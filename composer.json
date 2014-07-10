@@ -1,0 +1,25 @@
+{
+	"name": "primetime/content",
+    "type": "phpbb-extension",
+	"description": "Create and manage content types",
+	"homepage": "https://github.com/blitze/primetime_content",
+	"version": "1.0.0",
+	"time": "2014-06-21 01:01:01",
+	"license": "GPL-2.0",
+	"authors": [{
+			"name": "Daniel A.",
+			"username": "Blitze",
+			"email": "shizzah@hotmail.com",
+			"homepage": "https://github.com/blitze",
+			"role": "Lead Developer"
+		}],
+	"require": {
+		"php": ">=5.3"
+	},
+	"extra": {
+		"display-name": "phpBB Primetime Content",
+		"soft-require": {
+			"phpbb/phpbb": "3.1.*@dev"
+		}
+	}
+}

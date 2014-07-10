@@ -1,0 +1,67 @@
+<!-- BEGIN field -->
+	<div id="cfield-{field.NAME}" class="field">
+		<h3 id="{field.NAME}-header">
+			{field.LABEL}
+			<span class="small field-type">[ {field.L_TYPE} ]</span>
+		</h3>
+		<div id="{field.NAME}-panel">
+			<dl>
+				<dt><label>{L_LABEL}:</label></dt>
+				<dd>
+					<input type="text" name="fdata[{field.NAME}][label]" class="field_label text ui-corner-all" value="{field.LABEL}" />
+					<input type="hidden" name="fdata[{field.NAME}][name]" value="{field.NAME}" />
+				</dd>
+			</dl>
+			<dl>
+				<dt><label for="{field.NAME}_poster">{L_FIELD_POSTER}:</label></dt>
+				<dd>
+					<input type="radio" id="{field.NAME}_poster" class="radio" name="fdata[{field.NAME}][input]" value="0"<!-- IF not field.S_MOD_ONLY --> checked="checked"<!-- ENDIF --> />&nbsp;{L_FIELD_INPUT_AUTHOR}<br />
+					<input type="radio" class="radio" name="fdata[{field.NAME}][input]" value="1"<!-- IF field.S_MOD_ONLY --> checked="checked"<!-- ENDIF --> />&nbsp;{L_FIELD_INPUT_MODERATOR}
+				</dd>
+			</dl>
+			<dl>
+				<dt><label for="{field.NAME}_required">{L_FIELD_REQUIRED}:</label></dt>
+				<dd>
+					<input type="radio" id="{field.NAME}_required" class="radio" name="fdata[{field.NAME}][required]" value="1"<!-- IF field.REQUIRED --> checked="checked"<!-- ENDIF --> />&nbsp;{L_YES}&nbsp;&nbsp;
+					<input type="radio" class="radio" name="fdata[{field.NAME}][required]" value="0"<!-- IF not field.REQUIRED --> checked="checked"<!-- ENDIF --> />&nbsp;{L_NO}
+				</dd>
+			</dl>
+			<dl>
+				<dt><label for="{field.NAME}_ldisplay">{L_FIELD_DISPLAY_LABEL}:</label></dt>
+				<dd>
+					<input type="radio" id="{field.NAME}_ldisplay" class="radio" name="fdata[{field.NAME}][ldisplay]" value="1"<!-- IF field.S_LDISPLAY --> checked="checked"<!-- ENDIF --> />&nbsp;{L_YES}&nbsp;&nbsp;
+					<input type="radio" class="radio" name="fdata[{field.NAME}][ldisplay]" value="0"<!-- IF not field.S_LDISPLAY --> checked="checked"<!-- ENDIF --> />&nbsp;{L_NO}
+				</dd>
+			</dl>
+			<dl>
+				<dt><label for="{field.NAME}_description">{L_FIELD_DESCRIPTION}:</label></dt>
+				<dd>
+					<textarea id="{field.NAME}_description" class="text ui-corner-all" rows="3" name="fdata[{field.NAME}][description]">{field.DESCRIPTION}</textarea>
+				</dd>
+			</dl>
+			<!-- IF .field.option -->
+			<dl id="{field.NAME}-options">
+				<dt><label>{L_OPTIONS}:</label></dt>
+				<dd>
+					<!-- IF field.S_SELECT --><input type="checkbox" name="fdata[{field.NAME}][multy]" value="1"<!-- IF field.S_MULTY --> checked="checked"<!-- ENDIF --> />&nbsp;{L_MULTY_SELECT}<br /><!-- ENDIF -->
+					<div id="{field.NAME}-options-container">
+						<!-- BEGIN option -->
+						<div class="field-option">
+							<input name="fdata[{field.NAME}][default]" type="radio" value="{field.option.VALUE}"<!-- IF field.option.CHECKED --> checked="checked"<!-- ENDIF --> />&nbsp;
+							<input name="{field.NAME}_options[]" type="text" class="text ui-corner-all" value="{field.option.VALUE}" />&nbsp;
+							<a href="#" class="remove-option">{L_REMOVE}</a>
+						</div>
+						<!-- END option -->
+					</div>
+					<p style="text-align: right"><a href="#" class="add-option option-radio ui-corner-all ui-state-default" id="add-option-{field.NAME}">{L_ADD_OPTION}</a></p>
+				</dd>
+			</dl>
+			<!-- ENDIF -->
+		</div>
+		<div class="field-actions">
+			<a href="#" class="remove-field db-field field-icon ui-dialog-titlebar-close ui-corner-all" title="{L_DELETE}"><span class="ui-icon ui-icon-closethick">{L_DELETE}</span></a>
+			<a href="#" class="edit-field db-field field-icon ui-dialog-titlebar-close ui-corner-all" title="{L_EDIT}"><span class="ui-icon ui-icon-gear">{L_EDIT}</span></a>
+		</div>
+		<input type="hidden" id="{field.NAME}-type" name="fdata[{field.NAME}][type]" value="{field.S_TYPE}" />
+	</div>
+<!-- END field -->

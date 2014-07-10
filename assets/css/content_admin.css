@@ -1,0 +1,119 @@
+.hide {
+	display: none;
+}
+
+.clear {
+	clear: both;
+	height: 0px;
+}
+
+.ui-accordion  .ui-accordion-header{
+	margin-top: 5px !important;
+}
+
+.field {
+	position: relative;
+}
+
+.field .field-actions {
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	width: auto;
+}
+
+.field .field-icon {
+	float: right;
+	position: relative;
+	margin: 2px;
+}
+
+.field .field-icon span:hover {
+	border: 1px solid #ccc;
+}
+
+.field .field-type {
+	position: absolute;
+	left: 47%;
+}
+
+.field-option {
+	margin: 5px 0;
+}
+
+.add-option {
+	padding: 6px;
+}
+
+.add-option {
+	font-weight: bolder;
+}
+
+.add-option a:hover, .toggle-tpl a:hover {
+	text-decoration: none;
+}
+
+.editor {
+	width: 99.5%;
+	height: 250px;
+}
+
+.tpl-tabs {
+	margin-bottom: -2px;
+}
+
+.tpl-tabs .ui-state-default {
+	background-image: none;
+	background-color: #3fc;
+	font-weight: bold;
+}
+
+.tpl-tabs .ui-state-active {
+	background-color: white;
+	font-weight: normal;
+}
+
+li.tpl-tabs {
+	margin-bottom: 3px;
+}
+
+.tpl-boxes {
+	padding: 10px;
+	background-color: #3fc;
+	_zoom: 1;
+}
+
+.tpl-boxes h3 {
+	margin-top: 5px;
+}
+
+.tpl-boxes .ui-tabs-nav {
+	margin-right: 8px;
+}
+
+.rightside {
+	float: right;
+	position: relative;
+	margin-left: 25px;
+}
+
+#available-fields {
+	font-size: 10px;
+}
+
+#dialog-add-field fieldset {
+	padding: 0px;
+	border: 0px;
+	margin-top: 25px;
+}
+
+#dialog-add-field .error {
+	color: red;
+	text-align: center;
+	font-weight: bolder;
+	font-size: 9px;
+}
+
+#fields-template {
+	width: 100%;
+}

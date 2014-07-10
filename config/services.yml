@@ -1,0 +1,21 @@
+services:
+
+    primetime.content.display:
+        class: primetime\content\controller\display
+        arguments:
+            - @request
+            - @user
+            - @template
+            - @dbal.conn
+            - @controller.helper
+
+    primetime.content.types:
+        class: primetime\content\services\content_types
+        arguments:
+            - @cache.driver
+            - @dbal.conn
+
+    primetime.content.listener:
+        class: primetime\content\event\listener
+        tags:
+            - { name: event.listener }

@@ -1,0 +1,5 @@
+primetime.content.display:
+    pattern: /content/{type}/{content_id}
+    defaults: { _controller: primetime.content.display:handle, content_id: 0 }
+    requirements:
+        page_id: \d+
