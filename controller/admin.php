@@ -9,21 +9,8 @@
 
 namespace primetime\pages\controller;
 
-/**
- * @ignore
- */
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
-
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Yaml\Parser;
-use Symfony\Component\Yaml\Exception\ParseException;
 
-/**
-*
-*/
 class admin
 {
 	/**
@@ -111,11 +98,10 @@ class admin
 
 			break;
 
-
 			case 'rebuild_tree':
 
 				$this->tree->recalc_nestedset();
-				
+
 				// no break here
 
 			case 'get_all_items':
@@ -129,7 +115,7 @@ class admin
 					$items[] = $row;
 				}
 				$this->db->sql_freeresult($result);
-				
+
 				$return['items'] = $items;
 
 			break;

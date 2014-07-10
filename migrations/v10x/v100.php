@@ -9,17 +9,6 @@
 
 namespace primetime\content\migrations\v10x;
 
-/**
- * @ignore
- */
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
-
-/**
- * Initial data changes needed for Extension installation
- */
 class v100 extends \phpbb\db\migration\migration
 {
 	/**
@@ -39,7 +28,7 @@ class v100 extends \phpbb\db\migration\migration
 			'add_tables'	=> array(
 				$this->table_prefix . 'content_types'	=> array(
 					'COLUMNS'        => array(
-						'content_id'			=> array('UINT', NULL, 'auto_increment'),
+						'content_id'			=> array('UINT', null, 'auto_increment'),
 						'forum_id'				=> array('UINT', 0),
 						'content_name'			=> array('VCHAR:125', ''),
 						'content_langname'		=> array('VCHAR:155', ''),
@@ -70,7 +59,7 @@ class v100 extends \phpbb\db\migration\migration
 				),
 				$this->table_prefix . 'content_fields'	=> array(
 					'COLUMNS'        => array(
-						'field_id'				=> array('UINT', NULL, 'auto_increment'),
+						'field_id'				=> array('UINT', null, 'auto_increment'),
 						'content_id'			=> array('UINT', 0),
 						'field_name'			=> array('VCHAR:125', ''),
 						'field_label'			=> array('VCHAR:125', ''),
@@ -153,7 +142,7 @@ class v100 extends \phpbb\db\migration\migration
 				$permissions[] = array('permission.remove', array('m_content_manage_' . $row['content_name']));
 			}
 		}
-		$this->db->sql_freeresult($result); 
+		$this->db->sql_freeresult($result);
 
 		return array(
 			array('if', array(
@@ -175,7 +164,7 @@ class v100 extends \phpbb\db\migration\migration
 			array('if', array((sizeof($permissions)), $permissions))
 		);
 	}
-	
+
 	public function create_forum()
 	{
 		global $phpbb_container, $config;
@@ -187,7 +176,7 @@ class v100 extends \phpbb\db\migration\migration
 			'forum_name'	=> 'Primetime Content',
 		);
 
-        $errors = $forum->add($forum_data);
+		$errors = $forum->add($forum_data);
 
 		if (!sizeof($errors))
 		{

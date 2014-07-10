@@ -9,17 +9,6 @@
 
 namespace primetime\content\mcp;
 
-/**
- * @ignore
- */
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
-
-/**
-* @package module_install
-*/
 class content_info
 {
 	function module()
@@ -40,7 +29,7 @@ class content_info
 			$modes[$row['module_mode']] = array('title' => $row['module_langname'], 'auth' => $row['module_auth'], 'cat' => array('CONTENT_CP'));
 		}
 		$db->sql_freeresult($result);
-		
+
 		$module_info = array(
 			'filename'	=> '\primetime\content\mcp\content_module',
 			'title'		=> 'CONTENT_CP',
@@ -51,4 +40,3 @@ class content_info
 		return sizeof($modes) ? $module_info : array();
 	}
 }
-

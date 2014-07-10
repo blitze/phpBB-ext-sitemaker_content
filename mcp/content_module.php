@@ -9,24 +9,13 @@
 
 namespace primetime\content\mcp;
 
-/**
- * @ignore
- */
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
-
-/**
-*
-*/
 class content_module
 {
 	var $u_action;
 
 	function main($id, $mode)
 	{
-        global $phpbb_container, $request, $phpbb_root_path, $phpEx, $template, $user;
+		global $phpbb_container, $request, $phpbb_root_path, $phpEx, $template, $user;
 
 		// Set up the page
 		$this->tpl_name = 'cp_content';

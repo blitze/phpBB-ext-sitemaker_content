@@ -9,17 +9,6 @@
 
 namespace primetime\content\acp;
 
-/**
- * @ignore
- */
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
-
-/**
-*
-*/
 class content_module
 {
 	var $u_action;
@@ -189,7 +178,7 @@ class content_module
 					}
 					else
 					{
-						$db->sql_query('INSERT INTO ' . CONTENT_TYPES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary)); 
+						$db->sql_query('INSERT INTO ' . CONTENT_TYPES_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary));
 						$content_id = $db->sql_nextid();
 					}
 
@@ -291,7 +280,7 @@ class content_module
 							FROM ' . TOPICS_TABLE . "
 							WHERE content_type = '" . $db->sql_escape($module_mode) . "'";
 						$result = $db->sql_query($sql);
-	
+
 						$topic_ids = array();
 						while ($row = $db->sql_fetchrow($result))
 						{
@@ -307,11 +296,11 @@ class content_module
 						$template->assign_vars(array(
 							'S_POPUP'		=> true,
 							'S_DELETE_TYPE'	=> true,
-							'U_PATH'		=> append_sid(generate_board_url() . "/modules/content/acp_convert_type.$phpEx", "tag=$module_mode&amp;to=$transfer_to"))							
-						);
+							'U_PATH'		=> append_sid(generate_board_url() . "/modules/content/acp_convert_type.$phpEx", "tag=$module_mode&amp;to=$transfer_to")
+						));
 					}
 					else
-					{	
+					{
 						if (sizeof($topic_ids))
 						{
 							// TODO: trigger event here so other extensions can delete field data for this content type
@@ -540,12 +529,12 @@ class content_module
 
 				$scripts = array(
 					'js' => array(
-            			'//ajax.googleapis.com/ajax/libs/jqueryui/' . JQUI_VERSION . '/jquery-ui.min.js',
-            			'//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js',
+						'//ajax.googleapis.com/ajax/libs/jqueryui/' . JQUI_VERSION . '/jquery-ui.min.js',
+						'//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js',
 						$asset_path . 'ext/primetime/content/assets/js/content_admin.js',
 					),
 					'css'	=> array(
-            			'//ajax.googleapis.com/ajax/libs/jqueryui/' . JQUI_VERSION . '/themes/base/jquery-ui.css',
+						'//ajax.googleapis.com/ajax/libs/jqueryui/' . JQUI_VERSION . '/themes/base/jquery-ui.css',
 						$asset_path . 'ext/primetime/content/assets/css/content_admin.css',
 					)
 				);
@@ -701,13 +690,13 @@ class content_module
 		$migrator = $phpbb_container->get('migrator.tool.permission');
 
 		$options_ary = array(
-			'u_content_view_' . $name, 
-			'u_content_post_' . $name, 
+			'u_content_view_' . $name,
+			'u_content_post_' . $name,
 			'm_content_manage_' . $name,
 		);
 
 		$auth_base = array(
-			'ucp' => 'ext_primetime/content', 
+			'ucp' => 'ext_primetime/content',
 			'mcp' => 'ext_primetime/content'
 		);
 
@@ -721,7 +710,7 @@ class content_module
 		{
 			$migrator->$mode($option);
 		}
-		
+
 		$migrator->permission_set('ROLE_ADMIN_STANDARD', $options_ary, 'role', ($mode == 'add') ? true : false);
 
 		// update mcp/ucp module modes
@@ -762,7 +751,7 @@ class content_module
 			case 'add':
 
 				$auth_base = array(
-					'ucp' => 'ext_primetime/content', 
+					'ucp' => 'ext_primetime/content',
 					'mcp' => 'ext_primetime/content'
 				);
 

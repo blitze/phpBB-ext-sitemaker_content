@@ -9,17 +9,6 @@
 
 namespace primetime\content\acp;
 
-/**
- * @ignore
- */
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
-
-/**
-* @package module_install
-*/
 class content_info
 {
 	function module()
@@ -35,4 +24,3 @@ class content_info
 		);
 	}
 }
-

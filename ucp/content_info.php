@@ -9,17 +9,6 @@
 
 namespace primetime\content\ucp;
 
-/**
- * @ignore
- */
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
-
-/**
-* @package module_install
-*/
 class content_info
 {
 	function module()
@@ -51,4 +40,3 @@ class content_info
 		return sizeof($modes) ? $module_info : array();
 	}
 }
-

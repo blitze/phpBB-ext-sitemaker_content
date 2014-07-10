@@ -9,17 +9,6 @@
 
 namespace primetime\content\services;
 
-/**
- * @ignore
- */
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
-
-/**
-* @package phpBB Primetime
-*/
 class content_types
 {
 	/**

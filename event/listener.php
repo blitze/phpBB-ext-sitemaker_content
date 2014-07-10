@@ -9,19 +9,8 @@
 
 namespace primetime\content\event;
 
-/**
- * @ignore
- */
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
-
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-/**
-*
-*/
 class listener implements EventSubscriberInterface
 {
 	static public function getSubscribedEvents()

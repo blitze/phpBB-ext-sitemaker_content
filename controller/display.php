@@ -9,20 +9,9 @@
 
 namespace primetime\content\controller;
 
-/**
- * @ignore
- */
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
-
 // This is required for all controllers
 use Symfony\Component\HttpFoundation\Response;
 
-/**
-*
-*/
 class display
 {
 	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \phpbb\template\template $template, \phpbb\db\driver\factory $db, \phpbb\controller\helper $helper)
@@ -34,17 +23,8 @@ class display
 		$this->helper = $helper;
 	}
 
-	/**
-	* Foo controller to be accessed with the URL is /example/{test}
-	* (where {test} is the placeholder for a value)
-	*
-	* @param string $test String taken from the URL
-	* @return Symfony\Component\HttpFoundation\Response A Symfony Response object
-	*/
 	public function handle($page = '')
 	{
-
-
-		return $this->helper->render('page_body.html', 'Example extension bar() method');
+		return $this->helper->render('content_body.html', 'Example extension bar() method');
 	}
 }
