@@ -9,9 +9,6 @@
 
 namespace primetime\content\controller;
 
-// This is required for all controllers
-use Symfony\Component\HttpFoundation\Response;
-
 class display
 {
 	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \phpbb\template\template $template, \phpbb\db\driver\factory $db, \phpbb\controller\helper $helper)
