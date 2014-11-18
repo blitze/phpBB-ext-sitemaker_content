@@ -1,0 +1,37 @@
+/* Base styles */
+#grid {
+	margin-left: -10px;
+	overflow: hidden;
+}
+
+#grid .tile {
+	margin-left: 10px;
+}
+
+#grid .item {
+	width: 33.33333%;
+}
+
+/* Configurate salvattore with media queries */
+@media screen and (max-width: 480px){
+	#grid .item {
+		width: 100%;
+	}
+}
+
+@media screen and (min-width: 481px) and (max-width: 768px) {
+	#grid .item {
+		width: 50%;
+	}
+}
+@media screen and (min-width: 769px) {
+	#grid .item {
+		width: 33.33333%;
+	}
+}
+
+.load_more {
+	padding: 10px;
+	font-weight: bold;
+	clear: both;
+}

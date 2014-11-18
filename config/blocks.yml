@@ -1,0 +1,59 @@
+services:
+
+    primetime.content.block.archive:
+        class: primetime\content\blocks\archive
+        arguments:
+            - @auth
+            - @content.visibility
+            - @dbal.conn
+            - @controller.helper
+            - @user
+            - @primetime.content.types
+            - %core.root_path%
+            - %core.php_ext%
+        calls:
+            - [set_name, [primetime.content.block.archive]]
+        tags:
+            - { name: primetime.block }
+
+    primetime.content.block.calendar:
+        class: primetime\content\blocks\calendar
+        arguments:
+            - @config
+            - @user
+            - @primetime.content.displayer
+            - @primetime.primetime.forum
+            - %core.root_path%
+            - %core.php_ext%
+        calls:
+            - [set_name, [primetime.content.block.calendar]]
+        tags:
+            - { name: primetime.block }
+
+    primetime.content.block.featured:
+        class: primetime\content\blocks\featured
+        arguments:
+            - @config
+            - @user
+            - @primetime.content.displayer
+            - @primetime.primetime.forum
+            - %core.root_path%
+            - %core.php_ext%
+        calls:
+            - [set_name, [primetime.content.block.featured]]
+        tags:
+            - { name: primetime.block }
+
+    primetime.content.block.recent:
+        class: primetime\content\blocks\recent
+        arguments:
+            - @config
+            - @user
+            - @primetime.content.displayer
+            - @primetime.primetime.forum
+            - %core.root_path%
+            - %core.php_ext%
+        calls:
+            - [set_name, [primetime.content.block.recent]]
+        tags:
+            - { name: primetime.block }

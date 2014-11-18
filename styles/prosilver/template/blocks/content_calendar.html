@@ -1,0 +1,54 @@
+<table class="table1" style="border-collapse: separate" style="position: relative">
+	<thead>
+		<tr style="text-align: center" class="row1">
+			<td colspan="7">
+				<!-- IF S_SHOW_PREV --><div class="left-box"><a href="{U_LAST_MONTH}">&lt;&lt;</a></div><!-- ENDIF -->
+				<!-- IF S_SHOW_NEXT --><div class="right-box"><a href="{U_NEXT_MONTH}">&gt;&gt;</a></div><!-- ENDIF -->
+				<!-- IF S_LINKED --><a href="{U_MONTH}"><b>{CAPTION}</b></a><!-- ELSE --><b>{CAPTION}</b><!-- ENDIF -->
+				<div class="clear"></div><br />
+			</td>
+		</tr>
+		<tr style="text-align: center" class="navbar">
+		<!-- BEGIN wday -->
+			<td>{wday.DAY}</td>
+		<!-- END wday -->
+		</tr>
+	</thead>
+	<tbody>
+		<!-- BEGIN week -->
+		<tr>
+			<!-- BEGIN day -->
+			{% set day_num %}
+				<!-- IF week.day.EVENTS -->
+					<a class="bg3" href="">{week.day.DAY_NUM}</a>
+				<!-- ELSE -->
+					{week.day.DAY_NUM}
+				<!-- ENDIF -->
+			{% endset %}
+			<td><!-- IF week.day.S_OVERFLOW --><!-- IF SHOW_OVERFLOW --><span style="color: #ccc">{{ day_num }}</span><!-- ELSE -->&nbsp;<!-- ENDIF --><!-- ELSE -->{{ day_num }}<!-- ENDIF --></td>
+			<!-- END day -->
+		</tr>
+		<!-- END week -->
+		<tr class="bg2" style="position: absolute; bottom: 5px; right: 5px; left: 5px; height: 78%;">
+			<td colspan="7" style="display: block;">
+				<a class="pull-right" href="#"><i class="fa fa-close"></i></a>
+				<div class="clear"></div>
+			<!-- BEGIN week -->
+				<!-- BEGIN day -->
+					<!-- IF week.day.EVENTS -->
+					<div data-events="{{ week.day.DAY_DATE }}">
+						<h5 class="align-center"><strong>{{ week.day.DAY_DATE|date('M d, Y') }}</strong></h5>
+						<ul class="pt-list" style="height: 130px; overflow: auto;">
+						{% for event in week.day.EVENTS %}
+							<li><a href="{{ event.url }}">{{ event.title }}</a></li>
+						{% endfor %}
+						</ul>
+					</div>
+					<!-- ENDIF -->
+				<!-- END day -->
+			<!-- END week -->
+				<div class="clear"></div>
+			</td>
+		</tr>
+	</tbody>
+</table>

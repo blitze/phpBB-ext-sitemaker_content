@@ -1,0 +1,19 @@
+{
+  "name": "Primetime Content",
+  "dependencies": {
+    "masonry": "~3.1.5",
+    "datetimepicker": "~2.3.9",
+    "imagesloaded": "~3.1.8"
+  },
+  "overrides": {
+    "masonry": {
+      "dependencies": null
+    },
+    "imagesloaded": {
+      "dependencies": null
+    },
+    "datetimepicker": {
+      "dependencies": null
+    }
+  }
+}

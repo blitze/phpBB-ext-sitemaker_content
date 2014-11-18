@@ -1,0 +1,19 @@
+<ul class="pt-list">
+<!-- BEGIN topic_row -->
+	<li>
+		<div class="postbody pt-postbody">
+			<!-- IF not topic_row.CUSTOM_DISPLAY -->
+			<h3 class="topic-title"><a href="{topic_row.TOPIC_URL}">{topic_row.TOPIC_TITLE}</a></h3>
+			<p class="author">{topic_row.MINI_POST_IMG}<span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{topic_row.TOPIC_AUTHOR_FULL}</strong> &raquo; </span>{topic_row.TOPIC_TIME|date("m/d/Y")}</p>
+			<!-- ENDIF -->
+			<div class="content">
+				<!-- IF topic_row.CUSTOM_DISPLAY -->
+				{topic_row.CUSTOM_DISPLAY}
+				<!-- ELSE -->
+				{topic_row.SEQ_DISPLAY}
+				<!-- ENDIF -->
+			</div><br />
+		</div>
+	</li>
+<!-- END topic_row -->
+</ul>

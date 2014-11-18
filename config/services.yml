@@ -1,21 +1,113 @@
+parameters:
+    tables.primetime.content_types: %core.table_prefix%pt_content_types
+    tables.primetime.content_fields: %core.table_prefix%pt_content_fields
+
+imports:
+    - { resource: views.yml }
+    - { resource: blocks.yml }
+    - { resource: form.yml }
+
 services:
 
-    primetime.content.display:
+    primetime.content.display.controller:
         class: primetime\content\controller\display
         arguments:
-            - @request
-            - @user
-            - @template
+            - @auth
+            - @config
             - @dbal.conn
             - @controller.helper
+            - @pagination
+            - @service_container
+            - @template
+            - @user
+            - @primetime.content.displayer
+            - @primetime.primetime.forum
+            - %core.root_path%
+            - %core.php_ext%
 
-    primetime.content.types:
-        class: primetime\content\services\content_types
+    primetime.content.displayer:
+        class: primetime\content\services\displayer
         arguments:
-            - @cache.driver
+            - @auth
+            - @cache
+            - @config
+            - @content.visibility
             - @dbal.conn
+            - @controller.helper
+            - @service_container
+            - @template
+            - @user
+            - %core.root_path%
+            - %tables.primetime.content_fields%
+            - %tables.primetime.content_types%
+
+    primetime.content.form.builder:
+        class: primetime\content\services\form\builder
+        arguments:
+            - @request
+            - @primetime.content.form.fields_collection
+            - @template_context
+            - @user
+            - @primetime.primetime.template
+
+    primetime.content.form.fields_collection:
+        class: phpbb\di\service_collection
+        arguments:
+            - @service_container
+        tags:
+            - { name: service_collection, tag: form.field }
 
     primetime.content.listener:
         class: primetime\content\event\listener
+        arguments:
+            - @config
+            - @dbal.conn
+            - @controller.helper
+            - @user
+            - @primetime.content.types
+            - @primetime.content.displayer
+            - %core.root_path%
+            - %core.php_ext%
         tags:
             - { name: event.listener }
+
+    primetime.content.loader:
+        class: primetime\content\services\template_loader
+        arguments:
+            - @primetime.content.types
+
+    primetime.content.manager:
+        class: primetime\content\services\manager
+        arguments:
+            - @auth
+            - @cache
+            - @config
+            - @content.visibility
+            - @dbal.conn
+            - @controller.helper
+            - @pagination
+            - @service_container
+            - @request
+            - @template
+            - @user
+            - @primetime.content.displayer
+            - @primetime.content.form.builder
+            - @primetime.primetime.forum
+            - %core.root_path%
+            - %core.php_ext%
+
+    primetime.content.types:
+        class: primetime\content\services\types
+        arguments:
+            - @cache
+            - @config
+            - @dbal.conn
+            - %tables.primetime.content_fields%
+            - %tables.primetime.content_types%
+
+    primetime.content.views_collection:
+        class: phpbb\di\service_collection
+        arguments:
+            - @service_container
+        tags:
+            - { name: service_collection, tag: content.view }

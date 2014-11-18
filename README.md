@@ -6,7 +6,7 @@ phpBB Primetime Content is an Extension for [phpBB 3.1](https://www.phpbb.com/)
 
 ## Description
 
-Create and manage content types for phpBB Primetime
+Create and manage content types for phpBB Primetime Extension
 
 ## Features
 

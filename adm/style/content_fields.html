@@ -1,67 +1,95 @@
 <!-- BEGIN field -->
-	<div id="cfield-{field.NAME}" class="field">
-		<h3 id="{field.NAME}-header">
-			{field.LABEL}
-			<span class="small field-type">[ {field.L_TYPE} ]</span>
+	<div id="cfield-{field.FIELD_NAME}" class="field">
+		<h3 id="{field.FIELD_NAME}-header">
+			{field.FIELD_LABEL}
+			<span class="small field-type">[ {field.TYPE_LABEL} ]</span>
 		</h3>
-		<div id="{field.NAME}-panel">
+		<div id="{field.FIELD_NAME}-panel">
 			<dl>
-				<dt><label>{L_LABEL}:</label></dt>
+				<dt><label for="{field.FIELD_NAME}_name">{L_FIELD_LABEL}:</label></dt>
 				<dd>
-					<input type="text" name="fdata[{field.NAME}][label]" class="field_label text ui-corner-all" value="{field.LABEL}" />
-					<input type="hidden" name="fdata[{field.NAME}][name]" value="{field.NAME}" />
+					<input type="text" name="fdata[{field.FIELD_NAME}][label]" id="{field.FIELD_NAME}_name" class="field_label text ui-corner-all" value="{field.FIELD_LABEL}" />
+					<input type="hidden" name="fdata[{field.FIELD_NAME}][name]" value="{field.FIELD_NAME}" />
 				</dd>
 			</dl>
 			<dl>
-				<dt><label for="{field.NAME}_poster">{L_FIELD_POSTER}:</label></dt>
+				<dt><label for="{field.FIELD_NAME}_description">{L_FIELD_DESCRIPTION}:</label></dt>
 				<dd>
-					<input type="radio" id="{field.NAME}_poster" class="radio" name="fdata[{field.NAME}][input]" value="0"<!-- IF not field.S_MOD_ONLY --> checked="checked"<!-- ENDIF --> />&nbsp;{L_FIELD_INPUT_AUTHOR}<br />
-					<input type="radio" class="radio" name="fdata[{field.NAME}][input]" value="1"<!-- IF field.S_MOD_ONLY --> checked="checked"<!-- ENDIF --> />&nbsp;{L_FIELD_INPUT_MODERATOR}
+					<textarea id="{field.FIELD_NAME}_description" class="text ui-corner-all" name="fdata[{field.FIELD_NAME}][description]" rows="3">{field.FIELD_EXPLAIN}</textarea>
 				</dd>
 			</dl>
 			<dl>
-				<dt><label for="{field.NAME}_required">{L_FIELD_REQUIRED}:</label></dt>
+				<dt><label for="{field.FIELD_NAME}_location">{L_FIELD_LOCATION}:</label></dt>
+				<dd><label><input type="checkbox" class="checkbox" name="fdata[{field.FIELD_NAME}][summary_show]" value="1"<!-- IF field.FIELD_SUMMARY_SHOW --> checked="checked"<!-- ENDIF --> id="{field.FIELD_NAME}_location" /> {L_FIELD_SUMMARY_SHOW}</label></dd>
+				<dd><label><input type="checkbox" class="checkbox" name="fdata[{field.FIELD_NAME}][detail_show]" value="1"<!-- IF field.FIELD_DETAIL_SHOW --> checked="checked"<!-- ENDIF --> /> {L_FIELD_DETAIL_SHOW}</label></dd>
+			</dl>
+			<dl>
+				<dt><label for="{field.FIELD_NAME}_poster">{L_FIELD_POSTER}:</label></dt>
 				<dd>
-					<input type="radio" id="{field.NAME}_required" class="radio" name="fdata[{field.NAME}][required]" value="1"<!-- IF field.REQUIRED --> checked="checked"<!-- ENDIF --> />&nbsp;{L_YES}&nbsp;&nbsp;
-					<input type="radio" class="radio" name="fdata[{field.NAME}][required]" value="0"<!-- IF not field.REQUIRED --> checked="checked"<!-- ENDIF --> />&nbsp;{L_NO}
+					<label><input type="radio" id="{field.FIELD_NAME}_poster" class="radio" name="fdata[{field.FIELD_NAME}][input]" value="0"<!-- IF not field.FIELD_MOD_ONLY --> checked="checked"<!-- ENDIF --> /> {L_FIELD_INPUT_AUTHOR}</label>
+					<label><input type="radio" class="radio" name="fdata[{field.FIELD_NAME}][input]" value="1"<!-- IF field.FIELD_MOD_ONLY --> checked="checked"<!-- ENDIF --> /> {L_FIELD_INPUT_MODERATOR}</label>
 				</dd>
 			</dl>
 			<dl>
-				<dt><label for="{field.NAME}_ldisplay">{L_FIELD_DISPLAY_LABEL}:</label></dt>
+				<dt><label for="{field.FIELD_NAME}_required">{L_FIELD_REQUIRED}:</label></dt>
 				<dd>
-					<input type="radio" id="{field.NAME}_ldisplay" class="radio" name="fdata[{field.NAME}][ldisplay]" value="1"<!-- IF field.S_LDISPLAY --> checked="checked"<!-- ENDIF --> />&nbsp;{L_YES}&nbsp;&nbsp;
-					<input type="radio" class="radio" name="fdata[{field.NAME}][ldisplay]" value="0"<!-- IF not field.S_LDISPLAY --> checked="checked"<!-- ENDIF --> />&nbsp;{L_NO}
+					<label><input type="radio" id="{field.FIELD_NAME}_required" class="radio" name="fdata[{field.FIELD_NAME}][required_]" value="1"<!-- IF field.FIELD_REQUIRED --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+					<label><input type="radio" class="radio" name="fdata[{field.FIELD_NAME}][required]" value="0"<!-- IF not field.FIELD_REQUIRED --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
 				</dd>
 			</dl>
 			<dl>
-				<dt><label for="{field.NAME}_description">{L_FIELD_DESCRIPTION}:</label></dt>
+				<dt><label for="{field.FIELD_NAME}_summary_ldisp">{L_FIELD_DISPLAY_LABEL}:</label></dt>
 				<dd>
-					<textarea id="{field.NAME}_description" class="text ui-corner-all" rows="3" name="fdata[{field.NAME}][description]">{field.DESCRIPTION}</textarea>
-				</dd>
-			</dl>
-			<!-- IF .field.option -->
-			<dl id="{field.NAME}-options">
-				<dt><label>{L_OPTIONS}:</label></dt>
-				<dd>
-					<!-- IF field.S_SELECT --><input type="checkbox" name="fdata[{field.NAME}][multy]" value="1"<!-- IF field.S_MULTY --> checked="checked"<!-- ENDIF --> />&nbsp;{L_MULTY_SELECT}<br /><!-- ENDIF -->
-					<div id="{field.NAME}-options-container">
-						<!-- BEGIN option -->
-						<div class="field-option">
-							<input name="fdata[{field.NAME}][default]" type="radio" value="{field.option.VALUE}"<!-- IF field.option.CHECKED --> checked="checked"<!-- ENDIF --> />&nbsp;
-							<input name="{field.NAME}_options[]" type="text" class="text ui-corner-all" value="{field.option.VALUE}" />&nbsp;
-							<a href="#" class="remove-option">{L_REMOVE}</a>
-						</div>
-						<!-- END option -->
+					<div class="column1">
+						<h5>{L_CONTENT_INDEX}</h5>
+						<label><input type="radio" class="radio" name="fdata[{field.FIELD_NAME}][summary_ldisp]" value="0"<!-- IF not field.FIELD_SUMMARY_LDISP --> checked="checked"<!-- ENDIF --> id="{field.FIELD_NAME}_summary_ldisp" /> {L_NO}</label>
+						<label><input type="radio" class="radio" name="fdata[{field.FIELD_NAME}][summary_ldisp]" value="1"<!-- IF field.FIELD_SUMMARY_LDISP == 1 --> checked="checked"<!-- ENDIF --> /> {L_LABEL_INLINE}</label>
+						<label><input type="radio" class="radio" name="fdata[{field.FIELD_NAME}][summary_ldisp]" value="2"<!-- IF field.FIELD_SUMMARY_LDISP == 2 --> checked="checked"<!-- ENDIF --> /> {L_LABEL_NEWLINE}</label>
 					</div>
-					<p style="text-align: right"><a href="#" class="add-option option-radio ui-corner-all ui-state-default" id="add-option-{field.NAME}">{L_ADD_OPTION}</a></p>
+					<div class="column2">
+						<h5>{L_CONTENT_DETAIL}</h5>
+						<label><input type="radio" class="radio" name="fdata[{field.FIELD_NAME}][detail_ldisp]" value="0"<!-- IF not field.FIELD_DETAIL_LDISP --> checked="checked"<!-- ENDIF --> id="{field.FIELD_NAME}_detail_ldisp" /> {L_NO}</label>
+						<label><input type="radio" class="radio" name="fdata[{field.FIELD_NAME}][detail_ldisp]" value="1"<!-- IF field.FIELD_DETAIL_LDISP == 1 --> checked="checked"<!-- ENDIF --> /> {L_LABEL_INLINE}</label>
+						<label><input type="radio" class="radio" name="fdata[{field.FIELD_NAME}][detail_ldisp]" value="2"<!-- IF field.FIELD_DETAIL_LDISP == 2 --> checked="checked"<!-- ENDIF --> /> {L_LABEL_NEWLINE}</label>
+					</div>
 				</dd>
 			</dl>
-			<!-- ENDIF -->
+			<div class="bg3">
+				<!-- IF .field.option -->
+				<div id="{field.FIELD_NAME}-options">
+					<dl>
+						<dt><label>{L_OPTIONS}:</label></dt>
+						<dd>
+							<!-- IF field.FIELD_TYPE == 'select' --><label><input type="checkbox" name="fsettings[{field.FIELD_NAME}][field_multi]" value="1"<!-- IF field.FIELD_MULTI --> checked="checked"<!-- ENDIF --> /> {L_MULTI_SELECT}</label><!-- ENDIF -->
+							<div id="{field.FIELD_NAME}-options-container">
+								<!-- BEGIN option -->
+								<div class="field-option">
+									<label><input class="field-defaults" name="fdefaults[{field.FIELD_NAME}][]" type="{field.DEFAULT_TYPE}" value="{field.option.VALUE}"<!-- IF field.option.S_CHECKED --> checked="checked"<!-- ENDIF --> /></label>
+									<label><input name="{field.FIELD_NAME}_options[]" type="text" class="field-option ui-corner-all" value="{field.option.VALUE}" /></label>
+									<label><a href="#" class="remove-option">{L_REMOVE}</a></label>
+								</div>
+								<!-- END option -->
+							</div>
+							<p style="text-align: right"><a href="#" class="add-option option-radio ui-corner-all ui-state-default" id="add-option-{field.FIELD_NAME}">{L_ADD_OPTION}</a></p>
+						</dd>
+					</dl>
+				</div>
+				<!-- ENDIF -->
+				<!-- IF field.FIELD_TYPE == 'editor' or field.FIELD_TYPE == 'textarea' -->
+				<dl>
+					<dt><label for="{field.FIELD_NAME}_max_chars">{L_INDEX_MAX_CHARS}</label></dt>
+					<dd>
+						<label><input id="{field.FIELD_NAME}_max_chars" name="fsettings[{field.FIELD_NAME}][max_chars]" type="number" maxlength="4" min="0" step="25" value="{field.MAX_CHARS}" /> {L_CHARS}</label>
+					</dd>
+				</dl>
+				<!-- ENDIF -->
+				<!-- EVENT content_field_setup -->
+			</div>
 		</div>
 		<div class="field-actions">
 			<a href="#" class="remove-field db-field field-icon ui-dialog-titlebar-close ui-corner-all" title="{L_DELETE}"><span class="ui-icon ui-icon-closethick">{L_DELETE}</span></a>
 			<a href="#" class="edit-field db-field field-icon ui-dialog-titlebar-close ui-corner-all" title="{L_EDIT}"><span class="ui-icon ui-icon-gear">{L_EDIT}</span></a>
 		</div>
-		<input type="hidden" id="{field.NAME}-type" name="fdata[{field.NAME}][type]" value="{field.S_TYPE}" />
+		<input type="hidden" id="{field.FIELD_NAME}-type" name="fdata[{field.FIELD_NAME}][type]" value="{field.FIELD_TYPE}" />
 	</div>
 <!-- END field -->

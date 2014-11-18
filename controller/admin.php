@@ -13,39 +13,27 @@ use Symfony\Component\HttpFoundation\Response;
 
 class admin
 {
-	/**
-	 * Database object
-	 * @var \phpbb\db\driver
-	 */
+	/** @var \phpbb\db\driver */
 	protected $db;
 
-	/**
-	 * Request object
-	 * @var \phpbb\request\request_interface
-	 */
+	/** @var \phpbb\request\request_interface */
 	protected $request;
 
-	/**
-	* User object
-	* @var \phpbb\user
-	*/
+	/** @var \phpbb\user */
 	protected $user;
 
-	/**
-	* Tree builder object
-	* @var \primetime\category\core\builder
-	*/
+	/** @var \primetime\category\core\builder */
 	protected $tree;
 
 	/**
 	* Constructor
 	*
-	* @param \phpbb\db\driver\factory			$db				Database object
+	* @param \phpbb\db\driver\driver_interface	$db				Database object
 	* @param \phpbb\request\request_interface	$request 		Request object
 	* @param \phpbb\user                		$user       	User object
 	* @param \primetime\category\core\builder	$tree			Tree builder Object
 	*/
-	public function __construct(\phpbb\db\driver\factory $db, \phpbb\request\request_interface $request, \phpbb\user $user, \primetime\pages\core\builder $tree)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\request\request_interface $request, \phpbb\user $user, \primetime\pages\core\builder $tree)
 	{
 		$this->db = $db;
 		$this->request = $request;

@@ -1,5 +1,15 @@
-primetime.content.display:
-    pattern: /content/{type}/{content_id}
-    defaults: { _controller: primetime.content.display:handle, content_id: 0 }
+primetime_content_index:
+    pattern: /content/{type}
+    defaults: { _controller: primetime.content.display.controller:index, page: 1 }
+
+primetime_content_index_page:
+    pattern: /content/{type}/page/{page}
+    defaults: { _controller: primetime.content.display.controller:index }
     requirements:
-        page_id: \d+
+        page: \d+
+
+primetime_content_show:
+    pattern: /content/{type}/{topic_id}/{slug}
+    defaults: { _controller: primetime.content.display.controller:show }
+    requirements:
+        topic_id: \d+

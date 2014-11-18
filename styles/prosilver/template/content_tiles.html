@@ -1,0 +1,58 @@
+<!-- INCLUDECSS ../theme/content_tiles.css -->
+<!-- IF not S_HIDE_HEADERS --><!-- INCLUDE overall_header.html --><!-- ENDIF -->
+
+<!-- IF CONTENT_TYPE -->
+<h2 class="forum-title">{CONTENT_TYPE}</h2>
+
+<div>{CONTENT_DESC}</div><br />
+<!-- ENDIF -->
+
+<!-- IF .topic_row -->
+	<div class="line">
+		<div class="tile-grid">
+			<!-- BEGIN topic_row -->
+			<div class="unit item">
+				<div class="panel post tile cms-block-spacing">
+					<div class="inner">
+						<div class="postbody pt-postbody">
+							<!-- IF not topic_row.CUSTOM_DISPLAY -->
+							<h3 class="first"><a href="{topic_row.TOPIC_URL}">{topic_row.TOPIC_TITLE}</a></h3>
+							<p class="author">{topic_row.MINI_POST_IMG}<span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{topic_row.TOPIC_AUTHOR_FULL}</strong> &raquo; </span>{topic_row.TOPIC_DATE|date(m/d/Y)}</p>
+							<!-- ENDIF -->
+							<div class="content">
+								<!-- IF topic_row.CUSTOM_DISPLAY -->
+								{topic_row.CUSTOM_DISPLAY}
+								<!-- ELSE -->
+								{topic_row.SEQ_DISPLAY}
+								<p>&nbsp;</p>
+
+								<div class="buttons rightside">
+									<a href="{topic_row.TOPIC_URL}" class="button icon-button">{L_READ_MORE}</a>
+								</div>
+								<!-- ENDIF -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- END topic_row -->
+		</div>
+	</div>
+	<!-- IF .pagination -->
+	<div class="panel bg2 load_more align-center">
+	<!-- BEGIN pagination -->
+		<!-- IF pagination.S_IS_NEXT -->
+		<a id="tile-load-more" href="{pagination.PAGE_URL}" rel="next">{L_LOAD_MORE}</a>
+		<!-- ENDIF -->
+	<!-- END pagination -->
+	</div>
+	<!-- ENDIF -->
+<!-- ELSE -->
+<div class="panel post cms-block-spacing">
+	<div class="inner">
+		{L_NO_TOPICS}
+	</div>
+</div>
+<!-- ENDIF -->
+
+<!-- IF not S_HIDE_HEADERS --><!-- INCLUDE overall_footer.html --><!-- ENDIF -->

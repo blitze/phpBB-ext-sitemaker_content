@@ -11,14 +11,14 @@ namespace primetime\content\mcp;
 
 class content_module
 {
-	var $u_action;
+	/** @var string */
+	public $u_action;
 
 	function main($id, $mode)
 	{
-		global $phpbb_container, $request, $phpbb_root_path, $phpEx, $template, $user;
+		global $phpbb_container;
 
-		// Set up the page
 		$this->tpl_name = 'cp_content';
-		$this->page_title = 'MCP_CONTENT';
+		$phpbb_container->get('primetime.content.manager')->handle_crud('mcp', $this->u_action);
 	}
 }

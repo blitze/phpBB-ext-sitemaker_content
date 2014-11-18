@@ -1,0 +1,64 @@
+<!-- IF not S_PREVIEW --><!-- INCLUDE overall_header.html --><!-- ENDIF -->
+
+<!-- IF CONTENT_TYPE -->
+<h2 class="forum-title">{CONTENT_TYPE}</h2>
+
+<div>{CONTENT_DESC}</div><br />
+<!-- ENDIF -->
+
+<div class="action-bar top">
+	<!-- IF .pagination or TOTAL_POSTS -->
+		<div class="pagination">
+			<!-- IF .pagination -->
+				<!-- INCLUDE pagination.html -->
+			<!-- ELSE -->
+				&bull; {PAGE_NUMBER}
+			<!-- ENDIF -->
+		</div>
+	<!-- ENDIF -->
+</div>
+<!-- BEGIN topic_row -->
+<div class="panel post cms-block-spacing">
+	<div class="inner">
+		<div class="postbody pt-postbody" style="width: 100%">
+		<!-- IF not topic_row.CUSTOM -->
+			<h3 class="first"><a href="{topic_row.TOPIC_URL}">{topic_row.TOPIC_TITLE}</a></h3>
+			<p class="author">{topic_row.MINI_POST_IMG}<span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{topic_row.TOPIC_AUTHOR_FULL}</strong> &raquo; </span>{topic_row.TOPIC_DATE|date("m/d/Y")} </p>
+		<!-- ENDIF -->
+			<div class="content">
+				<!-- IF topic_row.CUSTOM -->
+					{topic_row.CUSTOM}
+				<!-- ELSE -->
+					{topic_row.MESSAGE}
+					<p>&nbsp;</p>
+
+					<div class="buttons rightside">
+						<a href="{topic_row.TOPIC_URL}" class="button icon-button">{L_READ_MORE}</a>
+					</div>
+				<!-- ENDIF -->
+			</div>
+		</div>
+	</div>
+</div>
+<!-- BEGINELSE -->
+<div class="panel post cms-block-spacing">
+	<div class="inner">
+		{L_NO_TOPICS}
+	</div>
+</div>
+<!-- END topic_row -->
+<div class="action-bar bottom">
+	<!-- IF .pagination or TOTAL_POSTS -->
+		<div class="pagination">
+			{TOTAL_POSTS} 
+			<!-- IF .pagination -->
+				<!-- INCLUDE pagination.html -->
+			<!-- ELSE -->
+				&bull; {PAGE_NUMBER}
+			<!-- ENDIF -->
+		</div>
+	<!-- ENDIF -->
+	<div class="clear"></div>
+</div>
+
+<!-- IF not S_PREVIEW --><!-- INCLUDE overall_footer.html --><!-- ENDIF -->

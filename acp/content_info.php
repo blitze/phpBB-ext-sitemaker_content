@@ -19,7 +19,7 @@ class content_info
 			'parent'	=> 'ACP_MOD_MANAGEMENT',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'content'		=> array('title' => 'CONTENT', 'auth' => '', 'cat' => array('ACP_CONTENT')),
+				'content'		=> array('title' => 'CONTENT_TYPES', 'auth' => 'ext_primetime/content', 'cat' => array('ACP_CONTENT')),
 			),
 		);
 	}

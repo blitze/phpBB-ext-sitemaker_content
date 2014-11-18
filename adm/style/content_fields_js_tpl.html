@@ -1,13 +1,13 @@
-<div id="content-field-select" class="tpl hide">
+<div id="content-field-select" class="tpl" style="display: none;">
 	<dl id="[field_name]-options">
 		<dt><label>{L_OPTIONS}</label></dt>
 		<dd>
-			<input type="checkbox" name="fdata[[field_name]][multy]" value="1" />&nbsp;{L_MULTY_SELECT}<br />
+			<label><input class="field-multi" type="checkbox" name="fsettings[[field_name]][field_multi]" value="1" /> {L_MULTI_SELECT}</label>
 			<div id="[field_name]-options-container">
 				<div class="field-option">
-					<input name="fdata[[field_name]][default]" type="radio" class="radio" value="1" />&nbsp;
-					<input name="[field_name]_options[]" type="text" class="text ui-corner-all" value="" />&nbsp;
-					<a href="#" class="remove-option">{L_REMOVE}</a><br />
+					<input name="fdefaults[[field_name]][]" type="radio" class="field-defaults" value="" />
+					<input name="[field_name]_options[]" type="text" class="field-option ui-corner-all" value="" />
+					<a href="#" class="remove-option">{L_REMOVE}</a>
 				</div>
 			</div>
 			<p style="text-align: right"><a href="#" class="add-option option-radio ui-corner-all ui-state-default" id="add-option-[field_name]">{L_ADD_OPTION}</a></p>
@@ -15,15 +15,15 @@
 	</dl>
 </div>
 
-<div id="content-field-radio" class="tpl hide">
+<div id="content-field-radio" class="tpl" style="display: none;">
 	<dl id="[field_name]-options">
 		<dt><label>{L_OPTIONS}</label></dt>
 		<dd>
 			<div id="[field_name]-options-container">
 				<div class="field-option">
-					<input name="fdata[[field_name]][default]" type="radio" class="radio" value="1" />&nbsp;
-					<input name="[field_name]_options[]" type="text" class="text ui-corner-all" value="" />&nbsp;
-					<a href="#" class="remove-option">{L_REMOVE}</a><br />
+					<input name="fdefaults[[field_name]][]" type="radio" class="field-defaults" value="" />
+					<input name="[field_name]_options[]" type="text" class="field-option ui-corner-all" value="" />
+					<a href="#" class="remove-option">{L_REMOVE}</a>
 				</div>
 			</div>
 			<p style="text-align: right"><a href="#" class="add-option option-radio ui-corner-all ui-state-default" id="add-option-[field_name]">{L_ADD_OPTION}</a></p>
@@ -31,15 +31,15 @@
 	</dl>
 </div>
 
-<div id="content-field-checkbox" class="tpl hide">
+<div id="content-field-checkbox" class="tpl" style="display: none;">
 	<dl id="[field_name]-options">
 		<dt><label>{L_OPTIONS}</label></dt>
 		<dd>
 			<div id="[field_name]-options-container">
 				<div class="field-option">
-					<input name="fdata[[field_name]][default]" type="radio" class="radio" value="1" />&nbsp;
-					<input name="[field_name]_options[]" type="text" class="text ui-corner-all" value="" />&nbsp;
-					<a href="#" class="remove-option">{L_REMOVE}</a><br />
+					<input name="fdefaults[[field_name]][]" type="checkbox" class="field-defaults" value="" />
+					<input name="[field_name]_options[]" type="text" class="field-option ui-corner-all" value="" />
+					<a href="#" class="remove-option">{L_REMOVE}</a>
 				</div>
 			</div>
 			<p style="text-align: right"><a href="#" class="add-option option-checkbox ui-corner-all ui-state-default" id="add-option-[field_name]">{L_ADD_OPTION}</a></p>
@@ -47,39 +47,38 @@
 	</dl>
 </div>
 
-<div id="content-field-option" class="tpl hide">
-	<input name="fdata[[field_name]][default]" type="radio" value="1" />&nbsp;
-	<input name="[field_name]_options[]" type="text" class="text ui-corner-all" value="" />&nbsp;
-	<a href="#" class="remove-option">{L_REMOVE}</a><br />
+<div id="content-field-editor" class="tpl" style="display: none;">
+	<dl id="[field_name]-options">
+		<dt><label>{L_INDEX_MAX_CHARS}</label></dt>
+		<dd>
+			<input name="fsettings[[field_name]][max_chars]" type="number" class="input" size="3" maxlength="4" value="0" /> {L_CHARS}
+		</dd>
+	</dl>
 </div>
 
-<div id="content-field-settings" class="tpl hide">
+<div id="content-field-textarea" class="tpl" style="display: none;">
+	<dl id="[field_name]-options">
+		<dt><label>{L_INDEX_MAX_CHARS}</label></dt>
+		<dd>
+			<input name="fsettings[[field_name]][max_chars]" type="number" class="input" size="3" maxlength="4" value="0" /> {L_CHARS}
+		</dd>
+	</dl>
+</div>
+
+<!-- EVENT content_field_setup_js -->
+
+<div id="content-field-option" class="tpl" style="display: none;">
+	<input name="fdefaults[[field_name]][]" type="checkbox" class="field-defaults" value="" />
+	<input name="[field_name]_options[]" type="text" class="field-option ui-corner-all" value="" />
+	<a href="#" class="remove-option">{L_REMOVE}</a>
+</div>
+
+<div id="content-field-settings" class="tpl" style="display: none;">
 	<dl>
-		<dt><label>{L_LABEL}</label></dt>
+		<dt><label>{L_FIELD_LABEL}</label></dt>
 		<dd>
 			<input type="text" name="fdata[[field_name]][label]" class="field_label text ui-corner-all" value="[field_label]" />
 			<input type="hidden" name="fdata[[field_name]][name]" value="[field_name]" />
-		</dd>
-	</dl>
-	<dl>
-		<dt><label for="[field_name]_poster">{L_FIELD_POSTER}</label></dt>
-		<dd>
-			<input type="radio" class="radio" name="fdata[[field_name]][input]" value="0" />&nbsp;{L_FIELD_INPUT_MODERATOR}&nbsp;&nbsp;
-			<input type="radio" id="[field_name]_poster" class="radio" name="fdata[[field_name]][input]" value="1" checked="checked" />&nbsp;{L_FIELD_INPUT_AUTHOR}
-		</dd>
-	</dl>
-	<dl>
-		<dt><label for="[field_name]_required">{L_FIELD_REQUIRED}</label></dt>
-		<dd>
-			<input type="radio" id="[field_name]_required" class="radio" name="[field_name][required]" value="1" />&nbsp;{L_YES}&nbsp;&nbsp;
-			<input type="radio" class="radio" name="fdata[[field_name]][required]" value="0" checked="checked" />&nbsp;{L_NO}
-		</dd>
-	</dl>
-	<dl>
-		<dt><label for="[field_name]_ldisplay">{L_FIELD_DISPLAY_LABEL}:</label></dt>
-		<dd>
-			<input type="radio" id="[field_name]_ldisplay" class="radio" name="fdata[[field_name]][ldisplay]" value="1" checked="checked" />&nbsp;{L_YES}&nbsp;&nbsp;
-			<input type="radio" class="radio" name="fdata[[field_name]][ldisplay]" value="0" />&nbsp;{L_NO}
 		</dd>
 	</dl>
 	<dl>
@@ -88,13 +87,51 @@
 			<textarea id="[field_name]_description" class="text ui-corner-all" rows="3" name="fdata[[field_name]][description]"></textarea>
 		</dd>
 	</dl>
+	<dl>
+		<dt><label for="[field_name]_location">{L_FIELD_LOCATION}:</label></dt>
+		<dd>
+			<label><input type="checkbox" class="checkbox" name="fdata[[field_name]][summary_show]" value="1" checked="checked" id="[field_name]_location" /> {L_FIELD_SUMMARY_SHOW}</label><br />
+			<label><input type="checkbox" class="checkbox" name="fdata[[field_name]][detail_show]" value="1" checked="checked" /> {L_FIELD_DETAIL_SHOW}</label>
+		</dd>
+	</dl>
+	<dl>
+		<dt><label for="[field_name]_poster">{L_FIELD_POSTER}</label></dt>
+		<dd>
+			<label><input type="radio" id="[field_name]_poster" class="radio" name="fdata[[field_name]][input]" value="1" checked="checked" /> {L_FIELD_INPUT_AUTHOR}</label>
+			<label><input type="radio" class="radio" name="fdata[[field_name]][input]" value="0" /> {L_FIELD_INPUT_MODERATOR}</label><label>
+		</dd>
+	</dl>
+	<dl>
+		<dt><label for="[field_name]_required">{L_FIELD_REQUIRED}</label></dt>
+		<dd>
+			<label><input type="radio" id="[field_name]_required" class="radio" name="[field_name][required]" value="1" /> {L_YES}</label>
+			<label><input type="radio" class="radio" name="fdata[[field_name]][required]" value="0" checked="checked" /> {L_NO}</label>
+		</dd>
+	</dl>
+	<dl>
+		<dt><label for="[field_name]_summary_ldisp">{L_FIELD_DISPLAY_LABEL}:</label></dt>
+		<dd>
+			<div class="column1">
+				<h5>{L_CONTENT_INDEX}</h5>
+				<label><input type="radio" class="radio" name="fdata[[field_name]][summary_ldisp]" value="0" checked="checked" id="[field_name]_summary_ldisp" /> {L_NO}</label><br />
+				<label><input type="radio" class="radio" name="fdata[[field_name]][summary_ldisp]" value="1" /> {L_LABEL_INLINE}</label><br />
+				<label><input type="radio" class="radio" name="fdata[[field_name]][summary_ldisp]" value="2" /> {L_LABEL_NEWLINE}</label>
+			</div>
+			<div class="column2">
+				<h5>{L_CONTENT_DETAIL}</h5>
+				<label><input type="radio" class="radio" name="fdata[[field_name]][detail_ldisp]" value="0" id="[field_name]_detail_ldisp" /> {L_NO}</label><br />
+				<label><input type="radio" class="radio" name="fdata[[field_name]][detail_ldisp]" value="1" /> {L_LABEL_INLINE}</label><br />
+				<label><input type="radio" class="radio" name="fdata[[field_name]][detail_ldisp]" value="2" checked="checked" /> {L_LABEL_NEWLINE}</label>
+			</div>
+		</dd>
+	</dl>
 </div>
 
-<div id="dialog-confirm-delete" title="{L_CONFIRM_DELETE}" class="hide">
+<div id="dialog-confirm-delete" title="{L_CONFIRM_DELETE}" style="display: none;">
 	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>{L_DELETE_FIELD_CONFIRM}</p>
 </div>
 
-<div id="dialog-add-field" title="{L_ADD_FIELD}">
+<div id="dialog-add-field" class="dialog-tpl" title="{L_ADD_FIELD}" style="display: none;">
 	<fieldset>
 	<dl>
 		<dt><label for="dialog-fieldtype">{L_FIELD_TYPE}</label></dt>
@@ -115,7 +152,7 @@
 	</fieldset>
 </div>
 
-<div id="dialog-edit-field" title="{L_EDIT_FIELD}">
+<div id="dialog-edit-field" title="{L_EDIT_FIELD}" style="display: none;">
 	<fieldset>
 	<dl>
 		<dt><label for="dialog-newtype">{L_FIELD_TYPE}</label></dt>
@@ -130,14 +167,28 @@
 
 <script type="text/javascript">
 // <![CDATA[
-	var l_add 		= '{L_ADD}';
-	var l_edit		= '{L_EDIT}';
-	var l_cancel 	= '{L_CANCEL}';
-	var l_delete	= '{L_DELETE}';
-	var l_taken		= '{L_FIELD_TAKEN}';
-	var l_label		= '{L_LABEL}';
-	var l_settings	= '{L_SETTINGS}';
-	var l_fieldname	= '{L_MISSING_FIELD}';
-	var l_fieldlabel = '{L_MISSING_LABEL}';
+	var trans = {
+		add: '{LA_ADD}',
+		edit: '{LA_EDIT}',
+		cancel: '{LA_CANCEL}',
+		delete: '{LA_DELETE}',
+		taken: '{LA_FIELD_TAKEN}',
+		label: '{LA_LABEL}',
+		settings: '{LA_SETTINGS}',
+		fieldName: '{LA_MISSING_FIELD}',
+		fieldLabel: '{LA_MISSING_LABEL}'
+	};
+	var post_data	= {
+		TOPIC_TITLE: '{LA_SAMPLE_POST}',
+		TOPIC_URL: '#',
+		TOPIC_AUTHOR: '{POST_AUTHOR}',
+		TOPIC_AUTHOR_FULL: '{TOPIC_AUTHOR_FULL}',
+		TOPIC_AUTHOR_COLOUR: '{TOPIC_AUTHOR_COLOUR}',
+		TOPIC_AUTHOR_AVATAR: '{TOPIC_AUTHOR_AVATAR}',
+		TOPIC_AUTHOR_URL: '#',
+		TOPIC_DATE: '{POST_DATE}',
+		COMMENTS: 9,
+		TOPIC_VIEWS: 26
+	};
 // ]]>
 </script>

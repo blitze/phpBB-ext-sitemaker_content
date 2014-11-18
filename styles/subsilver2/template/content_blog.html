@@ -1,0 +1,55 @@
+<!-- INCLUDECSS ../theme/content_blog.css -->
+<!-- IF not S_HIDE_HEADERS --><!-- INCLUDE overall_header.html --><!-- ENDIF -->
+
+<!-- IF CONTENT_TYPE -->
+<h2 class="forum-title">{CONTENT_TYPE}</h2>
+
+<div>{CONTENT_DESC}</div><br />
+<!-- ENDIF -->
+
+<div class="panel post cms-block-spacing">
+	<div class="inner">
+<!-- BEGIN topic_row -->
+		<div class="postbody pt-postbody">
+			<div class="content">
+			<!-- IF topic_row.CUSTOM_DISPLAY -->
+				{topic_row.CUSTOM_DISPLAY}
+			<!-- ELSE -->
+				<div class="calendar">{topic_row.TOPIC_DATE|date('d')} <em>{topic_row.TOPIC_DATE|date('M')}</em></div>
+				<h4 class="first"><a href="{topic_row.TOPIC_URL}">{topic_row.TOPIC_TITLE}</a></h4>
+				<div class="author">{topic_row.MINI_POST_IMG}<span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{topic_row.TOPIC_AUTHOR_FULL}</strong> &raquo; </span>{topic_row.TOPIC_DATE|date("m/d/Y")} </div><br />
+				{topic_row.SEQ_DISPLAY}
+				<p>&nbsp;</p>
+
+				<div class="buttons align-right">
+					<a href="{topic_row.TOPIC_URL}" class="button icon-button">{L_READ_MORE}</a>
+				</div>
+			<!-- ENDIF -->
+			</div>
+		</div>
+		<!-- IF not topic_row.S_LAST_ROW -->
+		<p>&nbsp;</p>
+		<hr />
+		<p>&nbsp;</p>
+		<!-- ENDIF -->
+<!-- BEGINELSE -->
+		{L_NO_TOPICS}
+<!-- END topic_row -->
+	</div>
+</div>
+
+<!-- IF .pagination or TOTAL_POSTS -->
+<div class="action-bar bottom">
+	<div class="pagination">
+		{TOTAL_POSTS} 
+		<!-- IF .pagination -->
+		<!-- INCLUDE pagination.html -->
+		<!-- ELSE -->
+		&bull; {PAGE_NUMBER}
+		<!-- ENDIF -->
+	</div>
+	<div class="clear"></div>
+</div>
+<!-- ENDIF -->
+
+<!-- IF not S_HIDE_HEADERS --><!-- INCLUDE overall_footer.html --><!-- ENDIF -->

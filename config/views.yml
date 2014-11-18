@@ -1,0 +1,48 @@
+services:
+
+    primetime.content.view.blog:
+        class: primetime\content\services\views\blog
+        arguments:
+            - @auth
+            - @cache
+            - @config
+            - @dbal.conn
+            - @template
+            - @user
+            - @primetime.content.displayer
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: content.view }
+
+    primetime.content.view.portal:
+        class: primetime\content\services\views\portal
+        arguments:
+            - @auth
+            - @cache
+            - @config
+            - @dbal.conn
+            - @template
+            - @user
+            - @primetime.content.displayer
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: content.view }
+
+    primetime.content.view.tiles:
+        class: primetime\content\services\views\tiles
+        arguments:
+            - @auth
+            - @cache
+            - @config
+            - @dbal.conn
+            - @request
+            - @template
+            - @user
+            - @primetime.content.displayer
+            - @primetime.primetime
+            - %core.root_path%
+            - %core.php_ext%
+        tags:
+            - { name: content.view }

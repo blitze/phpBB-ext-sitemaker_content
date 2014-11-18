@@ -1,0 +1,181 @@
+services:
+
+    primetime.content.form.field.checkbox:
+        class: primetime\content\services\form\field\checkbox
+        arguments:
+            - @request
+            - @user
+            - @primetime.primetime.template
+        tags:
+            - { name: form.field }
+
+    primetime.content.form.field.color:
+        class: primetime\content\services\form\field\color
+        arguments:
+            - @request
+            - @user
+            - @primetime.primetime.template
+        tags:
+            - { name: form.field }
+
+    primetime.content.form.field.date:
+        class: primetime\content\services\form\field\date
+        arguments:
+            - @request
+            - @user
+            - @primetime.primetime.template
+            - @primetime.primetime
+        tags:
+            - { name: form.field }
+
+    primetime.content.form.field.datetime:
+        class: primetime\content\services\form\field\datetime
+        arguments:
+            - @request
+            - @user
+            - @primetime.primetime.template
+            - @primetime.primetime
+        tags:
+            - { name: form.field }
+
+    primetime.content.form.field.editor:
+        class: primetime\content\services\form\field\editor
+        arguments:
+            - @request
+            - @user
+            - @primetime.primetime.template
+        tags:
+            - { name: form.field }
+
+    primetime.content.form.field.email:
+        class: primetime\content\services\form\field\email
+        arguments:
+            - @request
+            - @user
+            - @primetime.primetime.template
+        tags:
+            - { name: form.field }
+
+    primetime.content.form.field.hidden:
+        class: primetime\content\services\form\field\hidden
+        arguments:
+            - @user
+            - @primetime.primetime.template
+        tags:
+            - { name: form.field }
+
+    primetime.content.form.field.image:
+        class: primetime\content\services\form\field\image
+        arguments:
+            - @request
+            - @user
+            - @primetime.primetime.template
+        tags:
+            - { name: form.field }
+
+    primetime.content.form.field.number:
+        class: primetime\content\services\form\field\number
+        arguments:
+            - @request
+            - @user
+            - @primetime.primetime.template
+        tags:
+            - { name: form.field }
+
+    primetime.content.form.field.password:
+        class: primetime\content\services\form\field\password
+        arguments:
+            - @request
+            - @user
+            - @primetime.primetime.template
+        tags:
+            - { name: form.field }
+
+    primetime.content.form.field.radio:
+        class: primetime\content\services\form\field\radio
+        arguments:
+            - @request
+            - @user
+            - @primetime.primetime.template
+        tags:
+            - { name: form.field }
+
+    primetime.content.form.field.range:
+        class: primetime\content\services\form\field\range
+        arguments:
+            - @request
+            - @user
+            - @primetime.primetime.template
+        tags:
+            - { name: form.field }
+
+    primetime.content.form.field.reset:
+        class: primetime\content\services\form\field\reset
+        arguments:
+            - @user
+            - @primetime.primetime.template
+        tags:
+            - { name: form.field }
+
+    primetime.content.form.field.select:
+        class: primetime\content\services\form\field\select
+        arguments:
+            - @request
+            - @user
+            - @primetime.primetime.template
+        tags:
+            - { name: form.field }
+
+    primetime.content.form.field.submit:
+        class: primetime\content\services\form\field\submit
+        arguments:
+            - @user
+            - @primetime.primetime.template
+        tags:
+            - { name: form.field }
+
+    primetime.content.form.field.telephone:
+        class: primetime\content\services\form\field\telephone
+        arguments:
+            - @request
+            - @user
+            - @primetime.primetime.template
+        tags:
+            - { name: form.field }
+
+    primetime.content.form.field.text:
+        class: primetime\content\services\form\field\text
+        arguments:
+            - @request
+            - @user
+            - @primetime.primetime.template
+        tags:
+            - { name: form.field }
+
+    primetime.content.form.field.textarea:
+        class: primetime\content\services\form\field\textarea
+        arguments:
+            - @request
+            - @user
+            - @primetime.primetime.template
+        tags:
+            - { name: form.field }
+
+    primetime.content.form.field.time:
+        class: primetime\content\services\form\field\time
+        arguments:
+            - @request
+            - @user
+            - @primetime.primetime.template
+            - @primetime.primetime
+        tags:
+            - { name: form.field }
+
+    primetime.content.form.field.url:
+        class: primetime\content\services\form\field\url
+        arguments:
+            - @request
+            - @user
+            - @primetime.primetime.template
+        tags:
+            - { name: form.field }

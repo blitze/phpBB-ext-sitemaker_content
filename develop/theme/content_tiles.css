@@ -1,0 +1,37 @@
+/* Base styles */
+.tile-grid {
+	overflow: hidden;
+	margin-left: -10px;
+}
+
+.tile-grid .tile {
+	margin-left: 10px;
+}
+
+.tile-grid .item {
+	width: 33.33333%;
+}
+
+/* Configurate salvattore with media queries */
+@media screen and (max-width: 480px) {
+	.tile-grid .item {
+		width: 100%;
+	}
+}
+
+@media screen and (min-width: 481px) and (max-width: 768px) {
+	.tile-grid .item {
+		width: 50%;
+	}
+}
+@media screen and (min-width: 769px) {
+	.tile-grid .item {
+		width: 33.33333%;
+	}
+}
+
+.load_more {
+	font-weight: bold;
+	clear: both;
+	padding: 10px;
+}

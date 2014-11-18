@@ -1,6 +1,6 @@
 <!-- INCLUDE overall_header.html -->
 
-<!-- IF S_EDIT_TYPE -->
+<!-- IF S_EDIT -->
 
 	<form id="edit_type" method="post" action="{U_ACTION}">
 	<fieldset class="permissions">
@@ -9,7 +9,7 @@
 	<div class="permissions-category">
 		<ul>
 			<li class="activetab"><a id="ctype" class="ctab" href="#"><span class="tabbg">{L_CONTENT_TYPE}</span></a></li>
-			<li><a id="cfields" class="ctab" href="#"><span class="tabbg">{L_CONTENT_FIELDS}*</span></a></li>
+			<li><a id="cfields" class="ctab" href="#"><span class="tabbg">{L_CONTENT_PARTS}*</span></a></li>
 			<li><a id="ctemplates" class="ctab" href="#"><span class="tabbg">{L_FIELDS_TEMPLATE}</span></a></li>
 			<li><a id="csettings" class="ctab" href="#"><span class="tabbg">{L_CONTENT_SETTINGS}</span></a></li>
 		</ul>
@@ -26,20 +26,44 @@
 					<dd><input name="content_langname" type="text" id="content_langname" class="medium" maxlength="75" value="{LANGNAME}" /></dd>
 				</dl>
 				<dl>
-					<dt><label for="active">{L_CONTENT_ACTIVE}:</label></dt>
-					<dd><input type="radio" class="radio" id="active" name="active" value="1"<!-- IF S_ACTIVE --> checked="checked"<!-- ENDIF --> />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" name="active" value="0"<!-- IF not S_ACTIVE --> checked="checked"<!-- ENDIF --> />&nbsp;{L_NO}</dd>
-				</dl>
-				<dl>
-					<dt><label for="permission">{L_CONTENT_PERMISSION}:</label><br /><span>{L_PERMISSION_EXPLAIN}</span></dt>
-					<dd><input type="radio" class="radio" id="permission" name="permission" value="1"<!-- IF S_PERMISSIONS --> checked="checked"<!-- ENDIF --> />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" name="permission" value="0"<!-- IF not S_PERMISSIONS --> checked="checked"<!-- ENDIF --> />&nbsp;{L_NO}</dd>
-				</dl>
-				<dl>
 					<dt><label for="content_desc">{L_CONTENT_DESC}:</label><br /><span>{L_CONTENT_DESC_EXPLAIN}</span></dt>
 					<dd><textarea id="content_desc" name="content_desc" rows="5" cols="45">{CONTENT_DESC}</textarea></dd>
-					<dd><label><input type="checkbox" class="radio" name="desc_parse_bbcode"<!-- IF S_DESC_BBCODE_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_BBCODE}</label>
+					<dd>
+						<label><input type="checkbox" class="radio" name="desc_parse_bbcode"<!-- IF S_DESC_BBCODE_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_BBCODE}</label>
 						<label><input type="checkbox" class="radio" name="desc_parse_smilies"<!-- IF S_DESC_SMILIES_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_SMILIES}</label>
-						<label><input type="checkbox" class="radio" name="desc_parse_urls"<!-- IF S_DESC_URLS_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_URLS}</label></dd>
+						<label><input type="checkbox" class="radio" name="desc_parse_urls"<!-- IF S_DESC_URLS_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_URLS}</label>
+					</dd>
 				</dl>
+				<dl>
+					<dt><label for="index_show_desc">{L_SHOW_DESC_INDEX}:</label><br /><span>{L_SHOW_DESC_INDEX_EXPLAIN}</span></dt>
+					<dd>
+						<label><input type="radio" class="radio" id="index_show_desc" name="index_show_desc" value="1"<!-- IF S_INDEX_SHOW_DESC --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+						<label><input type="radio" class="radio" name="index_show_desc" value="0"<!-- IF not S_INDEX_SHOW_DESC --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+					</dd>
+				</dl>
+				<dl>
+					<dt><label for="content_enabled">{L_CONTENT_ENABLED}:</label></dt>
+					<dd>
+						<label><input type="radio" class="radio" id="content_enabled" name="content_enabled" value="1"<!-- IF S_ENABLED --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+						<label><input type="radio" class="radio" name="content_enabled" value="0"<!-- IF not S_ENABLED --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+					</dd>
+				</dl>
+				<dl>
+					<dt><label for="display_type">{L_DISPLAY_TYPE}:</label></dt>
+					<dd>
+						<!-- BEGIN view -->
+						<label><input type="radio" class="radio"<!-- IF view.S_FIRST_ROW --> id="display_type"<!-- ENDIF --> name="display_type" value="{view.VALUE}"<!-- IF view.S_SELECTED --> checked="checked"<!-- ENDIF --> /> {view.LABEL}</label><br />
+						<!-- END view -->
+					</dd>
+				</dl>
+				<!-- IF S_CAN_COPY_PERMISSIONS -->
+				<dl>
+					<dt><label for="copy_forum_perm">{L_COPY_PERMISSION}:</label><br /><span>{L_COPY_PERMISSION_EXPLAIN}</span></dt>
+					<dd>
+						<select name="copy_forum_perm" id="copy_forum_perm"><option value="">{L_NO_COPY_PERMISSIONS}</option>{S_FORUM_OPTIONS}</select>
+					</dd>
+				</dl>
+				<!-- ENDIF -->
 			</fieldset>
 		<span class="corners-bottom"><span></span></span>
 	</div>
@@ -50,7 +74,7 @@
 				<p style="text-align: right">
 					<button id="add-field">{L_ADD_FIELD}</button>
 				</p>
-				
+
 				<div id="fields-container">
 					<!-- INCLUDE content_fields.html -->
 				</div>
@@ -64,7 +88,7 @@
 	<div id="cctemplates" class="ctabcontent permissions-panel" style="display: none;">
 		<span class="corners-top"><span></span></span>
 			<fieldset class="permissions">
-				<div id="fields-template">
+				<div id="fields-template" class="full-width">
 					<div class="ui-tabs ui-widget tpl-tabs">
 						<ul class="rightside ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-corner-all">
 							<li id="custom-summary" class="toggle-tpl ui-state-default ui-corner-top"><a href="#">{L_SUMMARY_TEMPLATE}</a></li>
@@ -76,45 +100,41 @@
 					<div class="tpl-boxes ui-helper-reset ui-helper-clearfix ui-corner-all">
 						<div class="summary-tpl toggle-panel" id="custom-summary-tpl">
 							<fieldset>
-								<h3><a href="#">{L_SAMPLE_POST}</a></h3>
-								<p class="author">
-									<span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{POST_AUTHOR}</strong> &raquo; </span>{POST_DATE}
-								</p>
 								<p id="preview-summary" class="content"></p>
 							</fieldset>
-							<textarea id="tpl-custom-summary" class="custom-template" name="summary_tpl"></textarea>
+							<textarea id="tpl-custom-summary" class="custom-template" name="summary_tpl">{S_SUMMARY_TPL}</textarea>
 							<div style="width: 100%; height: 200px; position: relative" id="summary-editor"></div>
 							<p class="small">{L_SUMMARY_TEMPLATE_EXPLAIN}</p>
 						</div>
 
 						<div class="detail-tpl toggle-panel hide" id="custom-detail-tpl">
 							<fieldset>
-								<h3><a href="#">{L_SAMPLE_POST}</a></h3>
-								<p class="author">
-									<span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{POST_AUTHOR}</strong> &raquo; </span>{POST_DATE}
-								</p>
 								<p id="preview-detail" class="content"></p>
 							</fieldset>
-							<textarea id="tpl-custom-detail" class="editor custom-template" name="detail_tpl"></textarea>
+							<textarea id="tpl-custom-detail" class="editor custom-template" name="detail_tpl">{S_DETAIL_TPL}</textarea>
 							<div style="width: 100%; height: 200px; position: relative" id="detail-editor"></div>
 							<p class="small">{L_DETAIL_TEMPLATE_EXPLAIN}</p>
 						</div>
 					</div>
 				</div>
-				<div style="padding: 10px">
+				<div class="tpl-fields-container">
 					<div id="available-fields">
 						<!-- BEGIN field -->
-						<a class="button" href="#" title="{field.LABEL}" ftype="{field.S_TYPE}">{field.NAME}</a>&nbsp;
+						<a class="button" href="#" title="{field.FIELD_LABEL}" ftype="{field.FIELD_TYPE}">{field.FIELD_NAME}</a>
 						<!-- END field -->
 					</div>
 					<br />
 					<div id="post-info">
-						<a class="button" href="#" tag="POST_AUTHOR">{L_POST_AUTHOR}</a>&nbsp;
-						<a class="button" href="#" tag="POST_URL">{L_POST_URL}</a>&nbsp;
-						<a class="button" href="#" tag="POST_TIME">{L_POST_TIME}</a>&nbsp;
-						<a class="button" href="#" tag="POST_COMMENTS">{L_POST_COMMENTS}</a>&nbsp;
-						<a class="button" href="#" tag="POST_RATINGS">{L_POST_RATINGS}</a>&nbsp;
-						<a class="button" href="#" tag="POST_VIEWS">{L_POST_VIEWS}</a>
+						<a class="button" href="#" tag="TOPIC_TITLE">{L_TOPIC_TITLE}</a>
+						<a class="button" href="#" tag="TOPIC_URL">{L_TOPIC_URL}</a>
+						<a class="button" href="#" tag="TOPIC_AUTHOR">{L_TOPIC_AUTHOR}</a>
+						<a class="button" href="#" tag="TOPIC_AUTHOR_FULL">{L_TOPIC_AUTHOR_FULL}</a>
+						<a class="button" href="#" tag="TOPIC_AUTHOR_COLOUR">{L_TOPIC_AUTHOR_COLOUR}</a>
+						<a class="button" href="#" tag="TOPIC_AUTHOR_AVATAR">{L_TOPIC_AUTHOR_AVATAR}</a>
+						<a class="button" href="#" tag="TOPIC_AUTHOR_URL">{L_TOPIC_AUTHOR_URL}</a>
+						<a class="button" href="#" tag="TOPIC_DATE">{L_TOPIC_DATE}</a>
+						<a class="button" href="#" tag="TOPIC_COMMENTS">{L_TOPIC_COMMENTS}</a>
+						<a class="button" href="#" tag="TOPIC_VIEWS">{L_TOPIC_VIEWS}</a>
 					</div>
 				</div>
 			</fieldset>
@@ -124,48 +144,54 @@
 		<span class="corners-top"><span></span></span>
 			<fieldset>
 				<dl>
-					<dt><label for="display_type">{L_DISPLAY_TYPE}:</label></dt>
-					<dd><input type="radio" class="radio" name="display_type" value="0"<!-- IF S_DISPLAY eq 0 --> checked="checked"<!-- ENDIF --> />&nbsp;{L_BLOG}&nbsp;&nbsp;<input type="radio" class="radio" id="display_type" name="display_type" value="1"<!-- IF S_DISPLAY eq 1 --> checked="checked"<!-- ENDIF --> />&nbsp;{L_PORTAL}&nbsp;&nbsp;<input type="radio" class="radio" name="display_type" value="2"<!-- IF S_DISPLAY eq 2 --> checked="checked"<!-- ENDIF --> />&nbsp;{L_CATEGORY}&nbsp;&nbsp;<input type="radio" class="radio" name="display_type" value="3"<!-- IF S_DISPLAY eq 3 --> checked="checked"<!-- ENDIF --> />&nbsp;{L_AUTHOR}</dd>
-				</dl>
-				<dl>
 					<dt><label for="req_approval">{L_REQ_APPROVAL}:</label></dt>
-					<dd><input type="radio" class="radio" id="req_approval" name="req_approval" value="1"<!-- IF S_APPROVAL --> checked="checked"<!-- ENDIF --> />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" name="req_approval" value="0"<!-- IF not S_APPROVAL --> checked="checked"<!-- ENDIF --> />&nbsp;{L_NO}</dd>
+					<dd>
+						<label><input type="radio" class="radio" id="req_approval" name="req_approval" value="1"<!-- IF S_APPROVAL --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+						<label><input type="radio" class="radio" name="req_approval" value="0"<!-- IF not S_APPROVAL --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+					</dd>
 				</dl>
 				<dl>
 					<dt><label for="allow_comments">{L_ALLOW_COMMENTS}:</label></dt>
-					<dd><input type="radio" class="radio" id="allow_comments" name="allow_comments" value="1"<!-- IF S_COMMENTS --> checked="checked"<!-- ENDIF --> />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" name="allow_comments" value="0"<!-- IF not S_COMMENTS --> checked="checked"<!-- ENDIF --> />&nbsp;{L_NO}</dd>
-				</dl>
-				<dl>
-					<dt><label for="allow_ratings">{L_ALLOW_RATINGS}:</label></dt>
-					<dd><input type="radio" class="radio" id="allow_ratings" name="allow_ratings" value="1"<!-- IF S_RATINGS --> checked="checked"<!-- ENDIF --> />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" name="allow_ratings" value="0"<!-- IF not S_RATINGS --> checked="checked"<!-- ENDIF --> />&nbsp;{L_NO}</dd>
+					<dd>
+						<label><input type="radio" class="radio" id="allow_comments" name="allow_comments" value="1"<!-- IF S_COMMENTS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+						<label><input type="radio" class="radio" name="allow_comments" value="0"<!-- IF not S_COMMENTS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+					</dd>
 				</dl>
 				<dl>
 					<dt><label for="allow_urls">{L_SHOW_PAGINATION}:</label></dt>
-					<dd><input type="radio" class="radio" id="show_pagination" name="show_pagination" value="1"<!-- IF S_PAGINATION --> checked="checked"<!-- ENDIF --> />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" name="show_pagination" value="0"<!-- IF not S_PAGINATION --> checked="checked"<!-- ENDIF --> />&nbsp;{L_NO}</dd>
+					<dd>
+						<label><input type="radio" class="radio" id="show_pagination" name="show_pagination" value="1"<!-- IF S_PAGINATION --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+						<label><input type="radio" class="radio" name="show_pagination" value="0"<!-- IF not S_PAGINATION --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+					</dd>
 				</dl>
 				<dl>
 					<dt><label for="show_info">{L_SHOW_AUTHOR_INFO}:</label></dt>
-					<dd><input type="radio" class="radio" id="show_info" name="show_info" value="1"<!-- IF S_POSTER_INFO --> checked="checked"<!-- ENDIF --> />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" name="show_info" value="0"<!-- IF not S_POSTER_INFO --> checked="checked"<!-- ENDIF --> />&nbsp;{L_NO}</dd>
+					<dd>
+						<label><input type="radio" class="radio" id="show_info" name="show_info" value="1"<!-- IF S_POSTER_INFO --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+						<label><input type="radio" class="radio" name="show_info" value="0"<!-- IF not S_POSTER_INFO --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+					</dd>
 				</dl>
 				<dl>
 					<dt><label for="show_contents">{L_SHOW_AUTHOR_CONTENTS}:</label><br /><span>{L_AUTHOR_CONTENTS_EXPLAIN}</span></dt>
-					<dd><input type="radio" class="radio" id="show_contents" name="show_contents" value="1"<!-- IF S_POSTER_CONTENTS --> checked="checked"<!-- ENDIF --> />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" name="show_contents" value="0"<!-- IF not S_POSTER_CONTENTS --> checked="checked"<!-- ENDIF --> />&nbsp;{L_NO}</dd>
+					<dd>
+						<label><input type="radio" class="radio" id="show_contents" name="show_contents" value="1"<!-- IF S_POSTER_CONTENTS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+						<label><input type="radio" class="radio" name="show_contents" value="0"<!-- IF not S_POSTER_CONTENTS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+					</dd>
 				</dl>
 				<dl>
 					<dt><label for="allow_views">{L_DISPLAY_VIEWS}:</label><br /><span>{L_DISPLAY_VIEWS_EXPLAIN}</span></dt>
-					<dd><input type="radio" class="radio" id="allow_views" name="allow_views" value="1"<!-- IF S_VIEWS --> checked="checked"<!-- ENDIF --> />&nbsp;{L_YES}&nbsp;&nbsp;<input type="radio" class="radio" name="allow_views" value="0"<!-- IF not S_VIEWS --> checked="checked"<!-- ENDIF --> />&nbsp;{L_NO}</dd>
+					<dd>
+						<label><input type="radio" class="radio" id="allow_views" name="allow_views" value="1"<!-- IF S_VIEWS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+						<label><input type="radio" class="radio" name="allow_views" value="0"<!-- IF not S_VIEWS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+					</dd>
 				</dl>
 				<dl>
 					<dt><label for="items_per_page">{L_ITEMS_PER_PAGE}:</label></dt>
-					<dd><input type="text" id="items_per_page" class="small" maxlength="5" name="items_per_page" value="{PER_PAGE}" /></dd>
+					<dd><input type="text" id="items_per_page" class="small" maxlength="5" name="items_per_page" value="{ITEMS_PER_PAGE}" /></dd>
 				</dl>
 				<dl>
-					<dt><label for="max_display">{L_MAX_PER_CATEGORY}:</label><br /><span>{L_MAX_PER_CATEGORY_EXPLAIN}</span></dt>
-					<dd><input type="text" id="max_display" class="small" maxlength="5" name="max_display" value="{MAX_DISPLAY}" /></dd>
-				</dl>
-				<dl>
-					<dt><label for="char_limit">{L_TEASER_CHAR_LIMIT}:</label></dt>
-					<dd><input type="text" id="char_limit" class="small" maxlength="5" name="char_limit" value="{CHAR_LIMIT}" /></dd>
+					<dt><label for="topics_per_group">{L_TOPICS_PER_GROUP}:</label><br /><span>{L_TOPICS_PER_GROUP_EXPLAIN}</span></dt>
+					<dd><input type="text" id="topics_per_group" class="small" maxlength="5" name="topics_per_group" value="{TOPICS_PER_GROUP}" /></dd>
 				</dl>
 			</fieldset>
 		<span class="corners-bottom"><span></span></span>
@@ -241,7 +267,7 @@
 		</tr>
 	<!-- BEGIN types -->
 		<tr <!-- IF types.S_ROW_COUNT is even -->class="row1"<!-- ELSE -->class="row2"<!-- ENDIF -->>
-			<td><a target="_blank" href="{types.U_VIEW}">{types.CONTENT_NAME}</a></td>
+			<td><a target="_blank" href="{types.U_VIEW}">{types.CONTENT_TYPE}</a></td>
 			<td style="text-align: center; vertical-align: middle;">&nbsp;<!-- IF types.S_ENABLED --><a href="{types.U_DISABLE}">{L_DISABLE}</a><!-- ELSE --><a href="{types.U_ENABLE}">{L_ENABLE}</a><!-- ENDIF -->&nbsp;</td>
 			<td style="white-space: nowrap; text-align: center; vertical-align: middle;">
 				<a href="{types.U_POST}" title="{L_POST}"><img src="images/file_new.gif" border="0" alt="{L_POST}" /></a>&nbsp;
