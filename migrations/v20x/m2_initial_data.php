@@ -80,7 +80,7 @@ class m2_initial_data extends \phpbb\db\migration\migration
 	{
 		global $phpbb_container, $config;
 
-		$forum = $phpbb_container->get('primetime.forum.manager');
+		$forum = $phpbb_container->get('primetime.primetime.forum.manager');
 
 		$forum_data = array(
 			'forum_type'	=> FORUM_CAT,
