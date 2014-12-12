@@ -39,4 +39,6 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'MY_CONTENT'		=> 'My Content',
 	'MANAGE_CONTENT'	=> 'Manage Your Content',
+	'CONTENT_UPDATED'	=> 'Your content has been successfully saved',
+	'NO_CONTENT_TOPICS'	=> '<strong>There are no suitable topics to display!</strong><br />Either you have not posted any topics or you have applied filters that result in no topics to display.',
 ));

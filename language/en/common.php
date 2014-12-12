@@ -38,4 +38,6 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'LOAD_MORE'			=> 'Load more content',
+	'READ_MORE'			=> 'Read More',
+	'CONTENT_NO_TOPICS'	=> 'Sorry! No topics have been posted for this content type',
 ));

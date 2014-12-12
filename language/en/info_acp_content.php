@@ -191,6 +191,7 @@ $lang = array_merge($lang, array(
 	'INVALID_CONTENT_TYPE'		=> 'Oops! Invalid content type',
 	'NO_COMPATIBLE_TYPES'		=> '<strong>There are no suitable content types for transfer.</strong><br />To be compatible, this content type must have all content fields marked as <strong>required</strong>',
 	'NO_CONTENT_ID'				=> 'Oops! No content id specified',
+	'NO_CONTENT_TYPES'			=> 'No content types have been created',
 	'NO_CONTENT_FIELDS'			=> '<strong>No content field was entered.</strong><br />A content field is required for content to be created or displayed.',
 	'SUMMARY_TEMPLATE_EXPLAIN'	=> 'This template will be used to display content fields when viewing the topic exerpt. If a template is not provided, all fields will be displayed',
 	'DETAIL_TEMPLATE_EXPLAIN'	=> 'This template will be used to display the content fields when viewing the post body. If a template is not provided, all fields will be displayed',

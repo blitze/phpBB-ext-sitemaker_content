@@ -24,12 +24,11 @@ $lang = array_merge($lang, array(
 	'MAX_TOPICS'			=> 'Max Topics',
 	'OFFSET_START'			=> 'Offset start',
 	'ORDER_BY'				=> 'Order By',
-	'SELECT_CONTENT_TYPE'	=> 'Select Content Type',
 	'SELECT_FIELDS'			=> 'Select Fields',
 	'TOPIC_TIME'			=> 'Topic Time',
 	'TOPIC_TYPE'			=> 'Topic Type',
 	'TOPIC_VIEWS'			=> 'Topic Views',
-	'SELECT_CONTENT_TYPE'	=> 'Select content type',
+	'NO_CONTENT_TYPE'		=> 'No content types have been created',
 
 	// Block names
 	'PRIMETIME_CONTENT_BLOCK_ARCHIVE'	=> 'Content Archive',
