@@ -60,7 +60,7 @@
 					<dl>
 						<dt><label>{L_OPTIONS}:</label></dt>
 						<dd>
-							<!-- IF field.FIELD_TYPE == 'select' --><label><input type="checkbox" name="fsettings[{field.FIELD_NAME}][field_multi]" value="1"<!-- IF field.FIELD_MULTI --> checked="checked"<!-- ENDIF --> /> {L_MULTI_SELECT}</label><!-- ENDIF -->
+							<!-- IF field.FIELD_TYPE == 'select' --><label><input type="checkbox" class="field-multi" name="fsettings[{field.FIELD_NAME}][field_multi]" value="1"<!-- IF field.FIELD_MULTI --> checked="checked"<!-- ENDIF --> /> {L_MULTI_SELECT}</label><!-- ENDIF -->
 							<div id="{field.FIELD_NAME}-options-container">
 								<!-- BEGIN option -->
 								<div class="field-option">
