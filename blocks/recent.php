@@ -78,6 +78,7 @@ class recent extends \primetime\primetime\core\blocks\driver\block
 
 		$content_types = $this->displayer->get_all_types();
 
+		$type = '';
 		$content_type_options = $field_options = array();
 		foreach ($content_types as $type => $row)
 		{
@@ -119,16 +120,7 @@ class recent extends \primetime\primetime\core\blocks\driver\block
 	public function display($bdata, $edit_mode = false)
 	{
 		$this->settings = $bdata['settings'];
-
-		if (empty($this->settings['content_type']))
-		{
-			return array(
-				'title'		=> '',
-				'content'	=> ($edit_mode) ? $this->user->lang['SELECT_CONTENT_TYPE'] : '',
-			);
-		}
-
-		$enable_tracking = ($this->user->data['is_registered'] && $this->config['load_db_lastread'] && $this->settings['enable_tracking']) ? true : false;
+		$type = $this->settings['content_type'];
 
 		switch ($this->settings['topic_type'])
 		{
@@ -147,6 +139,17 @@ class recent extends \primetime\primetime\core\blocks\driver\block
 				$lang_var = $this->sort_options[$this->settings['sort_key']] . '_CONTENT';
 			break;
 		}
+		$block_title = 'Test'; //$this->user->lang[$lang_var];
+
+		if (empty($type))
+		{
+			return array(
+				'title'		=> $block_title,
+				'content'	=> ($edit_mode) ? $this->user->lang['NO_CONTENT_TYPE'] : '',
+			);
+		}
+
+		$enable_tracking = ($this->user->data['is_registered'] && $this->config['load_db_lastread'] && $this->settings['enable_tracking']) ? true : false;
 
 		$sort_keys = array(
 			self::SORT_TOPIC_TIME	=> 't.topic_time',
@@ -154,7 +157,6 @@ class recent extends \primetime\primetime\core\blocks\driver\block
 			self::SORT_TOPIC_READ	=> 't.topic_last_view_time'
 		);
 
-		$type = $this->settings['content_type'];
 		$type_data = $this->displayer->get_type($type);
 		$forum_id = $type_data['forum_id'];
 
@@ -199,7 +201,7 @@ class recent extends \primetime\primetime\core\blocks\driver\block
 			));
 
 			return array(
-				'title'		=> 'Test', //$this->user->lang[$lang_var],
+				'title'		=> $block_title,
 				'content'	=> $this->ptemplate->render_view('primetime/content', 'blocks/recent_content.html', 'recent_content_block')
 			);
 		}
