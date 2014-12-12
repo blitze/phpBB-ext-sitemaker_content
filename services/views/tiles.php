@@ -67,7 +67,7 @@ class tiles extends view
 			'js'   => array(
 				$asset_path . 'ext/primetime/content/assets/vendor/imagesloaded/imagesloaded.min.js',
 				$asset_path . 'ext/primetime/content/assets/vendor/masonry/masonry.min.js',
-				$asset_path . 'ext/primetime/content/assets/js/tiles.min.js',
+				$asset_path . 'ext/primetime/content/assets/scripts/tiles.min.js',
 			)
 		));
 	}
