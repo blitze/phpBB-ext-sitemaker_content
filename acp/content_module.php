@@ -492,7 +492,7 @@ class content_module
 						$data += array(
 							'TOKEN'			=> '{' . strtoupper($data['field_name']) . '}',
 							'TYPE_LABEL'	=> $l_type,
-							'DEFAULT_TYPE'	=> ($data['field_type'] == 'primetime.field.checkbox' || ($data['field_type'] == 'primetime.field.select' && $data['field_multi'])) ? 'checkbox' : 'radio',
+							'DEFAULT_TYPE'	=> ($data['field_type'] == 'checkbox' || ($data['field_type'] == 'select' && $data['field_multi'])) ? 'checkbox' : 'radio',
 						);
 
 						$this->template->assign_block_vars('field', array_change_key_case($data, CASE_UPPER));
@@ -541,12 +541,12 @@ class content_module
 					'js' => array(
 						'//ajax.googleapis.com/ajax/libs/jqueryui/' . JQUI_VERSION . '/jquery-ui.min.js',
 						'//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js',
-						$asset_path . 'ext/primetime/primetime/assets/js/t.js',
-						$asset_path . 'ext/primetime/content/assets/js/content_admin.min.js',
+						$asset_path . 'ext/primetime/primetime/assets/vendor/twig.js/twig.min.js',
+						$asset_path . 'ext/primetime/content/assets/scripts/content_admin.min.js',
 					),
 					'css'	=> array(
 						'//ajax.googleapis.com/ajax/libs/jqueryui/' . JQUI_VERSION . '/themes/smoothness/jquery-ui.css',
-						$asset_path . 'ext/primetime/content/assets/css/content_admin.min.css',
+						$asset_path . 'ext/primetime/content/assets/scripts/content_admin.min.css',
 					)
 				));
 

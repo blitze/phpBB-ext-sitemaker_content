@@ -1,131 +1,150 @@
-<div id="content-field-select" class="tpl" style="display: none;">
-	<dl id="[field_name]-options">
+<script id="content-field-select" class="tpl" type="text/x-jquery-tmpl">
+	<dl id="{% verbatim %}{{ field_name }}{% endverbatim %}-options">
 		<dt><label>{L_OPTIONS}</label></dt>
 		<dd>
-			<label><input class="field-multi" type="checkbox" name="fsettings[[field_name]][field_multi]" value="1" /> {L_MULTI_SELECT}</label>
-			<div id="[field_name]-options-container">
+			<label><input class="field-multi" type="checkbox" name="fsettings[{% verbatim %}{{ field_name }}{% endverbatim %}][field_multi]" value="1" /> {L_MULTI_SELECT}</label>
+			<div id="{% verbatim %}{{ field_name }}{% endverbatim %}-options-container">
 				<div class="field-option">
-					<input name="fdefaults[[field_name]][]" type="radio" class="field-defaults" value="" />
-					<input name="[field_name]_options[]" type="text" class="field-option ui-corner-all" value="" />
-					<a href="#" class="remove-option">{L_REMOVE}</a>
+					<label><input name="fdefaults[{% verbatim %}{{ field_name }}{% endverbatim %}][]" type="radio" class="field-defaults" value="" /></label>
+					<label><input name="{% verbatim %}{{ field_name }}{% endverbatim %}_options[]" type="text" class="field-option ui-corner-all" value="" /></label>
+					<label><a href="#" class="remove-option">{L_REMOVE}</a></label>
 				</div>
 			</div>
-			<p style="text-align: right"><a href="#" class="add-option option-radio ui-corner-all ui-state-default" id="add-option-[field_name]">{L_ADD_OPTION}</a></p>
+			<p style="text-align: right"><a href="#" class="add-option option-radio ui-corner-all ui-state-default" id="add-option-{% verbatim %}{{ field_name }}{% endverbatim %}">{L_ADD_OPTION}</a></p>
 		</dd>
 	</dl>
-</div>
+</script>
 
-<div id="content-field-radio" class="tpl" style="display: none;">
-	<dl id="[field_name]-options">
+<script id="content-field-radio" class="tpl" type="text/x-jquery-tmpl">
+	<dl id="{% verbatim %}{{ field_name }}{% endverbatim %}-options">
 		<dt><label>{L_OPTIONS}</label></dt>
 		<dd>
-			<div id="[field_name]-options-container">
+			<div id="{% verbatim %}{{ field_name }}{% endverbatim %}-options-container">
 				<div class="field-option">
-					<input name="fdefaults[[field_name]][]" type="radio" class="field-defaults" value="" />
-					<input name="[field_name]_options[]" type="text" class="field-option ui-corner-all" value="" />
-					<a href="#" class="remove-option">{L_REMOVE}</a>
+					<label><input name="fdefaults[{% verbatim %}{{ field_name }}{% endverbatim %}][]" type="radio" class="field-defaults" value="" /></label>
+					<label><input name="{% verbatim %}{{ field_name }}{% endverbatim %}_options[]" type="text" class="field-option ui-corner-all" value="" /></label>
+					<label><a href="#" class="remove-option">{L_REMOVE}</a></label>
 				</div>
 			</div>
-			<p style="text-align: right"><a href="#" class="add-option option-radio ui-corner-all ui-state-default" id="add-option-[field_name]">{L_ADD_OPTION}</a></p>
+			<p style="text-align: right"><a href="#" class="add-option option-radio ui-corner-all ui-state-default" id="add-option-{% verbatim %}{{ field_name }}{% endverbatim %}">{L_ADD_OPTION}</a></p>
 		</dd>
 	</dl>
-</div>
+</script>
 
-<div id="content-field-checkbox" class="tpl" style="display: none;">
-	<dl id="[field_name]-options">
+<script id="content-field-checkbox" class="tpl" type="text/x-jquery-tmpl">
+	<dl id="{% verbatim %}{{ field_name }}{% endverbatim %}-options">
 		<dt><label>{L_OPTIONS}</label></dt>
 		<dd>
-			<div id="[field_name]-options-container">
+			<div id="{% verbatim %}{{ field_name }}{% endverbatim %}-options-container">
 				<div class="field-option">
-					<input name="fdefaults[[field_name]][]" type="checkbox" class="field-defaults" value="" />
-					<input name="[field_name]_options[]" type="text" class="field-option ui-corner-all" value="" />
-					<a href="#" class="remove-option">{L_REMOVE}</a>
+					<label><input name="fdefaults[{% verbatim %}{{ field_name }}{% endverbatim %}][]" type="checkbox" class="field-defaults" value="" /></label>
+					<label><input name="{% verbatim %}{{ field_name }}{% endverbatim %}_options[]" type="text" class="field-option ui-corner-all" value="" /></label>
+					<label><a href="#" class="remove-option">{L_REMOVE}</a></label>
 				</div>
 			</div>
-			<p style="text-align: right"><a href="#" class="add-option option-checkbox ui-corner-all ui-state-default" id="add-option-[field_name]">{L_ADD_OPTION}</a></p>
+			<p style="text-align: right"><a href="#" class="add-option option-checkbox ui-corner-all ui-state-default" id="add-option-{% verbatim %}{{ field_name }}{% endverbatim %}">{L_ADD_OPTION}</a></p>
 		</dd>
 	</dl>
-</div>
+</script>
 
-<div id="content-field-editor" class="tpl" style="display: none;">
-	<dl id="[field_name]-options">
+<script id="content-field-editor" class="tpl" type="text/x-jquery-tmpl">
+	<dl id="{% verbatim %}{{ field_name }}{% endverbatim %}-options">
 		<dt><label>{L_INDEX_MAX_CHARS}</label></dt>
 		<dd>
-			<input name="fsettings[[field_name]][max_chars]" type="number" class="input" size="3" maxlength="4" value="0" /> {L_CHARS}
+			<label><input name="fsettings[{% verbatim %}{{ field_name }}{% endverbatim %}][max_chars]" type="number" class="input" size="3" maxlength="4" value="0" /> {L_CHARS}</label>
 		</dd>
 	</dl>
-</div>
+</script>
 
-<div id="content-field-textarea" class="tpl" style="display: none;">
-	<dl id="[field_name]-options">
+<script id="content-field-textarea" class="tpl" type="text/x-jquery-tmpl">
+	<dl id="{% verbatim %}{{ field_name }}{% endverbatim %}-options">
 		<dt><label>{L_INDEX_MAX_CHARS}</label></dt>
 		<dd>
-			<input name="fsettings[[field_name]][max_chars]" type="number" class="input" size="3" maxlength="4" value="0" /> {L_CHARS}
+			<label><input name="fsettings[{% verbatim %}{{ field_name }}{% endverbatim %}][max_chars]" type="number" class="input" size="3" maxlength="4" value="0" /> {L_CHARS}</label>
 		</dd>
 	</dl>
-</div>
+</script>
 
 <!-- EVENT content_field_setup_js -->
 
-<div id="content-field-option" class="tpl" style="display: none;">
-	<input name="fdefaults[[field_name]][]" type="checkbox" class="field-defaults" value="" />
-	<input name="[field_name]_options[]" type="text" class="field-option ui-corner-all" value="" />
-	<a href="#" class="remove-option">{L_REMOVE}</a>
-</div>
+<script id="content-field-option" class="tpl" type="text/x-jquery-tmpl">
+	<label><input name="fdefaults[{% verbatim %}{{ field_name }}{% endverbatim %}][]" type="checkbox" class="field-defaults" value="" /></label>
+	<label><input name="{% verbatim %}{{ field_name }}{% endverbatim %}_options[]" type="text" class="field-option ui-corner-all" value="" /></label>
+	<label><a href="#" class="remove-option">{L_REMOVE}</a></label>
+</script>
 
-<div id="content-field-settings" class="tpl" style="display: none;">
+<script id="content-field-settings" class="tpl" type="text/x-jquery-tmpl">
 	<dl>
 		<dt><label>{L_FIELD_LABEL}</label></dt>
 		<dd>
-			<input type="text" name="fdata[[field_name]][label]" class="field_label text ui-corner-all" value="[field_label]" />
-			<input type="hidden" name="fdata[[field_name]][name]" value="[field_name]" />
+			<input type="text" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][label]" class="field_label text ui-corner-all" value="{% verbatim %}{{ field_label }}{% endverbatim %}" />
+			<input type="hidden" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][name]" value="{% verbatim %}{{ field_name }}{% endverbatim %}" />
 		</dd>
 	</dl>
 	<dl>
-		<dt><label for="[field_name]_description">{L_FIELD_DESCRIPTION}:</label></dt>
+		<dt><label for="{% verbatim %}{{ field_name }}{% endverbatim %}_description">{L_FIELD_DESCRIPTION}:</label></dt>
 		<dd>
-			<textarea id="[field_name]_description" class="text ui-corner-all" rows="3" name="fdata[[field_name]][description]"></textarea>
+			<textarea id="{% verbatim %}{{ field_name }}{% endverbatim %}_description" class="text ui-corner-all" rows="3" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][description]"></textarea>
 		</dd>
 	</dl>
 	<dl>
-		<dt><label for="[field_name]_location">{L_FIELD_LOCATION}:</label></dt>
+		<dt><label for="{% verbatim %}{{ field_name }}{% endverbatim %}_location">{L_FIELD_LOCATION}:</label></dt>
 		<dd>
-			<label><input type="checkbox" class="checkbox" name="fdata[[field_name]][summary_show]" value="1" checked="checked" id="[field_name]_location" /> {L_FIELD_SUMMARY_SHOW}</label><br />
-			<label><input type="checkbox" class="checkbox" name="fdata[[field_name]][detail_show]" value="1" checked="checked" /> {L_FIELD_DETAIL_SHOW}</label>
+			<label><input type="checkbox" class="checkbox" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][summary_show]" value="1" checked="checked" id="{% verbatim %}{{ field_name }}{% endverbatim %}_location" /> {L_FIELD_SUMMARY_SHOW}</label><br />
+			<label><input type="checkbox" class="checkbox" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][detail_show]" value="1" checked="checked" /> {L_FIELD_DETAIL_SHOW}</label>
 		</dd>
 	</dl>
 	<dl>
-		<dt><label for="[field_name]_poster">{L_FIELD_POSTER}</label></dt>
+		<dt><label for="{% verbatim %}{{ field_name }}{% endverbatim %}_poster">{L_FIELD_POSTER}</label></dt>
 		<dd>
-			<label><input type="radio" id="[field_name]_poster" class="radio" name="fdata[[field_name]][input]" value="1" checked="checked" /> {L_FIELD_INPUT_AUTHOR}</label>
-			<label><input type="radio" class="radio" name="fdata[[field_name]][input]" value="0" /> {L_FIELD_INPUT_MODERATOR}</label><label>
+			<label><input type="radio" id="{% verbatim %}{{ field_name }}{% endverbatim %}_poster" class="radio" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][input]" value="1" checked="checked" /> {L_FIELD_INPUT_AUTHOR}</label>
+			<label><input type="radio" class="radio" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][input]" value="0" /> {L_FIELD_INPUT_MODERATOR}</label><label>
 		</dd>
 	</dl>
 	<dl>
-		<dt><label for="[field_name]_required">{L_FIELD_REQUIRED}</label></dt>
+		<dt><label for="{% verbatim %}{{ field_name }}{% endverbatim %}_required">{L_FIELD_REQUIRED}</label></dt>
 		<dd>
-			<label><input type="radio" id="[field_name]_required" class="radio" name="[field_name][required]" value="1" /> {L_YES}</label>
-			<label><input type="radio" class="radio" name="fdata[[field_name]][required]" value="0" checked="checked" /> {L_NO}</label>
+			<label><input type="radio" id="{% verbatim %}{{ field_name }}{% endverbatim %}_required" class="radio" name="{% verbatim %}{{ field_name }}{% endverbatim %}[required]" value="1" /> {L_YES}</label>
+			<label><input type="radio" class="radio" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][required]" value="0" checked="checked" /> {L_NO}</label>
 		</dd>
 	</dl>
 	<dl>
-		<dt><label for="[field_name]_summary_ldisp">{L_FIELD_DISPLAY_LABEL}:</label></dt>
+		<dt><label for="{% verbatim %}{{ field_name }}{% endverbatim %}_summary_ldisp">{L_FIELD_DISPLAY_LABEL}:</label></dt>
 		<dd>
 			<div class="column1">
 				<h5>{L_CONTENT_INDEX}</h5>
-				<label><input type="radio" class="radio" name="fdata[[field_name]][summary_ldisp]" value="0" checked="checked" id="[field_name]_summary_ldisp" /> {L_NO}</label><br />
-				<label><input type="radio" class="radio" name="fdata[[field_name]][summary_ldisp]" value="1" /> {L_LABEL_INLINE}</label><br />
-				<label><input type="radio" class="radio" name="fdata[[field_name]][summary_ldisp]" value="2" /> {L_LABEL_NEWLINE}</label>
+				<label><input type="radio" class="radio" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][summary_ldisp]" value="0" checked="checked" id="{% verbatim %}{{ field_name }}{% endverbatim %}_summary_ldisp" /> {L_NO}</label><br />
+				<label><input type="radio" class="radio" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][summary_ldisp]" value="1" /> {L_LABEL_INLINE}</label><br />
+				<label><input type="radio" class="radio" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][summary_ldisp]" value="2" /> {L_LABEL_NEWLINE}</label>
 			</div>
 			<div class="column2">
 				<h5>{L_CONTENT_DETAIL}</h5>
-				<label><input type="radio" class="radio" name="fdata[[field_name]][detail_ldisp]" value="0" id="[field_name]_detail_ldisp" /> {L_NO}</label><br />
-				<label><input type="radio" class="radio" name="fdata[[field_name]][detail_ldisp]" value="1" /> {L_LABEL_INLINE}</label><br />
-				<label><input type="radio" class="radio" name="fdata[[field_name]][detail_ldisp]" value="2" checked="checked" /> {L_LABEL_NEWLINE}</label>
+				<label><input type="radio" class="radio" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][detail_ldisp]" value="0" id="{% verbatim %}{{ field_name }}{% endverbatim %}_detail_ldisp" /> {L_NO}</label><br />
+				<label><input type="radio" class="radio" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][detail_ldisp]" value="1" /> {L_LABEL_INLINE}</label><br />
+				<label><input type="radio" class="radio" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][detail_ldisp]" value="2" checked="checked" /> {L_LABEL_NEWLINE}</label>
 			</div>
 		</dd>
 	</dl>
-</div>
+</script>
+
+<script id="content-field-row" class="tpl" type="text/x-jquery-tmpl">
+	{% verbatim %}
+	<div id="cfield-{{ field_name }}" class="field">
+		<h3 id="{{ field_name }}-header">
+			{{ field_label }}
+			<span class="small field-type">[ {{ type_label }} ]</span>
+		</h3>
+		<div id="{{ field_name }}-panel">{{ settings }}</div>
+	{% endverbatim %}
+		<div class="field-actions">
+			<a href="#" class="remove-field field-icon ui-dialog-titlebar-close ui-corner-all" title="{L_DELETE}"><span class="ui-icon ui-icon-closethick">{L_DELETE}</span></a>
+			<a href="#" class="edit-field field-icon ui-dialog-titlebar-close ui-corner-all" title="{L_EDIT}"><span class="ui-icon ui-icon-gear">{L_EDIT}</span></a>
+		</div>
+	{% verbatim %}
+		<input type="hidden" id="{{ field_name }}-type" name="fdata[{{ field_name }}][type]" value="{{ field_type }}" />
+	{% endverbatim %}
+	</div>
+</script>
 
 <div id="dialog-confirm-delete" title="{L_CONFIRM_DELETE}" style="display: none;">
 	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>{L_DELETE_FIELD_CONFIRM}</p>
@@ -178,7 +197,7 @@
 		fieldName: '{LA_MISSING_FIELD}',
 		fieldLabel: '{LA_MISSING_LABEL}'
 	};
-	var post_data	= {
+	var postData	= {
 		TOPIC_TITLE: '{LA_SAMPLE_POST}',
 		TOPIC_URL: '#',
 		TOPIC_AUTHOR: '{POST_AUTHOR}',
