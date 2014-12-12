@@ -170,21 +170,19 @@ class displayer extends types
 		);
 
 		$fields_data = array();
-		foreach ($this->type_fields as $fname => $row)
+		foreach ($this->type_fields as $field_name => $row)
 		{
-			$ftype	= $row['field_type'];
-			$fvalue	= &$post_field_data[$fname];
-			$fdisp	= $this->form_fields[$ftype]->display_field($fvalue, $row, $this->view, $topic_id);
+			$field_type		= $row['field_type'];
+			$field_value	= &$post_field_data[$field_name];
 
-			if (!$fdisp)
+			$field_contents	= $this->form_fields[$field_type]->display_field($field_value, $row, $this->view, $topic_id);
+
+			if (!$field_contents)
 			{
 				continue;
 			}
 
-			$fclass	= $label_class[$row['field_' . $this->view . '_ldisp']];
-			$fdisp	= '<div class="field-label ' . $fclass . '">' . $row['field_label'] . ': </div>' . $fdisp;
-
-			$fields_data[$fname] = $fdisp;
+			$fields_data[$field_name] = '<div class="field-label ' . $label_class[$row['field_' . $this->view . '_ldisp']] . '">' . $row['field_label'] . ': </div>' . $field_contents;
 		}
 
 		$topic_row = array_change_key_case(array_merge($topic_row, $fields_data), CASE_UPPER);
@@ -195,7 +193,7 @@ class displayer extends types
 		}
 		else
 		{
-			$topic_row['SEQ_DISPLAY'] = join('<br /><br />', $fields_data);
+			$topic_row['SEQ_DISPLAY'] = join('', $fields_data);
 		}
 		unset($fields_data, $post_field_data, $topic_data, $post_data, $row);
 
