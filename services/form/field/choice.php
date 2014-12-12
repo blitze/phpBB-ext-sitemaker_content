@@ -29,6 +29,15 @@ abstract class choice extends base
 	/**
 	 * @inheritdoc
 	 */
+	public function display_field($field_value, $fields_data = array(), $view = 'detail', $item_id = 0)
+	{
+		$field_value = array_filter(explode("<br />", $field_value));
+		return sizeof($field_value) ? join(', ', $field_value) . '<br /><br />' : '';
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function render_view($name, &$data, $item_id = 0)
 	{
 		$data += $this->get_default_props();

@@ -32,7 +32,7 @@ abstract class base implements field_interface
 	 */
 	public function display_field($field_value, $fields_data = array(), $view = 'detail', $item_id = 0)
 	{
-		return $field_value;
+		return ($field_value) ? $field_value . '<br /><br />' : '';
 	}
 
 	/**

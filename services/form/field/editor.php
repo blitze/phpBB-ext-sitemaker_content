@@ -58,7 +58,7 @@ class editor extends base
 			$value = $this->truncate->truncate($value, $data['max_chars']);
 		}
 
-		return $value;
+		return ($value) ? $value . '<br /><br />' : '';
 	}
 
 	/**
