@@ -1,15 +1,15 @@
 primetime_content_index:
-    pattern: /content/{type}
+    path: /content/{type}
     defaults: { _controller: primetime.content.display.controller:index, page: 1 }
 
 primetime_content_index_page:
-    pattern: /content/{type}/page/{page}
+    path: /content/{type}/page/{page}
     defaults: { _controller: primetime.content.display.controller:index }
     requirements:
         page: \d+
 
 primetime_content_show:
-    pattern: /content/{type}/{topic_id}/{slug}
+    path: /content/{type}/{topic_id}/{slug}
     defaults: { _controller: primetime.content.display.controller:show }
     requirements:
         topic_id: \d+
