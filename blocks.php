@@ -10,10 +10,6 @@
 /**
  * @ignore
  */
-if (!defined('IN_PHPBB'))
-{
-	exit;
-}
 
 /**
  * Get content types for block config
