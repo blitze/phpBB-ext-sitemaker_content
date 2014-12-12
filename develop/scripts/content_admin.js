@@ -10,48 +10,36 @@
 	var editor = {};
 
 	var addFieldOption = function(fieldName) {
-		var str = tplData.option;
 		var ocontainer = $('#' + fieldName + '-options-container');
-		var multi = ocontainer.prev().is(':checked');
+		var multi = ocontainer.parent().find('.field-multi').is(':checked');
 
-		str = str.replace(/\[fieldName\]/gi, fieldName);
-		ocontainer.append('<div class="field-option">' + str + '</div>').find('.field-defaults').attr('type', (multi) ? 'checkbox' : 'radio');
+		ocontainer.append('<div class="field-option">' + twig({ref: 'option'}).render({'field_name': fieldName}) + '</div>').find('.field-defaults').attr('type', (multi) ? 'checkbox' : 'radio');
 
 		return false;
 	};
 
 	var setField = function(fieldType, fieldTypeLabel, fieldName, fieldLabel) {
-
-		var str = tplData.settings;
 		var items = containerObj.children().length;
+		var data = {
+			'field_type': fieldType,
+			'type_label': fieldTypeLabel,
+			'field_name': fieldName,
+			'field_label': fieldLabel,
+			'settings': ''
+		};
 
-		if (tplData[fieldType] !== undefined) {
-			str += tplData[fieldType];
+		data.settings += twig({ref: 'settings'}).render(data);
+		if (twig({ref: fieldType}) !== null) {
+			data.settings += twig({ref: fieldType}).render(data);
 		}
 
-		str = str.replace(/\[fieldName\]/gi, fieldName);
-		str = str.replace(/\[fieldLabel\]/gi, fieldLabel);
-
-		var s = '';
-		s += '<div id="cfield-' + fieldName + '" class="field">';
-		s += '	<h3 id="' + fieldName + '-header">' + fieldLabel;
-		s += '		<span class="small field-type">[ ' + fieldTypeLabel + ' ]</span>';
-		s += '	</h3>';
-		s += '	<div id="' + fieldName + '-panel">' + str + '</div>';
-		s += '	<div class="field-actions">';
-		s += '		<a href="#" class="remove-field field-icon ui-dialog-titlebar-close ui-corner-all" title="' + trans.delete + '"><span class="ui-icon ui-icon-closethick">' + trans.delete + '</span></a>';
-		s += '		<a href="#" class="edit-field field-icon ui-dialog-titlebar-close ui-corner-all" title="' + trans.edit + '"><span class="ui-icon ui-icon-gear">' + trans.edit + '</span></a>';
-		s += '	</div>';
-		s += '	<input type="hidden" id="' + fieldName + '-type" name="fdata[' + fieldName + '][type]" value="' + fieldType + '" />';
-		s += '</div>';
-
-		containerObj.append(s).accordion('refresh').accordion('option', 'active', items);
+		containerObj.append(twig({ref: 'row'}).render(data)).accordion('refresh').accordion('option', 'active', items);
 		$('html,body').animate({scrollTop: $('#cfield-' + fieldName).offset().top}, '32000');
 	};
 
-	var editField = function(fid) {
-		if (fid) {
-			var tObj = $('#' + fid + '-type');
+	var editField = function(field) {
+		if (field) {
+			var tObj = $('#' + field + '-type');
 			var el = nTypeObj.children('option:selected');
 
 			var nType = el.val();
@@ -59,25 +47,25 @@
 
 			if (oType !== nType) {
 				var ops = ['radio', 'checkbox', 'select'];
-				var obj = $('#' + fid + '-header');
-				var currOps = $('#' + fid + '-options-container').html();
+				var obj = $('#' + field + '-header');
+				var currOps = $('#' + field + '-options-container').html();
 
 				// remove options
-				$('#' + fid + '-options').remove();
+				$('#' + field + '-options').remove();
 
-				if (tplData[nType] !== undefined) {
-					$('#' + fid + '-panel').append(tplData[nType].replace(/\[fieldName\]/gi, fid));
+				if (twig({ref: nType}) !== null) {
+					$('#' + field + '-panel').append(twig({ref: nType}).render({'field_name': field}));
 
 					// if new type is radio/checkbox/select, replace already entered options
 					if (ops && $.inArray(nType, ops) > -1) {
-						$('#' + fid + '-options-container').html(currOps).find('.field-defaults').attr('type', (nType === 'checkbox') ? 'checkbox' : 'radio');
+						$('#' + field + '-options-container').html(currOps).find('.field-defaults').attr('type', (nType === 'checkbox') ? 'checkbox' : 'radio');
 					}
 				}
 
 				tObj.val(nType);
 				obj.children('.field-type').text('[ ' + el.text() + ' ]');
 				containerObj.accordion('option', 'active', containerObj.children().index(obj.parent()));
-				$('html,body').animate({scrollTop: $('#cfield-' + fid).offset().top}, '32000');
+				$('html,body').animate({scrollTop: $('#cfield-' + field).offset().top}, '32000');
 			}
 		}
 	};
@@ -97,7 +85,7 @@
 			var ftype = $(this).parents('.ui-accordion-content').next().val();
 
 			buttons.push('<a class="button" href="' + label + '" title="' + label + '" ftype="' + ftype + '">' + field + '</a>');
-			fields.push('<p><b>' + label + ':</b> {' + field + '}</p>');
+			fields.push('<p><b>' + label + ':</b> {{ ' + field + ' }}</p>');
 		});
 
 		$('#available-fields').html(buttons.join('&nbsp;')).children('.button').button({disabled: false});
@@ -146,17 +134,6 @@
 		return (error1 || error2) ? true : false;
 	};
 
-	var parseTpl = function(str) {
-		for (var key in postData) {
-			var token = '{' + key + '}';
-			if (str.indexOf(token) > -1) {
-				str = str.replace(token, postData[key]);
-			}
-		}
-
-		return str;
-	};
-
 	$(document).ready(function() {
 		var removeObj = {};
 		var aButtons = {};
@@ -169,8 +146,10 @@
 
 		// collect all templates
 		$('.tpl').each(function() {
-			var tpl = $(this).attr('id').substring('14');
-			tplData[tpl] = $(this).html();
+			twig({
+				id: $(this).attr('id').substring('14'),
+				data: $(this).html()
+			});
 		});
 
 		fNameObj = $('#dialog-fieldname');
@@ -297,7 +276,7 @@
 		}).on('keyup', '.field-option input[type="text"]', function() {
 			$(this).prev().val($(this).val());
 		}).on('click', '.field-multi', function() {
-			$(this).next().find('.field-defaults').attr('type', $(this).is(':checked') ? 'checkbox' : 'radio');
+			$(this).parent().parent().find('.field-defaults').attr('type', $(this).is(':checked') ? 'checkbox' : 'radio');
 		});
 
 		$('body').on('click', '.toggle', function(e) {
@@ -334,24 +313,23 @@
 			editor[view].setShowPrintMargin(false);
 			editor[view].getSession().on('change', function() {
 				textarea[view].value = editor[view].getSession().getValue();
-				preview[view].html(parseTpl(textarea[view].value));
+				preview[view].html(twig({data: textarea[view].value}).render(postData));
 			});
 		});
 
 		$('#post-info > a.button').button({disabled: false}).click(function(e) {
 			e.preventDefault();
-			var tag = $(this).attr('tag');
-			editor[view].insert('{' + tag + '}');
+			editor[view].insert('{{ ' + $(this).attr('tag') + ' }}');
 		});
 
 		$('#available-fields').on('click', 'a.button', function(e) {
 			e.preventDefault();
-			var field = '{' + $(this).text().toUpperCase() + '}';
+			var field = '{{ ' + $(this).text().toUpperCase() + ' }}';
 			var ftype = $(this).attr('ftype');
 			editor[view].focus();
 
 			if (ftype === 'image') {
-				editor[view].insertHtml('<img class="cms-teaser-medium-image" src="' + field + '" />');
+				editor[view].insert('<img class="cms-teaser-medium-image" src="' + field + '" />');
 			} else {
 				editor[view].insert(field);
 			}
