@@ -512,7 +512,7 @@ class manager
 								$this->set_topic_data($post_data['topic_id'], $subject, $mod_data);
 							}
 
-							$message = $this->user->lang['CONTENT_UPDATED'] . '<br /><br />' . sprintf($this->user->lang['RETURN'], '<a href="' . $u_action . '">', '</a>');
+							$message = $this->user->lang['CONTENT_UPDATED'] . '<br /><br />' . sprintf($this->user->lang['RETURN_PAGE'], '<a href="' . $u_action . '">', '</a>');
 							trigger_error($message);
 							meta_refresh(3, $u_action);
 						}
