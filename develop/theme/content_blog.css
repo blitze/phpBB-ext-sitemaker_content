@@ -1,6 +1,5 @@
 /*
-* Based on tutorial by Joost de Valk - http://css-tricks.com/date-badges-and-comment-bubbles-for-your-blog/
-* Calendar icons provided by Marek Sotak - http://sotak.co.uk/calendar-icons-blog
+* Based on tutorial at http://cssglobe.com/drawing-calendar-icon-with-css3/
 */
 .calendar {
 	font: bold 30px/60px Arial Black, Arial, Helvetica, sans-serif;
@@ -20,13 +19,14 @@
 	background:    -moz-linear-gradient(top,  #ededef 0%, #ccc 100%); /* FF3.6+ */
 	background:     -ms-linear-gradient(top,  #ededef 0%,#ccc 100%); /* IE10+ */
 	background:      -o-linear-gradient(top,  #ededef 0%,#ccc 100%); /* Opera 11.10+ */
+	text-shadow: #fff 0 1px 0;
 	-webkit-box-shadow: 0 2px 2px #888;
 	   -moz-box-shadow: 0 2px 2px #888;
 	        box-shadow: 0 2px 2px #888;
-	text-shadow: #fff 0 1px 0;
 }
+
 .calendar em {
-	font: normal bold 11px/30px Arial, Helvetica, sans-serif;
+	font: bold 11px/30px Arial, Helvetica, sans-serif;
 	display: block;
 	color: #fff;
 	border-top: 1px solid #00365a;
@@ -44,6 +44,7 @@
 	background:      -o-linear-gradient(top,  #04599a 0%,#00365a 100%); /* Opera 11.10+ */
 	text-shadow: #00365a 0 -1px 0;
 }
+
 .calendar:before,
 .calendar:after {
 	position: absolute;
@@ -61,16 +62,19 @@
 	   -moz-box-shadow: 0 1px 1px #fff;
 	        box-shadow: 0 1px 1px #fff;
 }
+
 .calendar:before {
 	left: 11px;
 }
+
 .calendar:after {
 	right: 11px;
 }
+
 .calendar em:before,
 .calendar em:after {
 	position: absolute;
-	z-index: 1;
+	z-index: 2;
 	top: -5px;
 	float: left;
 	width: 4px;
@@ -86,9 +90,11 @@
 	background:     -ms-linear-gradient(top,  #f1f1f1 0%,#aaa 100%); /* IE10+ */
 	background:      -o-linear-gradient(top,  #f1f1f1 0%,#aaa 100%); /* Opera 11.10+ */
 }
+
 .calendar em:before {
 	left: 13px;
 }
+
 .calendar em:after {
 	right: 13px;
 }
