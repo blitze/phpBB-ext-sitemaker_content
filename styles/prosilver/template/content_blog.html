@@ -15,7 +15,7 @@
 			<!-- IF topic_row.CUSTOM_DISPLAY -->
 				{topic_row.CUSTOM_DISPLAY}
 			<!-- ELSE -->
-				<div class="calendar">{topic_row.TOPIC_DATE|date('d')} <em>{topic_row.TOPIC_DATE|date('M')}</em></div>
+				<div class="calendar">{topic_row.TOPIC_DATE|date('d')} <em>{topic_row.TOPIC_DATE|date('F')}</em></div>
 				<h4 class="first"><a href="{topic_row.TOPIC_URL}">{topic_row.TOPIC_TITLE}</a></h4>
 				<div class="author">{topic_row.MINI_POST_IMG}<span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{topic_row.TOPIC_AUTHOR_FULL}</strong> &raquo; </span>{topic_row.TOPIC_DATE|date("m/d/Y")} </div><br />
 				{topic_row.SEQ_DISPLAY}
@@ -33,7 +33,7 @@
 		<p>&nbsp;</p>
 		<!-- ENDIF -->
 <!-- BEGINELSE -->
-		{L_NO_TOPICS}
+		{L_CONTENT_NO_TOPICS}
 <!-- END topic_row -->
 	</div>
 </div>
