@@ -16,8 +16,8 @@ services:
         tags:
             - { name: primetime.block }
 
-    primetime.content.block.calendar:
-        class: primetime\content\blocks\calendar
+    primetime.content.block.calendr:
+        class: primetime\content\blocks\calendr
         arguments:
             - @config
             - @user
