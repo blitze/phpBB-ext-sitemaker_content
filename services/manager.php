@@ -339,6 +339,7 @@ class manager
 				$post_data = array(
 					'forum_id'			=> $forum_id,
 					'topic_id'			=> $topic_id,
+					'post_id'			=> 0,
 					'icon_id'			=> false,
 
 					'post_edit_locked'  => 0,
