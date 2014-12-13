@@ -63,6 +63,7 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
+			'core.user_setup'				=> 'load_block_language',
 			'core.search_get_posts_data'	=> 'modify_posts_data',
 			'core.search_get_topic_data'	=> 'modify_topic_data',
 			'core.search_modify_tpl_ary'	=> 'content_search',
@@ -70,6 +71,16 @@ class listener implements EventSubscriberInterface
 			'core.posting_modify_template_vars'				=> 'posting_redirect',
 			'core.viewonline_overwrite_location'			=> 'add_viewonline_location',
 		);
+	}
+
+	public function load_block_language($event)
+	{
+		$lang_set_ext = $event['lang_set_ext'];
+		$lang_set_ext[] = array(
+			'ext_name' => 'primetime/content',
+			'lang_set' => 'common',
+		);
+		$event['lang_set_ext'] = $lang_set_ext;
 	}
 
 	public function modify_posts_data($event)
