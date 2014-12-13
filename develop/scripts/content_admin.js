@@ -102,15 +102,17 @@
 	};
 
 	var checkRequired = function() {
-		var labels = '';
 		var name = $('#content_name').val();
 		var buttonObj = $('#fieldsubmit');
+		var missingLabels = 0;
 
-		$('.fieldLabel').each(function() {
-			labels = labels + $(this).val();
+		$('.field_label').each(function() {
+			if (!$(this).val().length) {
+				missingLabels++;
+			}
 		});
 
-		if (!labels || !name) {
+		if (missingLabels > 0 || !name) {
 			showTab(((!name) ? 'ctype' : 'cfields'));
 			buttonObj.attr('disabled', 'disabled').removeClass('button1');
 		} else {
