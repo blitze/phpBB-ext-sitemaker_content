@@ -11,7 +11,6 @@ namespace primetime\content\blocks;
 
 use Solution10\Calendar\Calendar;
 use Solution10\Calendar\Event;
-use Solution10\Calendar\Month;
 use Solution10\Calendar\Resolution\MonthResolution;
 
 class calendr extends \primetime\primetime\core\blocks\driver\block
@@ -61,7 +60,7 @@ class calendr extends \primetime\primetime\core\blocks\driver\block
 	{
 		$time = $this->user->create_datetime();
 
-		$calendar = new \Calendar($time);
+		$calendar = new Calendar($time);
 		$e = new Event('Standup and Finish very strong alltogether', new \DateTime('2014-10-2 10:00:00'), new \DateTime('2014-10-2 10:15:00'));
 		$calendar->addEvent($e);
 		$e = new Event('Finish', new \DateTime('2014-10-2 10:15:00'), new \DateTime('2014-10-2 10:15:00'));
