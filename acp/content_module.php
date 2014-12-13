@@ -55,7 +55,7 @@ class content_module
 
 	public function __construct()
 	{
-		global $auth, $cache, $config, $db, $request, $template, $user, $phpbb_root_path, $phpbb_admin_path, $php_ext, $phpbb_container;
+		global $auth, $cache, $config, $db, $request, $template, $user, $phpbb_root_path, $phpbb_admin_path, $phpEx, $phpbb_container;
 
 		$this->auth		= $auth;
 		$this->cache	= $cache;
@@ -71,7 +71,7 @@ class content_module
 		$this->primetime		= $phpbb_container->get('primetime.primetime');
 		$this->phpbb_admin_path	= $phpbb_admin_path;
 		$this->phpbb_root_path	= $phpbb_root_path;
-		$this->php_ext			= $php_ext;
+		$this->php_ext			= $phpEx;
 
 		$this->content_fields_table	= $phpbb_container->getParameter('tables.primetime.content_fields');
 		$this->content_types_table	= $phpbb_container->getParameter('tables.primetime.content_types');
@@ -617,9 +617,9 @@ class content_module
 						'U_ENABLE'		=> $this->u_action . '&amp;action=enable&amp;type=' . $row['content_name'],
 						'U_DISABLE'		=> $this->u_action . '&amp;action=disable&amp;type=' . $row['content_name'],
 						'U_VIEW'		=> $u_content_type,
-						'U_POST'		=> append_sid("{$this->phpbb_root_path}ucp.$this->php_ext", "i=-primetime-content-ucp-content_module&mode=content&action=post&type={$type}"),
-						'U_GROUP_PERMS'	=> append_sid("{$this->phpbb_admin_path}index.$this->php_ext", "i=permissions&mode=setting_group_global"),
-						'U_FORUM_PERMS'	=> append_sid("{$this->phpbb_admin_path}index.$this->php_ext", "i=permissions&mode=setting_forum_local&forum_id[]=$forum_id"))
+						'U_POST'		=> append_sid("{$this->phpbb_root_path}ucp." . $this->php_ext, "i=-primetime-content-ucp-content_module&amp;mode=content&amp;action=post&amp;type={$type}"),
+						'U_GROUP_PERMS'	=> append_sid("{$this->phpbb_admin_path}index." . $this->php_ext, "i=acp_permissions&amp;mode=setting_group_global"),
+						'U_FORUM_PERMS'	=> append_sid("{$this->phpbb_admin_path}index." . $this->php_ext, "i=acp_permissions&amp;mode=setting_forum_local&amp;forum_id[]=$forum_id"))
 					);
 				}
 
