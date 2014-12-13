@@ -136,7 +136,7 @@ class content_module
 						if ($forum_perm_from && $forum_perm_from != $forum_id)
 						{
 							copy_forum_permissions($forum_perm_from, $forum_id, false, false);
-							cache_moderators();
+							phpbb_cache_moderators($this->db, $this->cache, $this->auth);
 
 							$this->auth->acl_clear_prefetch();
 							$this->cache->destroy('sql', FORUMS_TABLE);
