@@ -186,7 +186,7 @@ $lang = array_merge($lang, array(
 	'CONFIRM_SWITCH_TO_TYPE'	=> '<strong>Are you sure you would like to change this post\'s content type?</strong><br />Note that if the new content type has more input fields you may need to provide the missing fields or lose data if the new content type has less fields.',
 	'CONFIRM_DELETE_TYPE'		=> 'Are you sure you would like to delete <strong>%s</strong>?<br />Keep in mind that this will delete all topics and posts for this content type, unless you transfer it to another content type.',
 	'CONVERTING_TYPE_EXPLAIN'	=> 'This page requires javascript and popups to be enabled. Please do not close the popup window. It may take from a few seconds to several minutes to completely transfer all posts to the new content type.',
-	'TRANSFER_TOPICS_EXPLAIN'	=> 'This will transfer all topics from this content type to the selected content type.', 
+	'TRANSFER_TOPICS_EXPLAIN'	=> 'This will transfer all topics from this content type to the selected content type.',
 	'SPECIAL_BBCODE_EXPLAIN'	=> '<strong>[page]yyy[/page] or [page=xxx]yyy[/page]</strong> - use this bbcode to break your content into pages where <strong>xxx</strong> is the page title and <strong>yyy</strong> is the page content',
 	'INVALID_CONTENT_TYPE'		=> 'Oops! Invalid content type',
 	'NO_COMPATIBLE_TYPES'		=> '<strong>There are no suitable content types for transfer.</strong><br />To be compatible, this content type must have all content fields marked as <strong>required</strong>',
@@ -196,5 +196,3 @@ $lang = array_merge($lang, array(
 	'SUMMARY_TEMPLATE_EXPLAIN'	=> 'This template will be used to display content fields when viewing the topic exerpt. If a template is not provided, all fields will be displayed',
 	'DETAIL_TEMPLATE_EXPLAIN'	=> 'This template will be used to display the content fields when viewing the post body. If a template is not provided, all fields will be displayed',
 ));
-
-?>
