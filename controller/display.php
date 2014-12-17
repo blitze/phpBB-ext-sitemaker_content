@@ -76,7 +76,6 @@ class display
 		$this->forum = $forum;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
-		$this->container = $phpbb_container;
 	}
 
 	public function index($type, $page)
@@ -88,13 +87,13 @@ class display
 			return $this->helper->error($this->user->lang['INVALID_CONTENT_TYPE']);
 		}
 
-		if ($this->container->has($type_data['display_type']))
+		if ($this->phpbb_container->has($type_data['display_type']))
 		{
-			$view = $this->container->get($type_data['display_type']);
+			$view = $this->phpbb_container->get($type_data['display_type']);
 		}
 		else
 		{
-			$view = $this->container->get('primetime.content.view.portal');
+			$view = $this->phpbb_container->get('primetime.content.view.portal');
 		}
 
 		$forum_id = (int) $type_data['forum_id'];
@@ -177,13 +176,13 @@ class display
 			return $this->helper->error($this->user->lang['INVALID_CONTENT_TYPE']);
 		}
 
-		if ($this->container->has('primetime.content.view.tiles'))
+		if ($this->phpbb_container->has('primetime.content.view.tiles'))
 		{
-			$view = $this->container->get('primetime.content.view.tiles');
+			$view = $this->phpbb_container->get('primetime.content.view.tiles');
 		}
 		else
 		{
-			$view = $this->container->get('primetime.content.view.portal');
+			$view = $this->phpbb_container->get('primetime.content.view.portal');
 		}
 
 		$navlinks[] = array(
