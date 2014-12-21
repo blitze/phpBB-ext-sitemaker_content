@@ -155,10 +155,10 @@ class displayer extends types
 
 		$topic_row = array(
 			'MINI_POST_IMG'			=> ($post_unread) ? $this->user->img('icon_post_target_unread', 'UNREAD_POST') : $this->user->img('icon_post_target', 'POST'),
-			'TOPIC_AUTHOR'			=> get_username_string('username', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
-			'TOPIC_AUTHOR_COLOUR'	=> get_username_string('colour', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
-			'TOPIC_AUTHOR_FULL'		=> get_username_string('full', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
-			'TOPIC_AUTHOR_URL'		=> get_username_string('profile', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
+			'TOPIC_AUTHOR'			=> $user_cache['author_username'],
+			'TOPIC_AUTHOR_COLOUR'	=> $user_cache['author_colour'],
+			'TOPIC_AUTHOR_FULL'		=> $user_cache['author_full'],
+			'TOPIC_AUTHOR_URL'		=> $user_cache['author_profile'],
 			'TOPIC_AUTHOR_AVATAR'	=> $user_cache['avatar'],
 
 			'S_UNREAD_POST'			=> $post_unread,
