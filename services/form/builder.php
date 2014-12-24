@@ -11,6 +11,12 @@ namespace primetime\content\services\form;
 
 class builder
 {
+	/** @var \phpbb\auth\auth */
+	protected $auth;
+
+	/** @var \phpbb\config\db */
+	protected $config;
+
 	/** @var \phpbb\template\context */
 	protected $template_context;
 
@@ -23,26 +29,54 @@ class builder
 	/** @var \primetime\primetime\core\block_template */
 	protected $ptemplate;
 
+	/** @var string */
+	protected $phpbb_root_path;
+
+	/** @var string */
+	protected $php_ext;
+
+	/** @var array */
 	protected $fields = array();
+
+	/** @var array */
 	protected $data = array();
+
+	/** @var array */
 	protected $form = array();
+
+	/** @var array */
+	protected $allowed_bbcodes = array();
+
+	/** @var array */
+	protected $custom_tags = array();
+
+	/** @var bool */
 	public $is_valid = false;
 
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\template\context					$context				Template context object
+	 * @param \phpbb\auth\auth							$auth					Auth object
+	 * @param \phpbb\config\db							$config					Config object
+	 * @param \phpbb\template\context					$template_context		Template context object
 	 * @param \phpbb\request\request_interface			$request				Request object
 	 * @param \phpbb\di\service_collection				$type_collection
 	 * @param \phpbb\user								$user					User object
 	 * @param \primetime\primetime\core\template		$ptemplate				Primetime template object
+	 * @param string									$phpbb_root_path		Path to the phpbb includes directory.
+	 * @param string									$php_ext			php file extension
 	 */
-	public function __construct(\phpbb\request\request_interface $request, \phpbb\di\service_collection $field_drivers, \phpbb\template\context $template_context, \phpbb\user $user, \primetime\primetime\core\template $ptemplate)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\db $config, \phpbb\request\request_interface $request, \phpbb\di\service_collection $field_drivers, \phpbb\template\context $template_context, \phpbb\user $user, \primetime\primetime\core\template $ptemplate, $phpbb_root_path, $php_ext)
 	{
+		$this->auth = $auth;
+		$this->config = $config;
 		$this->request = $request;
 		$this->template_context = $template_context;
 		$this->user = $user;
 		$this->ptemplate = $ptemplate;
+		$this->phpbb_root_path = $phpbb_root_path;
+		$this->php_ext = $php_ext;
+
 		$this->register_fields($field_drivers);
 
 		$this->user->add_lang_ext('primetime/content', 'form');
@@ -68,6 +102,18 @@ class builder
 		{
 			$obj = $this->fields[$type];
 
+			$field_data += $obj->get_default_props();
+
+			if ($type === 'textarea')
+			{
+				if ($field_data['editor'])
+				{
+					$this->ptemplate->assign_block_vars_array('custom_tags', $this->custom_tags);
+					$this->enable_editor = true;
+					$field_data += $this->allowed_bbcodes;
+				}
+			}
+
 			$field_data['field_type'] = $type;
 			$field_data['field_view'] = $obj->render_view($name, $field_data, $item_id);
 
@@ -77,12 +123,38 @@ class builder
 		return $this;
 	}
 
-	public function create($form_name, $action, $legend = '', $method = 'post')
+	public function create($form_name, $action, $legend = '', $method = 'post', $forum_id = 0)
 	{
+		$this->user->add_lang('posting');
+
 		add_form_key($form_name);
 
-		$rootref = $this->template_context->get_root_ref();
+		// HTML, BBCode, Smilies, Images and Flash status
+		if ($forum_id)
+		{
+			$img_status		= ($this->auth->acl_get('f_img', $forum_id)) ? true : false;
+			$url_status		= ($this->config['allow_post_links']) ? true : false;
+			$flash_status	= ($this->auth->acl_get('f_flash', $forum_id) && $this->config['allow_post_flash']) ? true : false;
+			$quote_status	= true;
 
+			$this->allowed_bbcodes['S_BBCODE_IMG']		= $img_status;
+			$this->allowed_bbcodes['S_BBCODE_FLASH']	= $flash_status;
+			$this->allowed_bbcodes['S_BBCODE_QUOTE']	= true;
+			$this->allowed_bbcodes['S_BBCODE_URL']		= $url_status;
+		}
+
+		// Assigning custom bbcodes
+		if (!function_exists('display_custom_bbcodes'))
+		{
+			include($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
+		}
+
+		display_custom_bbcodes();
+
+		$rootref = $this->template_context->get_root_ref();
+		$dataref = $this->template_context->get_data_ref();
+
+		$this->custom_tags = $dataref['custom_tags'];
 		$this->form = array(
 			'form_name'		=> $form_name,
 			'form_action'	=> $action,
@@ -90,7 +162,7 @@ class builder
 			'form_method'	=> $method,
 			'form_key'		=> $rootref['S_FORM_TOKEN'],
 		);
-		unset($rootref);
+		unset($rootref, $dataref);
 
 		return $this;
 	}
@@ -117,6 +189,12 @@ class builder
 			$this->ptemplate->assign_block_vars($key, array_change_key_case($row, CASE_UPPER));
 		}
 
+		$this->ptemplate->assign_vars(array(
+			'T_ASSETS_PATH'	=> $this->phpbb_root_path . 'assets',
+			'S_EDITOR'		=> $this->enable_editor,
+		));
+
+		$this->ptemplate->assign_block_vars_array('custom_tags', $this->custom_tags);
 		$this->ptemplate->assign_vars(array_change_key_case($this->form, CASE_UPPER));
 
 		return $this->ptemplate->render_view('primetime/content', 'form.html', 'form');

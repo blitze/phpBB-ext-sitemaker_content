@@ -1,1 +1,53 @@
-<textarea  name="{FIELD_NAME}" id="{FIELD_ID}" class="inputbox" rows="{FIELD_ROWS}" cols="{FIELD_COLS}"{FIELD_REQUIRED}>{FIELD_VALUE}</textarea>
+<script>
+	text_name = '{FIELD_NAME}';
+</script>
+<!-- IF EDITOR -->
+<!-- EVENT posting_editor_buttons_before -->
+<div style="margin: 15px 0 2px 0;">
+	<input type="button" class="button2 bbcode-b" accesskey="b" name="addbbcode0" value=" B " style="font-weight:bold; width: 30px" onclick="text_name='{FIELD_NAME}'; bbstyle(0)" title="{L_BBCODE_B_HELP}" />
+	<input type="button" class="button2 bbcode-i" accesskey="i" name="addbbcode2" value=" i " style="font-style:italic; width: 30px" onclick="text_name='{FIELD_NAME}'; bbstyle(2)" title="{L_BBCODE_I_HELP}" />
+	<input type="button" class="button2 bbcode-u" accesskey="u" name="addbbcode4" value=" u " style="text-decoration: underline; width: 30px" onclick="text_name='{FIELD_NAME}'; bbstyle(4)" title="{L_BBCODE_U_HELP}" />
+	<!-- IF S_BBCODE_QUOTE -->
+		<input type="button" class="button2 bbcode-quote" accesskey="q" name="addbbcode6" value="Quote" style="width: 50px" onclick="text_name='{FIELD_NAME}'; bbstyle(6)" title="{L_BBCODE_Q_HELP}" />
+	<!-- ENDIF -->
+	<input type="button" class="button2 bbcode-code" accesskey="c" name="addbbcode8" value="Code" style="width: 40px" onclick="text_name='{FIELD_NAME}'; bbstyle(8)" title="{L_BBCODE_C_HELP}" />
+	<input type="button" class="button2 bbcode-list" accesskey="l" name="addbbcode10" value="List" style="width: 40px" onclick="text_name='{FIELD_NAME}'; bbstyle(10)" title="{L_BBCODE_L_HELP}" />
+	<input type="button" class="button2 bbcode-list-" accesskey="o" name="addbbcode12" value="List=" style="width: 40px" onclick="text_name='{FIELD_NAME}'; bbstyle(12)" title="{L_BBCODE_O_HELP}" />
+	<input type="button" class="button2 bbcode-asterisk" accesskey="y" name="addlistitem" value="[*]" style="width: 40px" onclick="text_name='{FIELD_NAME}'; bbstyle(-1)" title="{L_BBCODE_LISTITEM_HELP}" />
+	<!-- IF S_BBCODE_IMG -->
+		<input type="button" class="button2 bbcode-img" accesskey="p" name="addbbcode14" value="Img" style="width: 40px" onclick="text_name='{FIELD_NAME}'; bbstyle(14)" title="{L_BBCODE_P_HELP}" />
+	<!-- ENDIF -->
+	<!-- IF S_BBCODE_URL -->
+		<input type="button" class="button2 bbcode-url" accesskey="w" name="addbbcode16" value="URL" style="text-decoration: underline; width: 40px" onclick="text_name='{FIELD_NAME}'; bbstyle(16)" title="{L_BBCODE_W_HELP}" />
+	<!-- ENDIF -->
+	<!-- IF S_BBCODE_FLASH -->
+		<input type="button" class="button2 bbcode-flash" accesskey="d" name="addbbcode18" value="Flash" onclick="text_name='{FIELD_NAME}'; bbstyle(18)" title="{L_BBCODE_D_HELP}" />
+	<!-- ENDIF -->
+	<select name="addbbcode20" class="bbcode-size" onchange="text_name='{FIELD_NAME}'; bbfontstyle('[size=' + this.options[this.selectedIndex].value + ']', '[/size]');this.selectedIndex = 2;" title="{L_BBCODE_F_HELP}">
+		<option value="50">{L_FONT_TINY}</option>
+		<option value="85">{L_FONT_SMALL}</option>
+		<option value="100" selected="selected">{L_FONT_NORMAL}</option>
+		<!-- IF not MAX_FONT_SIZE or MAX_FONT_SIZE >= 150 -->
+			<option value="150">{L_FONT_LARGE}</option>
+			<!-- IF not MAX_FONT_SIZE or MAX_FONT_SIZE >= 200 -->
+				<option value="200">{L_FONT_HUGE}</option>
+			<!-- ENDIF -->
+		<!-- ENDIF -->
+	</select>
+	<input type="button" class="button2 bbcode-color" name="bbpalette" id="{FIELD_NAME}_bbpalette" value="{L_FONT_COLOR}" onclick="text_name='{FIELD_NAME}'; change_palette('{FIELD_NAME}');" title="{L_BBCODE_S_HELP}" />
+
+	<!-- EVENT posting_editor_buttons_custom_tags_before -->
+
+	<!-- BEGIN custom_tags -->
+		<input type="button" class="button2 bbcode-{custom_tags.BBCODE_TAG_CLEAN}" name="addbbcode{custom_tags.BBCODE_ID}" value="{custom_tags.BBCODE_TAG}" onclick="text_name='{FIELD_NAME}'; bbstyle({custom_tags.BBCODE_ID})" title="{custom_tags.BBCODE_HELPLINE}" />
+	<!-- END custom_tags -->
+</div>
+<!-- EVENT posting_editor_buttons_after -->
+<div id="{FIELD_NAME}_colour_palette" style="display: none;">
+	<dl style="clear: left;">
+		<dt><label>{L_FONT_COLOR}{L_COLON}</label></dt>
+		<dd id="color_palette_placeholder" class="color_palette" data-editor="{FIELD_NAME}" data-orientation="h" data-height="12" data-width="15" data-bbcode="true"></dd>
+	</dl>
+</div>
+<!-- ENDIF -->
+<textarea name="{FIELD_NAME}" id="{FIELD_ID}" rows="{FIELD_ROWS}" cols="{FIELD_COLUMNS}"{FIELD_REQUIRED} style="width: 99%"<!-- IF EDITOR --> onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" data-bbcode="true"<!-- ENDIF -->>{FIELD_VALUE}</textarea>
