@@ -2,10 +2,10 @@
 * Based on tutorial at http://cssglobe.com/drawing-calendar-icon-with-css3/
 */
 .calendar {
-	font: bold 30px/60px Arial Black, Arial, Helvetica, sans-serif;
+	font: bold 20px/40px Arial Black, Arial, Helvetica, sans-serif;
 	position: relative;
 	float: left;
-	width: 80px;
+	width: 50px;
 	margin: 0.25em 10px 10px 0;
 	padding-top: 5px;
 	text-align: center;
@@ -49,10 +49,10 @@
 .calendar:after {
 	position: absolute;
 	z-index: 1;
-	top: 5px;
+	top: 4px;
 	float: left;
-	width: 8px;
-	height: 8px;
+	width: 6px;
+	height: 6px;
 	content: '';
 	-webkit-border-radius: 10px;
 	   -moz-border-radius: 10px;
@@ -64,21 +64,21 @@
 }
 
 .calendar:before {
-	left: 11px;
+	left: 7px;
 }
 
 .calendar:after {
-	right: 11px;
+	right: 7px;
 }
 
 .calendar em:before,
 .calendar em:after {
 	position: absolute;
 	z-index: 2;
-	top: -5px;
+	top: -3px;
 	float: left;
-	width: 4px;
-	height: 14px;
+	width: 2px;
+	height: 10px;
 	content: '';
 	-webkit-border-radius: 2px;
 	   -moz-border-radius: 2px;
@@ -92,9 +92,9 @@
 }
 
 .calendar em:before {
-	left: 13px;
+	left: 9px;
 }
 
 .calendar em:after {
-	right: 13px;
+	right: 9px;
 }
