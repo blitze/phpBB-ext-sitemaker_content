@@ -49,15 +49,6 @@ abstract class duration extends base
 			)
 		));
 
-		$data += $this->get_default_props();
-
-		$field = $this->get_name();
-		$data['field_name'] = $name;
-		$data['field_value'] = $this->get_field_value($name, $data['field_value']);
-		$data['field_required']	= ($data['field_required']) ? ' required' : '';
-
-		$this->ptemplate->assign_vars(array_change_key_case($data, CASE_UPPER));
-
-		return $this->ptemplate->render_view('primetime/content', "fields/$field.html", $field . '_field');
+		return parent::render_view($name, $data, $item_id);
 	}
 }

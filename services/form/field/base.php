@@ -40,8 +40,6 @@ abstract class base implements field_interface
 	 */
 	public function render_view($name, &$data, $item_id = 0)
 	{
-		$data += $this->get_default_props();
-
 		$field = $this->get_name();
 		$data['field_name'] = $name;
 		$data['field_value'] = $this->get_field_value($name, $data['field_value']);
