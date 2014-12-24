@@ -18,7 +18,7 @@ class blog extends view
 
 	public function get_langname()
 	{
-		return 'BLOG';
+		return 'CONTENT_DISPLAY_BLOG';
 	}
 
 	public function get_index_template()

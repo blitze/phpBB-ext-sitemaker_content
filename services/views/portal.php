@@ -18,7 +18,7 @@ class portal extends view
 
 	public function get_langname()
 	{
-		return 'PORTAL';
+		return 'CONTENT_DISPLAY_PORTAL';
 	}
 
 	public function get_index_template()

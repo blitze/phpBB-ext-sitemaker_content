@@ -47,7 +47,7 @@ class tiles extends view
 
 	public function get_langname()
 	{
-		return 'TILES';
+		return 'CONTENT_DISPLAY_TILES';
 	}
 
 	public function get_index_template()
