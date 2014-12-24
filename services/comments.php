@@ -259,7 +259,7 @@ class comments implements comments_interface
 				submit_post($action, $topic_data['topic_title'], $this->user->data['username'], POST_NORMAL, $poll, $post_data);
 
 				$post_id = $post_data['post_id'];
-				$redirect_url = $current_page . "p=$post_id#p$post_id"; 
+				$redirect_url = $current_page . "p=$post_id#p$post_id";
 				$message = $this->user->lang['COMMENT_POSTED'] . '<br /><br />' . sprintf($this->user->lang['RETURN_PAGE'], '<a href="' . $redirect_url . '">', '</a>');
 				$this->helper->error($message);
 				meta_refresh(3, $redirect_url);
