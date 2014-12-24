@@ -165,7 +165,7 @@ class display
 		return $this->helper->render($view->get_index_template(), $content_langname);
 	}
 
-	public function show($type, $topic_id, $slug)
+	public function show($type, $topic_id, $slug, $page)
 	{
 		$this->user->add_lang_ext('primetime/content', 'content');
 
@@ -241,6 +241,12 @@ class display
 		if ($type_data['show_poster_contents'])
 		{
 			$this->get_author_contents($topic_data, $type, $type_data['content_langname']);
+		}
+
+		if ($type_data['allow_comments'])
+		{
+			$comments = $this->phpbb_container->get('primetime.content.comments');
+			$comments->show($type, $topic_data, $page);
 		}
 		unset($type_data, $topic_data, $post_data, $users_cache, $topic_tracking_info, $tpl_data);
 

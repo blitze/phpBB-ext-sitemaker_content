@@ -52,7 +52,8 @@ $lang = array_merge($lang, array(
 
 	'SEARCH_USER_POSTS'		=> 'Search all posts by %s',
 	'VIEW_AUTHOR_CONTENTS'	=> 'View all %1$s (items) by %2$s',
-	'POST_COMMENT'			=> 'Leave a Comment',
+	'NEW_COMMENT'			=> 'Leave a Comment',
+	'POST_COMMENT'			=> 'Post Comment',
 	'EDIT_REASON'			=> 'Edit Reason',
 
 	'NO_CONTENT_TYPES'			=> 'There are no existing content types',

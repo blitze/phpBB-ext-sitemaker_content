@@ -10,6 +10,12 @@ primetime_content_index_page:
 
 primetime_content_show:
     path: /content/{type}/{topic_id}/{slug}
-    defaults: { _controller: primetime.content.display.controller:show }
+    defaults: { _controller: primetime.content.display.controller:show, page: 1 }
     requirements:
         topic_id: \d+
+
+primetime_content_comments_page:
+    path: /content/{type}/{topic_id}/{slug}/comments/page/{page}
+    defaults: { _controller: primetime.content.display.controller:show }
+    requirements:
+        page: \d+

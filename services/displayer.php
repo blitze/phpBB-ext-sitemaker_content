@@ -34,6 +34,9 @@ class displayer extends types
 	/** @var \phpbb\user */
 	protected $user;
 
+	/** @var \primetime\cotent\services\comments */
+	protected $comments;
+
 	/** @var field object collection */
 	protected $form_fields;
 
@@ -65,11 +68,12 @@ class displayer extends types
 	 * @param Container										$phpbb_container		Service container
 	 * @param \phpbb\template\template						$template				Template object
 	 * @param \phpbb\user									$user					User object
+	 * @param \primetime\cotent\services\comments			$comments				Comments object
 	 * @param string										$root_path				phpBB root path
 	 * @param string										$fields_table			Name of content fields database table
 	 * @param string										$types_table			Name of content types database table
 	 */
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, Container $phpbb_container, \phpbb\template\template $template, \phpbb\user $user, $root_path, $fields_table, $types_table)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, Container $phpbb_container, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\comments $comments, $root_path, $fields_table, $types_table)
 	{
 		parent::__construct($cache, $config, $db, $fields_table, $types_table);
 
@@ -80,6 +84,7 @@ class displayer extends types
 		$this->phpbb_container		= $phpbb_container;
 		$this->template				= $template;
 		$this->user					= $user;
+		$this->comments				= $comments;
 		$this->root_path			= $root_path;
 	}
 
@@ -164,7 +169,7 @@ class displayer extends types
 			'S_UNREAD_POST'			=> $post_unread,
 
 			'TOPIC_TITLE'			=> $topic_title,
-			'TOPIC_COMMENTS'		=> $this->content_visibility->get_count('topic_posts', $row, $row['forum_id']) - 1,
+			'TOPIC_COMMENTS'		=> $this->comments->count($topic_data),
 			'TOPIC_DATE'			=> $this->user->format_date($row['topic_time']),
 			'TOPIC_URL'				=> $topic_url,
 		);

@@ -47,6 +47,9 @@ class manager
 	/** @var \phpbb\user */
 	protected $user;
 
+	/** @var \primetime\cotent\services\comments */
+	protected $comments;
+
 	/* @var \primetime\content\services\displayer */
 	protected $displayer;
 
@@ -79,13 +82,14 @@ class manager
 	 * @param \phpbb\request\request_interface			$request			Request object
 	 * @param \phpbb\template\template					$template			Template object
 	 * @param \phpbb\user								$user				User object
+	 * @param \primetime\cotent\services\comments		$comments			Comments object
 	 * @param \primetime\content\services\displayer		$displayer			Content displayer object
 	 * @param \primetime\content\services\form\builder	$form				Form object
 	 * @param \primetime\primetime\core\forum\query		$forum				Forum object
 	 * @param string									$phpbb_root_path	Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, Container $phpbb_container, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\displayer $displayer, \primetime\content\services\form\builder $form, \primetime\primetime\core\forum\query $forum, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, Container $phpbb_container, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\comments $comments, \primetime\content\services\displayer $displayer, \primetime\content\services\form\builder $form, \primetime\primetime\core\forum\query $forum, $phpbb_root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->cache = $cache;
@@ -98,6 +102,7 @@ class manager
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
+		$this->comments = $comments;
 		$this->displayer = $displayer;
 		$this->form = $form;
 		$this->forum = $forum;
@@ -201,6 +206,7 @@ class manager
 				$topic_data = array_shift($topic_data);
 				$forum_id = $topic_data['forum_id'];
 				$type = $content_forum[$forum_id];
+				$type_data = $content_types[$type];
 
 				$row = $this->forum->get_post_data('first');
 				$user_cache = $this->forum->get_posters_info();
@@ -293,14 +299,14 @@ class manager
 					'DELETED_MESSAGE'		=> $l_deleted_by,
 					'DELETE_REASON'			=> $row['post_delete_reason'],
 
-					'U_INFO'				=> ($this->auth->acl_get('m_info', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", "i=main&amp;mode=post_details&amp;f=$forum_id&amp;p=" . $row['post_id'], true, $this->user->session_id) : '',
-					'U_MCP_REPORT'			=> ($this->auth->acl_get('m_report', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=reports&amp;mode=report_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
-					'U_MCP_APPROVE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=queue&amp;mode=approve_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
-					'U_MCP_RESTORE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=queue&amp;mode=' . (($topic_data['topic_visibility'] != ITEM_DELETED) ? 'deleted_posts' : 'deleted_topics') . '&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
-					'U_NOTES'				=> ($this->auth->acl_getf_global('m_')) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=notes&amp;mode=user_notes&amp;u=' . $poster_id, true, $this->user->session_id) : '',
-					'U_WARN'				=> ($this->auth->acl_get('m_warn') && $poster_id != $this->user->data['user_id'] && $poster_id != ANONYMOUS) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=warn&amp;mode=warn_post&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
+					'U_INFO'				=> ($this->auth->acl_get('m_info', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", "i=main&amp;mode=post_details&amp;f=$forum_id&amp;p=" . $row['post_id'], true, $this->user->session_id) : '',
+					'U_MCP_REPORT'			=> ($this->auth->acl_get('m_report', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=reports&amp;mode=report_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
+					'U_MCP_APPROVE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=queue&amp;mode=approve_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
+					'U_MCP_RESTORE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=queue&amp;mode=' . (($topic_data['topic_visibility'] != ITEM_DELETED) ? 'deleted_posts' : 'deleted_topics') . '&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
+					'U_NOTES'				=> ($this->auth->acl_getf_global('m_')) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=notes&amp;mode=user_notes&amp;u=' . $poster_id, true, $this->user->session_id) : '',
+					'U_WARN'				=> ($this->auth->acl_get('m_warn') && $poster_id != $this->user->data['user_id'] && $poster_id != ANONYMOUS) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=warn&amp;mode=warn_post&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
 
-					'U_APPROVE_ACTION'		=> append_sid("{$this->root_path}mcp.$this->php_ext", "i=queue&amp;p={$row['post_id']}&amp;f=$forum_id&amp;redirect=" . urlencode(str_replace('&amp;', '&', $viewtopic_url . '&amp;p=' . $row['post_id'] . '#p' . $row['post_id']))),
+					'U_APPROVE_ACTION'		=> append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", "i=queue&amp;p={$row['post_id']}&amp;f=$forum_id&amp;redirect=" . urlencode(str_replace('&amp;', '&', $viewtopic_url . '&amp;p=' . $row['post_id'] . '#p' . $row['post_id']))),
 					'U_EDIT'				=> $edit_url,
 					'U_DELETE'				=> ($delete_allowed) ? $u_action . "&amp;action=delete&amp;type=$type&amp;t=$topic_id" : '',
 				);
@@ -382,7 +388,7 @@ class manager
 					$post_data = array_merge($post_data, $this->user->data);
 				}
 
-				$this->form->create('postform', $u_action . "&action=$action&t=$topic_id")
+				$this->form->create('postform', $u_action . "&action=$action&t=$topic_id", '', 'post', $forum_id)
 					->add('subject', 'text', array('field_id' => 'topic-subject', 'field_label' => $this->user->lang['CONTENT_TITLE'], 'field_size' => 65, 'field_value' => $subject, 'field_required' => true));
 
 				$mod_only_required = $mod_only_content = array();
@@ -842,7 +848,7 @@ class manager
 						'TOPIC_TYPE'			=> $topic_type,
 						'TOPIC_TITLE'			=> $topic_title,
 						'TOPIC_STATUS'			=> $this->user->lang['TOPIC_' . strtoupper($topic_status)],
-						'REPLIES'				=> $this->content_visibility->get_count('topic_posts', $row, $forum_id) - 1,
+						'REPLIES'				=> $this->comments->count($row),
 						'LAST_POST_TIME'		=> $this->user->format_date($row['topic_last_post_time']),
 						'FIRST_POST_TIME'		=> $this->user->format_date($row['topic_time']),
 						'LAST_POST_SUBJECT'		=> $row['topic_last_post_subject'],

@@ -9,6 +9,24 @@ imports:
 
 services:
 
+    primetime.content.comments:
+        class: primetime\content\services\comments
+        arguments:
+            - @auth
+            - @cache
+            - @config
+            - @content.visibility
+            - @dbal.conn
+            - @controller.helper
+            - @pagination
+            - @request
+            - @template
+            - @user
+            - @primetime.content.form.builder
+            - @primetime.primetime.forum
+            - %core.root_path%
+            - %core.php_ext%
+
     primetime.content.display.controller:
         class: primetime\content\controller\display
         arguments:
@@ -37,6 +55,7 @@ services:
             - @service_container
             - @template
             - @user
+            - @primetime.content.comments
             - %core.root_path%
             - %tables.primetime.content_fields%
             - %tables.primetime.content_types%
@@ -44,11 +63,15 @@ services:
     primetime.content.form.builder:
         class: primetime\content\services\form\builder
         arguments:
+            - @auth
+            - @config
             - @request
             - @primetime.content.form.fields_collection
             - @template_context
             - @user
             - @primetime.primetime.template
+            - %core.root_path%
+            - %core.php_ext%
 
     primetime.content.form.fields_collection:
         class: phpbb\di\service_collection
@@ -90,6 +113,7 @@ services:
             - @request
             - @template
             - @user
+            - @primetime.content.comments
             - @primetime.content.displayer
             - @primetime.content.form.builder
             - @primetime.primetime.forum
