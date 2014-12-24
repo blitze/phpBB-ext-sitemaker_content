@@ -72,9 +72,9 @@ $lang = array_merge($lang, array(
 	'COPY_PERMISSION'		=> 'Copy permissions',
 	'LIVE_PREVIEW'			=> 'Live Preview',
 	'NO_COPY_PERMISSIONS'	=> 'Do not copy permissions',
+
 	'COPY_PERMISSION_EXPLAIN'	=> 'Copy permissions from the selected forum and apply it to this content type',
 	'SHOW_DESC_INDEX_EXPLAIN'	=> 'If selected, the content description will be displayed when listing contents for this content type',
-
 	'AUTHOR_CONTENTS_EXPLAIN'	=> 'Display other topics from content poster?',
 	'DISPLAY_VIEWS_EXPLAIN'		=> 'Display number of times topic has been viewed?',
 	'TOPICS_PER_GROUP_EXPLAIN'	=> 'For content views that group topics (e.g. by category or author), this limits the number of topics per group',
@@ -82,6 +82,9 @@ $lang = array_merge($lang, array(
 	'CONTENT_NAME_EXPLAIN'		=> 'The internal name of the content type e.g. articles, kb, etc.',
 	'CONTENT_DESC_EXPLAIN'		=> 'Any HTML markup entered here will be displayed as is.',
 	'CONTENT_LANGNAME_EXPLAIN'	=> 'The name that will be displayed e.g. Articles, Knowledge Base, etc.<br />Use language constant if name is served from language file.<br /><strong>Tip:</strong> If \'Content Parent\' and \'Display Name\' are the same, only the parent will be displayed on the menu.',
+	'CONTENT_DISPLAY_BLOG'		=> 'Blog',
+	'CONTENT_DISPLAY_PORTAL'	=> 'Portal',
+	'CONTENT_DISPLAY_TILES'		=> 'Tiles',
 
 	'REQ_APPROVAL'		=> 'Requires Approval?',
 	'ALLOW_COMMENTS'	=> 'Allow Comments?',
@@ -94,9 +97,6 @@ $lang = array_merge($lang, array(
 
 	'TITLE'				=> 'Title',
 	'DISPLAY_TYPE'		=> 'Display Type',
-	'PORTAL'			=> 'Portal',
-	'BLOG'				=> 'Blog',
-
 	'CONTENT_TYPE'		=> 'Content Type',
 	'EDIT'				=> 'Edit',
 	'ADD'				=> 'Add',
@@ -112,6 +112,11 @@ $lang = array_merge($lang, array(
 	'FIELD_TAKEN'		=> 'This content field already exists!',
 	'MISSING_FIELD'		=> 'Missing field name!',
 	'MISSING_LABEL'		=> 'Missing field label!',
+	'SIZE'				=> 'Size',
+	'SMALL'				=> 'Small',
+	'LARGE'				=> 'Large',
+	'ENABLE_EDITOR'		=> 'Enable Editor?',
+	'INDEX_MAX_CHARS'	=> 'Maximum characters displayed',
 
 	'TOPIC_AUTHOR'			=> 'Author',
 	'TOPIC_AUTHOR_FULL'		=> 'Author + Colour + URL',
@@ -169,6 +174,7 @@ $lang = array_merge($lang, array(
 	'TOPICS_PER_GROUP'		=> 'Topics per group',
 	'LABEL_INLINE'			=> 'Yes - on the same line',
 	'LABEL_NEWLINE'			=> 'Yes - on a new line',
+	'PT_REQUIRED_FIELDS'	=> '* Required',
 
 	'NEW_TYPE_NO_EXIST'			=> 'The new Content type to transfer to was not found',
 	'TYPE_NOT_FOUND'			=> 'The current content type was not found',
