@@ -75,8 +75,18 @@
 					</dl>
 				</div>
 				<!-- ENDIF -->
-				<!-- IF field.FIELD_TYPE == 'editor' or field.FIELD_TYPE == 'textarea' -->
+				<!-- IF field.FIELD_TYPE == 'textarea' -->
 				<dl>
+					<dt><label for="{field.FIELD_NAME}_size">{L_SIZE}</label></dt>
+					<dd>
+						<label><input id="{field.FIELD_NAME}_size" name="fsettings[{field.FIELD_NAME}][size]" type="radio" value="small"<!-- IF field.SIZE != 'large' --> checked="checked"<!-- ENDIF --> /> {L_SMALL}</label>
+						<label><input name="fsettings[{field.FIELD_NAME}][size]" type="radio" value="large"<!-- IF field.SIZE == 'large' --> checked="checked"<!-- ENDIF --> /> {L_LARGE}</label>
+					</dd>
+					<dt><label for="{field.FIELD_NAME}_editor">{L_ENABLE_EDITOR}</label></dt>
+					<dd>
+						<label><input id="{field.FIELD_NAME}_editor" name="fsettings[{field.FIELD_NAME}][editor]" type="radio" value="1"<!-- IF field.EDITOR != 0 --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+						<label><input name="fsettings[{field.FIELD_NAME}][editor]" type="radio" value="0"<!-- IF field.EDITOR == 0 --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+					</dd>
 					<dt><label for="{field.FIELD_NAME}_max_chars">{L_INDEX_MAX_CHARS}</label></dt>
 					<dd>
 						<label><input id="{field.FIELD_NAME}_max_chars" name="fsettings[{field.FIELD_NAME}][max_chars]" type="number" maxlength="4" min="0" step="25" value="{field.MAX_CHARS}" /> {L_CHARS}</label>

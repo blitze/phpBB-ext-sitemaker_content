@@ -47,17 +47,18 @@
 	</dl>
 </script>
 
-<script id="content-field-editor" class="tpl" type="text/x-jquery-tmpl">
-	<dl id="{% verbatim %}{{ field_name }}{% endverbatim %}-options">
-		<dt><label>{L_INDEX_MAX_CHARS}</label></dt>
-		<dd>
-			<label><input name="fsettings[{% verbatim %}{{ field_name }}{% endverbatim %}][max_chars]" type="number" class="input" size="3" maxlength="4" value="0" /> {L_CHARS}</label>
-		</dd>
-	</dl>
-</script>
-
 <script id="content-field-textarea" class="tpl" type="text/x-jquery-tmpl">
 	<dl id="{% verbatim %}{{ field_name }}{% endverbatim %}-options">
+		<dt><label for="{field.FIELD_NAME}_size">{L_SIZE}</label></dt>
+		<dd>
+			<label><input id="{% verbatim %}{{ field_name }}{% endverbatim %}_size" name="fsettings[{% verbatim %}{{ field_name }}{% endverbatim %}][size]" type="radio" value="small" checked="checked" /> {L_SMALL}</label>
+			<label><input name="fsettings[{% verbatim %}{{ field_name }}{% endverbatim %}][size]" type="radio" value="large" /> {L_LARGE}</label>
+		</dd>
+		<dt><label for="{% verbatim %}{{ field_name }}{% endverbatim %}_editor">{L_ENABLE_EDITOR}</label></dt>
+		<dd>
+			<label><input id="{% verbatim %}{{ field_name }}{% endverbatim %}_editor" name="fsettings[{% verbatim %}{{ field_name }}{% endverbatim %}][editor]" type="radio" value="1" checked="checked" /> {L_YES}</label>
+			<label><input name="fsettings[{% verbatim %}{{ field_name }}{% endverbatim %}][editor]" type="radio" value="0" /> {L_NO}</label>
+		</dd>
 		<dt><label>{L_INDEX_MAX_CHARS}</label></dt>
 		<dd>
 			<label><input name="fsettings[{% verbatim %}{{ field_name }}{% endverbatim %}][max_chars]" type="number" class="input" size="3" maxlength="4" value="0" /> {L_CHARS}</label>

@@ -38,15 +38,6 @@ services:
         tags:
             - { name: form.field }
 
-    primetime.content.form.field.editor:
-        class: primetime\content\services\form\field\editor
-        arguments:
-            - @request
-            - @user
-            - @primetime.primetime.template
-        tags:
-            - { name: form.field }
-
     primetime.content.form.field.email:
         class: primetime\content\services\form\field\email
         arguments:
@@ -158,6 +149,7 @@ services:
             - @request
             - @user
             - @primetime.primetime.template
+            - @primetime.primetime
         tags:
             - { name: form.field }
 

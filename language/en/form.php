@@ -25,7 +25,6 @@ $lang = array_merge($lang, array(
 	'FORM_FIELD_COLOR'			=> 'Color',
 	'FORM_FIELD_DATE'			=> 'Date',
 	'FORM_FIELD_DATETIME'		=> 'Date/Time',
-	'FORM_FIELD_EDITOR'			=> 'Large Textarea',
 	'FORM_FIELD_EMAIL'			=> 'Email',
 	'FORM_FIELD_HIDDEN'			=> 'Hidden Input',
 	'FORM_FIELD_IMAGE'			=> 'Image',
@@ -38,7 +37,7 @@ $lang = array_merge($lang, array(
 	'FORM_FIELD_SUBMIT'			=> 'Submit Button',
 	'FORM_FIELD_TELEPHONE'		=> 'Telephone',
 	'FORM_FIELD_TEXT'			=> 'String',
-	'FORM_FIELD_TEXTAREA'		=> 'Small Textarea',
+	'FORM_FIELD_TEXTAREA'		=> 'Textarea',
 	'FORM_FIELD_TIME'			=> 'Time',
 	'FORM_FIELD_URL'			=> 'URL',
 ));
