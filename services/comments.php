@@ -133,6 +133,7 @@ class comments implements comments_interface
 					'type'			=> $content_type,
 					'topic_id'		=> $topic_data['topic_id'],
 					'slug'			=> $topic_data['topic_slug'],
+					'#'				=> 'comments'
 				),
 			),
 			'pagination', 'page', $total_topics, $this->config['posts_per_page'], $start);
