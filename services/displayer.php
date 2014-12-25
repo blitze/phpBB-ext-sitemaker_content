@@ -103,6 +103,12 @@ class displayer extends types
 
 		$fields_data = $this->type_data['content_fields'];
 
+		if ($this->type_data['allow_comments'])
+		{
+			$this->template->assign_var('S_COMMENTS', true);
+			$this->allow_comments = true;
+		}
+
 		if (!empty($custom_tpl))
 		{
 			$this->twig		= $this->get_twig();
@@ -149,7 +155,6 @@ class displayer extends types
 
 		$label_class = array('label-hidden', 'label-inline', 'label-newline');
 		$post_field_data = $this->get_fields_data_from_post($post_data['post_text'], $this->tags);
-		$replies = $this->content_visibility->get_count('topic_posts', $row, $forum_id) - 1;
 		$post_unread = (isset($topic_tracking_info[$topic_id]) && $row['topic_last_post_time'] > $topic_tracking_info[$topic_id]) ? true : false;
 
 		$topic_url = $this->helper->route('primetime_content_show', array(
@@ -169,7 +174,7 @@ class displayer extends types
 			'S_UNREAD_POST'			=> $post_unread,
 
 			'TOPIC_TITLE'			=> $topic_title,
-			'TOPIC_COMMENTS'		=> $this->comments->count($topic_data),
+			'TOPIC_COMMENTS'		=> ($this->allow_comments) ? $this->comments->count($topic_data) : '',
 			'TOPIC_DATE'			=> $this->user->format_date($row['topic_time']),
 			'TOPIC_URL'				=> $topic_url,
 		);
