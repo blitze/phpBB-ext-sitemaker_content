@@ -154,7 +154,7 @@ class builder
 		$rootref = $this->template_context->get_root_ref();
 		$dataref = $this->template_context->get_data_ref();
 
-		$this->custom_tags = $dataref['custom_tags'];
+		$this->custom_tags = (isset($dataref['custom_tags'])) ? $dataref['custom_tags'] : array();
 		$this->form = array(
 			'form_name'		=> $form_name,
 			'form_action'	=> $action,
