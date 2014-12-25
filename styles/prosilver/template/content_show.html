@@ -52,7 +52,7 @@
 
 				<!-- IF not CUSTOM_DISPLAY -->
 				<h3 class="first"><a href="{TOPIC_URL}">{TOPIC_TITLE}</a></h3>
-				<p class="author"><!-- IF S_IS_BOT -->{MINI_POST_IMG}<!-- ELSE --><a href="{U_MINI_POST}">{MINI_POST_IMG}</a><!-- ENDIF --><span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{TOPIC_AUTHOR_FULL}</strong></span> | <i class="fa fa-calendar"></i> {TOPIC_DATE|date("m/d/Y")} | <i class="fa fa-comments-o fa-lg"></i> <a href="#comments">{TOPIC_COMMENTS}<span class="responsive-hide"> {L_COMMENTS}</span></a></p>
+				<p class="author"><!-- IF S_IS_BOT -->{MINI_POST_IMG}<!-- ELSE --><a href="{U_MINI_POST}">{MINI_POST_IMG}</a><!-- ENDIF --><span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{TOPIC_AUTHOR_FULL}</strong></span> | <i class="fa fa-calendar"></i> {TOPIC_DATE|date("m/d/Y")}<!-- IF S_COMMENTS --> | <i class="fa fa-comments-o fa-lg"></i> <a href="#comments">{TOPIC_COMMENTS}<span class="responsive-hide"> {L_COMMENTS}</span></a><!-- ENDIF --></p>
 				<!-- ENDIF -->
 
 				<!-- IF S_POST_UNAPPROVED -->
@@ -173,6 +173,7 @@
 </div>
 <!-- ENDIF -->
 
+<!-- IF S_COMMENTS -->
 <div class="panel post cms-block-container cms-block-spacing">
 	<div class="inner">
 		<div class="postbody pt-postbody small-avatar img-align-left">
@@ -227,6 +228,7 @@
 		</div>
 	</div>
 </div>
+<!-- ENDIF -->
 <!-- ENDIF -->
 
 <!-- IF not S_HIDE_HEADERS --><!-- INCLUDE overall_footer.html --><!-- ENDIF -->

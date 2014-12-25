@@ -245,6 +245,8 @@ class display
 
 		if ($type_data['allow_comments'])
 		{
+			$this->template->assign_var('S_COMMENTS', true);
+
 			$comments = $this->phpbb_container->get('primetime.content.comments');
 			$comments->show($type, $topic_data, $page);
 		}

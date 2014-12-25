@@ -290,7 +290,6 @@ class manager
 
 				$tpl_data = array(
 					'S_VIEWING'		=> true,
-					'S_MODERATOR'	=> true,
 					'S_POST_DELETED'		=> ($row['post_visibility'] == ITEM_DELETED) ? true : false,
 					'S_POST_REPORTED'		=> ($row['post_reported'] && $this->auth->acl_get('m_report', $forum_id)),
 					'S_POST_UNAPPROVED'		=> (($row['post_visibility'] == ITEM_UNAPPROVED || $row['post_visibility'] == ITEM_REAPPROVE) && $this->auth->acl_get('m_approve', $forum_id)),
@@ -776,8 +775,6 @@ class manager
 					$content_type = $content_forum[$forum_id];
 					$type_data = &$content_types[$content_type];
 
-					$replies = $this->content_visibility->get_count('topic_posts', $row, $forum_id) - 1;
-
 					if ($row['topic_status'] == ITEM_MOVED)
 					{
 						$unread_topic = false;
@@ -787,16 +784,28 @@ class manager
 						$unread_topic = (isset($topic_tracking_info[$forum_id][$topic_id]) && $row['topic_last_post_time'] > $topic_tracking_info[$forum_id][$topic_id]) ? true : false;
 					}
 
-					// Get folder img, topic status/type related information
-					$folder_img = $folder_alt = $topic_type = '';
-					topic_status($row, $replies, $unread_topic, $folder_img, $folder_alt, $topic_type);
-
 					$topic_title = censor_text($row['topic_title']);
 					$topic_unapproved = (($row['topic_visibility'] == ITEM_UNAPPROVED || $row['topic_visibility'] == ITEM_REAPPROVE)  && $this->auth->acl_get('m_approve', $forum_id)) ? true : false;
 					$posts_unapproved = ($row['topic_visibility'] == ITEM_APPROVED && $row['topic_posts_unapproved'] && $this->auth->acl_get('m_approve', $forum_id)) ? true : false;
 					$topic_deleted = $row['topic_visibility'] == ITEM_DELETED;
 					$view_type[$type_data['content_name']] = $type_data['content_langname'];
+
 					$topic_status = '';
+					$allow_comments = false;
+
+					if ($type_data['allow_comments'])
+					{
+						$allow_comments = true;
+						$num_comments = $this->comments->count($row);
+					}
+					else
+					{
+						$num_comments = $this->content_visibility->get_count('topic_posts', $row, $forum_id) - 1;
+					}
+
+					// Get folder img, topic status/type related information
+					$folder_img = $folder_alt = $topic_type = '';
+					topic_status($row, $num_comments, $unread_topic, $folder_img, $folder_alt, $topic_type);
 
 					if ($topic_deleted)
 					{
@@ -815,12 +824,12 @@ class manager
 						$topic_status = $topic_types_ary[$row['topic_type']];
 					}
 
-					/*$u_viewtopic = $this->helper->route('primetime_content_show', array(
+					$u_topic_review = $u_action . '&amp;action=view&amp;t=' . $topic_id;
+					$u_viewtopic = $this->helper->route('primetime_content_show', array(
 						'type'		=> $content_type,
 						'topic_id'	=> $topic_id,
 						'slug'		=> $row['topic_slug']
-					));*/
-					$u_viewtopic = $u_action . '&amp;action=view&amp;t=' . $topic_id;
+					));
 
 					$topic_row = array(
 						'ATTACH_ICON_IMG'			=> ($this->auth->acl_get('u_download') && $this->auth->acl_get('f_download', $row['forum_id']) && $row['topic_attachment']) ? $this->user->img('icon_topic_attach', $this->user->lang['TOTAL_ATTACHMENTS']) : '',
@@ -848,12 +857,13 @@ class manager
 						'TOPIC_TYPE'			=> $topic_type,
 						'TOPIC_TITLE'			=> $topic_title,
 						'TOPIC_STATUS'			=> $this->user->lang['TOPIC_' . strtoupper($topic_status)],
-						'REPLIES'				=> $this->comments->count($row),
+						'TOPIC_COMMENTS'		=> $num_comments,
 						'LAST_POST_TIME'		=> $this->user->format_date($row['topic_last_post_time']),
 						'FIRST_POST_TIME'		=> $this->user->format_date($row['topic_time']),
 						'LAST_POST_SUBJECT'		=> $row['topic_last_post_subject'],
 						'LAST_VIEW_TIME'		=> $this->user->format_date($row['topic_last_view_time']),
 
+						'S_COMMENTS'			=> $allow_comments,
 						'S_TOPIC_REPORTED'		=> (!empty($row['topic_reported']) && empty($row['topic_moved_id']) && $auth->acl_get('m_report', $forum_id)) ? true : false,
 						'S_TOPIC_UNAPPROVED'	=> $topic_unapproved,
 						'S_POSTS_UNAPPROVED'	=> $posts_unapproved,
@@ -861,7 +871,9 @@ class manager
 						'S_UNREAD_TOPIC'		=> $unread_topic,
 						'S_CAN_EDIT'			=> true,
 						'S_CAN_DELETE'			=> true,
+
 						'U_VIEW_TOPIC'			=> $u_viewtopic,
+						'U_REVIEW_TOPIC'		=> $u_topic_review,
 						'U_EDIT_TOPIC'			=> $u_action . "&amp;action=edit&amp;type=$content_type&amp;t=$topic_id",
 						'U_DELETE_TOPIC'		=> $u_action . "&amp;action=delete&amp;type=$content_type&amp;t=$topic_id",
 						'U_CONTENT_TYPE'		=> $u_action . "&amp;type=$content_type",

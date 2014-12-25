@@ -42,7 +42,7 @@ abstract class duration extends base
 		$this->primetime->add_assets(array(
 			'js'   => array(
 				$asset_path . 'ext/primetime/content/assets/vendor/datetimepicker/jquery.datetimepicker.min.js',
-				$asset_path . 'ext/primetime/content/assets/js/datetimepicker.min.js',
+				$asset_path . 'ext/primetime/content/assets/scripts/datetimepicker.min.js',
 			),
 			'css'   => array(
 				$asset_path . 'ext/primetime/content/assets/vendor/datetimepicker/jquery.datetimepicker.min.css',

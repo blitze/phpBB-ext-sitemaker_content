@@ -17,7 +17,7 @@
 						<div class="postbody pt-postbody">
 							<!-- IF not topic_row.CUSTOM_DISPLAY -->
 							<h3 class="first"><a href="{topic_row.TOPIC_URL}">{topic_row.TOPIC_TITLE}</a></h3>
-							<p class="author">{topic_row.MINI_POST_IMG}<span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{topic_row.TOPIC_AUTHOR_FULL}</strong></span> | <i class="fa fa-calendar"></i> {topic_row.TOPIC_DATE|date("m/d/Y")} | <i class="fa fa-comments-o fa-lg"></i> <a href="{topic_row.TOPIC_URL}#comments">{topic_row.TOPIC_COMMENTS}</a></p>
+							<p class="author">{topic_row.MINI_POST_IMG}<span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{topic_row.TOPIC_AUTHOR_FULL}</strong></span> | <i class="fa fa-calendar"></i> {topic_row.TOPIC_DATE|date("m/d/Y")}<!-- IF S_COMMENTS --> | <i class="fa fa-comments-o fa-lg"></i> <a href="{topic_row.TOPIC_URL}#comments">{topic_row.TOPIC_COMMENTS}</a><!-- ENDIF --></p>
 							<!-- ENDIF -->
 							<div class="content">
 								<!-- IF topic_row.CUSTOM_DISPLAY -->
