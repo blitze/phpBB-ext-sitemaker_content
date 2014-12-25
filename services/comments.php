@@ -114,16 +114,25 @@ class comments implements comments_interface
 
 		if ($post_id)
 		{
+			$sql = 'SELECT post_id, post_time, post_visibility
+				FROM ' . POSTS_TABLE . " p
+				WHERE p.topic_id = $topic_id
+					AND p.post_id = $post_id";
+			$result = $this->db->sql_query($sql);
+			$row = $this->db->sql_fetchrow($result);
+			$this->db->sql_freeresult($result);
+
 			$sql = 'SELECT COUNT(p.post_id) AS prev_posts
 				FROM ' . POSTS_TABLE . " p
 				WHERE p.topic_id = $topic_id
+					AND (p.post_time < {$row['post_time']} OR (p.post_time = {$row['post_time']} AND p.post_id <= {$row['post_id']}))
 					AND " . $this->content_visibility->get_visibility_sql('post', $forum_id, 'p.');
 
 			$result = $this->db->sql_query($sql);
 			$row = $this->db->sql_fetchrow($result);
 			$this->db->sql_freeresult($result);
 
-			$start = floor(($row['prev_posts'] - 1) / $this->config['posts_per_page']) * $this->config['posts_per_page'];
+			$start = floor(($row['prev_posts'] - 2) / $this->config['posts_per_page']) * $this->config['posts_per_page'];
 		}
 
 		$start = $this->pagination->validate_start($start, $this->config['posts_per_page'], $total_topics) + 1;

@@ -186,9 +186,11 @@
 			</h2>
 		<!-- BEGIN comment -->
 			<div id="p{comment.POST_ID}" class="panel bg2">
+				<!-- IF comment.POSTER_AVATAR -->
 				<div class="img-ui">
-					<!-- IF comment.POSTER_AVATAR -->{comment.POSTER_AVATAR}<!-- ELSE --><i class="fa fa-user"></i><!-- ENDIF -->
+					{comment.POSTER_AVATAR}
 				</div>
+				<!-- ENDIF -->
 				<h4>
 					<i class="fa fa-user"></i> {comment.POST_AUTHOR_FULL}<br />
 					{comment.MINI_POST_IMG}{comment.POST_DATE}

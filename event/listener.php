@@ -116,23 +116,34 @@ class listener implements EventSubscriberInterface
 
 	public function content_search($event)
 	{
+		$row = $event['row'];
 		$tpl_ary = $event['tpl_ary'];
-		$forum_id = $tpl_ary['FORUM_ID'];
-		$topic_id = $tpl_ary['TOPIC_ID'];
-		$message = &$tpl_ary['MESSAGE'];
+
+		$forum_id = $row['forum_id'];
+		$topic_id = $row['topic_id'];
+		$post_id = $row['post_id'];
 
 		if (isset($this->content_forums[$forum_id]))
 		{
 			$type = $this->content_forums[$forum_id];
 
-			$forum_url = $this->helper->route('primetime_content_index', array(
-				'type'		=> $type
-			));
-
-			$topic_url = $this->helper->route('primetime_content_show', array(
+			$params = array(
 				'type'		=> $type,
 				'topic_id'	=> $topic_id,
 				'slug'		=> $event['row']['topic_slug']
+			);
+
+			if ($event['row']['topic_first_post_id'] !== $post_id)
+			{
+				$params += array(
+					'p'	=> $post_id,
+					'#'	=> "p{$post_id}",
+				);
+			}
+
+			$topic_url = $this->helper->route('primetime_content_show', $params);
+			$forum_url = $this->helper->route('primetime_content_index', array(
+				'type'		=> $type
 			));
 
 			$tpl_ary['U_VIEW_TOPIC'] = $tpl_ary['U_VIEW_POST'] = $topic_url;
