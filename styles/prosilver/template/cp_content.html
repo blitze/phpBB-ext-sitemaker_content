@@ -39,7 +39,7 @@
 				<div class="postbody pt-postbody">
 					<!-- IF not CUSTOM_DISPLAY -->
 					<h3 class="first"><a href="{TOPIC_URL}">{TOPIC_TITLE}</a></h3>
-					<p class="author">{MINI_POST_IMG}<span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{TOPIC_AUTHOR_FULL}</strong> &raquo; </span>{TOPIC_DATE}</p>
+					<p class="author">{MINI_POST_IMG}<span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{TOPIC_AUTHOR_FULL}</strong></span> | <i class="fa fa-calendar"></i> {TOPIC_DATE|date("m/d/Y")}<!-- IF S_COMMENTS --> | <i class="fa fa-comments-o fa-lg"></i> <a href="#comments">{TOPIC_COMMENTS}<span class="responsive-hide"> {L_COMMENTS}</span></a><!-- ENDIF --></p>
 					<!-- ENDIF -->
 					<div class="content">
 						<!-- IF CUSTOM_DISPLAY -->
@@ -53,7 +53,7 @@
 		</div>
 	</div>
 
-	<!-- IF S_MODERATOR -->
+	<!-- IF MODE == 'mcp' -->
 	<div class="panel post">
 		<div class="inner">
 			<h3>{L_TOOLS}</h3>
@@ -147,7 +147,7 @@
 <!-- ELSE -->
 	<div class="panel">
 		<div class="inner">
-			<!-- IF S_MODERATOR && NUM_PENDING --><span class="error">{L_PENDING_TOPICS}: <a href="{U_PENDING}"><strong>[{NUM_PENDING}]</strong></a></span><!-- ENDIF -->
+			<!-- IF MODE == 'mcp' && NUM_PENDING --><span class="error">{L_PENDING_TOPICS}: <a href="{U_PENDING}"><strong>[{NUM_PENDING}]</strong></a></span><!-- ENDIF -->
 
 			<!-- IF .postable -->
 			<div class="action-bar top">
@@ -214,7 +214,7 @@
 			<div class="clear"></div><br />
 
 			<!-- IF .topicrow -->
-				<!-- IF S_MODERATOR --><form id="mcp" method="post" action="{S_MCP_ACTION}"><!-- ENDIF -->
+				<!-- IF MODE == 'mcp' --><form id="mcp" method="post" action="{S_MCP_ACTION}"><!-- ENDIF -->
 
 				<!-- IF PAGINATION or TOTAL_TOPICS -->
 				<div class="action-bar top">
@@ -246,7 +246,7 @@
 							<dt <!-- IF topicrow.TOPIC_ICON_IMG -->style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;"<!-- ENDIF -->>
 								<!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}" class="icon-link"></a><!-- ENDIF -->
 								<div class="list-inner">
-									<a href="{topicrow.U_VIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a>
+									<a href="{topicrow.U_REVIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a>
 									<!-- IF topicrow.S_TOPIC_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED --><a href="{topicrow.U_MCP_QUEUE}">{topicrow.UNAPPROVED_IMG}</a> <!-- ENDIF -->
 									<!-- IF topicrow.S_TOPIC_DELETED or topicrow.S_POSTS_DELETED --><a href="{topicrow.U_MCP_QUEUE}">{topicrow.DELETED_IMG}</a> <!-- ENDIF -->
 									<!-- IF topicrow.S_TOPIC_REPORTED --><a href="{topicrow.U_MCP_REPORT}">{REPORTED_IMG}</a><!-- ENDIF -->
@@ -255,25 +255,28 @@
 
 									<div class="responsive-show" style="display: none;">
 										<!-- IF topicrow.ATTACH_ICON_IMG -->{topicrow.ATTACH_ICON_IMG} <!-- ENDIF -->
+										<!-- IF MODE == 'mcp' --><strong>{topicrow.TOPIC_AUTHOR_FULL}</strong>&nbsp;<!-- ENDIF -->
 										<i class="fa fa-calendar"></i> <strong>{topicrow.FIRST_POST_TIME|date("m/d/Y")}</strong>&nbsp;
 										<i class="fa fa-eye"></i> <strong>{topicrow.TOPIC_VIEWS}</strong>&nbsp;
-										<i class="fa fa-comments"></i> <strong>{topicrow.REPLIES}</strong>
+										<!-- IF topicrow.S_COMMENTS --><i class="fa fa-comments"></i> <a href="{topicrow.U_VIEW_TOPIC}#comments"><strong>{topicrow.TOPIC_COMMENTS}</strong></a><!-- ENDIF -->
 									</div>
 									<span class="responsive-show left-box" style="display: none;">{L_TYPE}{L_COLON} <strong>{topicrow.CONTENT_TYPE}</strong></span>
 
 									<div class="responsive-hide">
 										<!-- IF topicrow.ATTACH_ICON_IMG -->{topicrow.ATTACH_ICON_IMG} <!-- ENDIF -->
+										<!-- IF MODE == 'mcp' -->{L_POST_BY_AUTHOR} <strong>{topicrow.TOPIC_AUTHOR_FULL}</strong>&nbsp;<!-- ENDIF -->
 										<i class="fa fa-calendar"></i> {L_POSTED}{L_COLON} <strong>{topicrow.FIRST_POST_TIME|date("m/d/Y")}</strong>&nbsp;
 										<i class="fa fa-eye"></i> {L_VIEWS}{L_COLON} <strong>{topicrow.TOPIC_VIEWS}</strong>&nbsp;
-										<i class="fa fa-comments"></i> {L_COMMENTS}{L_COLON} <strong>{topicrow.REPLIES}</strong>
+										<!-- IF topicrow.S_COMMENTS --><i class="fa fa-comments"></i> {L_COMMENTS}{L_COLON} <a href="{topicrow.U_VIEW_TOPIC}#comments"><strong>{topicrow.TOPIC_COMMENTS}</strong></a><!-- ENDIF -->
 									</div>
 								</div>
 							</dt>
 							<dd class="posts"><a href="{topicrow.U_TOPIC_STATUS}" title="{topicrow.FIRST_POST_TIME}">{topicrow.TOPIC_STATUS}</a> <dfn>{L_STATUS}</dfn></dd>
 							<dd class="lastpost align-center badge"><a href="{topicrow.U_CONTENT_TYPE}"><span class="info" style="background-color: {topicrow.CONTENT_TYPE_COLOR}; color: white">{topicrow.CONTENT_TYPE}</span></a><dfn>{L_LAST_POST}</dfn></dd>
 							<dd class="mark align-center">
-								<!-- IF topicrow.S_CAN_EDIT --><a href="{topicrow.U_EDIT_TOPIC}" alt="{L_EDIT}"><i class="fa fa-cog fa-lg green"></i></a>&nbsp;<!-- ELSE --><i class="fa fa-cog fa-2x"></i>&nbsp;<!-- ENDIF -->
-								<!-- IF topicrow.S_CAN_DELETE --><a href="{topicrow.U_DELETE_TOPIC}" alt="{L_DELETE}"><i class="fa fa-trash-o fa-lg red"></i></a>&nbsp;<!-- ENDIF -->
+								<a href="{topicrow.U_VIEW_TOPIC}" title="{L_GOTO_TOPIC}"><i class="fa fa-link"></i></a>&nbsp;
+								<!-- IF topicrow.S_CAN_EDIT --><a href="{topicrow.U_EDIT_TOPIC}" title="{L_EDIT}"><i class="fa fa-cog fa-lg green"></i></a>&nbsp;<!-- ELSE --><i class="fa fa-cog fa-2x"></i>&nbsp;<!-- ENDIF -->
+								<!-- IF topicrow.S_CAN_DELETE --><a href="{topicrow.U_DELETE_TOPIC}" title="{L_DELETE}"><i class="fa fa-trash-o fa-lg red"></i></a>&nbsp;<!-- ENDIF -->
 							</dd>
 						</dl>
 					</li>
