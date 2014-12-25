@@ -94,18 +94,23 @@ class comments implements comments_interface
 	 */
 	public function show($content_type, $topic_data, $page)
 	{
-		$total_topics = $this->count($topic_data);
-		if (!sizeof($topic_data) || !$total_topics)
-		{
-			return;
-		}
-
 		$post_id = $this->request->variable('p', 0);
 
 		$topic_id = (int) $topic_data['topic_id'];
 		$forum_id = (int) $topic_data['forum_id'];
 
 		$start = ($page - 1) * $this->config['posts_per_page'];
+		$total_topics = $this->count($topic_data);
+
+		if ($this->auth->acl_get('f_reply', $forum_id))
+		{
+			$this->post($content_type, $topic_data);
+		}
+
+		if (!$total_topics)
+		{
+			return;
+		}
 
 		if ($post_id)
 		{
@@ -164,11 +169,6 @@ class comments implements comments_interface
 				'POST_DATE'			=> $this->user->format_date($row['post_time']),
 				'MESSAGE'			=> $row['post_text'],
 			));
-		}
-
-		if ($this->auth->acl_get('f_reply', $forum_id))
-		{
-			$this->post($content_type, $topic_data);
 		}
 
 		$this->template->assign_var('TOPIC_COMMENTS', $total_topics);
