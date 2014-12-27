@@ -176,7 +176,7 @@
 <!-- IF S_COMMENTS -->
 <div class="panel post cms-block-container cms-block-spacing">
 	<div class="inner">
-		<div class="postbody pt-postbody small-avatar img-align-left">
+		<div class="postbody pt-postbody">
 			<h2 id="comments">
 				<span class="fa-stack">
 					<i class="fa fa-comment fa-stack-2x"></i>
@@ -186,15 +186,17 @@
 			</h2>
 		<!-- BEGIN comment -->
 			<div id="p{comment.POST_ID}" class="panel bg2">
-				<!-- IF comment.POSTER_AVATAR -->
-				<div class="img-ui">
-					{comment.POSTER_AVATAR}
+				<div class="small-avatar img-align-left">
+					<!-- IF comment.POSTER_AVATAR -->
+					<div class="img-ui">
+						{comment.POSTER_AVATAR}
+					</div>
+					<!-- ENDIF -->
+					<h4>
+						<i class="fa fa-user"></i> {comment.POST_AUTHOR_FULL}<br />
+						{comment.MINI_POST_IMG}{comment.POST_DATE}
+					</h4>
 				</div>
-				<!-- ENDIF -->
-				<h4>
-					<i class="fa fa-user"></i> {comment.POST_AUTHOR_FULL}<br />
-					{comment.MINI_POST_IMG}{comment.POST_DATE}
-				</h4>
 				<br />
 				<div class="content" style="display: inline">{comment.MESSAGE}</div>
 
@@ -224,7 +226,7 @@
 <!-- IF POST_FORM -->
 <div class="panel post cms-block-container cms-block-spacing">
 	<div class="inner">
-		<div class="postbody pt-postbody small-avatar img-align-left">
+		<div class="postbody pt-postbody">
 			<h2>{L_NEW_COMMENT}</h2>
 			{POST_FORM}
 		</div>

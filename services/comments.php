@@ -94,6 +94,7 @@ class comments implements comments_interface
 	 */
 	public function show($content_type, $topic_data, $page)
 	{
+		$action = $this->request->variable('action', '');
 		$post_id = $this->request->variable('p', 0);
 
 		$topic_id = (int) $topic_data['topic_id'];
@@ -104,7 +105,7 @@ class comments implements comments_interface
 
 		if ($this->auth->acl_get('f_reply', $forum_id))
 		{
-			$this->post($content_type, $topic_data);
+			$this->post($content_type, $action, $topic_data, $post_id);
 		}
 
 		if (!$total_topics)
@@ -112,7 +113,7 @@ class comments implements comments_interface
 			return;
 		}
 
-		if ($post_id)
+		if ($post_id && !$action)
 		{
 			$sql = 'SELECT post_id, post_time, post_visibility
 				FROM ' . POSTS_TABLE . " p
@@ -156,6 +157,11 @@ class comments implements comments_interface
 		$topic_tracking_info = $this->forum->get_topic_tracking_info();
 		$users_cache = $this->forum->get_posters_info();
 
+		if (!sizeof($posts_data))
+		{
+			return;
+		}
+
 		$posts_data = array_values(array_shift($posts_data));
 
 		for ($i = 0, $size = sizeof($posts_data); $i < $size; $i++)
@@ -187,11 +193,8 @@ class comments implements comments_interface
 	/**
 	 * Post comments
 	 */
-	public function post($type, $topic_data)
+	public function post($type, $action, $topic_data, $post_id)
 	{
-		$action = $this->request->variable('action', 'reply');
-		$post_id = $this->request->variable('p', 0);
-
 		$forum_id = (int) $topic_data['forum_id'];
 		$topic_id = (int) $topic_data['topic_id'];
 
@@ -271,8 +274,9 @@ class comments implements comments_interface
 				$post_id = $post_data['post_id'];
 				$redirect_url = $current_page . "p=$post_id#p$post_id";
 				$message = $this->user->lang['COMMENT_POSTED'] . '<br /><br />' . sprintf($this->user->lang['RETURN_PAGE'], '<a href="' . $redirect_url . '">', '</a>');
-				$this->helper->error($message);
+
 				meta_refresh(3, $redirect_url);
+				trigger_error($message);
 			}
 		}
 
