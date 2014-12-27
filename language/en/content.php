@@ -55,6 +55,7 @@ $lang = array_merge($lang, array(
 	'NEW_COMMENT'			=> 'Leave a Comment',
 	'POST_COMMENT'			=> 'Post Comment',
 	'NO_COMMENTS'			=> 'No comments have been posted for this topic',
+	'COMMENT_POSTED'		=> 'Your comment has been successfully posted',
 	'EDIT_REASON'			=> 'Edit Reason',
 
 	'NO_CONTENT_TYPES'			=> 'There are no existing content types',
