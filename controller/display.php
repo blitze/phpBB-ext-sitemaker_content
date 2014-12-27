@@ -185,11 +185,6 @@ class display
 			$view = $this->phpbb_container->get('primetime.content.view.portal');
 		}
 
-		$navlinks[] = array(
-			'FORUM_NAME'	=> $type_data['content_langname'],
-			'U_VIEW_FORUM'	=> $this->helper->route('primetime_content_index', array('type' => $type))
-		);
-
 		$forum_id = (int) $type_data['forum_id'];
 
 		$options = array(
@@ -223,14 +218,13 @@ class display
 
 		$view->show_topic($topic_title, $type, $topic_data, $post_data, $users_cache[$poster_id], $topic_tracking_info);
 
-		$navlinks[] = array(
-			'FORUM_NAME'	=> $topic_title,
-			'U_VIEW_FORUM'	=> $this->helper->route('primetime_content_show', array(
-				'type'			=> $type,
-				'topic_id'		=> $topic_id,
-				'slug'			=> $topic_data['topic_slug']
-			))
-		);
+		if ($type_data['allow_comments'])
+		{
+			$this->template->assign_var('S_COMMENTS', true);
+
+			$comments = $this->phpbb_container->get('primetime.content.comments');
+			$comments->show($type, $topic_data, $page);
+		}
 
 		//$this->show_edit_reason($row, $user_cache);
 		if ($type_data['show_poster_info'])
@@ -243,14 +237,20 @@ class display
 			$this->get_author_contents($topic_data, $type, $type_data['content_langname']);
 		}
 
-		if ($type_data['allow_comments'])
-		{
-			$this->template->assign_var('S_COMMENTS', true);
-
-			$comments = $this->phpbb_container->get('primetime.content.comments');
-			$comments->show($type, $topic_data, $page);
-		}
-		unset($type_data, $topic_data, $post_data, $users_cache, $topic_tracking_info, $tpl_data);
+		$navlinks = array(
+			array(
+				'FORUM_NAME'	=> $type_data['content_langname'],
+				'U_VIEW_FORUM'	=> $this->helper->route('primetime_content_index', array('type' => $type))
+			),
+			array(
+				'FORUM_NAME'	=> $topic_title,
+				'U_VIEW_FORUM'	=> $this->helper->route('primetime_content_show', array(
+					'type'			=> $type,
+					'topic_id'		=> $topic_id,
+					'slug'			=> $topic_data['topic_slug']
+				))
+			)
+		);
 
 		foreach ($navlinks as $item)
 		{
@@ -259,6 +259,7 @@ class display
 				'U_VIEW_FORUM'	=> $item['U_VIEW_FORUM'],
 			));
 		}
+		unset($type_data, $topic_data, $post_data, $users_cache, $topic_tracking_info, $tpl_data);
 
 		return $this->helper->render($view->get_detail_template(), $topic_title);
 	}
