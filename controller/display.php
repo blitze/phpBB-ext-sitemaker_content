@@ -167,6 +167,7 @@ class display
 
 	public function show($type, $topic_id, $slug, $page)
 	{
+		$this->user->add_lang('viewtopic');
 		$this->user->add_lang_ext('primetime/content', 'content');
 
 		$type_data = $this->displayer->get_type($type);
@@ -226,7 +227,6 @@ class display
 			$comments->show($type, $topic_data, $page);
 		}
 
-		//$this->show_edit_reason($row, $user_cache);
 		if ($type_data['show_poster_info'])
 		{
 			$this->get_author_info($forum_id, $poster_id, $users_cache[$poster_id], $post_id, $type_data['content_langname']);
