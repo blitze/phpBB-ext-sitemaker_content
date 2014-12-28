@@ -197,7 +197,7 @@ abstract class view implements views_interface
 
 		if (($row['post_edit_count'] && $this->config['display_last_edited']) || $row['post_edit_reason'])
 		{
-			$this->show_edit_reason($row, $user_cache);
+			$this->show_edit_reason($row, $user_cache['author_full']);
 		}
 
 		// Deleting information
@@ -259,9 +259,8 @@ abstract class view implements views_interface
 		);
 	}
 
-	protected function show_edit_reason($row, $user_cache)
+	protected function show_edit_reason($row, $display_username)
 	{
-		$display_username = get_username_string('full', $row['post_edit_user'], $user_cache[$row['post_edit_user']]['username'], $user_cache[$row['post_edit_user']]['user_colour'], $user_cache[$row['post_edit_user']]['post_username']);
 		$l_edited_by = $this->user->lang('EDITED_TIMES_TOTAL', (int) $row['post_edit_count'], $display_username, $this->user->format_date($row['post_edit_time'], false, true));
 
 		$this->template->assign_vars(array(
