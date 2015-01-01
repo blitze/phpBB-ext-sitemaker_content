@@ -116,25 +116,22 @@ class displayer extends types
 		}
 
 		$this->view = ($view == 'summary' || $view == 'detail') ? $view : 'summary';
+		$this->form_fields = array_intersect_key($form->get_form_fields(), array_flip($fields));
 
-		if (sizeof($fields))
+		foreach ($fields as $name => $type)
 		{
-			$this->form_fields = array_intersect_key($form->get_form_fields(), array_flip($fields));
-		}
-
-		foreach ($fields_data as $field => $row)
-		{
-			if (isset($this->form_fields[$row['field_type']]))
+			if (isset($this->form_fields[$type]))
 			{
-				if ($force_max_chars)
+				if ($force_max_chars && $type == 'textarea')
 				{
-					$row['max_chars'] = $force_max_chars;
+					$fields_data[$name]['max_chars'] = $force_max_chars;
 				}
 
-				$this->tags[] = $field;
-				$this->type_fields[$field] = $row;
+				$this->tags[] = $name;
+				$this->type_fields[$name] = $fields_data[$name];
 			}
 		}
+
 		unset($fields, $fields_data);
 	}
 
@@ -192,9 +189,9 @@ class displayer extends types
 			{
 				continue;
 			}
-			else if ($field_type == 'textarea' && $row['size'] == 'large' && strpos($field_value, '<!-- PAGE') !== false)
+			else if ($field_type == 'textarea' && $row['size'] == 'large' && strpos($field_contents, '<!-- PAGE') !== false)
 			{
-				if (preg_match_all("#<!-- PAGE(.*?)? -->(.*?)<!-- ENDPAGE -->#s", $field_value, $matches))
+				if (preg_match_all("#<!-- PAGE(.*?)? -->(.*?)<!-- ENDPAGE -->#s", $field_contents, $matches))
 				{
 					if (sizeof($matches[2]))
 					{
