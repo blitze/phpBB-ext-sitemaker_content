@@ -101,7 +101,7 @@ class m2_initial_data extends \phpbb\db\migration\migration
 		}
 	}
 
-	public function create_bbcode()
+	public function create_bbcodes()
 	{
 		global $cache;
 
@@ -110,64 +110,78 @@ class m2_initial_data extends \phpbb\db\migration\migration
 			include($this->phpbb_root_path . 'includes/acp/acp_bbcodes.' . $this->php_ext);
 		}
 
-		$display_on_posting = false;
-		$bbcode_match = '[tag={IDENTIFIER}]{TEXT}[/tag]';
-		$bbcode_tpl = '<div data-field="{IDENTIFIER}">{TEXT}</div><br />';
-		$bbcode_helpline = '';
-
-		$bbcode_manager = new \acp_bbcodes();
-		$data = $bbcode_manager->build_regexp($bbcode_match, $bbcode_tpl);
-
-		$sql_ary = array(
-			'bbcode_tag'				=> $data['bbcode_tag'],
-			'bbcode_match'				=> $bbcode_match,
-			'bbcode_tpl'				=> $bbcode_tpl,
-			'display_on_posting'		=> $display_on_posting,
-			'bbcode_helpline'			=> $bbcode_helpline,
-			'first_pass_match'			=> $data['first_pass_match'],
-			'first_pass_replace'		=> $data['first_pass_replace'],
-			'second_pass_match'			=> $data['second_pass_match'],
-			'second_pass_replace'		=> $data['second_pass_replace']
+		$bbcodes_ary = array(
+			array(
+				'match'		=> '[tag={IDENTIFIER}]{TEXT}[/tag]',
+				'template'	=> '<!-- BEGIN {IDENTIFIER} -->{TEXT}<!-- END {IDENTIFIER} --><br />',
+			),
+			array(
+				'match'		=> '[page={SIMPLETEXT}]{TEXT}[/page]',
+				'template'	=> '<!-- PAGE {SIMPLETEXT} -->{TEXT}<!-- ENDPAGE --><br />',
+			),
+			array(
+				'match'		=> '[page]{TEXT}[/page]',
+				'template'	=> '<!-- PAGE -->{TEXT}<!-- ENDPAGE --><br />',
+			),
 		);
 
-		// Does this bbcode already exist?
-		$sql = 'SELECT bbcode_id
-			FROM ' . BBCODES_TABLE . "
-			WHERE bbcode_tag = '" . $this->db->sql_escape($sql_ary['bbcode_tag']) . "'";
+		$sql = 'SELECT bbcode_id, bbcode_tag
+			FROM ' . BBCODES_TABLE . '
+			ORDER BY bbcode_id ASC';
 		$result = $this->db->sql_query($sql);
-		$bbcode_id = $this->db->sql_fetchfield('bbcode_id');
+
+		$max_bbcode_id = NUM_CORE_BBCODES;
+		$current_bbcodes = array();
+
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$max_bbcode_id = (int) $row['bbcode_id'];
+			$current_bbcodes[$row['bbcode_tag']] = $row['bbcode_id'];
+		}
 		$this->db->sql_freeresult($result);
 
-		if (!empty($bbcode_id))
+		// Make sure max_bbcode_id is not less than the core bbcode ids...
+		if ($max_bbcode_id < NUM_CORE_BBCODES)
 		{
-			$this->db->sql_query('UPDATE ' . BBCODES_TABLE . ' SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . ' WHERE bbcode_id = ' . (int) $bbcode_id);
+			$max_bbcode_id = NUM_CORE_BBCODES;
 		}
-		else
+
+		$bbcode_manager = new \acp_bbcodes();
+
+		foreach ($bbcodes_ary as $bbcode)
 		{
-			$sql = 'SELECT MAX(bbcode_id) as max_bbcode_id
-				FROM ' . BBCODES_TABLE;
+			$data = $bbcode_manager->build_regexp($bbcode['match'], $bbcode['template']);
+
+			$sql_ary = array(
+				'bbcode_tag'				=> $data['bbcode_tag'],
+				'bbcode_match'				=> $bbcode['match'],
+				'bbcode_tpl'				=> $bbcode['template'],
+				'display_on_posting'		=> false,
+				'bbcode_helpline'			=> '',
+				'first_pass_match'			=> $data['first_pass_match'],
+				'first_pass_replace'		=> $data['first_pass_replace'],
+				'second_pass_match'			=> $data['second_pass_match'],
+				'second_pass_replace'		=> $data['second_pass_replace']
+			);
+
+			// Does this bbcode already exist?
+			$sql = 'SELECT bbcode_id, bbcode_tag
+				FROM ' . BBCODES_TABLE . "
+				WHERE bbcode_tag = '" . $this->db->sql_escape($sql_ary['bbcode_tag']) . "'";
 			$result = $this->db->sql_query($sql);
-			$row = $this->db->sql_fetchrow($result);
+			$bbcode_id = $this->db->sql_fetchfield('bbcode_id');
 			$this->db->sql_freeresult($result);
 
-			if ($row)
+			if (isset($current_bbcodes[$sql_ary['bbcode_tag']]))
 			{
-				$bbcode_id = $row['max_bbcode_id'] + 1;
-
-				// Make sure it is greater than the core bbcode ids...
-				if ($bbcode_id <= NUM_CORE_BBCODES)
-				{
-					$bbcode_id = NUM_CORE_BBCODES + 1;
-				}
+				$this->db->sql_query('UPDATE ' . BBCODES_TABLE . ' SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . ' WHERE bbcode_id = ' . (int) $current_bbcodes[$sql_ary['bbcode_tag']]);
 			}
 			else
 			{
-				$bbcode_id = NUM_CORE_BBCODES + 1;
+				$sql_ary['bbcode_id'] = ++$max_bbcode_id;
+
+				$this->db->sql_query('INSERT INTO ' . BBCODES_TABLE . $this->db->sql_build_array('INSERT', $sql_ary));
 			}
-
-			$sql_ary['bbcode_id'] = (int) $bbcode_id;
-
-			$this->db->sql_query('INSERT INTO ' . BBCODES_TABLE . $this->db->sql_build_array('INSERT', $sql_ary));
 		}
 
 		$cache->destroy('sql', BBCODES_TABLE);

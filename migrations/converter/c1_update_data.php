@@ -45,13 +45,6 @@ class c1_update_data extends \phpbb\db\migration\migration
 			2 => 'primetime.content.view.tiles',
 			3 => 'primetime.content.view.tiles'
 		);
-		$field_maps = array(
-			'category'	=> 'category',
-			'image'		=> 'image',
-			'summary'	=> 'textarea',
-			'content'	=> 'editor',
-			'tags'		=> 'tags',
-		);
 
 		$sql = 'SELECT t.topic_id, t.forum_id, t.topic_title, t.topic_tag
 			FROM ' . FORUMS_TABLE . ' f, ' . TOPICS_TABLE . " t
@@ -115,11 +108,25 @@ class c1_update_data extends \phpbb\db\migration\migration
 			for ($i = 0, $size = sizeof($fields); $i < $size; $i++)
 			{
 				$field_settings = '';
-				$field_type = isset($field_maps[$fields[$i]['name']]) ? $field_maps[$fields[$i]['name']] : $fields[$i]['name'];
+				$field_type = $fields[$i]['name'];
 
-				if ($field_type == 'editor' || $field_type == 'textarea')
+				if ($field_type == 'content')
 				{
-					$field_settings = serialize(array('max_chars' => $row['char_limit']));
+					$field_type = 'textarea';
+					$field_settings = serialize(array(
+						'max_chars' => $row['char_limit'],
+						'size'		=> 'large',
+						'editor'	=> true,
+					));
+				}
+				else if ($field_type == 'summary')
+				{
+					$field_type = 'textarea';
+					$field_settings = serialize(array(
+						'max_chars' => $row['char_limit'],
+						'size'		=> 'small',
+						'editor'	=> true,
+					));
 				}
 
 				$content_fields[] = array(
