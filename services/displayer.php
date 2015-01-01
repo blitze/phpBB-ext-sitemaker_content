@@ -91,7 +91,7 @@ class displayer extends types
 	/**
 	 * Set type data needed to display posts
 	 */
-	public function prepare_to_show($type, $view, $fields, $custom_tpl = '', $tpl_name = '', $max_chars = '')
+	public function prepare_to_show($type, $view, $fields, $custom_tpl = '', $tpl_name = '', $force_max_chars = '')
 	{
 		$form = $this->phpbb_container->get('primetime.content.form.builder');
 
@@ -126,10 +126,11 @@ class displayer extends types
 		{
 			if (isset($this->form_fields[$row['field_type']]))
 			{
-				if ($max_chars)
+				if ($force_max_chars)
 				{
-					$row['max_chars'] = $max_chars;
+					$row['max_chars'] = $force_max_chars;
 				}
+
 				$this->tags[] = $field;
 				$this->type_fields[$field] = $row;
 			}
@@ -140,7 +141,7 @@ class displayer extends types
 	/**
 	 * Get post
 	 */
-	public function show($type, $topic_title, $topic_data, $post_data, $user_cache, $topic_tracking_info = array())
+	public function show($type, $topic_title, $topic_data, $post_data, $user_cache, $topic_tracking_info = array(), $page = 1)
 	{
 		$row = $topic_data;
 		$forum_id = $row['forum_id'];
@@ -190,6 +191,71 @@ class displayer extends types
 			if (!$field_contents)
 			{
 				continue;
+			}
+			else if ($field_type == 'textarea' && $row['size'] == 'large' && strpos($field_value, '<!-- PAGE') !== false)
+			{
+				if (preg_match_all("#<!-- PAGE(.*?)? -->(.*?)<!-- ENDPAGE -->#s", $field_value, $matches))
+				{
+					if (sizeof($matches[2]))
+					{
+						$total_pages = sizeof($matches[2]);
+						$start = (($page > $total_pages) ? $total_pages - 1 : (($page < 1) ? 1 : $page)) - 1;
+						$field_contents = $matches[2][$start];
+
+						// Generate pagination
+						if ($this->view == 'detail')
+						{
+							$this->phpbb_container->get('pagination')->generate_template_pagination(
+								array(
+									'routes' => array(
+										'primetime_content_show',
+										'primetime_content_show_page',
+									),
+									'params' => array(
+										'type'		=> $type,
+										'topic_id'	=> $topic_id,
+										'slug'		=> $topic_data['topic_slug']
+									),
+								),
+								'page', 'page', $total_pages, 1, $start);
+
+							// Generate TOC
+							if (sizeof(array_filter($matches[1])))
+							{
+								foreach ($matches[1] as $pg => $title)
+								{
+									$title = ($title) ? $title : $this->user->lang['CONTENT_TOC_UNTITLED'];
+									$this->template->assign_block_vars('toc', array(
+										'TITLE'		=> $title,
+										'S_PAGE'	=> ($pg == $start) ? true : false,
+										'U_VIEW'	=> $topic_url . (($pg > 0) ? '/page/' . ($pg + 1) : ''),
+									));
+								}
+							}
+
+							// When Previewing
+							if (!empty($post_data['preview']))
+							{
+								for ($i = 1, $size = sizeof($matches[2]); $i < $size; $i++)
+								{
+									$this->template->assign_block_vars('pages', array(
+										'CONTENT'	=> $matches[2][$i],
+										'PAGE'		=> $i + 1,
+									));
+								}
+							}
+
+							// Hide all other fields if we're looking at page 2+
+							if ($page > 1)
+							{
+								$fields_data = array(
+									$field_name	=> $field_contents
+								);
+								break;
+							}
+						}
+					}
+				}
 			}
 
 			$fields_data[$field_name] = '<div class="field-label ' . $label_class[$row['field_' . $this->view . '_ldisp']] . '">' . $row['field_label'] . ': </div>' . $field_contents;

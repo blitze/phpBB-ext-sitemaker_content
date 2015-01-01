@@ -530,6 +530,9 @@ class manager
 					// Preview
 					if ($preview)
 					{
+						$this->user->add_lang('viewtopic');
+						$this->user->add_lang_ext('primetime/content', 'content');
+
 						if (!function_exists('get_user_rank'))
 						{
 							include($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
@@ -544,6 +547,7 @@ class manager
 							$view = $this->phpbb_container->get('primetime.content.view.portal');
 						}
 
+						$post_data['preview'] = true;
 						$post_data['post_text'] = $message_parser->format_display($allow_bbcode, $allow_urls, $allow_smilies, false);
 						$poster_id = $this->user->data['user_id'];
 

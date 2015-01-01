@@ -46,6 +46,8 @@ $lang = array_merge($lang, array(
 	'PRON_FEMALE'		=> 'She',
 	'PRON_NO_GENDER'	=> 'He/She',
 
+	'CONTENT_TOC'			=> 'Table of Contents',
+	'CONTENT_TOC_UNTITLED'	=> 'Untitled',
 	'AUTHOR_INFO'			=> 'About the Author',
 	'AUTHOR_INFO_EXPLAIN'	=> '%1$s has been a member since %2$s. %3$s has posted a total of %4$s %5$s item(s) for a total of %6$s post(s).',
 	'AUTHOR_CONTENTS'		=> 'Other %1$s by %2$s',

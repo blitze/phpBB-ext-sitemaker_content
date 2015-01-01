@@ -13,8 +13,8 @@
 		<div class="postbody pt-postbody">
 			<div class="calendar">{topic_row.TOPIC_DATE|date('d')} <em>{topic_row.TOPIC_DATE|date('M')}</em></div>
 		<!-- IF not topic_row.CUSTOM_DISPLAY -->
-			<h3 class="first"><a href="{topic_row.TOPIC_URL}">{topic_row.TOPIC_TITLE}</a></h3><br /><br />
-			<p class="author" style="display: inline"><!-- IF S_IS_BOT -->{topic_row.MINI_POST_IMG}<!-- ELSE --><a href="{topic_row.U_MINI_POST}">{topic_row.MINI_POST_IMG}</a><!-- ENDIF --><span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{topic_row.TOPIC_AUTHOR_FULL}</strong></span> | <i class="fa fa-calendar"></i> {topic_row.TOPIC_DATE|date("m/d/Y")}<!-- IF S_COMMENTS --> | <i class="fa fa-comments-o fa-lg"></i> <a href="{topic_row.TOPIC_URL}#comments">{topic_row.TOPIC_COMMENTS}<span class="responsive-hide"> {L_COMMENTS}</span></a><!-- ENDIF --></p><br /><br />
+			<h3 class="first"><a href="{topic_row.TOPIC_URL}">{topic_row.TOPIC_TITLE}</a></h3>
+			<p class="author" style="display: inline"><!-- IF S_IS_BOT -->{topic_row.MINI_POST_IMG}<!-- ELSE --><a href="{topic_row.U_MINI_POST}">{topic_row.MINI_POST_IMG}</a><!-- ENDIF --><span class="responsive-hide">{L_POST_BY_AUTHOR} </span><strong>{topic_row.TOPIC_AUTHOR_FULL}</strong> | <i class="fa fa-calendar"></i> {topic_row.TOPIC_DATE|date("m/d/Y")}<!-- IF S_COMMENTS --> | <i class="fa fa-comments-o fa-lg"></i> <a href="{topic_row.TOPIC_URL}#comments">{topic_row.TOPIC_COMMENTS}<span class="responsive-hide"> {L_COMMENTS}</span></a><!-- ENDIF --></p><br /><br />
 		<!-- ENDIF -->
 			<div class="content" style="display: inline">
 			<!-- IF topic_row.CUSTOM_DISPLAY -->

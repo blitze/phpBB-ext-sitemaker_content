@@ -165,7 +165,7 @@ class display
 		return $this->helper->render($view->get_index_template(), $content_langname);
 	}
 
-	public function show($type, $topic_id, $slug, $page)
+	public function show($type, $topic_id, $slug, $page = 1)
 	{
 		$this->user->add_lang('viewtopic');
 		$this->user->add_lang_ext('primetime/content', 'content');
@@ -217,7 +217,7 @@ class display
 		$post_data = array_shift($post_data[$topic_id]);
 		$topic_title = censor_text($topic_data['topic_title']);
 
-		$view->show_topic($topic_title, $type, $topic_data, $post_data, $users_cache[$poster_id], $topic_tracking_info);
+		$view->show_topic($topic_title, $type, $topic_data, $post_data, $users_cache[$poster_id], $topic_tracking_info, $page);
 
 		if ($type_data['allow_comments'])
 		{

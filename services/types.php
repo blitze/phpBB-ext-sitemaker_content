@@ -146,8 +146,7 @@ class types
 	{
 		$fields_data = array();
 		$find_tags = join('|', $fields);
-
-		if (preg_match_all('/<div[^>]+data-field="(' . $find_tags . ')"[^>]*>(.*)<\/div>/is', $post_text, $matches))
+		if (preg_match_all("#<!-- BEGIN ($find_tags) -->(.*?)<!-- END ($find_tags) -->#s", $post_text, $matches))
 		{
 			$fields_data = array_combine($matches[1], $matches[2]);
 		}

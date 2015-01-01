@@ -39,7 +39,7 @@
 				<div class="postbody pt-postbody">
 					<!-- IF not CUSTOM_DISPLAY -->
 					<h3 class="first"><a href="{TOPIC_URL}">{TOPIC_TITLE}</a></h3>
-					<p class="author">{MINI_POST_IMG}<span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{TOPIC_AUTHOR_FULL}</strong></span> | <i class="fa fa-calendar"></i> {TOPIC_DATE|date("m/d/Y")}<!-- IF S_COMMENTS --> | <i class="fa fa-comments-o fa-lg"></i> <a href="#comments">{TOPIC_COMMENTS}<span class="responsive-hide"> {L_COMMENTS}</span></a><!-- ENDIF --></p>
+					<p class="author">{MINI_POST_IMG}<span class="responsive-hide">{L_POST_BY_AUTHOR} </span><strong>{TOPIC_AUTHOR_FULL}</strong> | <i class="fa fa-calendar"></i> {TOPIC_DATE|date("m/d/Y")}<!-- IF S_COMMENTS --> | <i class="fa fa-comments-o fa-lg"></i> <a href="#comments">{TOPIC_COMMENTS}<span class="responsive-hide"> {L_COMMENTS}</span></a><!-- ENDIF --></p>
 					<!-- ENDIF -->
 					<div class="content">
 						<!-- IF CUSTOM_DISPLAY -->
@@ -129,7 +129,33 @@
 					</ul>
 					<div class="clear"></div>
 					<div id="post_details">
-						<!-- INCLUDE {DETAIL_TPL} -->
+						<div id="page-1" class="pages">
+							<!-- INCLUDE {DETAIL_TPL} -->
+						</div>
+						<!-- BEGIN pages -->
+						<div id="page-{pages.PAGE}" class="pages" style="display: none">
+							{pages.CONTENT}
+						</div>
+						<!-- END pages -->
+
+						<!-- IF .page -->
+						<br /><hr />
+						<div class="action-bar bottom">
+							<div class="pagination pull-left">
+								<ul>
+								<!-- BEGIN page -->
+									<!-- IF page.S_FIRST_ROW -->
+									<li><a class="first current" href="{page.PAGE_URL}" role="button">{page.PAGE_NUMBER}</a></li>
+									<!-- ELSE -->
+									<li><a href="{page.PAGE_URL}" role="button">{page.PAGE_NUMBER}</a></li>
+									<!-- ENDIF -->
+								<!-- END page -->
+								</ul>
+							</div>
+							<div class="clear"></div>
+						</div>
+						<br />
+						<!-- ENDIF -->
 					</div>
 				</div>
 			</div>
@@ -150,7 +176,7 @@
 			<!-- IF MODE == 'mcp' && NUM_PENDING --><span class="error">{L_PENDING_TOPICS}: <a href="{U_PENDING}"><strong>[{NUM_PENDING}]</strong></a></span><!-- ENDIF -->
 
 			<!-- IF .postable -->
-			<div class="action-bar top">
+			<div class="action-bar top responsive-center">
 				<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
 					<span title="{L_CONTENT_NEW}" class="button dropdown-trigger dropdown-select"><i class="fa fa-plus"></i> {L_CONTENT_NEW}</span>
 					<div class="dropdown hidden">
@@ -167,13 +193,13 @@
 				{L_NOT_AUTHORIZED}
 			<!-- ENDIF -->
 
-			<div class="right-box">
+			<div class="right-box responsive-center">
 				<form method="post" action="{U_ACTION}" style="margin-right: 5px">
 					<input type="search" placeholder="{L_TOPIC_TITLE}" id="search" class="panel inputbox autowidth" name="search" size="28" maxwidth="255" value="" />
 					<input type="submit" class="panel bg3" value="{L_SEARCH}" />
 				</form>
 
-				<div class="action-bar top right-box">
+				<div class="action-bar top right-box responsive-center">
 					<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
 						<span title="{L_TOPIC_STATUS}" class="button dropdown-trigger dropdown-select"><i class="fa <!-- IF S_STATUS_FILTER -->fa-filter<!-- ELSE -->fa-square-o<!-- ENDIF -->"></i> {L_TOPIC_STATUS}</span>
 						<div class="dropdown hidden">
@@ -192,7 +218,7 @@
 				</div>
 
 				<!-- IF .content > 1 -->
-				<div class="action-bar top right-box">
+				<div class="action-bar top right-box responsive-center">
 					<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
 						<span title="{L_CONTENT_TYPE}" class="button dropdown-trigger dropdown-select"><i class="fa <!-- IF S_CONTENT_FILTER -->fa-filter<!-- ELSE -->fa-square-o<!-- ENDIF -->"></i> {L_CONTENT_TYPE}</span>
 						<div class="dropdown hidden">

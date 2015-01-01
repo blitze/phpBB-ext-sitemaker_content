@@ -105,7 +105,7 @@ abstract class view implements views_interface
 		}
 	}
 
-	public function show_topic($topic_title, $type, $topic_data, $post_data, $user_cache, $topic_tracking_info = array())
+	public function show_topic($topic_title, $type, $topic_data, $post_data, $user_cache, $topic_tracking_info = array(), $page = 1)
 	{
 		$max_post_time = 0;
 		$update_count = array();
@@ -121,7 +121,7 @@ abstract class view implements views_interface
 
 		$tpl_data = $this->get_common_template_data($topic_data, $post_data, $topic_tracking_info);
 		$tpl_data += $this->get_detail_template_data($type, $topic_data, $post_data, $user_cache);
-		$tpl_data += $this->displayer->show($type, $topic_title, $topic_data, $post_data, $user_cache, $topic_tracking_info);
+		$tpl_data += $this->displayer->show($type, $topic_title, $topic_data, $post_data, $user_cache, $topic_tracking_info, $page);
 		$this->template->assign_vars($tpl_data);
 
 		// Update topic view and if necessary attachment view counters ... but only for humans and if this is the first 'page view'

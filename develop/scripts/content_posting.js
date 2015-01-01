@@ -18,5 +18,19 @@
 			var color = $(this).attr('data-color');
 			bbfontstyle('[color=#' + color + ']', '[/color]');
 		});
+
+		var tocItems = $('#preview-detail-panel .toc a, #preview-detail-panel .pagination a').click(function(e) {
+			var url = $(this).attr('href').match(/\/(\d+)$/);
+			var page = (url !== null) ? url[1] : 1;
+			$('.pages').hide();
+			$('#page-' + page).show();
+			tocItems.removeClass('current');
+			if (page > 1) {
+				tocItems.filter('[href$="' + page + '"]').addClass('current');
+			} else {
+				tocItems.filter('.first').addClass('current');
+			}
+			e.preventDefault();
+		});
 	});
 })(jQuery, window, document);

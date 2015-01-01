@@ -98,3 +98,7 @@
 .calendar em:after {
 	right: 9px;
 }
+
+.pt-postbody .first {
+	float: none;
+}
