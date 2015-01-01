@@ -553,7 +553,7 @@ class content_module
 				foreach ($this->views as $service => $label)
 				{
 					$this->template->assign_block_vars('view', array(
-						'LABEL'		=> $this->user->lang[$label],
+						'LABEL'		=> (isset($this->user->lang[$label])) ? $this->user->lang[$label] : $label,
 						'VALUE'		=> $service,
 						'S_SELECTED'	=> ($service == $row['display_type']) ? true : false,
 					));
