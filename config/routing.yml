@@ -1,10 +1,10 @@
 primetime_content_index:
     path: /content/{type}
-    defaults: { _controller: primetime.content.display.controller:index, page: 1 }
+    defaults: { _controller: primetime.content.display.controller:index }
 
 primetime_content_index_page:
     path: /content/{type}/page/{page}
-    defaults: { _controller: primetime.content.display.controller:index }
+    defaults: { _controller: primetime.content.display.controller:index, page: 1 }
     requirements:
         page: \d+
 
@@ -21,8 +21,18 @@ primetime_content_show_page:
         topic_id: \d+
         page: \d+
 
-primetime_content_comments_page:
+primetime_content_show_comments_page:
     path: /content/{type}/{topic_id}/{slug}/comments/page/{page}
     defaults: { _controller: primetime.content.display.controller:show }
+    requirements:
+        page: \d+
+
+primetime_content_index_filter:
+    path: /content/{type}/{filter}/{filter_value}
+    defaults: { _controller: primetime.content.display.controller:index, page: 1 }
+
+primetime_content_index_filter_page:
+    path: /content/{type}/{filter}/{fitler_value}/page/{page}
+    defaults: { _controller: primetime.content.display.controller:index, page: 1 }
     requirements:
         page: \d+

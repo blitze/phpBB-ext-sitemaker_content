@@ -142,7 +142,7 @@ class comments implements comments_interface
 			array(
 				'routes' => array(
 					'primetime_content_show',
-					'primetime_content_comments_page',
+					'primetime_content_show_comments_page',
 				),
 				'params' => array(
 					'type'			=> $content_type,

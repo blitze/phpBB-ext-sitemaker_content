@@ -22,6 +22,9 @@ class display
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
+	/** @var \phpbb\controller\helper */
+	protected $helper;
+
 	/** @var phpbb\pagination */
 	protected $pagination;
 
@@ -78,7 +81,7 @@ class display
 		$this->php_ext = $php_ext;
 	}
 
-	public function index($type, $page)
+	public function index($type, $page = 1, $filter = '', $filter_value = '')
 	{
 		$type_data = $this->displayer->get_type($type);
 
