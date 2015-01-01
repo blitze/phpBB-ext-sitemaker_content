@@ -125,7 +125,7 @@ abstract class view implements views_interface
 		$this->template->assign_vars($tpl_data);
 
 		// Update topic view and if necessary attachment view counters ... but only for humans and if this is the first 'page view'
-		if (isset($this->user->data['session_page']) && !$this->user->data['is_bot'] && (strpos($this->user->data['session_page'], "content/$type/$topic_id/$slug") === false || isset($this->user->data['session_created'])))
+		if (isset($this->user->data['session_page']) && !$this->user->data['is_bot'] && (strpos($this->user->data['session_page'], "content/$type/$topic_id/$slug") === false && $page === 1 || isset($this->user->data['session_created'])))
 		{
 			$sql = 'UPDATE ' . TOPICS_TABLE . '
 				SET topic_views = topic_views + 1, topic_last_view_time = ' . time() . "
