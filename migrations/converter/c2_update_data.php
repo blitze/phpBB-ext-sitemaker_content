@@ -89,7 +89,7 @@ class c1_update_data extends \phpbb\db\migration\migration
 				'post_checksum'		=> md5($message),
 				'bbcode_bitfield'	=> $message_parser->bbcode_bitfield,
 				'bbcode_uid'		=> (string) $message_parser->bbcode_uid,
-			));
+			);
 
 			$this->db->sql_query('UPDATE ' . POSTS_TABLE . ' SET ' . $this->db->sql_build_array('UPDATE', $sql_data) . ' WHERE post_id = ' . $post_id);
 
