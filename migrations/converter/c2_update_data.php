@@ -11,7 +11,7 @@ namespace primetime\content\migrations\converter;
 
 use Cocur\Slugify\Slugify;
 
-class c1_update_data extends \phpbb\db\migration\migration
+class c2_update_data extends \phpbb\db\migration\migration
 {
 	/**
 	 * Skip this migration if the content types table does not exist
