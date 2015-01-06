@@ -21,8 +21,7 @@ class m2_initial_data extends \phpbb\db\migration\migration
 	{
 		return array(
 			'\primetime\content\migrations\v20x\m1_initial_schema',
-			'\primetime\content\migrations\converter\c1_update_data',
-			'\primetime\content\migrations\converter\c2_update_tables',
+			'\primetime\content\migrations\converter\c1_update_config',
 		);
 	}
 
@@ -33,7 +32,7 @@ class m2_initial_data extends \phpbb\db\migration\migration
 	{
 		return array(
 			array('custom', array(array($this, 'create_forum'))),
-			array('custom', array(array($this, 'create_bbcode'))),
+			array('custom', array(array($this, 'create_bbcodes'))),
 			array('config.add', array('primetime_content_forums', '')),
 			array('config.add', array('primetime_content_forum_id', 0)),
 		);

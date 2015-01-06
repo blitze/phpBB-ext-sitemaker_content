@@ -12,7 +12,7 @@ namespace primetime\content\migrations\converter;
 /**
  * Initial schema changes needed for Extension installation
  */
-class c2_update_tables extends \phpbb\db\migration\migration
+class c3_update_tables extends \phpbb\db\migration\migration
 {
 	/**
 	 * Skip this migration if a previous blocks table does not exist
@@ -23,6 +23,16 @@ class c2_update_tables extends \phpbb\db\migration\migration
 	public function effectively_installed()
 	{
 		return !$this->db_tools->sql_table_exists($this->table_prefix . 'content_types');
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	static public function depends_on()
+	{
+		return array(
+			'\primetime\content\migrations\converter\c2_update_data',
+		);
 	}
 
 	/**

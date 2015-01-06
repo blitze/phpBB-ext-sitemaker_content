@@ -31,11 +31,17 @@ class c1_update_data extends \phpbb\db\migration\migration
 	{
 		return array(
 			'\primetime\content\migrations\v20x\m1_initial_schema',
+			'\primetime\content\migrations\v20x\m2_initial_data',
 		);
 	}
 
 	public function update_data()
 	{
+		// required by message_parser
+		global $phpbb_root_path, $phpEx;
+
+		include($this->phpbb_root_path . 'includes/message_parser.' . $this->php_ext);
+
 		$slugify = new Slugify();
 
 		$return_data = array();
@@ -46,20 +52,49 @@ class c1_update_data extends \phpbb\db\migration\migration
 			3 => 'primetime.content.view.tiles'
 		);
 
-		$sql = 'SELECT t.topic_id, t.forum_id, t.topic_title, t.topic_tag
-			FROM ' . FORUMS_TABLE . ' f, ' . TOPICS_TABLE . " t
-			WHERE t.topic_tag <> ''
-				AND f.forum_id = t.forum_id
+		$sql = 'SELECT t.topic_id, t.forum_id, t.topic_title, t.topic_tag, p.post_id, p.post_text, p.bbcode_uid
+			FROM ' . FORUMS_TABLE . ' f, ' . TOPICS_TABLE . ' t, ' . POSTS_TABLE . " p
+			WHERE p.post_id = t.topic_first_post_id
+				AND t.topic_tag <> ''
+				AND t.forum_id = f.forum_id
 				AND f.parent_id = " . (int) $this->config['content_forum_id'];
 		$result = $this->db->sql_query($sql);
 
 		$topic_tags = $poll = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$topic_tags[$row['forum_id']] = $row['topic_tag'];
+			$post_info = generate_text_for_edit($row['post_text'], $row['bbcode_uid'], 7);
+
+			$forum_id		= (int) $row['forum_id'];
+			$topic_id		= (int) $row['topic_id'];
+			$post_id		= (int) $row['post_id'];
+			$message		= $post_info['text'];
+			$allow_bbcode	= $post_info['allow_bbcode'];
+			$allow_urls		= $post_info['allow_urls'];
+			$allow_smilies	= $post_info['allow_smilies'];
+
+			$topic_tags[$forum_id] = $row['topic_tag'];
+
+			$message_parser = new \parse_message($message);
+
+			// Allowing Quote BBCode
+			$message_parser->parse($allow_bbcode, $allow_urls, $allow_smilies, true, true, true, true, true, 'post');
+
+			$sql_data = array(
+				'enable_bbcode'		=> $allow_bbcode,
+				'enable_smilies'	=> $allow_smilies,
+				'enable_magic_url'	=> $allow_urls,
+				'enable_sig'		=> false,
+				'post_text'			=> (string) $message_parser->message,
+				'post_checksum'		=> md5($message),
+				'bbcode_bitfield'	=> $message_parser->bbcode_bitfield,
+				'bbcode_uid'		=> (string) $message_parser->bbcode_uid,
+			));
+
+			$this->db->sql_query('UPDATE ' . POSTS_TABLE . ' SET ' . $this->db->sql_build_array('UPDATE', $sql_data) . ' WHERE post_id = ' . $post_id);
 
 			$slug = $slugify->slugify($row['topic_title']);
-			$this->db->sql_query('UPDATE ' . TOPICS_TABLE . " SET topic_slug = '$slug' WHERE topic_id = " . (int) $row['topic_id']);
+			$this->db->sql_query('UPDATE ' . TOPICS_TABLE . " SET topic_slug = '$slug' WHERE topic_id = " . $topic_id);
 		}
 		$this->db->sql_freeresult($result);
 
@@ -149,7 +184,7 @@ class c1_update_data extends \phpbb\db\migration\migration
 		$this->import_data($content_types, 'pt_content_types');
 		$this->import_data($content_fields, 'pt_content_fields');
 
-		$return_data[] = array('config.add', array('primetime_content_forum_id', (int) $this->config['content_forum_id']));
+		$return_data[] = array('config.remove', array('content_forum_id'));
 
 		return $return_data;
 	}

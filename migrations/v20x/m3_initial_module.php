@@ -21,6 +21,8 @@ class m3_initial_module extends \phpbb\db\migration\migration
 	{
 		return array(
 			'\primetime\content\migrations\v20x\m2_initial_data',
+			'\primetime\content\migrations\converter\c2_update_data',
+			'\primetime\content\migrations\converter\c3_update_tables',
 		);
 	}
 
