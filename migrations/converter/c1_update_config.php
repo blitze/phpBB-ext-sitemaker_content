@@ -25,7 +25,7 @@ class c1_update_config extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return array(
-			array('config.add', array('primetime_content_forum_id', (int) $this->config['content_forum_id']));
+			array('config.add', array('primetime_content_forum_id', (int) $this->config['content_forum_id']))
 		);
 	}
 }
