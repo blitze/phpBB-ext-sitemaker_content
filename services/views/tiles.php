@@ -65,8 +65,8 @@ class tiles extends view
 		$asset_path = $this->primetime->asset_path;
 		$this->primetime->add_assets(array(
 			'js'   => array(
-				$asset_path . 'ext/primetime/content/assets/vendor/imagesloaded/imagesloaded.min.js',
-				$asset_path . 'ext/primetime/content/assets/vendor/masonry/masonry.min.js',
+				$asset_path . 'ext/primetime/content/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js',
+				$asset_path . 'ext/primetime/content/assets/vendor/masonry/dist/masonry.pkgd.min.js',
 				$asset_path . 'ext/primetime/content/assets/scripts/tiles.min.js',
 			)
 		));

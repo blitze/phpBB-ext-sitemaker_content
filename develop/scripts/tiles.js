@@ -2,7 +2,7 @@
 	'use strict';
 
 	$(document).ready(function() {
-		var container = $('#grid');
+		var container = $('#primetime-content-grid');
 		var loadAnchor = $('#tile-load-more');
 
 		// initialize Masonry after all images have loaded
