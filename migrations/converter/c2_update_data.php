@@ -43,8 +43,13 @@ class c2_update_data extends \phpbb\db\migration\migration
 		include($this->phpbb_root_path . 'includes/message_parser.' . $this->php_ext);
 
 		$slugify = new Slugify();
+		$message_parser = new \parse_message();
+		$message_parser->mode = 'post';
+		$message_parser->bbcode_init();
 
+		$last_topic_id = 0;
 		$return_data = array();
+		$topic_tags = $poll = array();
 		$display_maps = array(
 			0 => 'primetime.content.view.blog',
 			1 => 'primetime.content.view.portal',
@@ -52,49 +57,48 @@ class c2_update_data extends \phpbb\db\migration\migration
 			3 => 'primetime.content.view.tiles'
 		);
 
-		$sql = 'SELECT t.topic_id, t.forum_id, t.topic_title, t.topic_tag, p.post_id, p.post_text, p.bbcode_uid
+		$sql = 'SELECT t.topic_id, t.forum_id, t.topic_title, t.topic_tag, p.post_id, p.post_text, p.bbcode_uid, p.enable_bbcode, p.enable_smilies
 			FROM ' . FORUMS_TABLE . ' f, ' . TOPICS_TABLE . ' t, ' . POSTS_TABLE . " p
 			WHERE p.post_id = t.topic_first_post_id
 				AND t.topic_tag <> ''
 				AND t.forum_id = f.forum_id
-				AND f.parent_id = " . (int) $this->config['content_forum_id'];
+				AND f.parent_id = " . (int) $this->config['content_forum_id'] . '
+			ORDER BY t.topic_id';
 		$result = $this->db->sql_query($sql);
 
-		$topic_tags = $poll = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$post_info = generate_text_for_edit($row['post_text'], $row['bbcode_uid'], 7);
+			$forum_id	= (int) $row['forum_id'];
+			$topic_id	= (int) $row['topic_id'];
+			$post_id	= (int) $row['post_id'];
 
-			$forum_id		= (int) $row['forum_id'];
-			$topic_id		= (int) $row['topic_id'];
-			$post_id		= (int) $row['post_id'];
-			$message		= $post_info['text'];
-			$allow_bbcode	= $post_info['allow_bbcode'];
-			$allow_urls		= $post_info['allow_urls'];
-			$allow_smilies	= $post_info['allow_smilies'];
+			// Convert bbcodes back to their normal form
+			if ($row['enable_bbcode'])
+			{
+				decode_message($row['post_text'], $row['bbcode_uid']);
 
-			$topic_tags[$forum_id] = $row['topic_tag'];
+				$message_parser->message = $row['post_text'];
 
-			$message_parser = new \parse_message($message);
+				$message_parser->prepare_bbcodes();
+				$message_parser->parse_bbcode();
 
-			// Allowing Quote BBCode
-			$message_parser->parse($allow_bbcode, $allow_urls, $allow_smilies, true, true, true, true, true, 'post');
+				$bitfield = $message_parser->bbcode_bitfield;
 
-			$sql_data = array(
-				'enable_bbcode'		=> $allow_bbcode,
-				'enable_smilies'	=> $allow_smilies,
-				'enable_magic_url'	=> $allow_urls,
-				'enable_sig'		=> false,
-				'post_text'			=> (string) $message_parser->message,
-				'post_checksum'		=> md5($message),
-				'bbcode_bitfield'	=> $message_parser->bbcode_bitfield,
-				'bbcode_uid'		=> (string) $message_parser->bbcode_uid,
-			);
+				$this->db->sql_query('UPDATE ' . POSTS_TABLE . " SET bbcode_bitfield = '" . $this->db->sql_escape($bitfield) . "' WHERE post_id = " . $post_id);
+			}
+			else
+			{
+				$this->db->sql_query('UPDATE ' . POSTS_TABLE . " SET bbcode_bitfield = '' WHERE post_id = " . $post_id);
+			}
 
-			$this->db->sql_query('UPDATE ' . POSTS_TABLE . ' SET ' . $this->db->sql_build_array('UPDATE', $sql_data) . ' WHERE post_id = ' . $post_id);
+			if ($topic_id != $last_topic_id)
+			{
+				$last_topic_id = $topic_id;
+				$topic_tags[$forum_id] = $row['topic_tag'];
+				$slug = $slugify->slugify($row['topic_title']);
 
-			$slug = $slugify->slugify($row['topic_title']);
-			$this->db->sql_query('UPDATE ' . TOPICS_TABLE . " SET topic_slug = '$slug' WHERE topic_id = " . $topic_id);
+				$this->db->sql_query('UPDATE ' . TOPICS_TABLE . " SET topic_slug = '$slug' WHERE topic_id = " . $topic_id);
+			}
 		}
 		$this->db->sql_freeresult($result);
 
