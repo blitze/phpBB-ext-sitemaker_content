@@ -339,6 +339,12 @@ class manager
 				$type_data = $content_types[$type];
 				$content_fields = $type_data['content_fields'];
 				$forum_id = $type_data['forum_id'];
+
+				if (!$this->auth->acl_get('f_post', $forum_id))
+				{
+					trigger_error('NOT_AUTHORISED');
+				}
+
 				$user_is_mod = $this->auth->acl_get('m_', $forum_id);
 
 				$post_data = array(
