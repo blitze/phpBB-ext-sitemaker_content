@@ -1,16 +1,18 @@
 {
   "name": "Primetime Content",
   "dependencies": {
-    "masonry": "~3.1.5",
-    "datetimepicker": "~2.3.9",
-    "imagesloaded": "~3.1.8"
+    "masonry": "latest",
+    "datetimepicker": "latest",
+    "imagesloaded": "latest"
   },
   "overrides": {
     "masonry": {
-      "dependencies": null
+      "dependencies": null,
+      "main": "dist/masonry.pkgd.min.js"
     },
     "imagesloaded": {
-      "dependencies": null
+      "dependencies": null,
+      "main": "imagesloaded.pkgd.min.js"
     },
     "datetimepicker": {
       "dependencies": null

@@ -10,7 +10,7 @@ var gulp = require('gulp'),
 		'dev': {
 			'scripts': 'develop/scripts/',
 			'theme': 'develop/theme/',
-			'vendor': 'develop/vendor/'
+			'vendor': 'bower_components/'
 		},
 		'prod': {
 			'scripts': 'assets/scripts/',
