@@ -188,7 +188,7 @@ class listener implements EventSubscriberInterface
 			if (sizeof($match))
 			{
 				$row = $this->content_types->get_type($match[1]);
-				$lang = (!empty($match[2])) ? 'HOME' : 'INDEX';
+				$lang = (!empty($match[2])) ? 'PRIMETIME_READING_TOPIC' : 'PRIMETIME_BROWSING_CONTENT';
 
 				$event['location'] = sprintf($this->user->lang($lang), $row['content_langname']);
 				$event['location_url'] = $event['row']['session_page'];

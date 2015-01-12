@@ -40,5 +40,7 @@ $lang = array_merge($lang, array(
 	'LOAD_MORE'			=> 'Load more content',
 	'READ_MORE'			=> 'Read More',
 	'COMMENTS'			=> 'Comments',
-	'CONTENT_NO_TOPICS'	=> 'Sorry! No topics have been posted for this content type',
+	'CONTENT_NO_TOPICS'				=> 'Sorry! No topics have been posted for this content type',
+	'PRIMETIME_READING_TOPIC'		=> 'Reading topic in %s',
+	'PRIMETIME_BROWSING_CONTENT'	=> 'Browsing %s',
 ));
