@@ -220,6 +220,37 @@
 				</h2>
 			<!-- BEGIN comment -->
 				<div id="p{comment.POST_ID}" class="panel bg2">
+				<!-- IF not S_IS_BOT -->
+				<!-- IF comment.U_EDIT or comment.U_DELETE or comment.U_REPORT or comment.U_WARN or comment.U_INFO or comment.U_QUOTE -->
+				<ul class="post-buttons">
+					<!-- IF comment.U_EDIT -->
+					<li>
+						<a href="{comment.U_EDIT}" title="{L_EDIT_POST}" class="button icon-button edit-icon"><span>{L_BUTTON_EDIT}</span></a>
+					</li>
+					<!-- ENDIF -->
+					<!-- IF comment.U_DELETE -->
+					<li>
+						<a href="{comment.U_DELETE}" title="{L_DELETE_POST}" class="button icon-button delete-icon"><span>{L_DELETE_POST}</span></a>
+					</li>
+					<!-- ENDIF -->
+					<!-- IF comment.U_REPORT -->
+					<li>
+						<a href="{comment.U_REPORT}" title="{L_REPORT_POST}" class="button icon-button report-icon"><span>{L_REPORT_POST}</span></a>
+					</li>
+					<!-- ENDIF -->
+					<!-- IF comment.U_WARN -->
+					<li>
+						<a href="{comment.U_WARN}" title="{L_WARN_USER}" class="button icon-button warn-icon"><span>{L_WARN_USER}</span></a>
+					</li>
+					<!-- ENDIF -->
+					<!-- IF comment.U_INFO -->
+					<li>
+						<a href="{comment.U_INFO}" title="{L_INFORMATION}" class="button icon-button info-icon"><span>{L_INFORMATION}</span></a>
+					</li>
+					<!-- ENDIF -->
+				</ul>
+				<!-- ENDIF -->
+				<!-- ENDIF -->
 					<div class="small-avatar img-align-left">
 						<!-- IF comment.POSTER_AVATAR -->
 						<div class="img-ui">
