@@ -16,9 +16,10 @@ class content_module
 
 	function main($id, $mode)
 	{
-		global $phpbb_container;
+		global $phpbb_container, $template;
 
 		$this->tpl_name = 'cp_content';
+		$template->assign_var('MODE', 'ucp');
 		$phpbb_container->get('primetime.content.manager')->handle_crud('ucp', $this->u_action);
 	}
 }

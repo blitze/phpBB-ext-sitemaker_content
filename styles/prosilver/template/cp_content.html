@@ -1,6 +1,18 @@
 <!-- INCLUDE {MODE}_header.html -->
 
-<!-- IF not S_PREVIEW --><h2>{L_MANAGE_CONTENT}</h2><!-- ENDIF -->
+<!-- IF not S_PREVIEW -->
+	<!-- IF S_ACTION -->
+	<div class="pull-right responsive-center">
+		<form method="post" action="{S_ACTION}">
+			<fieldset>
+				<input type="search" placeholder="{L_TOPIC_TITLE}" class="panel inputbox tiny" name="search" size="20" maxlength="128" value="" />
+				<input type="submit" class="panel bg3" value="{L_SEARCH}" />
+			</fieldset>
+		</form>
+	</div>
+	<!-- ENDIF -->
+<h2>{L_MANAGE_CONTENT}</h2>
+<!-- ENDIF -->
 
 <!-- IF S_VIEWING -->
 
@@ -53,7 +65,7 @@
 		</div>
 	</div>
 
-	<!-- IF MODE == 'mcp' -->
+	<!-- IF MODE == 'mcp' and (S_POST_UNAPPROVED || S_POST_DELETED || S_POST_REPORTED) -->
 	<div class="panel post">
 		<div class="inner">
 			<h3>{L_TOOLS}</h3>
@@ -171,37 +183,34 @@
 	</div>
 
 <!-- ELSE -->
+	<!-- IF MODE == 'mcp' --><form method="post" id="mcp" action="{S_ACTION}"><!-- ENDIF -->
 	<div class="panel">
 		<div class="inner">
 			<!-- IF MODE == 'mcp' && NUM_PENDING --><span class="error">{L_PENDING_TOPICS}: <a href="{U_PENDING}"><strong>[{NUM_PENDING}]</strong></a></span><!-- ENDIF -->
 
 			<!-- IF .postable -->
-			<div class="action-bar top responsive-center">
-				<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
-					<span title="{L_CONTENT_NEW}" class="button dropdown-trigger dropdown-select"><i class="fa fa-plus"></i> {L_CONTENT_NEW}</span>
-					<div class="dropdown hidden">
-						<div class="pointer"><div class="pointer-inner"></div></div>
-						<ul class="dropdown-contents" style="min-width: 150px">
-						<!-- BEGIN postable -->
-							<li><i class="fa fa-square" style="color: #{postable.COLOUR}"></i> <a href="{postable.U_POST}">{postable.TYPE}</a></li>
-							<!-- END postable -->
-						</ul>
+			<div class="pull-left">
+				<div class="action-bar top responsive-center">
+					<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
+						<span title="{L_CONTENT_NEW}" class="button dropdown-trigger dropdown-select"><i class="fa fa-plus fa-green"></i> {L_CONTENT_NEW}</span>
+						<div class="dropdown hidden">
+							<div class="pointer"><div class="pointer-inner"></div></div>
+							<ul class="dropdown-contents" style="min-width: 150px">
+								<!-- BEGIN postable -->
+								<li><i class="fa fa-square" style="color: #{postable.COLOUR}"></i> <a href="{postable.U_POST}">{postable.TYPE}</a></li>
+								<!-- END postable -->
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>
-			<!-- ELSEIF MODE == 'ucp' -->
-				{L_NOT_AUTHORIZED}
 			<!-- ENDIF -->
 
-			<div class="right-box responsive-center">
-				<form method="post" action="{U_ACTION}" style="margin-right: 5px">
-					<input type="search" placeholder="{L_TOPIC_TITLE}" id="search" class="panel inputbox autowidth" name="search" size="28" maxwidth="255" value="" />
-					<input type="submit" class="panel bg3" value="{L_SEARCH}" />
-				</form>
-
-				<div class="action-bar top right-box responsive-center">
+			<!-- IF .status -->
+			<div class="pull-right responsive-center">
+				<div class="action-bar top pull-right responsive-center">
 					<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
-						<span title="{L_TOPIC_STATUS}" class="button dropdown-trigger dropdown-select"><i class="fa <!-- IF S_STATUS_FILTER -->fa-filter<!-- ELSE -->fa-square-o<!-- ENDIF -->"></i> {L_TOPIC_STATUS}</span>
+						<span title="{L_TOPIC_STATUS}" class="button dropdown-trigger dropdown-select"><i class="fa <!-- IF S_STATUS_FILTER -->fa-filter fa-green<!-- ELSE -->fa-square-o<!-- ENDIF -->"></i> {L_TOPIC_STATUS}</span>
 						<div class="dropdown hidden">
 							<div class="pointer"><div class="pointer-inner"></div></div>
 							<ul class="dropdown-contents" style="min-width: 150px">
@@ -216,11 +225,12 @@
 						</div>
 					</div>
 				</div>
+				<!-- ENDIF -->
 
 				<!-- IF .content > 1 -->
 				<div class="action-bar top right-box responsive-center">
 					<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
-						<span title="{L_CONTENT_TYPE}" class="button dropdown-trigger dropdown-select"><i class="fa <!-- IF S_CONTENT_FILTER -->fa-filter<!-- ELSE -->fa-square-o<!-- ENDIF -->"></i> {L_CONTENT_TYPE}</span>
+						<span title="{L_CONTENT_TYPE}" class="button dropdown-trigger dropdown-select"><i class="fa <!-- IF S_CONTENT_FILTER -->fa-filter fa-green<!-- ELSE -->fa-square-o<!-- ENDIF -->"></i> {L_CONTENT_TYPE}</span>
 						<div class="dropdown hidden">
 							<div class="pointer"><div class="pointer-inner"></div></div>
 							<ul class="dropdown-contents" style="min-width: 150px">
@@ -240,7 +250,6 @@
 			<div class="clear"></div><br />
 
 			<!-- IF .topicrow -->
-				<!-- IF MODE == 'mcp' --><form id="mcp" method="post" action="{S_MCP_ACTION}"><!-- ENDIF -->
 
 				<!-- IF PAGINATION or TOTAL_TOPICS -->
 				<div class="action-bar top">
@@ -258,7 +267,7 @@
 				<ul class="topiclist">
 					<li class="header">
 						<dl class="icon">
-							<dt><div class="list-inner">{L_TITLE}</div></dt>
+							<dt><div class="list-inner align-center">{L_TITLE}</div></dt>
 							<dd class="posts">{L_STATUS}</dd>
 							<dd class="lastpost align-center"><span>{L_TYPE}</span></dd>
 							<dd class="mark">{L_ACTION}</dd>
@@ -272,11 +281,14 @@
 							<dt <!-- IF topicrow.TOPIC_ICON_IMG -->style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;"<!-- ENDIF -->>
 								<!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}" class="icon-link"></a><!-- ENDIF -->
 								<div class="list-inner">
+									<a class="fa-orange" href="{topicrow.U_VIEW_TOPIC}" title="{L_GOTO_TOPIC}"><i class="fa fa-chevron-circle-right fa-lg"></i></a>
 									<a href="{topicrow.U_REVIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a>
+									<!-- IF MODE == 'mcp' -->
 									<!-- IF topicrow.S_TOPIC_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED --><a href="{topicrow.U_MCP_QUEUE}">{topicrow.UNAPPROVED_IMG}</a> <!-- ENDIF -->
 									<!-- IF topicrow.S_TOPIC_DELETED or topicrow.S_POSTS_DELETED --><a href="{topicrow.U_MCP_QUEUE}">{topicrow.DELETED_IMG}</a> <!-- ENDIF -->
 									<!-- IF topicrow.S_TOPIC_REPORTED --><a href="{topicrow.U_MCP_REPORT}">{REPORTED_IMG}</a><!-- ENDIF -->
 									<!-- IF topicrow.S_MOVED_TOPIC and S_CAN_DELETE -->&nbsp;<a href="{topicrow.U_DELETE_TOPIC}" class="topictitle">[ {L_DELETE_SHADOW_TOPIC} ]</a><!-- ENDIF -->
+									<!-- ENDIF -->
 									<br />
 
 									<div class="responsive-show" style="display: none;">
@@ -299,10 +311,10 @@
 							</dt>
 							<dd class="posts"><a href="{topicrow.U_TOPIC_STATUS}" title="{topicrow.FIRST_POST_TIME}">{topicrow.TOPIC_STATUS}</a> <dfn>{L_STATUS}</dfn></dd>
 							<dd class="lastpost align-center badge"><a href="{topicrow.U_CONTENT_TYPE}"><span class="info" style="background-color: {topicrow.CONTENT_TYPE_COLOR}; color: white">{topicrow.CONTENT_TYPE}</span></a><dfn>{L_LAST_POST}</dfn></dd>
-							<dd class="mark align-center">
-								<a href="{topicrow.U_VIEW_TOPIC}" title="{L_GOTO_TOPIC}"><i class="fa fa-link"></i></a>&nbsp;
+							<dd class="mark align-right">
 								<!-- IF topicrow.S_CAN_EDIT --><a href="{topicrow.U_EDIT_TOPIC}" title="{L_EDIT}"><i class="fa fa-cog fa-lg green"></i></a>&nbsp;<!-- ELSE --><i class="fa fa-cog fa-2x"></i>&nbsp;<!-- ENDIF -->
 								<!-- IF topicrow.S_CAN_DELETE --><a href="{topicrow.U_DELETE_TOPIC}" title="{L_DELETE}"><i class="fa fa-trash-o fa-lg red"></i></a>&nbsp;<!-- ENDIF -->
+								<!-- IF MODE == 'mcp' -->&nbsp;<input type="checkbox" name="topic_id_list[]" value="{topicrow.TOPIC_ID}"><!-- ENDIF -->
 							</dd>
 						</dl>
 					</li>
@@ -324,6 +336,27 @@
 			<!-- ENDIF -->
 		</div>
 	</div>
+	<!-- IF MODE == 'mcp' -->
+	<fieldset class="display-actions">
+		<select name="action">
+			<option value="" selected="selected">{L_SELECT_ACTION}</option>
+			<!-- IF S_CAN_APPROVE --><option value="approve">{L_APPROVE}</option><option value="disapprove">{L_DISAPPROVE}</option><!-- ENDIF -->
+			<!-- IF S_CAN_DELETE --><option value="delete_topic">{L_DELETE}</option><!-- ENDIF -->
+			<!-- IF S_CAN_RESTORE --><option value="restore_topic">{L_RESTORE}</option><!-- ENDIF -->
+			<!-- IF S_CAN_LOCK --><option value="lock">{L_LOCK}</option><option value="unlock">{L_UNLOCK}</option><!-- ENDIF -->
+			<!-- IF S_CAN_SYNC --><option value="resync">{L_RESYNC}</option><!-- ENDIF -->
+			<!-- IF S_CAN_MAKE_NORMAL --><option value="make_normal">{L_MCP_MAKE_NORMAL}</option><!-- ENDIF -->
+			<!-- IF S_CAN_MAKE_STICKY --><option value="make_sticky">{L_MCP_MAKE_STICKY}</option><!-- ENDIF -->
+			<!-- IF S_CAN_MAKE_ANNOUNCE -->
+			<option value="make_announce">{L_MCP_MAKE_ANNOUNCEMENT}</option>
+			<option value="make_global">{L_MCP_MAKE_GLOBAL}</option>
+			<!-- ENDIF -->
+		</select>
+		<input class="button2" type="submit" value="{L_SUBMIT}" />
+		<div><a href="#" onclick="marklist('mcp', 'topic_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'topic_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
+	</fieldset>
+	</form>
+	<!-- ENDIF -->
 <!-- ENDIF -->
 
 <!-- INCLUDE {MODE}_footer.html -->

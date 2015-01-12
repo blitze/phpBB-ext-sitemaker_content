@@ -123,7 +123,8 @@ class manager
 		$row = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
 
-		decode_message($row['post_text'], $row['bbcode_uid']);
+		$post_data = generate_text_for_edit($row['post_text'], $row['bbcode_uid'], $row['bbcode_bitfield']);
+		$row['post_text'] = $post_data['text'];
 
 		return $row;
 	}
@@ -176,14 +177,137 @@ class manager
 		$action		= $this->request->variable('action', '');
 		$type		= $this->request->variable('type', '');
 
-		$content_forum = unserialize($this->config['primetime_content_forums']);
-		$content_types = $this->displayer->get_all_types();
-
-		$this->template->assign_var('MODE', $mode);
+		$content_forum	= unserialize($this->config['primetime_content_forums']);
+		$content_types	= $this->displayer->get_all_types();
 
 		if (!sizeof($content_types))
 		{
 			return;
+		}
+
+		$forum_id	= 0;
+		$type_data	= array();
+
+		if ($type && isset($content_types[$type]))
+		{
+			$type_data	= $content_types[$type];
+			$forum_id	= $type_data['forum_id'];
+			$user_is_mod = $this->auth->acl_get('m_', $forum_id);
+		}
+		else
+		{
+			$user_is_mod = (sizeof(array_intersect_key($content_forum, $this->auth->acl_getf('m_', true)))) ? true : false;
+		}
+
+		if ($mode == 'mcp' && $action && !in_array($action, array('edit', 'post', 'view')))
+		{
+			if ($this->request->is_set('topic_id_list'))
+			{
+				$mcp_mode = '';
+				$topic_ids = $this->request->variable('topic_id_list', array(0));
+			}
+			else
+			{
+				$mcp_mode = 'quickmod';
+				$topic_ids = array($topic_id);
+			}
+
+			$topic_ids = array_filter($topic_ids);
+
+			if (!sizeof($topic_ids))
+			{
+				trigger_error('NO_TOPIC_SELECTED');
+			}
+
+			$sql = 'SELECT forum_id
+				FROM ' . TOPICS_TABLE . '
+				WHERE ' . $this->db->sql_in_set('topic_id', $topic_ids) . '
+					AND ' . $this->db->sql_in_set('forum_id', array_keys($content_forum));
+			$result = $this->db->sql_query($sql);
+
+			$forum_ids = array();
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$forum_ids[] = $row['forum_id'];
+			}
+			$this->db->sql_freeresult($result);
+
+			$forum_ids = array_flip($forum_ids);
+
+			switch ($action)
+			{
+				case 'approve':
+				case 'disapprove':
+					include($this->phpbb_root_path . 'includes/mcp/mcp_queue.' . $this->php_ext);
+					include($this->phpbb_root_path . 'includes/functions_messenger.' . $this->php_ext);
+				case 'restore_topic':
+					$is_authed = (sizeof(array_intersect_key($forum_ids, $this->auth->acl_getf('m_approve', true)))) ? true : false;
+				break;
+				case 'lock':
+				case 'unlock':
+					$is_authed = (sizeof(array_intersect_key($forum_ids, $this->auth->acl_getf('m_lock', true)))) ? true : false;
+				break;
+				case 'resync':
+					$is_authed = $user_is_mod;
+				break;
+				case 'delete_topic':
+					$is_authed = (sizeof(array_intersect_key($forum_ids, $this->auth->acl_getf('m_delete', true)))) ? true : false;
+				break;
+				case 'make_normal':
+					$is_authed = (sizeof(array_intersect_key($forum_ids, $this->auth->acl_getf('f_announce', true))) || sizeof(array_intersect_key($content_forum, $this->auth->acl_getf('f_sticky', true)))) ? true : false;
+				case 'make_sticky':
+					$is_authed = (sizeof(array_intersect_key($forum_ids, $this->auth->acl_getf('f_sticky', true)))) ? true : false;
+				break;
+				case 'make_announce':
+				case 'make_global':
+					$is_authed = (sizeof(array_intersect_key($forum_ids, $this->auth->acl_getf('f_announce', true)))) ? true : false;
+				break;
+			}
+
+			if (!$is_authed)
+			{
+				trigger_error('NOT_AUTHORISED');
+			}
+
+			switch ($action)
+			{
+				case 'approve':
+					\mcp_queue::approve_topics($action, $topic_ids, '-primetime-content-mcp-content_module', 'content');
+				break;
+				case 'disapprove':
+					$sql = 'SELECT post_id
+						FROM ' . POSTS_TABLE . '
+						WHERE ' . $this->db->sql_in_set('post_visibility', array(ITEM_UNAPPROVED, ITEM_REAPPROVE)) . '
+							AND ' . $this->db->sql_in_set('topic_id', $topic_ids);
+					$result = $this->db->sql_query($sql);
+					$post_id_list = array();
+					while ($row = $this->db->sql_fetchrow($result))
+					{
+						$post_id_list[] = (int) $row['post_id'];
+					}
+					$this->db->sql_freeresult($result);
+
+					if (!empty($post_id_list))
+					{
+						\mcp_queue::disapprove_posts($post_id_list, '-primetime-content-mcp-content_module', 'content');
+					}
+					else
+					{
+						trigger_error('NO_POST_SELECTED');
+					}
+				break;
+				case 'resync':
+					include($this->phpbb_root_path . 'includes/mcp/mcp_forum.' . $this->php_ext);
+
+					mcp_resync_topics($topic_ids);
+				break;
+				default:
+					include($this->phpbb_root_path . 'includes/mcp/mcp_main.' . $this->php_ext);
+
+					$mcp = new \mcp_main($mode);
+					$mcp->main("-primetime-content-mcp-content_module", $mcp_mode);
+				break;
+			}
 		}
 
 		switch ($action)
@@ -224,12 +348,6 @@ class manager
 					$this->show_edit_reason($row, $user_cache);
 				}
 
-				// Deleting information
-				if ($row['post_visibility'] == ITEM_DELETED && $row['post_delete_user'])
-				{
-					$this->show_delete_reason($row, $user_cache);
-				}
-
 				$s_cannot_edit = !$this->auth->acl_get('f_edit', $forum_id) || $this->user->data['user_id'] != $poster_id;
 				$s_cannot_edit_time = $this->config['edit_time'] && $row['post_time'] <= time() - ($this->config['edit_time'] * 60);
 				$s_cannot_edit_locked = $topic_data['topic_status'] == ITEM_LOCKED || $row['post_edit_locked'];
@@ -254,10 +372,21 @@ class manager
 					$edit_url = $u_action . "&amp;action=edit&amp;type=$type&amp;t=$topic_id";
 				}
 
-				$delete_allowed = $this->user->data['is_registered'] && (
+				$u_delete_topic = '';
+				if ($this->user->data['is_registered'] && (
 					($this->auth->acl_get('m_delete', $forum_id) || ($this->auth->acl_get('m_softdelete', $forum_id) && $row['post_visibility'] != ITEM_DELETED)) ||
 					(!$s_cannot_delete && !$s_cannot_delete_lastpost && !$s_cannot_delete_time && !$s_cannot_delete_locked)
-				);
+				))
+				{
+					if ($mode == 'mcp')
+					{
+						$u_delete_topic = $u_action . "&amp;action=delete_topic&amp;type=$content_type&amp;t=$topic_id";
+					}
+					else
+					{
+						$u_delete_topic = append_sid("{$this->phpbb_root_path}posting." . $this->php_ext, "mode=delete&amp;f=$forum_id&amp;p=" . $row['topic_first_post_id']);
+					}
+				}
 
 				// Deleting information
 				if ($row['post_visibility'] == ITEM_DELETED && $row['post_delete_user'])
@@ -279,7 +408,7 @@ class manager
 					}
 
 					$this->user->add_lang('viewtopic');
-					$l_deleted_by = $this->user->lang('DELETED_INFORMATION', $display_username, $user->format_date($row['post_delete_time'], false, true));
+					$l_deleted_by = $this->user->lang('DELETED_INFORMATION', $display_username, $this->user->format_date($row['post_delete_time'], false, true));
 				}
 				else
 				{
@@ -289,7 +418,7 @@ class manager
 				$this->displayer->prepare_to_show($type, 'detail', $type_data['detail_tags'], $type_data['detail_tpl']);
 
 				$tpl_data = array(
-					'S_VIEWING'		=> true,
+					'S_VIEWING'				=> true,
 					'S_POST_DELETED'		=> ($row['post_visibility'] == ITEM_DELETED) ? true : false,
 					'S_POST_REPORTED'		=> ($row['post_reported'] && $this->auth->acl_get('m_report', $forum_id)),
 					'S_POST_UNAPPROVED'		=> (($row['post_visibility'] == ITEM_UNAPPROVED || $row['post_visibility'] == ITEM_REAPPROVE) && $this->auth->acl_get('m_approve', $forum_id)),
@@ -307,15 +436,12 @@ class manager
 
 					'U_APPROVE_ACTION'		=> append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", "i=queue&amp;p={$row['post_id']}&amp;f=$forum_id&amp;redirect=" . urlencode(str_replace('&amp;', '&', $viewtopic_url . '&amp;p=' . $row['post_id'] . '#p' . $row['post_id']))),
 					'U_EDIT'				=> $edit_url,
-					'U_DELETE'				=> ($delete_allowed) ? $u_action . "&amp;action=delete&amp;type=$type&amp;t=$topic_id" : '',
+					'U_DELETE'				=> $u_delete_topic,
 				);
 
 				$tpl_data += $this->displayer->show($type, $topic_title, $topic_data, $row, $user_cache, $topic_tracking_info);
 				$this->template->assign_vars($tpl_data);
 
-			break;
-
-			case 'delete':
 			break;
 
 			case 'edit':
@@ -336,16 +462,12 @@ class manager
 				}
 
 				$subject = '';
-				$type_data = $content_types[$type];
 				$content_fields = $type_data['content_fields'];
-				$forum_id = $type_data['forum_id'];
 
 				if (!$this->auth->acl_get('f_post', $forum_id))
 				{
 					trigger_error('NOT_AUTHORISED');
 				}
-
-				$user_is_mod = $this->auth->acl_get('m_', $forum_id);
 
 				$post_data = array(
 					'forum_id'			=> $forum_id,
@@ -383,7 +505,7 @@ class manager
 						'topic_poster'				=> $this->user->data['user_id'],
 						'topic_first_poster_name'	=> $this->user->data['username'],
 						'topic_first_poster_colour'	=> $this->user->data['user_colour'],
-						'topic_posts_approved'		=> 0,
+						'topic_posts_approved'		=> 1,
 						'topic_posts_unapproved'	=> 0,
 						'topic_posts_softdeleted'	=> 0,
 						'topic_posts'				=> 0,
@@ -651,26 +773,43 @@ class manager
 				$this->user->add_lang('viewforum');
 
 				$start = $this->request->variable('start', 0);
-				$topic_content = $this->request->variable('content', '');
-				$topic_status = $this->request->variable('status', '');
-				$topic_search = utf8_normalize_nfc($this->request->variable('search', '', true));
+				$filter_content_type = $this->request->variable('type', '');
+				$filter_topic_status = $this->request->variable('status', '');
+				$filter_topic_search = utf8_normalize_nfc($this->request->variable('search', '', true));
 
 				$time = time();
 				$sql_where_array = array();
-				$topic_status_ary = array(
+				$filter_topic_status_ary 	= array(
+					'-1'				=> 'scheduled',
 					ITEM_UNAPPROVED		=> 'unapproved',
 					ITEM_APPROVED		=> 'published',
 					ITEM_DELETED		=> 'deleted',
-					'-1'				=> 'scheduled',
 				);
-				$topic_types_ary = array(
+				$filter_topic_types_ary		= array(
 					POST_NORMAL		=> 'published',
-					POST_STICKY		=> 'recommended',
-					POST_ANNOUNCE	=> 'featured',
+					POST_STICKY		=> 'featured',
+					POST_ANNOUNCE	=> 'recommended',
 					POST_GLOBAL		=> 'must_read',
 				);
 
-				if ($mode == 'ucp')
+				if ($mode == 'mcp')
+				{
+					$s_can_approve = (sizeof(array_intersect_key($content_forum, $this->auth->acl_getf('m_approve', true)))) ? true : false;
+					$s_can_make_sticky = (sizeof(array_intersect_key($content_forum, $this->auth->acl_getf('f_sticky', true)))) ? true : false;
+					$s_can_make_announce = (sizeof(array_intersect_key($content_forum, $this->auth->acl_getf('f_announce', true)))) ? true : false;
+
+					$this->template->assign_vars(array(
+						'S_CAN_DELETE'			=> (sizeof(array_intersect_key($content_forum, $this->auth->acl_getf('m_delete', true)))) ? true : false,
+						'S_CAN_RESTORE'			=> $s_can_approve,
+						'S_CAN_LOCK'			=> (sizeof(array_intersect_key($content_forum, $this->auth->acl_getf('m_lock', true)))) ? true : false,
+						'S_CAN_SYNC'			=> $user_is_mod,
+						'S_CAN_APPROVE'			=> $s_can_approve,
+						'S_CAN_MAKE_NORMAL'		=> ($s_can_make_sticky || $s_can_make_announce),
+						'S_CAN_MAKE_STICKY'		=> $s_can_make_sticky,
+						'S_CAN_MAKE_ANNOUNCE'	=> $s_can_make_announce,
+					));
+				}
+				else
 				{
 					$sql_where_array[] =  't.topic_poster = ' . (int) $this->user->data['user_id'];
 
@@ -687,18 +826,18 @@ class manager
 				}
 
 				// filter by content type
-				if ($topic_content && in_array($topic_content, $content_forum))
+				if ($filter_content_type && in_array($filter_content_type, $content_forum))
 				{
-					$content_forum = array_intersect($content_forum, array($topic_content));
+					$content_forum = array_intersect($content_forum, array($filter_content_type));
 					$this->template->assign_var('S_CONTENT_FILTER', true);
 				}
 
 				// filter by topic status
-				if ($topic_status)
+				if ($filter_topic_status)
 				{
 					$this->template->assign_var('S_STATUS_FILTER', true);
 
-					switch ($topic_status)
+					switch ($filter_topic_status)
 					{
 						case 'scheduled':
 							$sql_where_array[] = 't.topic_time > ' . $time;
@@ -706,20 +845,20 @@ class manager
 						case 'unapproved':
 						case 'published':
 						case 'deleted':
-							$sql_where_array[] = 't.topic_visibility = ' . array_search($topic_status, $topic_status_ary);
+							$sql_where_array[] = 't.topic_visibility = ' . array_search($filter_topic_status, $filter_topic_status_ary);
 						break;
 						case 'recommended':
 						case 'featured':
 						case 'must_read':
-							$sql_where_array[] = 't.topic_type = ' . array_search($topic_type, $topic_types_ary);
+							$sql_where_array[] = 't.topic_type = ' . array_search($filter_topic_status, $filter_topic_types_ary);
 							$sql_where_array[] = 't.topic_visibility = ' . ITEM_APPROVED;
 						break;
 					}
 				}
 
-				if ($topic_search)
+				if ($filter_topic_search)
 				{
-					$sql_where_array[] = 't.topic_title ' . $this->db->sql_like_expression($this->db->get_any_char() . $topic_search . $this->db->get_any_char());
+					$sql_where_array[] = 't.topic_title ' . $this->db->sql_like_expression($this->db->get_any_char() . $filter_topic_search . $this->db->get_any_char());
 				}
 
 				$sql_where_array[] = $this->db->sql_in_set('t.forum_id', array_keys($content_forum));
@@ -727,9 +866,9 @@ class manager
 				$sql_array['WHERE'] = join(' AND ', $sql_where_array);
 
 				$params = array_filter(array(
-					'content'	=> $topic_content,
-					'status'	=> $topic_status,
-					'search'	=> $topic_search,
+					'type'		=> $filter_content_type,
+					'status'	=> $filter_topic_status,
+					'search'	=> $filter_topic_search,
 				));
 
 				$options = array(
@@ -738,7 +877,7 @@ class manager
 					'check_visibility'	=> false,
 				);
 
-				// Get forum info
+				// Get topics count
 				$sql = 'SELECT COUNT(*) as topics_count
 					FROM ' . TOPICS_TABLE . ' t
 					WHERE ' . $sql_array['WHERE'];
@@ -747,25 +886,10 @@ class manager
 				$topics_count = $this->db->sql_fetchfield('topics_count');
 				$this->db->sql_freeresult($result);
 
-				$base_url = $u_action . '&amp;' . http_build_query($params);
-				$start = $this->pagination->validate_start($start, $this->config['topics_per_page'], $topics_count);
-				$this->pagination->generate_template_pagination($base_url, 'pagination', 'start', $topics_count, $this->config['topics_per_page'], $start);
-
 				$this->template->assign_vars(array(
-					'TOTAL_TOPICS'	=> $this->user->lang('VIEW_FORUM_TOPICS', (int) $topics_count),
+					'TOTAL_TOPICS'		=> $this->user->lang('VIEW_FORUM_TOPICS', (int) $topics_count),
+					'S_ACTION'			=> $u_action,
 				));
-
-				// generate content type filters
-				$copy_params = $params;
-				unset($copy_params['content']);
-				$base_url = $u_action . '&amp;' . http_build_query($copy_params);
-				$this->generate_content_type_filter($topic_content, $content_types, $base_url);
-
-				// generate status filters
-				$copy_params = $params;
-				unset($copy_params['status']);
-				$base_url = $u_action . '&amp;' . http_build_query($copy_params);
-				$this->generate_topic_status_filter($topic_status, array_merge($topic_status_ary, $topic_types_ary), $base_url);
 
 				// grab the topics
 				$this->forum->build_query($options, $sql_array);
@@ -795,22 +919,19 @@ class manager
 					}
 
 					$topic_title = censor_text($row['topic_title']);
-					$topic_unapproved = (($row['topic_visibility'] == ITEM_UNAPPROVED || $row['topic_visibility'] == ITEM_REAPPROVE)  && $this->auth->acl_get('m_approve', $forum_id)) ? true : false;
+					$topic_unapproved = ($row['topic_visibility'] == ITEM_UNAPPROVED || $row['topic_visibility'] == ITEM_REAPPROVE) ? true : false;
 					$posts_unapproved = ($row['topic_visibility'] == ITEM_APPROVED && $row['topic_posts_unapproved'] && $this->auth->acl_get('m_approve', $forum_id)) ? true : false;
 					$topic_deleted = $row['topic_visibility'] == ITEM_DELETED;
 					$view_type[$type_data['content_name']] = $type_data['content_langname'];
 
 					$topic_status = '';
+					$num_comments = 0;
 					$allow_comments = false;
 
 					if ($type_data['allow_comments'])
 					{
 						$allow_comments = true;
 						$num_comments = $this->comments->count($row);
-					}
-					else
-					{
-						$num_comments = $this->content_visibility->get_count('topic_posts', $row, $forum_id) - 1;
 					}
 
 					// Get folder img, topic status/type related information
@@ -831,7 +952,19 @@ class manager
 					}
 					else
 					{
-						$topic_status = $topic_types_ary[$row['topic_type']];
+						$topic_status = $filter_topic_types_ary[$row['topic_type']];
+					}
+
+					if ($mode == 'mcp')
+					{
+						$url = append_sid("{$this->phpbb_root_path}mcp." . $this->php_ext, "f=$forum_id");
+						$u_mcp_queue = ($topic_unapproved || $posts_unapproved) ? $url . '&amp;i=queue&amp;mode=' . (($topic_unapproved) ? 'approve_details' : 'unapproved_posts') . '&amp;t=' . $row['topic_id'] : '';
+						$u_mcp_queue = (!$u_mcp_queue && $topic_deleted) ? $url . '&amp;i=queue&amp;mode=deleted_topics&amp;t=' . $topic_id : $u_mcp_queue;
+						$u_delete_topic = $u_action . "&amp;action=delete_topic&amp;type=$content_type&amp;t=$topic_id";
+					}
+					else
+					{
+						$u_delete_topic = append_sid("{$this->phpbb_root_path}posting." . $this->php_ext, "mode=delete&amp;f=$forum_id&amp;p=" . $row['topic_first_post_id']);
 					}
 
 					$u_topic_review = $u_action . '&amp;action=view&amp;t=' . $topic_id;
@@ -849,7 +982,7 @@ class manager
 						'TOPIC_ICON_IMG_WIDTH'		=> (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['width'] : '',
 						'TOPIC_ICON_IMG_HEIGHT'		=> (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['height'] : '',
 						'UNAPPROVED_IMG'			=> ($topic_unapproved || $posts_unapproved) ? $this->user->img('icon_topic_unapproved', ($topic_unapproved) ? 'TOPIC_UNAPPROVED' : 'POSTS_UNAPPROVED') : '',
-						'DELETED_IMG'				=> ($topic_deleted) ? $user->img('icon_topic_deleted', 'POSTS_DELETED') : '',
+						'DELETED_IMG'				=> ($topic_deleted) ? $this->user->img('icon_topic_deleted', 'POSTS_DELETED') : '',
 
 						'TOPIC_AUTHOR'				=> get_username_string('username', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
 						'TOPIC_AUTHOR_COLOUR'		=> get_username_string('colour', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']),
@@ -864,6 +997,7 @@ class manager
 						'CONTENT_TYPE'			=> $type_data['content_langname'],
 						'CONTENT_TYPE_COLOR'	=> '#' . $type_data['content_colour'],
 						'TOPIC_VIEWS'			=> $row['topic_views'],
+						'TOPIC_ID'				=> $topic_id,
 						'TOPIC_TYPE'			=> $topic_type,
 						'TOPIC_TITLE'			=> $topic_title,
 						'TOPIC_STATUS'			=> $this->user->lang['TOPIC_' . strtoupper($topic_status)],
@@ -885,14 +1019,33 @@ class manager
 						'U_VIEW_TOPIC'			=> $u_viewtopic,
 						'U_REVIEW_TOPIC'		=> $u_topic_review,
 						'U_EDIT_TOPIC'			=> $u_action . "&amp;action=edit&amp;type=$content_type&amp;t=$topic_id",
-						'U_DELETE_TOPIC'		=> $u_action . "&amp;action=delete&amp;type=$content_type&amp;t=$topic_id",
+						'U_DELETE_TOPIC'		=> $u_delete_topic,
 						'U_CONTENT_TYPE'		=> $u_action . "&amp;type=$content_type",
-						'U_TOPIC_STATUS'		=> $base_url . "&amp;status=$topic_status"
+						'U_TOPIC_STATUS'		=> $base_url . "&amp;status=$topic_status",
+						'U_MCP_QUEUE'			=> $u_mcp_queue,
 					);
 
 					$this->template->assign_block_vars('topicrow', $topic_row);
 					unset($topic_data[$i]);
 				}
+
+				$u_action .= (sizeof($params)) ? '&amp;' : '';
+
+				$base_url = $u_action . http_build_query($params);
+				$start = $this->pagination->validate_start($start, $this->config['topics_per_page'], $topics_count);
+				$this->pagination->generate_template_pagination($base_url, 'pagination', 'start', $topics_count, $this->config['topics_per_page'], $start);
+
+				// generate content type filters
+				$copy_params = $params;
+				unset($copy_params['type']);
+				$base_url = $u_action . http_build_query($copy_params);
+				$this->generate_content_type_filter($filter_content_type, $content_types, $base_url);
+
+				// generate status filters
+				$copy_params = $params;
+				unset($copy_params['status']);
+				$base_url = $u_action . http_build_query($copy_params);
+				$this->generate_topic_status_filter($filter_topic_status, array_merge($filter_topic_status_ary, $filter_topic_types_ary), $base_url);
 
 			break;
 		}
@@ -913,7 +1066,7 @@ class manager
 				'TITLE'			=> $row['content_langname'],
 				'COLOUR'		=> $row['content_colour'],
 				'S_SELECTED'	=> ($type == $row['content_name']) ? true : false,
-				'U_VIEW'		=> $view_url . '&amp;content=' . $row['content_name']
+				'U_VIEW'		=> $view_url . '&amp;type=' . $row['content_name']
 			));
 		}
 		$this->db->sql_freeresult();
