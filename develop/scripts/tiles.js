@@ -21,7 +21,7 @@
 
 		phpbb.addAjaxCallback('primetime.content.load_more', function(response) {
 			var respObj = $(response);
-			var items = respObj.find('#grid .item');
+			var items = respObj.find('#primetime-content-grid .item');
 			var nextUrl = respObj.find('#tile-load-more').attr('href');
 
 			container.append(items);
