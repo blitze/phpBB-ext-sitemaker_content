@@ -94,7 +94,7 @@ class comments implements comments_interface
 	 */
 	public function show($content_type, $topic_data, $page)
 	{
-		$action = $this->request->variable('action', '');
+		$action = $this->request->variable('action', 'reply');
 		$post_id = $this->request->variable('p', 0);
 
 		$topic_id = (int) $topic_data['topic_id'];
@@ -102,10 +102,11 @@ class comments implements comments_interface
 
 		$start = ($page - 1) * $this->config['posts_per_page'];
 		$total_topics = $this->count($topic_data);
+		$current_page = generate_board_url() . '/' . ltrim(build_url(array('p', 'action')), './../');
 
 		if ($this->auth->acl_get('f_reply', $forum_id))
 		{
-			$this->post($content_type, $action, $topic_data, $post_id);
+			$this->post($content_type, rtrim($current_page, '?'), $action, $topic_data, $post_id);
 		}
 
 		if (!$total_topics)
@@ -171,6 +172,69 @@ class comments implements comments_interface
 			$post_id = (int) $row['post_id'];
 			$poster_id = (int) $row['poster_id'];
 
+			if (($row['post_edit_count'] && $this->config['display_last_edited']) || $row['post_edit_reason'])
+			{
+				$this->show_edit_reason($row, $user_cache);
+			}
+
+			$s_cannot_edit = !$this->auth->acl_get('f_edit', $forum_id) || $this->user->data['user_id'] != $poster_id;
+			$s_cannot_edit_time = $this->config['edit_time'] && $row['post_time'] <= time() - ($this->config['edit_time'] * 60);
+			$s_cannot_edit_locked = $topic_data['topic_status'] == ITEM_LOCKED || $row['post_edit_locked'];
+
+			$s_cannot_delete = $this->user->data['user_id'] != $poster_id || (
+				!$this->auth->acl_get('f_delete', $forum_id) &&
+				(!$this->auth->acl_get('f_softdelete', $forum_id) || $row['post_visibility'] == ITEM_DELETED)
+			);
+			$s_cannot_delete_lastpost = $topic_data['topic_last_post_id'] != $row['post_id'];
+			$s_cannot_delete_time = $this->config['delete_time'] && $row['post_time'] <= time() - ($this->config['delete_time'] * 60);
+			// we do not want to allow removal of the last post if a moderator locked it!
+			$s_cannot_delete_locked = $topic_data['topic_status'] == ITEM_LOCKED || $row['post_edit_locked'];
+
+			$edit_url = '';
+			if ($this->user->data['is_registered'] && ($this->auth->acl_get('m_edit', $forum_id) || (
+				!$s_cannot_edit &&
+				!$s_cannot_edit_time &&
+				!$s_cannot_edit_locked)))
+			{
+				$edit_url = reapply_sid($current_page . "action=edit&amp;p=$post_id#postform");
+			}
+
+			$u_delete_topic = '';
+			if ($this->user->data['is_registered'] && (
+				($this->auth->acl_get('m_delete', $forum_id) || ($this->auth->acl_get('m_softdelete', $forum_id) && $row['post_visibility'] != ITEM_DELETED)) ||
+				(!$s_cannot_delete && !$s_cannot_delete_lastpost && !$s_cannot_delete_time && !$s_cannot_delete_locked)
+			))
+			{
+				$u_delete_topic = append_sid("{$this->root_path}posting." . $this->php_ext, "mode=delete&amp;f=$forum_id&amp;p=" . $row['post_id']);
+			}
+
+			// Deleting information
+			if ($row['post_visibility'] == ITEM_DELETED && $row['post_delete_user'])
+			{
+				// User having deleted the post also being the post author?
+				if (!$row['post_delete_user'] || $row['post_delete_user'] == $row['poster_id'])
+				{
+					$display_username = get_username_string('full', $row['poster_id'], $row['username'], $row['user_colour'], $row['post_username']);
+				}
+				else
+				{
+					$sql = 'SELECT user_id, username, user_colour
+							FROM ' . USERS_TABLE . '
+							WHERE user_id = ' . (int) $row['post_delete_user'];
+					$result = $this->db->sql_query($sql);
+					$user_delete_row = $this->db->sql_fetchrow($result);
+					$this->db->sql_freeresult($result);
+					$display_username = get_username_string('full', $row['post_delete_user'], $user_delete_row['username'], $user_delete_row['user_colour']);
+				}
+
+				$this->user->add_lang('viewtopic');
+				$l_deleted_by = $this->user->lang('DELETED_INFORMATION', $display_username, $this->user->format_date($row['post_delete_time'], false, true));
+			}
+			else
+			{
+				$l_deleted_by = '';
+			}
+
 			$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
 			$row['post_text'] = generate_text_for_display($row['post_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
 			$post_unread = (isset($topic_tracking_info[$forum_id][$topic_id]) && $row['post_time'] > $topic_tracking_info[$forum_id][$topic_id]) ? true : false;
@@ -184,6 +248,25 @@ class comments implements comments_interface
 
 				'POST_DATE'			=> $this->user->format_date($row['post_time']),
 				'MESSAGE'			=> $row['post_text'],
+
+				'S_POST_DELETED'		=> ($row['post_visibility'] == ITEM_DELETED) ? true : false,
+				'S_POST_REPORTED'		=> ($row['post_reported'] && $this->auth->acl_get('m_report', $forum_id)),
+				'S_POST_UNAPPROVED'		=> (($row['post_visibility'] == ITEM_UNAPPROVED || $row['post_visibility'] == ITEM_REAPPROVE) && $this->auth->acl_get('m_approve', $forum_id)),
+				'S_POST_DELETED'		=> ($row['post_visibility'] == ITEM_DELETED && $this->auth->acl_get('m_approve', $forum_id)),
+
+				'DELETED_MESSAGE'		=> $l_deleted_by,
+				'DELETE_REASON'			=> $row['post_delete_reason'],
+
+				'U_INFO'				=> ($this->auth->acl_get('m_info', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", "i=main&amp;mode=post_details&amp;f=$forum_id&amp;p=" . $row['post_id'], true, $this->user->session_id) : '',
+				'U_MCP_REPORT'			=> ($this->auth->acl_get('m_report', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=reports&amp;mode=report_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
+				'U_MCP_APPROVE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=queue&amp;mode=approve_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
+				'U_MCP_RESTORE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=queue&amp;mode=' . (($topic_data['topic_visibility'] != ITEM_DELETED) ? 'deleted_posts' : 'deleted_topics') . '&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
+				'U_NOTES'				=> ($this->auth->acl_getf_global('m_')) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=notes&amp;mode=user_notes&amp;u=' . $poster_id, true, $this->user->session_id) : '',
+				'U_WARN'				=> ($this->auth->acl_get('m_warn') && $poster_id != $this->user->data['user_id'] && $poster_id != ANONYMOUS) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=warn&amp;mode=warn_post&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
+
+				'U_APPROVE_ACTION'		=> append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", "i=queue&amp;p={$row['post_id']}&amp;f=$forum_id&amp;redirect=" . urlencode(str_replace('&amp;', '&', $viewtopic_url . '&amp;p=' . $row['post_id'] . '#p' . $row['post_id']))),
+				'U_EDIT'				=> $edit_url,
+				'U_DELETE'				=> $u_delete_topic,
 			));
 		}
 
@@ -193,19 +276,16 @@ class comments implements comments_interface
 	/**
 	 * Post comments
 	 */
-	public function post($type, $action, $topic_data, $post_id)
+	public function post($type, $current_page, $action, $topic_data, $post_id)
 	{
 		$forum_id = (int) $topic_data['forum_id'];
 		$topic_id = (int) $topic_data['topic_id'];
 
-		$current_page = build_url('action');
-		$form_action = $current_page . 'action=' . $action;
 		$message = '';
-
 		$post_data = array(
 			'forum_id'			=> $forum_id,
 			'topic_id'			=> $topic_id,
-			'post_id'			=> 0,
+			'post_id'			=> $post_id,
 			'icon_id'			=> false,
 
 			'post_edit_locked'  => 0,
@@ -216,25 +296,27 @@ class comments implements comments_interface
 			'enable_indexing'   => true,
 		);
 
-		if ($post_id && $action == 'edit')
+		if ($action == 'edit')
 		{
 			$result = $this->db->sql_query('SELECT * FROM ' . POSTS_TABLE . ' WHERE post_id = ' . (int) $post_id);
 			$post_data = $this->db->sql_fetchrow($result);
 			$this->db->sql_freeresult($result);
 
 			$message = $post_data['post_text'];
-			$form_action .= '&amp;p=' . $post_id;
 
 			decode_message($message, $post_data['bbcode_uid']);
 		}
 
-		$this->form->create('postform', $form_action, '', 'post', $forum_id)
+		$this->form->create('postform', $current_page, '', 'post', $forum_id)
 			->add('comment', 'textarea', array('field_value' => $message, 'field_explain' => '', 'editor' => true))
+			->add('p', 'hidden', array('field_value' => $post_id))
+			->add('action', 'hidden', array('field_value' => $action))
+			->add('cancel', 'submit', array('field_value' => $this->user->lang['CANCEL']))
 			->add('submit', 'submit', array('field_value' => $this->user->lang['POST_COMMENT']));
 
 		$this->form->handle_request($this->request);
 
-		if ($this->form->is_valid)
+		if ($this->form->is_valid && $this->request->is_set_post('submit'))
 		{
 			$data = $this->form->get_data();
 			$message = $data['comment']['field_value'];
@@ -272,7 +354,7 @@ class comments implements comments_interface
 				submit_post($action, $topic_data['topic_title'], $this->user->data['username'], POST_NORMAL, $poll, $post_data);
 
 				$post_id = $post_data['post_id'];
-				$redirect_url = $current_page . "p=$post_id#p$post_id";
+				$redirect_url = $current_page . ((strpos($current_page, '?') === false) ? '?' : '&amp;')  . "p=$post_id#p$post_id";
 				$message = $this->user->lang['COMMENT_POSTED'] . '<br /><br />' . sprintf($this->user->lang['RETURN_PAGE'], '<a href="' . $redirect_url . '">', '</a>');
 
 				meta_refresh(3, $redirect_url);
