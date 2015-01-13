@@ -41,7 +41,7 @@ services:
             - @template
             - @user
             - @primetime.content.displayer
-            - @primetime.primetime
+            - @primetime.primetime.util
             - %core.root_path%
             - %core.php_ext%
         tags:

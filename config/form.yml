@@ -24,7 +24,7 @@ services:
             - @request
             - @user
             - @primetime.primetime.template
-            - @primetime.primetime
+            - @primetime.primetime.util
         tags:
             - { name: form.field }
 
@@ -34,7 +34,7 @@ services:
             - @request
             - @user
             - @primetime.primetime.template
-            - @primetime.primetime
+            - @primetime.primetime.util
         tags:
             - { name: form.field }
 
@@ -149,7 +149,7 @@ services:
             - @request
             - @user
             - @primetime.primetime.template
-            - @primetime.primetime
+            - @primetime.primetime.util
         tags:
             - { name: form.field }
 
@@ -159,7 +159,7 @@ services:
             - @request
             - @user
             - @primetime.primetime.template
-            - @primetime.primetime
+            - @primetime.primetime.util
         tags:
             - { name: form.field }
 

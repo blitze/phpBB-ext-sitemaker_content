@@ -14,7 +14,7 @@ class tiles extends view
 	/** @var \phpbb\request\request_interface */
 	protected $request;
 
-	/** @var \primetime\primetime\core\primetime */
+	/** @var \primetime\primetime\core\util */
 	protected $primetime;
 
 	/**
@@ -28,11 +28,11 @@ class tiles extends view
 	 * @param \phpbb\template\template					$template			Template object
 	 * @param \phpbb\user								$user				User object
 	 * @param \primetime\content\services\displayer		$displayer			Content displayer object
-	 * @param \primetime\primetime\core\primetime		$primetime			Primetime object
+	 * @param \primetime\primetime\core\util			$primetime			Primetime object
 	 * @param string									$root_path			Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\db\driver\driver_interface $db, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\displayer $displayer, \primetime\primetime\core\primetime $primetime, $root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\db\driver\driver_interface $db, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\displayer $displayer, \primetime\primetime\core\util $primetime, $root_path, $php_ext)
 	{
 		parent::__construct($auth, $cache, $config, $db, $template, $user, $displayer, $root_path, $php_ext);
 

@@ -59,9 +59,6 @@ class manager
 	/** @var \primetime\primetime\core\forum\query */
 	protected $forum;
 
-	/** @var \primetime\primetime\core\primetime */
-	protected $primetime;
-
 	/** @var string */
 	protected $phpbb_root_path;
 

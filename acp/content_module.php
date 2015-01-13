@@ -68,7 +68,7 @@ class content_module
 		$this->content			= $phpbb_container->get('primetime.content.types');
 		$this->form				= $phpbb_container->get('primetime.content.form.builder');
 		$this->forum			= $phpbb_container->get('primetime.primetime.forum.manager');
-		$this->primetime		= $phpbb_container->get('primetime.primetime');
+		$this->primetime		= $phpbb_container->get('primetime.primetime.util');
 		$this->phpbb_admin_path	= $phpbb_admin_path;
 		$this->phpbb_root_path	= $phpbb_root_path;
 		$this->php_ext			= $phpEx;
