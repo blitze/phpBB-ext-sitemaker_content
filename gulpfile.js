@@ -8,14 +8,12 @@ var gulp = require('gulp'),
 	production = !!(argv.production), // true if --production flag is used
 	paths = {
 		'dev': {
-			'scripts': 'develop/scripts/',
-			'theme': 'develop/theme/',
+			'scripts': 'develop/',
 			'vendor': 'bower_components/'
 		},
 		'prod': {
-			'scripts': 'assets/scripts/',
-			'theme': 'styles/prosilver/theme/',
-			'vendor': 'assets/vendor/'
+			'scripts': 'styles/all/theme/assets/',
+			'vendor': 'components/'
 		}
 	};
 
@@ -51,20 +49,6 @@ gulp.task('scripts', function() {
 		.pipe(plugins.notify({ message: 'Scripts task complete' }));
 });
 
-// Theme-specific CSS
-gulp.task('theme', function() {
-	return gulp.src(paths.dev.theme + '*.css')
-		.pipe(plugins.csscomb())
-		.pipe(gulp.dest(paths.dev.theme))
-		.pipe(plugins.csslint())
-		.pipe(plugins.csslint.reporter())
-		.pipe(plugins.autoprefixer())
-		.pipe(plugins.rename({ suffix: '.min' }))
-		.pipe(plugins.minifyCss())
-		.pipe(gulp.dest(paths.prod.theme))
-		.pipe(plugins.notify({ message: 'Theme task complete' }));
-});
-
 // Vendor
 gulp.task('vendor', function() {
 	var mainFiles = plugins.mainBowerFiles();
@@ -94,8 +78,7 @@ gulp.task('vendor', function() {
 // Clean up
 gulp.task('clean', function(cb) {
 	plugins.del([
-		'assets/',
-		paths.prod.theme + '*.css',
+		paths.prod.scripts,
 		paths.prod.vendor
 	], cb);
 });
@@ -103,9 +86,6 @@ gulp.task('clean', function(cb) {
 gulp.task('watch', function() {
 	// Watch script files
 	gulp.watch([paths.dev.scripts + '**/*.css', paths.dev.scripts + '**/*.js'], ['scripts']);
-
-	// Watch theme files
-	gulp.watch(paths.dev.theme + '*.css', ['theme']);
 
 	// Watch Vendor files
 	gulp.watch(paths.dev.vendor + '**', ['vendor']);
@@ -115,5 +95,5 @@ gulp.task('watch', function() {
 });
 
 gulp.task('build', ['clean'], function() {
-	gulp.start('theme', 'scripts', 'vendor');
+	gulp.start('scripts', 'vendor');
 });

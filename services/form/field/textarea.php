@@ -77,7 +77,7 @@ class textarea extends base
 			$this->primetime->add_assets(array(
 				'js'   => array(
 					$asset_path . 'assets/javascript/editor.js',
-					$asset_path . 'ext/primetime/content/assets/scripts/content_posting.min.js'
+					'@primetime_content/assets/content_posting.min.js'
 				)
 			));
 		}

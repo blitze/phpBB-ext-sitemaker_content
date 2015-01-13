@@ -541,12 +541,12 @@ class content_module
 					'js' => array(
 						'//ajax.googleapis.com/ajax/libs/jqueryui/' . JQUI_VERSION . '/jquery-ui.min.js',
 						'//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js',
-						$asset_path . 'ext/primetime/primetime/assets/vendor/twig.js/twig.min.js',
-						$asset_path . 'ext/primetime/content/assets/scripts/content_admin.min.js',
+						$asset_path . 'ext/primetime/primetime/components/twig.js/twig.min.js',
+						'@primetime_content/assets/content_admin.min.js',
 					),
 					'css'	=> array(
 						'//ajax.googleapis.com/ajax/libs/jqueryui/' . JQUI_VERSION . '/themes/smoothness/jquery-ui.css',
-						$asset_path . 'ext/primetime/content/assets/scripts/content_admin.min.css',
+						'@primetime_content/assets/content_admin.min.css',
 					)
 				));
 
