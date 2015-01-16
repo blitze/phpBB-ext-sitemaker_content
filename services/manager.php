@@ -330,13 +330,12 @@ class manager
 				$type_data = $content_types[$type];
 
 				$row = $this->forum->get_post_data('first');
-				$user_cache = $this->forum->get_posters_info();
+				$users_cache = $this->forum->get_posters_info();
 				$topic_tracking_info = $this->forum->get_topic_tracking_info($forum_id);
 
 				$topic_id = (int) $topic_data['topic_id'];
 				$post_id = (int) $topic_data['topic_first_post_id'];
 				$poster_id = (int) $topic_data['topic_poster'];
-				$user_cache = array_shift($user_cache);
 				$row = array_shift($row[$topic_id]);
 				$topic_title = censor_text($topic_data['topic_title']);
 
@@ -355,11 +354,11 @@ class manager
 				);
 				$s_cannot_delete_lastpost = $topic_data['topic_last_post_id'] != $row['post_id'];
 				$s_cannot_delete_time = $this->config['delete_time'] && $row['post_time'] <= time() - ($this->config['delete_time'] * 60);
+
 				// we do not want to allow removal of the last post if a moderator locked it!
 				$s_cannot_delete_locked = $topic_data['topic_status'] == ITEM_LOCKED || $row['post_edit_locked'];
 
 				$edit_url = '';
-				$viewtopic_url = $u_action . '&amp;action=view&amp;t=' . $topic_id;
 
 				if ($this->user->data['is_registered'] && ($this->auth->acl_get('m_edit', $forum_id) || (
 					!$s_cannot_edit &&
@@ -377,11 +376,11 @@ class manager
 				{
 					if ($mode == 'mcp')
 					{
-						$u_delete_topic = $u_action . "&amp;action=delete_topic&amp;type=$content_type&amp;t=$topic_id";
+						$u_delete_topic = $u_action . "&amp;action=delete_topic&amp;type=$type&amp;t=$topic_id";
 					}
 					else
 					{
-						$u_delete_topic = append_sid("{$this->phpbb_root_path}posting." . $this->php_ext, "mode=delete&amp;f=$forum_id&amp;p=" . $row['topic_first_post_id']);
+						$u_delete_topic = append_sid("{$this->phpbb_root_path}posting." . $this->php_ext, "mode=delete&amp;f=$forum_id&amp;p=" . $post_id);
 					}
 				}
 
@@ -391,7 +390,7 @@ class manager
 					// User having deleted the post also being the post author?
 					if (!$row['post_delete_user'] || $row['post_delete_user'] == $row['poster_id'])
 					{
-						$display_username = get_username_string('full', $row['poster_id'], $row['username'], $row['user_colour'], $row['post_username']);
+						$display_username = $users_cache[$row['poster_id']]['author_full'];
 					}
 					else
 					{
@@ -421,22 +420,23 @@ class manager
 					'S_POST_UNAPPROVED'		=> (($row['post_visibility'] == ITEM_UNAPPROVED || $row['post_visibility'] == ITEM_REAPPROVE) && $this->auth->acl_get('m_approve', $forum_id)),
 					'S_POST_DELETED'		=> ($row['post_visibility'] == ITEM_DELETED && $this->auth->acl_get('m_approve', $forum_id)),
 
+					'TOPIC_ID'				=> $topic_id,
 					'DELETED_MESSAGE'		=> $l_deleted_by,
 					'DELETE_REASON'			=> $row['post_delete_reason'],
 
 					'U_INFO'				=> ($this->auth->acl_get('m_info', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", "i=main&amp;mode=post_details&amp;f=$forum_id&amp;p=" . $row['post_id'], true, $this->user->session_id) : '',
 					'U_MCP_REPORT'			=> ($this->auth->acl_get('m_report', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=reports&amp;mode=report_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
-					'U_MCP_APPROVE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=queue&amp;mode=approve_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
-					'U_MCP_RESTORE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=queue&amp;mode=' . (($topic_data['topic_visibility'] != ITEM_DELETED) ? 'deleted_posts' : 'deleted_topics') . '&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
+					'U_MCP_APPROVE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=queue&amp;mode=unapproved_topics', true, $this->user->session_id) : '',
+					'U_MCP_RESTORE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=queue&amp;mode=deleted_topics', true, $this->user->session_id) : '',
 					'U_NOTES'				=> ($this->auth->acl_getf_global('m_')) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=notes&amp;mode=user_notes&amp;u=' . $poster_id, true, $this->user->session_id) : '',
 					'U_WARN'				=> ($this->auth->acl_get('m_warn') && $poster_id != $this->user->data['user_id'] && $poster_id != ANONYMOUS) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=warn&amp;mode=warn_post&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
 
-					'U_APPROVE_ACTION'		=> append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", "i=queue&amp;p={$row['post_id']}&amp;f=$forum_id&amp;redirect=" . urlencode(str_replace('&amp;', '&', $viewtopic_url . '&amp;p=' . $row['post_id'] . '#p' . $row['post_id']))),
+					'U_REDIRECT'			=> $u_action,
 					'U_EDIT'				=> $edit_url,
 					'U_DELETE'				=> $u_delete_topic,
 				);
 
-				$tpl_data += $this->displayer->show($type, $topic_title, $topic_data, $row, $user_cache, $topic_tracking_info);
+				$tpl_data += $this->displayer->show($type, $topic_title, $topic_data, $row, $users_cache[$poster_id], $topic_tracking_info);
 				$this->template->assign_vars($tpl_data);
 
 			break;
@@ -898,6 +898,11 @@ class manager
 				// Grab icons
 				$icons = $this->cache->obtain_icons();
 
+				$base_url = $u_action . ((sizeof($params)) ? '&amp;' : '') . http_build_query($params);
+
+				$start = $this->pagination->validate_start($start, $this->config['topics_per_page'], $topics_count);
+				$this->pagination->generate_template_pagination($base_url, 'pagination', 'start', $topics_count, $this->config['topics_per_page'], $start);
+
 				for ($i = 0, $size = sizeof($topic_data); $i < $size; $i++)
 				{
 					$row = $topic_data[$i];
@@ -952,6 +957,7 @@ class manager
 						$topic_status = $filter_topic_types_ary[$row['topic_type']];
 					}
 
+					$u_mcp_queue = '';
 					if ($mode == 'mcp')
 					{
 						$url = append_sid("{$this->phpbb_root_path}mcp." . $this->php_ext, "f=$forum_id");
@@ -1017,7 +1023,7 @@ class manager
 						'U_REVIEW_TOPIC'		=> $u_topic_review,
 						'U_EDIT_TOPIC'			=> $u_action . "&amp;action=edit&amp;type=$content_type&amp;t=$topic_id",
 						'U_DELETE_TOPIC'		=> $u_delete_topic,
-						'U_CONTENT_TYPE'		=> $u_action . "&amp;type=$content_type",
+						'U_CONTENT_TYPE'		=> $base_url . "&amp;type=$content_type",
 						'U_TOPIC_STATUS'		=> $base_url . "&amp;status=$topic_status",
 						'U_MCP_QUEUE'			=> $u_mcp_queue,
 					);
@@ -1027,10 +1033,6 @@ class manager
 				}
 
 				$u_action .= (sizeof($params)) ? '&amp;' : '';
-
-				$base_url = $u_action . http_build_query($params);
-				$start = $this->pagination->validate_start($start, $this->config['topics_per_page'], $topics_count);
-				$this->pagination->generate_template_pagination($base_url, 'pagination', 'start', $topics_count, $this->config['topics_per_page'], $start);
 
 				// generate content type filters
 				$copy_params = $params;
