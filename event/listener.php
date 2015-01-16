@@ -67,6 +67,7 @@ class listener implements EventSubscriberInterface
 			'core.search_get_posts_data'	=> 'modify_posts_data',
 			'core.search_get_topic_data'	=> 'modify_topic_data',
 			'core.search_modify_tpl_ary'	=> 'content_search',
+			'core.viewforum_get_topic_data'					=> 'viewforum_redirect',
 			'core.viewtopic_assign_template_vars_before'	=> 'viewtopic_redirect',
 			'core.posting_modify_template_vars'				=> 'posting_redirect',
 			'core.viewonline_overwrite_location'			=> 'add_viewonline_location',
@@ -151,6 +152,18 @@ class listener implements EventSubscriberInterface
 
 			$event['tpl_ary'] = $tpl_ary;
 			unset($type, $tpl_ary);
+		}
+	}
+
+	public function viewforum_redirect($event)
+	{
+		if (isset($this->content_forums[$event['forum_data']['forum_id']]))
+		{
+			$type = $this->content_forums[$event['forum_data']['forum_id']];
+
+			redirect($this->helper->route('primetime_content_index', array(
+				'type'		=> $type,
+			)));
 		}
 	}
 
