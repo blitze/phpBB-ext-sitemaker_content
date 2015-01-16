@@ -41,12 +41,6 @@ class admin
 		$this->tree = $tree;
 	}
 
-	/**
-	* Default controller method to be called if no other method is given.
-	* In our case, it is accessed when the URL is /example
-	*
-	* @return Symfony\Component\HttpFoundation\Response A Symfony Response object
-	*/
 	public function handle($action, $cat_id = 0)
 	{
 		$this->user->add_lang_ext('primetime/category', 'acp/info_acp_category');
