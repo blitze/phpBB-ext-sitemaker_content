@@ -35,5 +35,9 @@
 				loadAnchor.parent().hide();
 			}
 		});
+
+		$('body').on('layoutChanged', function() {
+			container.masonry();
+		});
 	});
 })(jQuery, window, document);
