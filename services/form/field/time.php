@@ -17,10 +17,10 @@ class time extends duration
 	/* @var \phpbb\user */
 	protected $user;
 
-	/** @var \primetime\primetime\core\template */
+	/** @var \primetime\core\services\template */
 	protected $ptemplate;
 
-	/** @var \primetime\primetime\core\util */
+	/** @var \primetime\core\services\util */
 	protected $primetime;
 
 	/**
@@ -28,10 +28,10 @@ class time extends duration
 	 *
 	 * @param \phpbb\request\request_interface		$request		Request object
 	 * @param \phpbb\user							$user			User object
-	 * @param \primetime\primetime\core\template	$ptemplate		Primetime template object
-	 * @param \primetime\primetime\core\util		$primetime		Primetime object
+	 * @param \primetime\core\services\template		$ptemplate		Primetime template object
+	 * @param \primetime\core\services\util			$primetime		Primetime object
 	 */
-	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \primetime\primetime\core\template $ptemplate, \primetime\primetime\core\util $primetime)
+	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \primetime\core\services\template $ptemplate, \primetime\core\services\util $primetime)
 	{
 		$this->request = $request;
 		$this->user = $user;

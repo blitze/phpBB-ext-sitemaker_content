@@ -13,7 +13,7 @@ use Solution10\Calendar\Calendar;
 use Solution10\Calendar\Event;
 use Solution10\Calendar\Resolution\MonthResolution;
 
-class calendr extends \primetime\primetime\core\blocks\driver\block
+class calendr extends \primetime\core\services\blocks\driver\block
 {
 	/** @var \phpbb\config\db */
 	protected $config;
@@ -24,7 +24,7 @@ class calendr extends \primetime\primetime\core\blocks\driver\block
 	/* @var \primetime\content\services\displayer */
 	protected $displayer;
 
-	/** @var \primetime\primetime\core\forum\query */
+	/** @var \primetime\core\services\forum\query */
 	protected $forum;
 
 	/** @var string phpBB root path */
@@ -39,11 +39,11 @@ class calendr extends \primetime\primetime\core\blocks\driver\block
 	 * @param \phpbb\config\db							$config				Config object
 	 * @param \phpbb\user								$user				User object
 	 * @param \primetime\content\services\displayer		$displayer			Content displayer object
-	 * @param \primetime\primetime\core\forum\query		$forum				Forum object
+	 * @param \primetime\core\services\forum\query		$forum				Forum object
 	 * @param string									$root_path			phpBB root path
 	 * @param string									$php_ext			phpEx
 	 */
-	public function __construct(\phpbb\config\db $config, \phpbb\user $user, \primetime\content\services\displayer $displayer, \primetime\primetime\core\forum\query $forum, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\config\db $config, \phpbb\user $user, \primetime\content\services\displayer $displayer, \primetime\core\services\forum\query $forum, $phpbb_root_path, $php_ext)
 	{
 		$this->config = $config;
 		$this->user = $user;

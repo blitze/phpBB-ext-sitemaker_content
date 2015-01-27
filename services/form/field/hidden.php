@@ -14,16 +14,16 @@ class hidden extends base
 	/* @var \phpbb\user */
 	protected $user;
 
-	/** @var \primetime\primetime\core\template */
+	/** @var \primetime\core\services\template */
 	protected $ptemplate;
 
 	/**
 	 * Constructor
 	 *
 	 * @param \phpbb\user							$user			User object
-	 * @param \primetime\primetime\core\template	$ptemplate		Primetime template object
+	 * @param \primetime\core\services\template		$ptemplate		Primetime template object
 	 */
-	public function __construct(\phpbb\user $user, \primetime\primetime\core\template $ptemplate)
+	public function __construct(\phpbb\user $user, \primetime\core\services\template $ptemplate)
 	{
 		$this->user = $user;
 		$this->ptemplate = $ptemplate;

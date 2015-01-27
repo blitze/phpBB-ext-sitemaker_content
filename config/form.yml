@@ -5,7 +5,7 @@ services:
         arguments:
             - @request
             - @user
-            - @primetime.primetime.template
+            - @primetime.core.template
         tags:
             - { name: form.field }
 
@@ -14,7 +14,7 @@ services:
         arguments:
             - @request
             - @user
-            - @primetime.primetime.template
+            - @primetime.core.template
         tags:
             - { name: form.field }
 
@@ -23,8 +23,8 @@ services:
         arguments:
             - @request
             - @user
-            - @primetime.primetime.template
-            - @primetime.primetime.util
+            - @primetime.core.template
+            - @primetime.core.util
         tags:
             - { name: form.field }
 
@@ -33,8 +33,8 @@ services:
         arguments:
             - @request
             - @user
-            - @primetime.primetime.template
-            - @primetime.primetime.util
+            - @primetime.core.template
+            - @primetime.core.util
         tags:
             - { name: form.field }
 
@@ -43,7 +43,7 @@ services:
         arguments:
             - @request
             - @user
-            - @primetime.primetime.template
+            - @primetime.core.template
         tags:
             - { name: form.field }
 
@@ -51,7 +51,7 @@ services:
         class: primetime\content\services\form\field\hidden
         arguments:
             - @user
-            - @primetime.primetime.template
+            - @primetime.core.template
         tags:
             - { name: form.field }
 
@@ -60,7 +60,7 @@ services:
         arguments:
             - @request
             - @user
-            - @primetime.primetime.template
+            - @primetime.core.template
         tags:
             - { name: form.field }
 
@@ -69,7 +69,7 @@ services:
         arguments:
             - @request
             - @user
-            - @primetime.primetime.template
+            - @primetime.core.template
         tags:
             - { name: form.field }
 
@@ -78,7 +78,7 @@ services:
         arguments:
             - @request
             - @user
-            - @primetime.primetime.template
+            - @primetime.core.template
         tags:
             - { name: form.field }
 
@@ -87,7 +87,7 @@ services:
         arguments:
             - @request
             - @user
-            - @primetime.primetime.template
+            - @primetime.core.template
         tags:
             - { name: form.field }
 
@@ -96,7 +96,7 @@ services:
         arguments:
             - @request
             - @user
-            - @primetime.primetime.template
+            - @primetime.core.template
         tags:
             - { name: form.field }
 
@@ -104,7 +104,7 @@ services:
         class: primetime\content\services\form\field\reset
         arguments:
             - @user
-            - @primetime.primetime.template
+            - @primetime.core.template
         tags:
             - { name: form.field }
 
@@ -113,7 +113,7 @@ services:
         arguments:
             - @request
             - @user
-            - @primetime.primetime.template
+            - @primetime.core.template
         tags:
             - { name: form.field }
 
@@ -121,7 +121,7 @@ services:
         class: primetime\content\services\form\field\submit
         arguments:
             - @user
-            - @primetime.primetime.template
+            - @primetime.core.template
         tags:
             - { name: form.field }
 
@@ -130,7 +130,7 @@ services:
         arguments:
             - @request
             - @user
-            - @primetime.primetime.template
+            - @primetime.core.template
         tags:
             - { name: form.field }
 
@@ -139,7 +139,7 @@ services:
         arguments:
             - @request
             - @user
-            - @primetime.primetime.template
+            - @primetime.core.template
         tags:
             - { name: form.field }
 
@@ -148,8 +148,8 @@ services:
         arguments:
             - @request
             - @user
-            - @primetime.primetime.template
-            - @primetime.primetime.util
+            - @primetime.core.template
+            - @primetime.core.util
         tags:
             - { name: form.field }
 
@@ -158,8 +158,8 @@ services:
         arguments:
             - @request
             - @user
-            - @primetime.primetime.template
-            - @primetime.primetime.util
+            - @primetime.core.template
+            - @primetime.core.util
         tags:
             - { name: form.field }
 
@@ -168,6 +168,6 @@ services:
         arguments:
             - @request
             - @user
-            - @primetime.primetime.template
+            - @primetime.core.template
         tags:
             - { name: form.field }

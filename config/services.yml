@@ -23,7 +23,7 @@ services:
             - @template
             - @user
             - @primetime.content.form.builder
-            - @primetime.primetime.forum
+            - @primetime.core.forum
             - %core.root_path%
             - %core.php_ext%
 
@@ -39,7 +39,7 @@ services:
             - @template
             - @user
             - @primetime.content.displayer
-            - @primetime.primetime.forum
+            - @primetime.core.forum
             - %core.root_path%
             - %core.php_ext%
 
@@ -69,7 +69,7 @@ services:
             - @primetime.content.form.fields_collection
             - @template_context
             - @user
-            - @primetime.primetime.template
+            - @primetime.core.template
             - %core.root_path%
             - %core.php_ext%
 
@@ -116,7 +116,7 @@ services:
             - @primetime.content.comments
             - @primetime.content.displayer
             - @primetime.content.form.builder
-            - @primetime.primetime.forum
+            - @primetime.core.forum
             - %core.root_path%
             - %core.php_ext%
 

@@ -11,7 +11,7 @@ namespace primetime\content\services\form\field;
 
 abstract class base implements field_interface
 {
-	/** @var \primetime\primetime\core\template */
+	/** @var \primetime\core\services\template */
 	protected $ptemplate;
 
 	/** @var string */
@@ -20,9 +20,9 @@ abstract class base implements field_interface
 	/**
 	 * Constructor
 	 *
-	 * @param \primetime\primetime\core\template	$ptemplate		Primetime template object
+	 * @param \primetime\core\services\template		$ptemplate		Primetime template object
 	 */
-	public function __construct(\primetime\primetime\core\template $ptemplate)
+	public function __construct(\primetime\core\services\template $ptemplate)
 	{
 		$this->ptemplate = $ptemplate;
 	}

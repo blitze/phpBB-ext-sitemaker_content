@@ -26,7 +26,7 @@ class builder
 	/** @var \phpbb\user */
 	protected $user;
 
-	/** @var \primetime\primetime\core\block_template */
+	/** @var \primetime\core\services\block_template */
 	protected $ptemplate;
 
 	/** @var string */
@@ -62,11 +62,11 @@ class builder
 	 * @param \phpbb\request\request_interface			$request				Request object
 	 * @param \phpbb\di\service_collection				$type_collection
 	 * @param \phpbb\user								$user					User object
-	 * @param \primetime\primetime\core\template		$ptemplate				Primetime template object
+	 * @param \primetime\core\services\template			$ptemplate				Primetime template object
 	 * @param string									$phpbb_root_path		Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	 */
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\db $config, \phpbb\request\request_interface $request, \phpbb\di\service_collection $field_drivers, \phpbb\template\context $template_context, \phpbb\user $user, \primetime\primetime\core\template $ptemplate, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\db $config, \phpbb\request\request_interface $request, \phpbb\di\service_collection $field_drivers, \phpbb\template\context $template_context, \phpbb\user $user, \primetime\core\services\template $ptemplate, $phpbb_root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;

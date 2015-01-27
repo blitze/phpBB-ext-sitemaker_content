@@ -38,7 +38,7 @@ class comments implements comments_interface
 	/** @var \primetime\content\services\form\builder */
 	protected $form;
 
-	/** @var \primetime\primetime\core\forum\query */
+	/** @var \primetime\core\services\forum\query */
 	protected $forum;
 
 	/** @var string */
@@ -60,11 +60,11 @@ class comments implements comments_interface
 	 * @param \phpbb\template\template					$template			Template object
 	 * @param \phpbb\user								$user				User object
 	 * @param \primetime\content\services\form\builder	$form				Form object
-	 * @param \primetime\primetime\core\forum\query		$forum				Forum object
+	 * @param \primetime\core\services\forum\query		$forum				Forum object
 	 * @param string									$root_path			Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\form\builder $form, \primetime\primetime\core\forum\query $forum, $root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\form\builder $form, \primetime\core\services\forum\query $forum, $root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;

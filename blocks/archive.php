@@ -9,7 +9,7 @@
 
 namespace primetime\content\blocks;
 
-class archive extends \primetime\primetime\core\blocks\driver\block
+class archive extends \primetime\core\services\blocks\driver\block
 {
 	/** @var \phpbb\auth\auth */
 	protected $auth;

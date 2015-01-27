@@ -12,7 +12,6 @@
 	width: 33.33333%;
 }
 
-/* Configurate salvattore with media queries */
 @media screen and (max-width: 480px) {
 	.tile-grid .item {
 		width: 100%;

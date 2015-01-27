@@ -168,9 +168,6 @@ abstract class view implements views_interface
 			$display_notice = true;
 		}
 
-		// this should be the url to content type
-		$viewtopic_url = '';
-		//
 		return array(
 			'POST_ICON_IMG'			=> ($topic_data['enable_icons'] && !empty($row['icon_id'])) ? $this->icons[$row['icon_id']]['img'] : '',
 			'POST_ICON_IMG_WIDTH'	=> ($topic_data['enable_icons'] && !empty($row['icon_id'])) ? $this->icons[$row['icon_id']]['width'] : '',
@@ -179,6 +176,7 @@ abstract class view implements views_interface
 			'POST_ID'				=> $row['post_id'],
 			'POSTER_ID'				=> $poster_id,
 
+			'S_TOPIC_TYPE'				=> $topic_data['topic_type'],
 			'S_HAS_ATTACHMENTS'			=> (!empty($attachments[$row['post_id']])) ? true : false,
 			'S_MULTIPLE_ATTACHMENTS'	=> !empty($attachments[$row['post_id']]) && sizeof($attachments[$row['post_id']]) > 1,
 			'S_DISPLAY_NOTICE'			=> $display_notice && $row['post_attachment'],

@@ -38,48 +38,11 @@ class m2_initial_data extends \phpbb\db\migration\migration
 		);
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function revert_data()
-	{
-		$sql = 'SELECT content_name, req_permission
-			FROM ' .$this->table_prefix . 'content_types';
-		$result = $this->db->sql_query($sql);
-
-		$modes = $permissions = array();
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$modes[] = $row['content_name'];
-		}
-		$this->db->sql_freeresult($result);
-
-		return array(
-			array('if', array(
-				(sizeof($modes)),
-				array('module.remove', array('mcp', 'CONTENT_CP', array(
-					'module_basename'	=> '\primetime\content\mcp\content_module',
-					'modes'				=> $modes
-				))),
-			)),
-			array('if', array(
-				(sizeof($modes)),
-				array('module.remove', array('ucp', 'CONTENT_CP', array(
-					'module_basename'	=> '\primetime\content\ucp\content_module',
-					'modes'				=> $modes
-				))),
-			)),
-			array('module.remove', array('mcp', 0, 'CONTENT_CP')),
-			array('module.remove', array('ucp', 0, 'CONTENT_CP')),
-			array('config.remove', array('primetime_content_forums')),
-		);
-	}
-
 	public function create_forum()
 	{
 		global $phpbb_container, $config;
 
-		$forum = $phpbb_container->get('primetime.primetime.forum.manager');
+		$forum = $phpbb_container->get('primetime.core.forum.manager');
 
 		$forum_data = array(
 			'forum_type'	=> FORUM_CAT,

@@ -38,7 +38,7 @@ class content_module
 	/** @var \primetime\content\services\form\builder */
 	protected $form;
 
-	/** @var \primetime\primetime\core\forum\query */
+	/** @var \primetime\core\core\forum\query */
 	protected $forum;
 
 	/** @var string */
@@ -67,8 +67,8 @@ class content_module
 		$this->helper			= $phpbb_container->get('controller.helper');
 		$this->content			= $phpbb_container->get('primetime.content.types');
 		$this->form				= $phpbb_container->get('primetime.content.form.builder');
-		$this->forum			= $phpbb_container->get('primetime.primetime.forum.manager');
-		$this->primetime		= $phpbb_container->get('primetime.primetime.util');
+		$this->forum			= $phpbb_container->get('primetime.core.forum.manager');
+		$this->primetime		= $phpbb_container->get('primetime.core.util');
 		$this->phpbb_admin_path	= $phpbb_admin_path;
 		$this->phpbb_root_path	= $phpbb_root_path;
 		$this->php_ext			= $phpEx;
@@ -541,7 +541,7 @@ class content_module
 					'js' => array(
 						'//ajax.googleapis.com/ajax/libs/jqueryui/' . JQUI_VERSION . '/jquery-ui.min.js',
 						'//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js',
-						$asset_path . 'ext/primetime/primetime/components/twig.js/twig.min.js',
+						$asset_path . 'ext/primetime/core/components/twig.js/twig.min.js',
 						'@primetime_content/assets/content_admin.min.js',
 					),
 					'css'	=> array(

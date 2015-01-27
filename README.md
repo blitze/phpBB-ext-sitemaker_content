@@ -17,11 +17,11 @@ Create and manage content types for phpBB Primetime Extension
 
 ## Installation
 
-Clone into phpBB/ext/primetime/primetime:
+Clone into phpBB/ext/primetime/content:
 
     git clone https://github.com/blitze/primetime_content.git phpBB/ext/primetime/content
 
-Go to "ACP" > "Customise" > "Extensions" and enable the "phpBB Primetime" extension.
+Go to "ACP" > "Customise" > "Extensions" and enable the "phpBB Primetime Content" extension.
 
 ## Collaborate
 

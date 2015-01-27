@@ -22,7 +22,7 @@ services:
             - @config
             - @user
             - @primetime.content.displayer
-            - @primetime.primetime.forum
+            - @primetime.core.forum
             - %core.root_path%
             - %core.php_ext%
         calls:
@@ -36,7 +36,7 @@ services:
             - @config
             - @user
             - @primetime.content.displayer
-            - @primetime.primetime.forum
+            - @primetime.core.forum
             - %core.root_path%
             - %core.php_ext%
         calls:
@@ -50,7 +50,7 @@ services:
             - @config
             - @user
             - @primetime.content.displayer
-            - @primetime.primetime.forum
+            - @primetime.core.forum
             - %core.root_path%
             - %core.php_ext%
         calls:
