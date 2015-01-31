@@ -11,6 +11,12 @@ namespace primetime\content\services\form\field;
 
 abstract class duration extends base
 {
+	/** @var \phpbb\request\request_interface */
+	protected $request;
+
+	/** @var \primetime\core\services\util */
+	protected $primetime;
+
 	/**
 	 * @inheritdoc
 	 */

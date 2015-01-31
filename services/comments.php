@@ -23,7 +23,10 @@ class comments implements comments_interface
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
-	/** @var phpbb\pagination */
+	/** @var \phpbb\controller\helper */
+	protected $helper;
+
+	/** @var \phpbb\pagination */
 	protected $pagination;
 
 	/** @var \phpbb\request\request_interface */
@@ -35,7 +38,7 @@ class comments implements comments_interface
 	/** @var \phpbb\user */
 	protected $user;
 
-	/** @var \primetime\content\services\form\builder */
+	/** @var \primetime\content\services\form */
 	protected $form;
 
 	/** @var \primetime\core\services\forum\query */
@@ -59,12 +62,12 @@ class comments implements comments_interface
 	 * @param \phpbb\request\request_interface			$request			Request object
 	 * @param \phpbb\template\template					$template			Template object
 	 * @param \phpbb\user								$user				User object
-	 * @param \primetime\content\services\form\builder	$form				Form object
+	 * @param \primetime\content\services\form			$form				Form object
 	 * @param \primetime\core\services\forum\query		$forum				Forum object
 	 * @param string									$root_path			Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\form\builder $form, \primetime\core\services\forum\query $forum, $root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\form $form, \primetime\core\services\forum\query $forum, $root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -172,9 +175,10 @@ class comments implements comments_interface
 			$post_id = (int) $row['post_id'];
 			$poster_id = (int) $row['poster_id'];
 
+			$l_edited_by = '';
 			if (($row['post_edit_count'] && $this->config['display_last_edited']) || $row['post_edit_reason'])
 			{
-				$this->show_edit_reason($row, $user_cache);
+				$l_edited_by = $this->user->lang('EDITED_TIMES_TOTAL', (int) $row['post_edit_count'], $users_cache[$poster_id]['author_full'], $this->user->format_date($row['post_edit_time'], false, true));
 			}
 
 			$s_cannot_edit = !$this->auth->acl_get('f_edit', $forum_id) || $this->user->data['user_id'] != $poster_id;
@@ -209,6 +213,7 @@ class comments implements comments_interface
 			}
 
 			// Deleting information
+			$l_deleted_by = '';
 			if ($row['post_visibility'] == ITEM_DELETED && $row['post_delete_user'])
 			{
 				// User having deleted the post also being the post author?
@@ -230,10 +235,6 @@ class comments implements comments_interface
 				$this->user->add_lang('viewtopic');
 				$l_deleted_by = $this->user->lang('DELETED_INFORMATION', $display_username, $this->user->format_date($row['post_delete_time'], false, true));
 			}
-			else
-			{
-				$l_deleted_by = '';
-			}
 
 			$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
 			$row['post_text'] = generate_text_for_display($row['post_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
@@ -248,12 +249,15 @@ class comments implements comments_interface
 
 				'POST_DATE'			=> $this->user->format_date($row['post_time']),
 				'MESSAGE'			=> $row['post_text'],
+				'MINI_POST_IMG'		=> ($post_unread) ? $this->user->img('icon_post_target_unread', 'UNREAD_POST') : $this->user->img('icon_post_target', 'POST'),
 
 				'S_POST_DELETED'		=> ($row['post_visibility'] == ITEM_DELETED) ? true : false,
 				'S_POST_REPORTED'		=> ($row['post_reported'] && $this->auth->acl_get('m_report', $forum_id)),
 				'S_POST_UNAPPROVED'		=> (($row['post_visibility'] == ITEM_UNAPPROVED || $row['post_visibility'] == ITEM_REAPPROVE) && $this->auth->acl_get('m_approve', $forum_id)),
 				'S_POST_DELETED'		=> ($row['post_visibility'] == ITEM_DELETED && $this->auth->acl_get('m_approve', $forum_id)),
 
+				'EDITED_MESSAGE'		=> $l_edited_by,
+				'EDIT_REASON'			=> $row['post_edit_reason'],
 				'DELETED_MESSAGE'		=> $l_deleted_by,
 				'DELETE_REASON'			=> $row['post_delete_reason'],
 
@@ -262,7 +266,7 @@ class comments implements comments_interface
 				'U_MCP_APPROVE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=queue&amp;mode=approve_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
 				'U_MCP_RESTORE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=queue&amp;mode=' . (($topic_data['topic_visibility'] != ITEM_DELETED) ? 'deleted_posts' : 'deleted_topics') . '&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
 				'U_NOTES'				=> ($this->auth->acl_getf_global('m_')) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=notes&amp;mode=user_notes&amp;u=' . $poster_id, true, $this->user->session_id) : '',
-				'U_WARN'				=> ($this->auth->acl_get('m_warn') && $poster_id != $this->user->data['user_id'] && $poster_id != ANONYMOUS) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=warn&amp;mode=warn_post&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
+				'U_WARN'				=> ($this->auth->acl_get('m_warn') && $poster_id != $this->user->data['user_id'] && $poster_id != ANONYMOUS) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=warn&amp;mode=warn_post&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
 
 				'U_EDIT'				=> $edit_url,
 				'U_DELETE'				=> $u_delete_topic,

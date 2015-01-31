@@ -12,13 +12,21 @@ namespace primetime\content\mcp;
 class content_module
 {
 	/** @var string */
-	public $u_action;
+	var $tpl_name;
 
-	function main($id, $mode)
+	/** @var string */
+	var $page_title;
+
+	/** @var string */
+	var $u_action;
+
+	function main()
 	{
 		global $phpbb_container, $template;
 
 		$this->tpl_name = 'cp_content';
+		$this->page_title = 'MCP_CONTENT';
+
 		$template->assign_var('MODE', 'mcp');
 		$phpbb_container->get('primetime.content.manager')->handle_crud('mcp', $this->u_action);
 	}

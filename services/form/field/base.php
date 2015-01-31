@@ -11,6 +11,9 @@ namespace primetime\content\services\form\field;
 
 abstract class base implements field_interface
 {
+	/* @var \phpbb\user */
+	protected $user;
+
 	/** @var \primetime\core\services\template */
 	protected $ptemplate;
 
@@ -20,10 +23,12 @@ abstract class base implements field_interface
 	/**
 	 * Constructor
 	 *
+	 * @param \phpbb\user							$user			User object
 	 * @param \primetime\core\services\template		$ptemplate		Primetime template object
 	 */
-	public function __construct(\primetime\core\services\template $ptemplate)
+	public function __construct(\phpbb\user $user, \primetime\core\services\template $ptemplate)
 	{
+		$this->user = $user;
 		$this->ptemplate = $ptemplate;
 	}
 
@@ -63,8 +68,6 @@ abstract class base implements field_interface
 	 */
 	public function validate_field($data)
 	{
-		global $user;
-
 		if (isset($data['field_minlength']))
 		{
 			$data['validation_options'] += array('min_range' => $data['field_minlength']);
@@ -83,15 +86,15 @@ abstract class base implements field_interface
 
 			if (isset($data['field_minlength']) && $length < $data['field_minlength'])
 			{
-				return sprintf($user->lang['FIELD_TOO_SHORT'], $data['field_label'], $data['field_minlength']);
+				return sprintf($this->user->lang['FIELD_TOO_SHORT'], $data['field_label'], $data['field_minlength']);
 			}
 			else if (isset($data['field_maxlength']) && $length < $data['field_maxlength'])
 			{
-				return sprintf($user->lang['FIELD_TOO_LONG'], $data['field_label'], $data['field_maxlength']);
+				return sprintf($this->user->lang['FIELD_TOO_LONG'], $data['field_label'], $data['field_maxlength']);
 			}
 			else
 			{
-				return sprintf($user->lang['FIELD_INVALID'], $data['field_label']);
+				return sprintf($this->user->lang['FIELD_INVALID'], $data['field_label']);
 			}
 		}
 	}

@@ -49,7 +49,7 @@ class c2_update_data extends \phpbb\db\migration\migration
 
 		$last_topic_id = 0;
 		$return_data = array();
-		$topic_tags = $poll = array();
+		$topic_tags = array();
 		$display_maps = array(
 			0 => 'primetime.content.view.blog',
 			1 => 'primetime.content.view.portal',

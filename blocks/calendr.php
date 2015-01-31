@@ -40,7 +40,7 @@ class calendr extends \primetime\core\services\blocks\driver\block
 	 * @param \phpbb\user								$user				User object
 	 * @param \primetime\content\services\displayer		$displayer			Content displayer object
 	 * @param \primetime\core\services\forum\query		$forum				Forum object
-	 * @param string									$root_path			phpBB root path
+	 * @param string									$phpbb_root_path	phpBB root path
 	 * @param string									$php_ext			phpEx
 	 */
 	public function __construct(\phpbb\config\db $config, \phpbb\user $user, \primetime\content\services\displayer $displayer, \primetime\core\services\forum\query $forum, $phpbb_root_path, $php_ext)

@@ -20,6 +20,12 @@ class types
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
+	/** @var string */
+	private $content_types_table;
+
+	/** @var string */
+	private $content_fields_table;
+
 	/**
 	 * Construct
 	 *

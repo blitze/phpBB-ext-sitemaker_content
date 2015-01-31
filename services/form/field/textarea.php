@@ -25,7 +25,7 @@ class textarea extends base
 	/** @var \primetime\core\services\util */
 	protected $primetime;
 
-	/** @var Urodoz\Truncate\TruncateService */
+	/** @var \Urodoz\Truncate\TruncateService */
 	protected $truncate;
 
 	/**

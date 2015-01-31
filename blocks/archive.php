@@ -64,6 +64,7 @@ class archive extends \primetime\core\services\blocks\driver\block
 	{
 		$content_types = $this->content_types->get_all_types();
 
+		$forum_id = 0;
 		$content_type_options = array();
 		foreach ($content_types as $type => $row)
 		{
@@ -71,7 +72,7 @@ class archive extends \primetime\core\services\blocks\driver\block
 			$content_type_options[$forum_id] = $row['content_langname'];
 		}
 
-		$forum_id	= (isset($settings['forum_id'])) ? $settings['forum_id'] : $forum_id;
+		$forum_id = (isset($settings['forum_id'])) ? $settings['forum_id'] : $forum_id;
 
 		return array(
 			'legend1'		=> $this->user->lang['SETTINGS'],

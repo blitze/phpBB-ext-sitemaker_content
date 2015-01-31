@@ -49,5 +49,5 @@ interface views_interface
 	/**
 	 * Show topic details
 	 */
-	public function show_topic($topic_title, $type, $topic_data, $post_data, $user_cache, $topic_tracking_info = array(), $page = 1);
+	public function show_topic($topic_title, $type, $topic_data, $post_data, $users_cache, $topic_tracking_info = array(), $page = 1);
 }

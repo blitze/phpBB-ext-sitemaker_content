@@ -25,7 +25,7 @@ class display
 	/** @var \phpbb\controller\helper */
 	protected $helper;
 
-	/** @var phpbb\pagination */
+	/** @var \phpbb\pagination */
 	protected $pagination;
 
 	/** @var Container */
@@ -90,7 +90,7 @@ class display
 			return $this->helper->error($this->user->lang['INVALID_CONTENT_TYPE']);
 		}
 
-		if ($this->phpbb_container->has($type_data['display_type']))
+		if ($this->phpbb_container->has($type_data['display_type']) && !($filter && $filter_value))
 		{
 			$view = $this->phpbb_container->get($type_data['display_type']);
 		}
@@ -155,7 +155,7 @@ class display
 			'topic_tracking'	=> true,
 		);
 
-		$sql_ary = $this->forum->build_query($options, $sql_array);
+		$this->forum->build_query($options, $sql_array);
 
 		$topics_data = $this->forum->get_topic_data($limit, $start);
 		$posts_data = $this->forum->get_post_data('first');
@@ -168,7 +168,7 @@ class display
 		return $this->helper->render($view->get_index_template(), $content_langname);
 	}
 
-	public function show($type, $topic_id, $slug, $page = 1)
+	public function show($type, $topic_id, $page = 1)
 	{
 		$this->user->add_lang('viewtopic');
 		$this->user->add_lang_ext('primetime/content', 'content');
@@ -197,8 +197,6 @@ class display
 			'topic_tracking'	=> true,
 		);
 
-		$sql_array = array();
-
 		$this->forum->build_query($options);
 		$topic_data = $this->forum->get_topic_data();
 
@@ -217,10 +215,11 @@ class display
 		$topic_id = (int) $topic_data['topic_id'];
 		$post_id = (int) $topic_data['topic_first_post_id'];
 		$poster_id = (int) $topic_data['topic_poster'];
+		$slug = $topic_data['topic_slug'];
 		$post_data = array_shift($post_data[$topic_id]);
 		$topic_title = censor_text($topic_data['topic_title']);
 
-		$view->show_topic($topic_title, $type, $topic_data, $post_data, $users_cache[$poster_id], $topic_tracking_info, $page);
+		$view->show_topic($topic_title, $type, $topic_data, $post_data, $users_cache, $topic_tracking_info, $page);
 
 		if ($type_data['allow_comments'])
 		{
@@ -250,7 +249,7 @@ class display
 				'U_VIEW_FORUM'	=> $this->helper->route('primetime_content_show', array(
 					'type'			=> $type,
 					'topic_id'		=> $topic_id,
-					'slug'			=> $topic_data['topic_slug']
+					'slug'			=> $slug
 				))
 			)
 		);
@@ -261,6 +260,33 @@ class display
 				'FORUM_NAME'	=> $item['FORUM_NAME'],
 				'U_VIEW_FORUM'	=> $item['U_VIEW_FORUM'],
 			));
+		}
+
+		// Update topic view and if necessary attachment view counters ... but only for humans and if this is the first 'page view'
+		if (isset($this->user->data['session_page']) && !$this->user->data['is_bot'] && (strpos($this->user->data['session_page'], "content/$type/$topic_id/$slug") === false && $page === 1 || isset($this->user->data['session_created'])))
+		{
+			$sql = 'UPDATE ' . TOPICS_TABLE . '
+				SET topic_views = topic_views + 1, topic_last_view_time = ' . time() . "
+				WHERE topic_id = $topic_id";
+			$this->db->sql_query($sql);
+
+			// Update the attachment download counts
+			if (sizeof($update_count))
+			{
+				$sql = 'UPDATE ' . ATTACHMENTS_TABLE . '
+					SET download_count = download_count + 1
+					WHERE ' . $this->db->sql_in_set('attach_id', array_unique($update_count));
+				$this->db->sql_query($sql);
+			}
+		}
+
+		// Only mark topic if it's currently unread. Also make sure we do not set topic tracking back if earlier pages are viewed.
+		if (isset($topic_tracking_info[$topic_id]) && $topic_data['topic_last_post_time'] > $topic_tracking_info[$topic_id] && $max_post_time > $topic_tracking_info[$topic_id])
+		{
+			markread('topic', $forum_id, $topic_id, $max_post_time);
+
+			// Update forum info
+			update_forum_tracking_info($forum_id, $topic_data['forum_last_post_time'], (isset($topic_data['forum_mark_time'])) ? $topic_data['forum_mark_time'] : false, false);
 		}
 		unset($type_data, $topic_data, $post_data, $users_cache, $topic_tracking_info, $tpl_data);
 

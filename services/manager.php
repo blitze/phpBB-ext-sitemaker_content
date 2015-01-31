@@ -47,7 +47,7 @@ class manager
 	/** @var \phpbb\user */
 	protected $user;
 
-	/** @var \primetime\cotent\services\comments */
+	/** @var \primetime\content\services\comments */
 	protected $comments;
 
 	/* @var \primetime\content\services\displayer */
@@ -81,12 +81,12 @@ class manager
 	 * @param \phpbb\user								$user				User object
 	 * @param \primetime\cotent\services\comments		$comments			Comments object
 	 * @param \primetime\content\services\displayer		$displayer			Content displayer object
-	 * @param \primetime\content\services\form\builder	$form				Form object
+	 * @param \primetime\content\services\form			$form				Form object
 	 * @param \primetime\core\services\forum\query		$forum				Forum object
 	 * @param string									$phpbb_root_path	Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, Container $phpbb_container, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\comments $comments, \primetime\content\services\displayer $displayer, \primetime\content\services\form\builder $form, \primetime\core\services\forum\query $forum, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, Container $phpbb_container, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\comments $comments, \primetime\content\services\displayer $displayer, \primetime\content\services\form $form, \primetime\core\services\forum\query $forum, $phpbb_root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->cache = $cache;
@@ -107,7 +107,7 @@ class manager
 		$this->php_ext = $php_ext;
 	}
 
-	public function get_post_data($forum_id, $topic_id)
+	public function get_post_data($topic_id)
 	{
 		$sql = 'SELECT f.*, t.*, p.*, u.username, u.username_clean, u.user_sig, u.user_sig_bbcode_uid, u.user_sig_bbcode_bitfield
 			FROM ' . POSTS_TABLE . ' p, ' . TOPICS_TABLE . ' t, ' . FORUMS_TABLE . ' f, ' . USERS_TABLE . " u
@@ -259,6 +259,9 @@ class manager
 				case 'make_global':
 					$is_authed = (sizeof(array_intersect_key($forum_ids, $this->auth->acl_getf('f_announce', true)))) ? true : false;
 				break;
+				default:
+					$is_authed = false;
+				break;
 			}
 
 			if (!$is_authed)
@@ -339,11 +342,6 @@ class manager
 				$row = array_shift($row[$topic_id]);
 				$topic_title = censor_text($topic_data['topic_title']);
 
-				if (($row['post_edit_count'] && $this->config['display_last_edited']) || $row['post_edit_reason'])
-				{
-					$this->show_edit_reason($row, $user_cache);
-				}
-
 				$s_cannot_edit = !$this->auth->acl_get('f_edit', $forum_id) || $this->user->data['user_id'] != $poster_id;
 				$s_cannot_edit_time = $this->config['edit_time'] && $row['post_time'] <= time() - ($this->config['edit_time'] * 60);
 				$s_cannot_edit_locked = $topic_data['topic_status'] == ITEM_LOCKED || $row['post_edit_locked'];
@@ -382,33 +380,6 @@ class manager
 					{
 						$u_delete_topic = append_sid("{$this->phpbb_root_path}posting." . $this->php_ext, "mode=delete&amp;f=$forum_id&amp;p=" . $post_id);
 					}
-				}
-
-				// Deleting information
-				if ($row['post_visibility'] == ITEM_DELETED && $row['post_delete_user'])
-				{
-					// User having deleted the post also being the post author?
-					if (!$row['post_delete_user'] || $row['post_delete_user'] == $row['poster_id'])
-					{
-						$display_username = $users_cache[$row['poster_id']]['author_full'];
-					}
-					else
-					{
-						$sql = 'SELECT user_id, username, user_colour
-							FROM ' . USERS_TABLE . '
-							WHERE user_id = ' . (int) $row['post_delete_user'];
-						$result = $this->db->sql_query($sql);
-						$user_delete_row = $this->db->sql_fetchrow($result);
-						$this->db->sql_freeresult($result);
-						$display_username = get_username_string('full', $row['post_delete_user'], $user_delete_row['username'], $user_delete_row['user_colour']);
-					}
-
-					$this->user->add_lang('viewtopic');
-					$l_deleted_by = $this->user->lang('DELETED_INFORMATION', $display_username, $this->user->format_date($row['post_delete_time'], false, true));
-				}
-				else
-				{
-					$l_deleted_by = '';
 				}
 
 				$this->displayer->prepare_to_show($type, 'detail', $type_data['detail_tags'], $type_data['detail_tpl']);
@@ -482,7 +453,7 @@ class manager
 
 				if ($topic_id && $action == 'edit')
 				{
-					$post_data = array_merge($post_data, $this->get_post_data($forum_id, $topic_id));
+					$post_data = array_merge($post_data, $this->get_post_data($topic_id));
 
 					$fields_data = $this->get_fields_data_from_post($post_data['post_text'], array_keys($content_fields));
 					$subject = $post_data['post_subject'];
@@ -620,6 +591,7 @@ class manager
 					{
 						if (!sizeof($error))
 						{
+							$poll = array();
 							$post_data = array_merge($post_data, array(
 								'enable_bbcode'		=> $allow_bbcode,
 								'enable_smilies'	=> $allow_smilies,
@@ -649,7 +621,7 @@ class manager
 						}
 
 						// Replace "error" strings with their real, localised form
-						$error = array_map(array($user, 'lang'), $error);
+						$error = array_map(array($this->user, 'lang'), $error);
 					}
 
 					// Preview
@@ -719,26 +691,6 @@ class manager
 							$user_data['email'] = '';
 						}
 
-						if ($this->config['allow_birthdays'] && !empty($this->user->data['user_birthday']))
-						{
-							list($bday_day, $bday_month, $bday_year) = array_map('intval', explode('-', $this->user->data['user_birthday']));
-
-							if ($bday_year)
-							{
-								$diff = $now['mon'] - $bday_month;
-								if ($diff == 0)
-								{
-									$diff = ($now['mday'] - $bday_day < 0) ? 1 : 0;
-								}
-								else
-								{
-									$diff = ($diff < 0) ? 1 : 0;
-								}
-
-								$user_dat['age'] = (int) ($now['year'] - $bday_year - $diff);
-							}
-						}
-
 						$this->displayer->prepare_to_show($type, 'detail', $type_data['detail_tags'], $type_data['detail_tpl']);
 						$this->template->assign_vars($this->displayer->show($type, $subject, $post_data, $post_data, $user_data));
 
@@ -775,6 +727,7 @@ class manager
 				$filter_topic_search = utf8_normalize_nfc($this->request->variable('search', '', true));
 
 				$time = time();
+				$sql_array = array();
 				$sql_where_array = array();
 				$filter_topic_status_ary 	= array(
 					'-1'				=> 'scheduled',
@@ -903,6 +856,7 @@ class manager
 				$start = $this->pagination->validate_start($start, $this->config['topics_per_page'], $topics_count);
 				$this->pagination->generate_template_pagination($base_url, 'pagination', 'start', $topics_count, $this->config['topics_per_page'], $start);
 
+				$view_type = array();
 				for ($i = 0, $size = sizeof($topic_data); $i < $size; $i++)
 				{
 					$row = $topic_data[$i];
@@ -1011,7 +965,7 @@ class manager
 						'LAST_VIEW_TIME'		=> $this->user->format_date($row['topic_last_view_time']),
 
 						'S_COMMENTS'			=> $allow_comments,
-						'S_TOPIC_REPORTED'		=> (!empty($row['topic_reported']) && empty($row['topic_moved_id']) && $auth->acl_get('m_report', $forum_id)) ? true : false,
+						'S_TOPIC_REPORTED'		=> (!empty($row['topic_reported']) && empty($row['topic_moved_id']) && $this->auth->acl_get('m_report', $forum_id)) ? true : false,
 						'S_TOPIC_UNAPPROVED'	=> $topic_unapproved,
 						'S_POSTS_UNAPPROVED'	=> $posts_unapproved,
 						'S_TOPIC_DELETED'		=> $topic_deleted,

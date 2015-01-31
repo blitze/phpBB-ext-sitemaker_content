@@ -13,7 +13,6 @@ services:
         class: primetime\content\services\comments
         arguments:
             - @auth
-            - @cache
             - @config
             - @content.visibility
             - @dbal.conn
@@ -22,7 +21,7 @@ services:
             - @request
             - @template
             - @user
-            - @primetime.content.form.builder
+            - @primetime.content.form
             - @primetime.core.forum
             - %core.root_path%
             - %core.php_ext%
@@ -56,12 +55,13 @@ services:
             - @template
             - @user
             - @primetime.content.comments
+            - @primetime.content.form
             - %core.root_path%
             - %tables.primetime.content_fields%
             - %tables.primetime.content_types%
 
-    primetime.content.form.builder:
-        class: primetime\content\services\form\builder
+    primetime.content.form:
+        class: primetime\content\services\form
         arguments:
             - @auth
             - @config
@@ -115,7 +115,7 @@ services:
             - @user
             - @primetime.content.comments
             - @primetime.content.displayer
-            - @primetime.content.form.builder
+            - @primetime.content.form
             - @primetime.core.forum
             - %core.root_path%
             - %core.php_ext%

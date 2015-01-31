@@ -16,7 +16,7 @@ class displayer extends types
 	/** @var \phpbb\auth\auth */
 	protected $auth;
 
-	/** @var \phpbb\config\config */
+	/** @var \phpbb\config\db */
 	protected $config;
 
 	/** @var \phpbb\content_visibility */
@@ -31,11 +31,17 @@ class displayer extends types
 	/** @var \phpbb\template\template */
 	protected $template;
 
+	/** @var Twig */
+	protected $twig;
+
 	/** @var \phpbb\user */
 	protected $user;
 
 	/** @var \primetime\cotent\services\comments */
 	protected $comments;
+
+	/** @var \primetime\cotent\services\form */
+	protected $form;
 
 	/** @var field object collection */
 	protected $form_fields;
@@ -49,6 +55,9 @@ class displayer extends types
 	/** @var array */
 	protected $type_fields;
 
+	/** @var bool */
+	protected $allow_comments = false;
+
 	/** @var string */
 	protected $tpl_name = '';
 
@@ -61,19 +70,19 @@ class displayer extends types
 	 * @param \phpbb\auth\auth								$auth					Auth object
 	 * @param \phpbb\cache\service							$cache					Cache object
 	 * @param \phpbb\config\db								$config					Config object
-	 * @param \phpbb\content_visibility						$content_visibility		Template context
-	 * @param \phpbb\template\context						$context				Template context
+	 * @param \phpbb\content_visibility						$content_visibility		Content visibility object
 	 * @param \phpbb\db\driver\driver_interface				$db						Database connection
 	 * @param \phpbb\controller\helper						$helper					Helper object
 	 * @param Container										$phpbb_container		Service container
 	 * @param \phpbb\template\template						$template				Template object
 	 * @param \phpbb\user									$user					User object
 	 * @param \primetime\cotent\services\comments			$comments				Comments object
+	 * @param \primetime\cotent\services\form				$form					Form object
 	 * @param string										$root_path				phpBB root path
 	 * @param string										$fields_table			Name of content fields database table
 	 * @param string										$types_table			Name of content types database table
 	 */
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, Container $phpbb_container, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\comments $comments, $root_path, $fields_table, $types_table)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, Container $phpbb_container, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\comments $comments, \primetime\content\services\form $form, $root_path, $fields_table, $types_table)
 	{
 		parent::__construct($cache, $config, $db, $fields_table, $types_table);
 
@@ -85,6 +94,7 @@ class displayer extends types
 		$this->template				= $template;
 		$this->user					= $user;
 		$this->comments				= $comments;
+		$this->form					= $form;
 		$this->root_path			= $root_path;
 	}
 
@@ -93,8 +103,6 @@ class displayer extends types
 	 */
 	public function prepare_to_show($type, $view, $fields, $custom_tpl = '', $tpl_name = '', $force_max_chars = '')
 	{
-		$form = $this->phpbb_container->get('primetime.content.form.builder');
-
 		$this->tags = array();
 		$this->type_fields = array();
 		$this->form_fields = null;
@@ -116,7 +124,7 @@ class displayer extends types
 		}
 
 		$this->view = ($view == 'summary' || $view == 'detail') ? $view : 'summary';
-		$this->form_fields = array_intersect_key($form->get_form_fields(), array_flip($fields));
+		$this->form_fields = array_intersect_key($this->form->get_form_fields(), array_flip($fields));
 
 		foreach ($fields as $name => $type)
 		{
@@ -131,7 +139,6 @@ class displayer extends types
 				$this->type_fields[$name] = $fields_data[$name];
 			}
 		}
-
 		unset($fields, $fields_data);
 	}
 
@@ -141,9 +148,7 @@ class displayer extends types
 	public function show($type, $topic_title, $topic_data, $post_data, $user_cache, $topic_tracking_info = array(), $page = 1)
 	{
 		$row = $topic_data;
-		$forum_id = $row['forum_id'];
 		$topic_id = $row['topic_id'];
-		$post_id = $post_data['post_id'];
 
 		/*$update_count = array();
 		if (!empty($attachments[$post_id]))

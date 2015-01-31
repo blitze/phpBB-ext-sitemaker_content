@@ -38,6 +38,9 @@ abstract class view implements views_interface
 	/** @var string */
 	protected $php_ext;
 
+	/** @var array */
+	protected $icons;
+
 	/**
 	 * Constructor
 	 *
@@ -97,7 +100,7 @@ abstract class view implements views_interface
 			$post_data	= array_shift($posts_data[$topic_id]);
 			$title		= censor_text($topic_data['topic_title']);
 
-			$tpl_data = $this->get_common_template_data($topic_data, $post_data, $topic_tracking_info);
+			$tpl_data = $this->get_common_template_data($topic_data, $post_data);
 			$tpl_data += $this->displayer->show($type, $title, $topic_data, $post_data, $users_cache[$poster_id], $topic_tracking_info);
 
 			$this->template->assign_block_vars('topic_row', $tpl_data);
@@ -105,7 +108,7 @@ abstract class view implements views_interface
 		}
 	}
 
-	public function show_topic($topic_title, $type, $topic_data, $post_data, $user_cache, $topic_tracking_info = array(), $page = 1)
+	public function show_topic($topic_title, $type, $topic_data, $post_data, $users_cache, $topic_tracking_info = array(), $page = 1)
 	{
 		$max_post_time = 0;
 		$update_count = array();
@@ -119,49 +122,19 @@ abstract class view implements views_interface
 			$max_post_time = $post_data['post_time'];
 		}
 
-		$tpl_data = $this->get_common_template_data($topic_data, $post_data, $topic_tracking_info);
-		$tpl_data += $this->get_detail_template_data($type, $topic_data, $post_data, $user_cache);
-		$tpl_data += $this->displayer->show($type, $topic_title, $topic_data, $post_data, $user_cache, $topic_tracking_info, $page);
+		$tpl_data = $this->get_common_template_data($topic_data, $post_data);
+		$tpl_data += $this->get_detail_template_data($type, $topic_data, $post_data, $users_cache);
+		$tpl_data += $this->displayer->show($type, $topic_title, $topic_data, $post_data, $users_cache[$topic_data['topic_poster']], $topic_tracking_info, $page);
 		$this->template->assign_vars($tpl_data);
-
-		// Update topic view and if necessary attachment view counters ... but only for humans and if this is the first 'page view'
-		if (isset($this->user->data['session_page']) && !$this->user->data['is_bot'] && (strpos($this->user->data['session_page'], "content/$type/$topic_id/$slug") === false && $page === 1 || isset($this->user->data['session_created'])))
-		{
-			$sql = 'UPDATE ' . TOPICS_TABLE . '
-				SET topic_views = topic_views + 1, topic_last_view_time = ' . time() . "
-				WHERE topic_id = $topic_id";
-			$this->db->sql_query($sql);
-
-			// Update the attachment download counts
-			if (sizeof($update_count))
-			{
-				$sql = 'UPDATE ' . ATTACHMENTS_TABLE . '
-					SET download_count = download_count + 1
-					WHERE ' . $this->db->sql_in_set('attach_id', array_unique($update_count));
-				$this->db->sql_query($sql);
-			}
-		}
-
-		// Only mark topic if it's currently unread. Also make sure we do not set topic tracking back if earlier pages are viewed.
-		if (isset($topic_tracking_info[$topic_id]) && $topic_data['topic_last_post_time'] > $topic_tracking_info[$topic_id] && $max_post_time > $topic_tracking_info[$topic_id])
-		{
-			markread('topic', $forum_id, $topic_id, $max_post_time);
-
-			// Update forum info
-			update_forum_tracking_info($forum_id, $topic_data['forum_last_post_time'], (isset($topic_data['forum_mark_time'])) ? $topic_data['forum_mark_time'] : false, false);
-		}
-
 	}
 
 	protected function get_common_template_data($topic_data, $post_data)
 	{
 		$row = &$post_data;
 		$forum_id = $topic_data['forum_id'];
-		$topic_id = $topic_data['topic_id'];
 		$poster_id = $row['poster_id'];
 
 		$display_notice = false;
-		$post_edit_list = array();
 
 		if (!$this->auth->acl_get('f_download', $forum_id))
 		{
@@ -186,7 +159,7 @@ abstract class view implements views_interface
 		);
 	}
 
-	protected function get_detail_template_data($type, $topic_data, $post_data, $user_cache)
+	protected function get_detail_template_data($type, $topic_data, $post_data, $users_cache)
 	{
 		$row = &$post_data;
 		$forum_id = $row['forum_id'];
@@ -195,13 +168,13 @@ abstract class view implements views_interface
 
 		if (($row['post_edit_count'] && $this->config['display_last_edited']) || $row['post_edit_reason'])
 		{
-			$this->show_edit_reason($row, $user_cache['author_full']);
+			$this->show_edit_reason($row, $users_cache);
 		}
 
 		// Deleting information
 		if ($row['post_visibility'] == ITEM_DELETED && $row['post_delete_user'])
 		{
-			$this->show_delete_reason($row, $user_cache);
+			$this->show_delete_reason($row, $users_cache);
 		}
 
 		$s_cannot_edit = !$this->auth->acl_get('f_edit', $forum_id) || $this->user->data['user_id'] != $poster_id;
@@ -257,8 +230,9 @@ abstract class view implements views_interface
 		);
 	}
 
-	protected function show_edit_reason($row, $display_username)
+	protected function show_edit_reason($row, $users_cache)
 	{
+		$display_postername	= $users_cache[$row['poster_id']]['author_full'];
 		$l_edited_by = $this->user->lang('EDITED_TIMES_TOTAL', (int) $row['post_edit_count'], $display_username, $this->user->format_date($row['post_edit_time'], false, true));
 
 		$this->template->assign_vars(array(
@@ -267,9 +241,10 @@ abstract class view implements views_interface
 		));
 	}
 
-	protected function show_delete_reason($row, $user_cache)
+	protected function show_delete_reason($row, $users_cache)
 	{
-		$display_username = get_username_string('full', $row['post_delete_user'], $user_cache[$row['post_delete_user']]['username'], $user_cache[$row['post_delete_user']]['user_colour']);
+		$display_postername	= $users_cache[$row['poster_id']]['author_full'];
+		$display_username	= $users_cache[$row['post_delete_user']]['author_full'];
 
 		if ($row['post_delete_reason'])
 		{

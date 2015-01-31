@@ -35,11 +35,17 @@ class content_module
 	/** @var \phpbb\user */
 	protected $user;
 
-	/** @var \primetime\content\services\form\builder */
+	/** @var \primetime\content\services\types */
+	protected $content;
+
+	/** @var \primetime\content\services\form */
 	protected $form;
 
-	/** @var \primetime\core\core\forum\query */
+	/** @var \primetime\core\services\forum\query */
 	protected $forum;
+
+	/** @var \primetime\core\util */
+	protected $primetime;
 
 	/** @var string */
 	protected $phpbb_admin_path;
@@ -49,6 +55,21 @@ class content_module
 
 	/** @var string */
 	protected $php_ext;
+
+	/** @var string */
+	private $content_types_table;
+
+	/** @var string */
+	private $content_fields_table;
+
+	/** @var array */
+	var $views = array();
+
+	/** @var string */
+	var $tpl_name;
+
+	/** @var string */
+	var $page_title;
 
 	/** @var string */
 	public $u_action;
@@ -66,7 +87,7 @@ class content_module
 		$this->user		= $user;
 		$this->helper			= $phpbb_container->get('controller.helper');
 		$this->content			= $phpbb_container->get('primetime.content.types');
-		$this->form				= $phpbb_container->get('primetime.content.form.builder');
+		$this->form				= $phpbb_container->get('primetime.content.form');
 		$this->forum			= $phpbb_container->get('primetime.core.forum.manager');
 		$this->primetime		= $phpbb_container->get('primetime.core.util');
 		$this->phpbb_admin_path	= $phpbb_admin_path;
@@ -106,7 +127,6 @@ class content_module
 					$content_name = str_replace(' ', '_', strtolower(trim($this->request->variable('content_name', ''))));
 					$content_langname = utf8_normalize_nfc($this->request->variable('content_langname', '', true));
 					$content_enabled = $this->request->variable('content_enabled', 1);
-					$group_by = $this->request->variable('group_by', '');
 					$forum_perm_from = $this->request->variable('copy_forum_perm', 0);
 
 					//Let's do some checks
@@ -150,7 +170,7 @@ class content_module
 
 						if ($content_langname !== $row['content_langname'])
 						{
-							$this->handle_langname_change($content_name, $forum_id, $content_langname);
+							$this->handle_langname_change($forum_id, $content_langname);
 						}
 					}
 					else
@@ -254,15 +274,13 @@ class content_module
 					$row = $this->content->get_type($content_type);
 
 					$forum_id = (int) $row['forum_id'];
+					$content_id = (int) $row['content_id'];
 					$content_name = $row['content_name'];
 
 					if (!$content_name)
 					{
 						trigger_error($this->user->lang['CONTENT_TYPE_NO_EXIST'] . adm_back_link($this->u_action), E_USER_WARNING);
 					}
-
-					// Delete ucp/mcp modes
-					$this->handle_modules('remove', $content_name);
 
 					// Delete blocks that display this content type
 					$sql = 'SELECT c.bid
@@ -282,9 +300,10 @@ class content_module
 
 					if (sizeof($block_ids))
 					{
-						$phpbb_container->get('primetime.blocks.manager')->delete_blocks($block_ids);
+						$this->phpbb_container->get('primetime.blocks.manager')->delete_blocks($block_ids);
 					}
 
+					$topic_ids = array();
 					if ($transfer_to)
 					{
 						if (!isset($types_data[$transfer_to]))
@@ -302,10 +321,9 @@ class content_module
 
 						$sql = 'SELECT topic_id
 							FROM ' . TOPICS_TABLE . "
-							WHERE content_type = '" . $this->db->sql_escape($module_mode) . "'";
+							WHERE content_type = '" . $this->db->sql_escape($content_name) . "'";
 						$result = $this->db->sql_query($sql);
 
-						$topic_ids = array();
 						while ($row = $this->db->sql_fetchrow($result))
 						{
 							$topic_ids[] = $row['topic_id'];
@@ -372,7 +390,7 @@ class content_module
 
 				$row = $this->content->get_type($content_type);
 
-				if (sizeof($content_data))
+				if (!sizeof($row))
 				{
 					trigger_error($this->user->lang['CONTENT_TYPE_NO_EXIST'] . adm_back_link($this->u_action), E_USER_WARNING);
 				}
@@ -469,71 +487,69 @@ class content_module
 					'allow_urls'	=> true
 				);
 
-				$db_fields = array();
 				$field_types = $this->form->get_form_fields();
 
-				if ($content_type)
+				if (!$content_type)
 				{
-					$row = $this->content->get_type($content_type);
+					trigger_error($this->user->lang['NO_CONTENT_TYPE'] . adm_back_link($this->u_action), E_USER_WARNING);
+				}
 
-					$forum_id = (int) $row['forum_id'];
-					$content_fields = (array) $row['content_fields'];
+				$row = $this->content->get_type($content_type);
 
-					foreach ($content_fields as $data)
+				$forum_id = (int) $row['forum_id'];
+				$content_fields = (array) $row['content_fields'];
+
+				foreach ($content_fields as $data)
+				{
+					if (!isset($field_types[$data['field_type']]))
 					{
-						if (!isset($field_types[$data['field_type']]))
-						{
-							continue;
-						}
-
-						$l_type = $field_types[$data['field_type']]->get_langname();
-						decode_message($data['field_explain'], $data['field_exp_uid']);
-
-						$data += array(
-							'TOKEN'			=> '{' . strtoupper($data['field_name']) . '}',
-							'TYPE_LABEL'	=> $l_type,
-							'DEFAULT_TYPE'	=> ($data['field_type'] == 'checkbox' || ($data['field_type'] == 'select' && $data['field_multi'])) ? 'checkbox' : 'radio',
-						);
-
-						$this->template->assign_block_vars('field', array_change_key_case($data, CASE_UPPER));
-
-						if (isset($data['field_options']))
-						{
-							$selected = array();
-							if (isset($data['field_value']))
-							{
-								$selected = array_flip($data['field_value']);
-							}
-
-							foreach ($data['field_options'] as $option)
-							{
-								$this->template->assign_block_vars('field.option', array(
-									'VALUE'		=> $option,
-									'S_CHECKED'	=> (isset($selected[$option])) ? true : false
-								));
-							}
-						}
+						continue;
 					}
 
-					// Parse description if specified
-					if ($row['content_desc'])
-					{
-						if (!isset($row['content_desc_uid']))
-						{
-							// Before we are able to display the preview and plane text, we need to parse our $this->request->variable()'d value...
-							$row['content_desc_uid'] = '';
-							$row['content_desc_bitfield'] = '';
-							$row['content_desc_options'] = 0;
+					$l_type = $field_types[$data['field_type']]->get_langname();
+					decode_message($data['field_explain'], $data['field_exp_uid']);
 
-							generate_text_for_storage($row['content_desc'], $row['content_desc_uid'], $row['content_desc_bitfield'], $row['content_desc_options'], $this->request->variable('desc_allow_bbcode', false), $this->request->variable('desc_allow_urls', false), $this->request->variable('desc_allow_smilies', false));
+					$data += array(
+						'TOKEN'			=> '{' . strtoupper($data['field_name']) . '}',
+						'TYPE_LABEL'	=> $l_type,
+						'DEFAULT_TYPE'	=> ($data['field_type'] == 'checkbox' || ($data['field_type'] == 'select' && $data['field_multi'])) ? 'checkbox' : 'radio',
+					);
+
+					$this->template->assign_block_vars('field', array_change_key_case($data, CASE_UPPER));
+
+					if (isset($data['field_options']))
+					{
+						$selected = array();
+						if (isset($data['field_value']))
+						{
+							$selected = array_flip($data['field_value']);
 						}
 
-						// decode...
-						$content_desc_data = generate_text_for_edit($row['content_desc'], $row['content_desc_uid'], $row['content_desc_options']);
+						foreach ($data['field_options'] as $option)
+						{
+							$this->template->assign_block_vars('field.option', array(
+								'VALUE'		=> $option,
+								'S_CHECKED'	=> (isset($selected[$option])) ? true : false
+							));
+						}
+					}
+				}
+
+				// Parse description if specified
+				if ($row['content_desc'])
+				{
+					if (!isset($row['content_desc_uid']))
+					{
+						// Before we are able to display the preview and plane text, we need to parse our $this->request->variable()'d value...
+						$row['content_desc_uid'] = '';
+						$row['content_desc_bitfield'] = '';
+						$row['content_desc_options'] = 0;
+
+						generate_text_for_storage($row['content_desc'], $row['content_desc_uid'], $row['content_desc_bitfield'], $row['content_desc_options'], $this->request->variable('desc_allow_bbcode', false), $this->request->variable('desc_allow_urls', false), $this->request->variable('desc_allow_smilies', false));
 					}
 
-					$summary_tpl = $row['summary_tpl'];
-					$detail_tpl = $row['detail_tpl'];
+					// decode...
+					$content_desc_data = generate_text_for_edit($row['content_desc'], $row['content_desc_uid'], $row['content_desc_options']);
 				}
 
 				$asset_path = $this->primetime->asset_path;
@@ -623,7 +639,6 @@ class content_module
 					);
 				}
 
-				$l_action = 'ACP_CONTENT';
 				$this->template->assign_vars(array('U_ADD_TYPE'	=> $this->u_action . "&amp;action=add"));
 
 			break;
@@ -665,7 +680,7 @@ class content_module
 		return ($content_id) ? true : false;
 	}
 
-	public function handle_langname_change($name, $forum_id, $new_langname)
+	public function handle_langname_change($forum_id, $new_langname)
 	{
 		// update content forum name
 		$forum_name = (isset($this->user->lang[$new_langname])) ? $this->user->lang[$new_langname] : $new_langname;
@@ -687,19 +702,25 @@ class content_module
 
 				$errors = $this->forum->add($forum_data, $forum_perm_from);
 
-				if (!$forum_data['forum_id'])
+				if (!sizeof($errors))
 				{
-					trigger_error('NO_FORUM_ID');
+					$forum_id = (int) $forum_data['forum_id'];
 				}
-
-				return (int) $forum_data['forum_id'];
 
 			break;
 
 			case 'remove':
+
+				if (!$forum_id)
+				{
+					trigger_error('NO_FORUM_ID');
+				}
+
 				$this->forum->delete_forum($forum_id, $action_posts, true, $transfer_to_id);
 			break;
 		}
+
+		return $forum_id;
 	}
 
 	public function handle_content_fields($content_id, $fields_data)
@@ -708,6 +729,7 @@ class content_module
 		$fields_defaults = utf8_normalize_nfc($this->request->variable('fdefaults', array('' => array('' => ''))));
 
 		$count = 0;
+		$form_fields = array();
 		$fields_ary = array_filter(array_keys($fields_data));
 
 		foreach ($fields_ary as $field)

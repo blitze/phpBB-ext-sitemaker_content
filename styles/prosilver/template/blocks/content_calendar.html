@@ -29,26 +29,5 @@
 			<!-- END day -->
 		</tr>
 		<!-- END week -->
-		<tr class="bg2" style="position: absolute; bottom: 5px; right: 5px; left: 5px; height: 78%;">
-			<td colspan="7" style="display: block;">
-				<a class="pull-right" href="#"><i class="fa fa-close"></i></a>
-				<div class="clear"></div>
-			<!-- BEGIN week -->
-				<!-- BEGIN day -->
-					<!-- IF week.day.EVENTS -->
-					<div data-events="{{ week.day.DAY_DATE }}">
-						<h5 class="align-center"><strong>{{ week.day.DAY_DATE|date('M d, Y') }}</strong></h5>
-						<ul class="pt-list" style="height: 130px; overflow: auto;">
-						{% for event in week.day.EVENTS %}
-							<li><a href="{{ event.url }}">{{ event.title }}</a></li>
-						{% endfor %}
-						</ul>
-					</div>
-					<!-- ENDIF -->
-				<!-- END day -->
-			<!-- END week -->
-				<div class="clear"></div>
-			</td>
-		</tr>
 	</tbody>
 </table>
