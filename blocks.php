@@ -27,11 +27,3 @@ function select_content_type($content_types, $type)
 
 	return $html;
 }
-
-/**
- * Build hidden field for content blocks config
- */
-function set_last_modified($value, $key)
-{
-	return '<input type="hidden" name="config[' . $key . ']" value="' . time() . '" />';
-}
