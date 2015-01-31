@@ -7,9 +7,9 @@
  *
  */
 
-namespace primetime\content\services\form;
+namespace primetime\content\services;
 
-class builder
+class form
 {
 	/** @var \phpbb\auth\auth */
 	protected $auth;
@@ -26,7 +26,7 @@ class builder
 	/** @var \phpbb\user */
 	protected $user;
 
-	/** @var \primetime\core\services\block_template */
+	/** @var \primetime\core\services\template */
 	protected $ptemplate;
 
 	/** @var string */
@@ -51,6 +51,9 @@ class builder
 	protected $custom_tags = array();
 
 	/** @var bool */
+	public $enable_editor = false;
+
+	/** @var bool */
 	public $is_valid = false;
 
 	/**
@@ -60,7 +63,6 @@ class builder
 	 * @param \phpbb\config\db							$config					Config object
 	 * @param \phpbb\template\context					$template_context		Template context object
 	 * @param \phpbb\request\request_interface			$request				Request object
-	 * @param \phpbb\di\service_collection				$type_collection
 	 * @param \phpbb\user								$user					User object
 	 * @param \primetime\core\services\template			$ptemplate				Primetime template object
 	 * @param string									$phpbb_root_path		Path to the phpbb includes directory.
@@ -226,7 +228,7 @@ class builder
 
 			if (!check_form_key($this->form['form_name']))
 			{
-				$error[] = 'FORM_INVALID';
+				$errors[] = 'FORM_INVALID';
 			}
 
 			$errors = array_filter($errors);
