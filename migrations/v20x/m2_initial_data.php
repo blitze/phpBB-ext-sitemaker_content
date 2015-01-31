@@ -127,13 +127,6 @@ class m2_initial_data extends \phpbb\db\migration\migration
 			);
 
 			// Does this bbcode already exist?
-			$sql = 'SELECT bbcode_id, bbcode_tag
-				FROM ' . BBCODES_TABLE . "
-				WHERE bbcode_tag = '" . $this->db->sql_escape($sql_ary['bbcode_tag']) . "'";
-			$result = $this->db->sql_query($sql);
-			$bbcode_id = $this->db->sql_fetchfield('bbcode_id');
-			$this->db->sql_freeresult($result);
-
 			if (isset($current_bbcodes[$sql_ary['bbcode_tag']]))
 			{
 				$this->db->sql_query('UPDATE ' . BBCODES_TABLE . ' SET ' . $this->db->sql_build_array('UPDATE', $sql_ary) . ' WHERE bbcode_id = ' . (int) $current_bbcodes[$sql_ary['bbcode_tag']]);
