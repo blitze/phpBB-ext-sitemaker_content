@@ -89,9 +89,11 @@ abstract class view implements views_interface
 		return $total_topics;
 	}
 
-	public function display_topics($type, $topics_data, $posts_data, $users_cache, $topic_tracking_info = array())
+	public function display_topics($type, $topics_data, $posts_data, $users_cache, $attachments, $topic_tracking_info = array())
 	{
+		$update_count = array();
 		$topics_data = array_values($topics_data);
+
 		for ($i = 0, $size = sizeof($topics_data); $i < $size; $i++)
 		{
 			$topic_data	= $topics_data[$i];
@@ -101,14 +103,14 @@ abstract class view implements views_interface
 			$title		= censor_text($topic_data['topic_title']);
 
 			$tpl_data = $this->get_common_template_data($topic_data, $post_data);
-			$tpl_data += $this->displayer->show($type, $title, $topic_data, $post_data, $users_cache[$poster_id], $topic_tracking_info);
+			$tpl_data += $this->displayer->show($type, $title, $topic_data, $post_data, $users_cache[$poster_id], $attachments, $update_count, $topic_tracking_info);
 
 			$this->template->assign_block_vars('topic_row', $tpl_data);
 			unset($topics_data[$i], $post_data[$topic_id]);
 		}
 	}
 
-	public function show_topic($topic_title, $type, $topic_data, $post_data, $users_cache, $topic_tracking_info = array(), $page = 1)
+	public function show_topic($type, $topic_title, $topic_data, $post_data, $users_cache, $attachments, $topic_tracking_info = array(), $page = 1)
 	{
 		$max_post_time = 0;
 		$update_count = array();
@@ -124,8 +126,11 @@ abstract class view implements views_interface
 
 		$tpl_data = $this->get_common_template_data($topic_data, $post_data);
 		$tpl_data += $this->get_detail_template_data($type, $topic_data, $post_data, $users_cache);
-		$tpl_data += $this->displayer->show($type, $topic_title, $topic_data, $post_data, $users_cache[$topic_data['topic_poster']], $topic_tracking_info, $page);
+		$tpl_data += $this->displayer->show($type, $topic_title, $topic_data, $post_data, $users_cache[$topic_data['topic_poster']], $attachments, $update_count, $topic_tracking_info, $page);
+
 		$this->template->assign_vars($tpl_data);
+
+		return $update_count;
 	}
 
 	protected function get_common_template_data($topic_data, $post_data)
@@ -166,17 +171,6 @@ abstract class view implements views_interface
 		$topic_id = $row['topic_id'];
 		$poster_id = $row['poster_id'];
 
-		if (($row['post_edit_count'] && $this->config['display_last_edited']) || $row['post_edit_reason'])
-		{
-			$this->show_edit_reason($row, $users_cache);
-		}
-
-		// Deleting information
-		if ($row['post_visibility'] == ITEM_DELETED && $row['post_delete_user'])
-		{
-			$this->show_delete_reason($row, $users_cache);
-		}
-
 		$s_cannot_edit = !$this->auth->acl_get('f_edit', $forum_id) || $this->user->data['user_id'] != $poster_id;
 		$s_cannot_edit_time = $this->config['edit_time'] && $row['post_time'] <= time() - ($this->config['edit_time'] * 60);
 		$s_cannot_edit_locked = $topic_data['topic_status'] == ITEM_LOCKED || $row['post_edit_locked'];
@@ -207,59 +201,30 @@ abstract class view implements views_interface
 
 		$viewtopic_url = '';
 		//
-		return array(
-			'S_POST_DELETED'		=> ($row['post_visibility'] == ITEM_DELETED) ? true : false,
-			//'S_FRIEND'				=> ($row['friend']) ? true : false,
-			//'S_IGNORE_POST'			=> ($row['foe']) ? true : false,
-			//'S_POST_HIDDEN'			=> $row['hide_post'],
-			//'L_IGNORE_POST'			=> ($row['foe']) ? sprintf($this->user->lang['POST_BY_FOE'], get_username_string('full', $poster_id, $row['username'], $row['user_colour'], $row['post_username'])) : '',
-			//'L_POST_DISPLAY'		=> ($row['hide_post']) ? $this->user->lang('POST_DISPLAY', '<a class="display_post" data-post-id="' . $row['post_id'] . '" href="' . $viewtopic_url . "&amp;p={$row['post_id']}&amp;view=show#p{$row['post_id']}" . '">', '</a>') : '',
+		return array_merge(
+			array(
+				'S_POST_DELETED'		=> ($row['post_visibility'] == ITEM_DELETED) ? true : false,
+				//'S_FRIEND'				=> ($row['friend']) ? true : false,
+				//'S_IGNORE_POST'			=> ($row['foe']) ? true : false,
+				//'S_POST_HIDDEN'			=> $row['hide_post'],
+				//'L_IGNORE_POST'			=> ($row['foe']) ? sprintf($this->user->lang['POST_BY_FOE'], get_username_string('full', $poster_id, $row['username'], $row['user_colour'], $row['post_username'])) : '',
+				//'L_POST_DISPLAY'		=> ($row['hide_post']) ? $this->user->lang('POST_DISPLAY', '<a class="display_post" data-post-id="' . $row['post_id'] . '" href="' . $viewtopic_url . "&amp;p={$row['post_id']}&amp;view=show#p{$row['post_id']}" . '">', '</a>') : '',
 
-			'U_EDIT'				=> $edit_url,
-			'U_INFO'				=> ($this->auth->acl_get('m_info', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", "i=main&amp;mode=post_details&amp;f=$forum_id&amp;p=" . $row['post_id'], true, $this->user->session_id) : '',
-			'U_DELETE'				=> ($delete_allowed) ? append_sid("{$this->root_path}posting.$this->php_ext", "mode=delete&amp;f=$forum_id&amp;p={$row['post_id']}") : '',
+				'U_EDIT'				=> $edit_url,
+				'U_INFO'				=> ($this->auth->acl_get('m_info', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", "i=main&amp;mode=post_details&amp;f=$forum_id&amp;p=" . $row['post_id'], true, $this->user->session_id) : '',
+				'U_DELETE'				=> ($delete_allowed) ? append_sid("{$this->root_path}posting.$this->php_ext", "mode=delete&amp;f=$forum_id&amp;p={$row['post_id']}") : '',
 
-			'U_APPROVE_ACTION'		=> append_sid("{$this->root_path}mcp.$this->php_ext", "i=queue&amp;p={$row['post_id']}&amp;f=$forum_id&amp;redirect=" . urlencode(str_replace('&amp;', '&', $viewtopic_url . '&amp;p=' . $row['post_id'] . '#p' . $row['post_id']))),
-			'U_REPORT'				=> ($this->auth->acl_get('f_report', $forum_id)) ? append_sid("{$this->root_path}report.$this->php_ext", 'f=' . $forum_id . '&amp;p=' . $row['post_id']) : '',
-			'U_MCP_REPORT'			=> ($this->auth->acl_get('m_report', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=reports&amp;mode=report_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
-			'U_MCP_APPROVE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=queue&amp;mode=approve_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
-			'U_MCP_RESTORE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=queue&amp;mode=' . (($topic_data['topic_visibility'] != ITEM_DELETED) ? 'deleted_posts' : 'deleted_topics') . '&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
-			'U_MINI_POST'			=> append_sid("{$this->root_path}viewtopic.$this->php_ext", 'p=' . $row['post_id']) . '#p' . $row['post_id'],
-			'U_NOTES'				=> ($this->auth->acl_getf_global('m_')) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=notes&amp;mode=user_notes&amp;u=' . $poster_id, true, $this->user->session_id) : '',
-			'U_WARN'				=> ($this->auth->acl_get('m_warn') && $poster_id != $this->user->data['user_id'] && $poster_id != ANONYMOUS) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=warn&amp;mode=warn_post&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
+				'U_APPROVE_ACTION'		=> append_sid("{$this->root_path}mcp.$this->php_ext", "i=queue&amp;p={$row['post_id']}&amp;f=$forum_id&amp;redirect=" . urlencode(str_replace('&amp;', '&', $viewtopic_url . '&amp;p=' . $row['post_id'] . '#p' . $row['post_id']))),
+				'U_REPORT'				=> ($this->auth->acl_get('f_report', $forum_id)) ? append_sid("{$this->root_path}report.$this->php_ext", 'f=' . $forum_id . '&amp;p=' . $row['post_id']) : '',
+				'U_MCP_REPORT'			=> ($this->auth->acl_get('m_report', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=reports&amp;mode=report_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
+				'U_MCP_APPROVE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=queue&amp;mode=approve_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
+				'U_MCP_RESTORE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=queue&amp;mode=' . (($topic_data['topic_visibility'] != ITEM_DELETED) ? 'deleted_posts' : 'deleted_topics') . '&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
+				'U_MINI_POST'			=> append_sid("{$this->root_path}viewtopic.$this->php_ext", 'p=' . $row['post_id']) . '#p' . $row['post_id'],
+				'U_NOTES'				=> ($this->auth->acl_getf_global('m_')) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=notes&amp;mode=user_notes&amp;u=' . $poster_id, true, $this->user->session_id) : '',
+				'U_WARN'				=> ($this->auth->acl_get('m_warn') && $poster_id != $this->user->data['user_id'] && $poster_id != ANONYMOUS) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=warn&amp;mode=warn_post&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
+			),
+			$this->displayer->show_delete_reason($row, $users_cache),
+			$this->displayer->show_edit_reason($row, $users_cache)
 		);
-	}
-
-	protected function show_edit_reason($row, $users_cache)
-	{
-		$display_postername	= $users_cache[$row['poster_id']]['author_full'];
-		$l_edited_by = $this->user->lang('EDITED_TIMES_TOTAL', (int) $row['post_edit_count'], $display_username, $this->user->format_date($row['post_edit_time'], false, true));
-
-		$this->template->assign_vars(array(
-			'EDITED_MESSAGE'	=> $l_edited_by,
-			'EDIT_REASON'		=> $row['post_edit_reason']
-		));
-	}
-
-	protected function show_delete_reason($row, $users_cache)
-	{
-		$display_postername	= $users_cache[$row['poster_id']]['author_full'];
-		$display_username	= $users_cache[$row['post_delete_user']]['author_full'];
-
-		if ($row['post_delete_reason'])
-		{
-			$l_deleted_message = $this->user->lang('POST_DELETED_BY_REASON', $display_postername, $display_username, $this->user->format_date($row['post_delete_time'], false, true), $row['post_delete_reason']);
-		}
-		else
-		{
-			$l_deleted_message = $this->user->lang('POST_DELETED_BY', $display_postername, $display_username, $this->user->format_date($row['post_delete_time'], false, true));
-		}
-		$l_deleted_by = $this->user->lang('DELETED_INFORMATION', $display_username, $this->user->format_date($row['post_delete_time'], false, true));
-
-		$this->template->assign_vars(array(
-			'DELETED_MESSAGE'			=> $l_deleted_by,
-			'DELETE_REASON'				=> $row['post_delete_reason'],
-			'L_POST_DELETED_MESSAGE'	=> $l_deleted_message
-		));
 	}
 }

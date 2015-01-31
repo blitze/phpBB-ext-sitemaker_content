@@ -334,6 +334,7 @@ class manager
 
 				$row = $this->forum->get_post_data('first');
 				$users_cache = $this->forum->get_posters_info();
+				$attachments = $this->forum->get_attachments($forum_id);
 				$topic_tracking_info = $this->forum->get_topic_tracking_info($forum_id);
 
 				$topic_id = (int) $topic_data['topic_id'];
@@ -357,6 +358,7 @@ class manager
 				$s_cannot_delete_locked = $topic_data['topic_status'] == ITEM_LOCKED || $row['post_edit_locked'];
 
 				$edit_url = '';
+				$update_count = array();
 
 				if ($this->user->data['is_registered'] && ($this->auth->acl_get('m_edit', $forum_id) || (
 					!$s_cannot_edit &&
@@ -384,30 +386,32 @@ class manager
 
 				$this->displayer->prepare_to_show($type, 'detail', $type_data['detail_tags'], $type_data['detail_tpl']);
 
-				$tpl_data = array(
-					'S_VIEWING'				=> true,
-					'S_POST_DELETED'		=> ($row['post_visibility'] == ITEM_DELETED) ? true : false,
-					'S_POST_REPORTED'		=> ($row['post_reported'] && $this->auth->acl_get('m_report', $forum_id)),
-					'S_POST_UNAPPROVED'		=> (($row['post_visibility'] == ITEM_UNAPPROVED || $row['post_visibility'] == ITEM_REAPPROVE) && $this->auth->acl_get('m_approve', $forum_id)),
-					'S_POST_DELETED'		=> ($row['post_visibility'] == ITEM_DELETED && $this->auth->acl_get('m_approve', $forum_id)),
+				$tpl_data = array_merge(
+					array(
+						'S_VIEWING'				=> true,
+						'S_POST_DELETED'		=> ($row['post_visibility'] == ITEM_DELETED) ? true : false,
+						'S_POST_REPORTED'		=> ($row['post_reported'] && $this->auth->acl_get('m_report', $forum_id)),
+						'S_POST_UNAPPROVED'		=> (($row['post_visibility'] == ITEM_UNAPPROVED || $row['post_visibility'] == ITEM_REAPPROVE) && $this->auth->acl_get('m_approve', $forum_id)),
+						'S_POST_DELETED'		=> ($row['post_visibility'] == ITEM_DELETED && $this->auth->acl_get('m_approve', $forum_id)),
 
-					'TOPIC_ID'				=> $topic_id,
-					'DELETED_MESSAGE'		=> $l_deleted_by,
-					'DELETE_REASON'			=> $row['post_delete_reason'],
+						'TOPIC_ID'				=> $topic_id,
 
-					'U_INFO'				=> ($this->auth->acl_get('m_info', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", "i=main&amp;mode=post_details&amp;f=$forum_id&amp;p=" . $row['post_id'], true, $this->user->session_id) : '',
-					'U_MCP_REPORT'			=> ($this->auth->acl_get('m_report', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=reports&amp;mode=report_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
-					'U_MCP_APPROVE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=queue&amp;mode=unapproved_topics', true, $this->user->session_id) : '',
-					'U_MCP_RESTORE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=queue&amp;mode=deleted_topics', true, $this->user->session_id) : '',
-					'U_NOTES'				=> ($this->auth->acl_getf_global('m_')) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=notes&amp;mode=user_notes&amp;u=' . $poster_id, true, $this->user->session_id) : '',
-					'U_WARN'				=> ($this->auth->acl_get('m_warn') && $poster_id != $this->user->data['user_id'] && $poster_id != ANONYMOUS) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=warn&amp;mode=warn_post&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
+						'U_INFO'				=> ($this->auth->acl_get('m_info', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", "i=main&amp;mode=post_details&amp;f=$forum_id&amp;p=" . $row['post_id'], true, $this->user->session_id) : '',
+						'U_MCP_REPORT'			=> ($this->auth->acl_get('m_report', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=reports&amp;mode=report_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
+						'U_MCP_APPROVE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=queue&amp;mode=unapproved_topics', true, $this->user->session_id) : '',
+						'U_MCP_RESTORE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=queue&amp;mode=deleted_topics', true, $this->user->session_id) : '',
+						'U_NOTES'				=> ($this->auth->acl_getf_global('m_')) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=notes&amp;mode=user_notes&amp;u=' . $poster_id, true, $this->user->session_id) : '',
+						'U_WARN'				=> ($this->auth->acl_get('m_warn') && $poster_id != $this->user->data['user_id'] && $poster_id != ANONYMOUS) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=warn&amp;mode=warn_post&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
 
-					'U_REDIRECT'			=> $u_action,
-					'U_EDIT'				=> $edit_url,
-					'U_DELETE'				=> $u_delete_topic,
+						'U_REDIRECT'			=> $u_action,
+						'U_EDIT'				=> $edit_url,
+						'U_DELETE'				=> $u_delete_topic,
+					),
+					$this->displayer->show($type, $topic_title, $topic_data, $row, $users_cache[$poster_id], $attachments, $update_count, $topic_tracking_info),
+					$this->displayer->show_delete_reason($row, $users_cache),
+					$this->displayer->show_edit_reason($row, $users_cache)
 				);
 
-				$tpl_data += $this->displayer->show($type, $topic_title, $topic_data, $row, $users_cache[$poster_id], $topic_tracking_info);
 				$this->template->assign_vars($tpl_data);
 
 			break;
@@ -674,10 +678,10 @@ class manager
 							'jabber'			=> ($this->user->data['user_jabber'] && $this->auth->acl_get('u_sendim')) ? append_sid("{$this->phpbb_root_path}memberlist.$this->php_ext", "mode=contact&amp;action=jabber&amp;u=$poster_id") : '',
 							'search'			=> ($this->auth->acl_get('u_search')) ? append_sid("{$this->phpbb_root_path}search.$this->php_ext", "author_id=$poster_id&amp;sr=posts") : '',
 
-							'author_full'		=> get_username_string('full', $poster_id, $this->user->data['username'], $this->user->data['user_colour']),
-							'author_colour'		=> get_username_string('colour', $poster_id, $this->user->data['username'], $this->user->data['user_colour']),
-							'author_username'	=> get_username_string('username', $poster_id, $this->user->data['username'], $this->user->data['user_colour']),
-							'author_profile'	=> get_username_string('profile', $poster_id, $this->user->data['username'], $this->user->data['user_colour']),
+							'username'			=> get_username_string('username', $poster_id, $this->user->data['username'], $this->user->data['user_colour']),
+							'username_full'		=> get_username_string('full', $poster_id, $this->user->data['username'], $this->user->data['user_colour']),
+							'user_colour'		=> get_username_string('colour', $poster_id, $this->user->data['username'], $this->user->data['user_colour']),
+							'user_profile'		=> get_username_string('profile', $poster_id, $this->user->data['username'], $this->user->data['user_colour']),
 						);
 
 						get_user_rank($this->user->data['user_rank'], $this->user->data['user_posts'], $this->user->data['rank_title'], $this->user->data['rank_image'], $this->user->data['rank_image_src']);

@@ -161,8 +161,9 @@ class display
 		$posts_data = $this->forum->get_post_data('first');
 		$topic_tracking_info = $this->forum->get_topic_tracking_info($forum_id);
 		$users_cache = $this->forum->get_posters_info();
+		$attachments = $this->forum->get_attachments($forum_id);
 
-		$view->display_topics($type, $topics_data, $posts_data, $users_cache, $topic_tracking_info);
+		$view->display_topics($type, $topics_data, $posts_data, $users_cache, $attachments, $topic_tracking_info);
 		unset($type_data, $topic_data, $post_data, $user_cache, $topic_tracking_info, $tpl_data);
 
 		return $this->helper->render($view->get_index_template(), $content_langname);
@@ -210,6 +211,7 @@ class display
 		$post_data = $this->forum->get_post_data('first');
 		$topic_tracking_info = $this->forum->get_topic_tracking_info($forum_id);
 		$users_cache = $this->forum->get_posters_info();
+		$attachments = $this->forum->get_attachments($forum_id);
 
 		$topic_data = array_shift($topic_data);
 		$topic_id = (int) $topic_data['topic_id'];
@@ -219,7 +221,7 @@ class display
 		$post_data = array_shift($post_data[$topic_id]);
 		$topic_title = censor_text($topic_data['topic_title']);
 
-		$view->show_topic($topic_title, $type, $topic_data, $post_data, $users_cache, $topic_tracking_info, $page);
+		$update_count = $view->show_topic($type, $topic_title, $topic_data, $post_data, $users_cache, $attachments, $topic_tracking_info, $page);
 
 		if ($type_data['allow_comments'])
 		{

@@ -242,10 +242,10 @@ class comments implements comments_interface
 
 			$this->template->assign_block_vars('comment', array(
 				'POST_ID'			=> $post_id,
-				'POST_AUTHOR_FULL'	=> $users_cache[$poster_id]['author_full'],
-				'POST_AUTHOR'		=> $users_cache[$poster_id]['author_username'],
+				'POST_AUTHOR_FULL'	=> $users_cache[$poster_id]['username_full'],
+				'POST_AUTHOR'		=> $users_cache[$poster_id]['username'],
 				'POSTER_AVATAR'		=> $users_cache[$poster_id]['avatar'],
-				'U_POST_AUTHOR'		=> $users_cache[$poster_id]['author_profile'],
+				'U_POST_AUTHOR'		=> $users_cache[$poster_id]['user_profile'],
 
 				'POST_DATE'			=> $this->user->format_date($row['post_time']),
 				'MESSAGE'			=> $row['post_text'],

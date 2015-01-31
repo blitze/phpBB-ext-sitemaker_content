@@ -145,16 +145,16 @@ class displayer extends types
 	/**
 	 * Get post
 	 */
-	public function show($type, $topic_title, $topic_data, $post_data, $user_cache, $topic_tracking_info = array(), $page = 1)
+	public function show($type, $topic_title, $topic_data, $post_data, $user_cache, $attachments, &$update_count, $topic_tracking_info = array(), $page = 1)
 	{
 		$row = $topic_data;
 		$topic_id = $row['topic_id'];
+		$post_id = $post_data['post_id'];
 
-		/*$update_count = array();
 		if (!empty($attachments[$post_id]))
 		{
 			parse_attachments($forum_id, $post_data['post_text'], $attachments[$post_id], $update_count);
-		}*/
+		}
 
 		$label_class = array('label-hidden', 'label-inline', 'label-newline');
 		$post_field_data = $this->get_fields_data_from_post($post_data['post_text'], $this->tags);
@@ -168,15 +168,15 @@ class displayer extends types
 
 		$topic_row = array(
 			'MINI_POST_IMG'			=> ($post_unread) ? $this->user->img('icon_post_target_unread', 'UNREAD_POST') : $this->user->img('icon_post_target', 'POST'),
-			'TOPIC_AUTHOR'			=> $user_cache['author_username'],
-			'TOPIC_AUTHOR_COLOUR'	=> $user_cache['author_colour'],
-			'TOPIC_AUTHOR_FULL'		=> $user_cache['author_full'],
-			'TOPIC_AUTHOR_URL'		=> $user_cache['author_profile'],
+			'TOPIC_AUTHOR'			=> $user_cache['username'],
+			'TOPIC_AUTHOR_COLOUR'	=> $user_cache['user_colour'],
+			'TOPIC_AUTHOR_FULL'		=> $user_cache['username_full'],
+			'TOPIC_AUTHOR_URL'		=> $user_cache['user_profile'],
 			'TOPIC_AUTHOR_AVATAR'	=> $user_cache['avatar'],
 
 			'S_UNREAD_POST'			=> $post_unread,
 
-			'TOPIC_TITLE'			=> $topic_title,
+			'TOPIC_TITLE'			=> censor_text($topic_data['topic_title']),
 			'TOPIC_COMMENTS'		=> ($this->allow_comments) ? $this->comments->count($topic_data) : '',
 			'TOPIC_DATE'			=> $this->user->format_date($row['topic_time']),
 			'TOPIC_URL'				=> $topic_url,
@@ -276,6 +276,50 @@ class displayer extends types
 		unset($fields_data, $post_field_data, $topic_data, $post_data, $row);
 
 		return $topic_row;
+	}
+
+	public function show_edit_reason($row, $users_cache)
+	{
+		$l_edited_by = $edit_reason = '';
+		if (($row['post_edit_count'] && $this->config['display_last_edited']) || $row['post_edit_reason'])
+		{
+			$display_postername	= $users_cache[$row['poster_id']]['username_full'];
+			$l_edited_by = $this->user->lang('EDITED_TIMES_TOTAL', (int) $row['post_edit_count'], $display_username, $this->user->format_date($row['post_edit_time'], false, true));
+			$edit_reason = $row['post_edit_reason'];
+		}
+
+		return array(
+			'EDITED_MESSAGE'	=> $l_edited_by,
+			'EDIT_REASON'		=> $edit_reason,
+		);
+	}
+
+	public function show_delete_reason($row, $users_cache)
+	{
+		$l_deleted_by = $delete_reason = $l_deleted_message = '';
+		if ($row['post_visibility'] == ITEM_DELETED && $row['post_delete_user'])
+		{
+			$display_postername	= $users_cache[$row['poster_id']]['username_full'];
+			$display_username	= $users_cache[$row['post_delete_user']]['username_full'];
+
+			if ($row['post_delete_reason'])
+			{
+				$l_deleted_message = $this->user->lang('POST_DELETED_BY_REASON', $display_postername, $display_username, $this->user->format_date($row['post_delete_time'], false, true), $row['post_delete_reason']);
+			}
+			else
+			{
+				$l_deleted_message = $this->user->lang('POST_DELETED_BY', $display_postername, $display_username, $this->user->format_date($row['post_delete_time'], false, true));
+			}
+
+			$l_deleted_by = $this->user->lang('DELETED_INFORMATION', $display_username, $this->user->format_date($row['post_delete_time'], false, true));
+			$delete_reason = $row['post_delete_reason'];
+		}
+
+		return array(
+			'DELETED_MESSAGE'			=> $l_deleted_by,
+			'DELETE_REASON'				=> $delete_reason,
+			'L_POST_DELETED_MESSAGE'	=> $l_deleted_message
+		);
 	}
 
 	public function get_twig()

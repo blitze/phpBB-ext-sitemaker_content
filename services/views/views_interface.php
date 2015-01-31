@@ -44,10 +44,10 @@ interface views_interface
 	/**
 	 * Display topics on content index
 	 */
-	public function display_topics($type, $topics_data, $posts_data, $users_cache, $topic_tracking_info = array());
+	public function display_topics($type, $topics_data, $posts_data, $users_cache, $attachments, $topic_tracking_info = array());
 
 	/**
 	 * Show topic details
 	 */
-	public function show_topic($topic_title, $type, $topic_data, $post_data, $users_cache, $topic_tracking_info = array(), $page = 1);
+	public function show_topic($type, $topic_title, $topic_data, $post_data, $users_cache, $attachments, $topic_tracking_info = array(), $page = 1);
 }

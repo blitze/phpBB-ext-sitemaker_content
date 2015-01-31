@@ -184,7 +184,9 @@ class recent extends \primetime\core\services\blocks\driver\block
 
 			$this->displayer->prepare_to_show($type, 'block', $fields, $this->settings['block_tpl'], $tpl_name, $this->settings['max_chars']);
 
+			$update_count = array();
 			$topics_data = array_values($topics_data);
+
 			for ($i = 0, $size = sizeof($topics_data); $i < $size; $i++)
 			{
 				$topic_data	= $topics_data[$i];
@@ -193,7 +195,7 @@ class recent extends \primetime\core\services\blocks\driver\block
 				$post_data	= array_shift($posts_data[$topic_id]);
 				$title		= censor_text($topic_data['topic_title']);
 
-				$tpl_data = $this->displayer->show($type, $title, $topic_data, $post_data, $users_cache[$poster_id], $topic_tracking_info);
+				$tpl_data = $this->displayer->show($type, $title, $topic_data, $post_data, $users_cache[$poster_id], array(), $update_count, $topic_tracking_info);
 
 				$this->ptemplate->assign_block_vars('topic_row', $tpl_data);
 				unset($topics_data[$i], $post_data[$topic_id]);
