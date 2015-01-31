@@ -30,20 +30,6 @@ services:
         tags:
             - { name: primetime.block }
 
-    primetime.content.block.featured:
-        class: primetime\content\blocks\featured
-        arguments:
-            - @config
-            - @user
-            - @primetime.content.displayer
-            - @primetime.core.forum
-            - %core.root_path%
-            - %core.php_ext%
-        calls:
-            - [set_name, [primetime.content.block.featured]]
-        tags:
-            - { name: primetime.block }
-
     primetime.content.block.recent:
         class: primetime\content\blocks\recent
         arguments:

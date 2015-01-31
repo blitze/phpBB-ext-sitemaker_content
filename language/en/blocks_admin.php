@@ -33,6 +33,5 @@ $lang = array_merge($lang, array(
 	// Block names
 	'PRIMETIME_CONTENT_BLOCK_ARCHIVE'	=> 'Content Archive',
 	'PRIMETIME_CONTENT_BLOCK_CALENDAR'	=> 'Content Calendar',
-	'PRIMETIME_CONTENT_BLOCK_FEATURED'	=> 'Featured Content',
 	'PRIMETIME_CONTENT_BLOCK_RECENT'	=> 'Recent Content',
 ));
