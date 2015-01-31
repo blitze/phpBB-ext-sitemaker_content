@@ -48,7 +48,7 @@ class recent extends \primetime\core\services\blocks\driver\block
 	 * @param \phpbb\user								$user				User object
 	 * @param \primetime\content\services\displayer		$displayer			Content displayer object
 	 * @param \primetime\core\services\forum\query		$forum				Forum object
-	 * @param string									$root_path			phpBB root path
+	 * @param string									$phpbb_root_path	phpBB root path
 	 * @param string									$php_ext			phpEx
 	 */
 	public function __construct(\phpbb\config\db $config, \phpbb\user $user, \primetime\content\services\displayer $displayer, \primetime\core\services\forum\query $forum, $phpbb_root_path, $php_ext)
@@ -78,21 +78,27 @@ class recent extends \primetime\core\services\blocks\driver\block
 
 		$content_types = $this->displayer->get_all_types();
 
-		$type = '';
+		$default_type = '';
 		$content_type_options = $field_options = array();
-		foreach ($content_types as $type => $row)
+		if (sizeof($content_types))
 		{
-			$content_type_options[$type] = $row['content_langname'];
-			foreach ($row['content_fields'] as $field => $fdata)
+			foreach ($content_types as $type => $row)
 			{
-				$field_options[$type][$field] = $fdata['field_label'];
+				$content_type_options[$type] = $row['content_langname'];
+				foreach ($row['content_fields'] as $field => $fdata)
+				{
+					$field_options[$type][$field] = $fdata['field_label'];
+				}
 			}
+
+			$row = array_shift($content_types);
+			$default_type = $row['content_name'];
 		}
 
 		$topic_type_options = array(POST_NORMAL => 'POST_NORMAL', POST_STICKY => 'POST_STICKY', POST_ANNOUNCE => 'POST_ANNOUNCEMENT', POST_GLOBAL => 'POST_GLOBAL');
 		$range_options = array('' => 'ALL_TIME', 'today' => 'TODAY', 'week' => 'THIS_WEEK', 'month' => 'THIS_MONTH', 'year' => 'THIS_YEAR');
 
-		$content_type	= (isset($settings['content_type'])) ? $settings['content_type'] : $type;
+		$content_type	= (isset($settings['content_type'])) ? $settings['content_type'] : $default_type;
 		$fields		= (isset($settings['fields'])) ? $settings['fields'] : '';
 		$topic_type	= (isset($settings['topic_type'])) ? $settings['topic_type'] : POST_NORMAL;
 		$date_range	= (isset($settings['date_range'])) ? $settings['date_range'] : '';
@@ -100,7 +106,7 @@ class recent extends \primetime\core\services\blocks\driver\block
 
 		return array(
 			'legend1'			=> $this->user->lang['DISPLAY'],
-			'content_type'		=> array('lang' => 'CONTENT_TYPE', 'validate' => 'string', 'type' => 'select:1:toggable', 'function' => 'select_content_type', 'params' => array($content_type_options, $content_type), 'default' => $type, 'explain' => false),
+			'content_type'		=> array('lang' => 'CONTENT_TYPE', 'validate' => 'string', 'type' => 'select:1:toggable', 'function' => 'select_content_type', 'params' => array($content_type_options, $content_type), 'default' => $default_type, 'explain' => false),
 			'max_chars'			=> array('lang' => 'FIELD_MAX_CHARS', 'validate' => 'int:0:255', 'type' => 'number:0:255', 'maxlength' => 3, 'explain' => false, 'default' => 125),
 			'fields'			=> array('lang' => 'SELECT_FIELDS', 'validate' => 'string', 'type' => 'checkbox', 'params' => array($field_options, $fields), 'default' => '', 'explain' => true),
 			'block_tpl'			=> array('lang' => 'TEMPLATE', 'validate' => 'string', 'type' => 'textarea:5:50', 'maxlength' => 255, 'explain' => false, 'default' => ''),
@@ -113,52 +119,49 @@ class recent extends \primetime\core\services\blocks\driver\block
 			'date_range'		=> array('lang' => 'LIMIT_POST_TIME', 'validate' => 'string', 'type' => 'select', 'params' => array($range_options, $date_range), 'default' => '', 'explain' => false),
 			'sort_key'			=> array('lang' => 'SORT_BY', 'validate' => 'string', 'type' => 'select', 'params' => array($this->sort_options, $sort_key), 'default' => self::SORT_TOPIC_TIME, 'explain' => false),
 			'enable_tracking'	=> array('lang' => 'ENABLE_TOPIC_TRACKING', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => false, 'default' => 1),
-			'last_modified'		=> array('type' => 'hidden', 'function' => 'set_last_modified', 'default' => 0),
+			'last_modified'		=> array('type' => 'hidden', 'default' => time()),
 		);
 	}
 
 	public function display($bdata, $edit_mode = false)
 	{
 		$this->settings = $bdata['settings'];
-		$type = $this->settings['content_type'];
 
-		switch ($this->settings['topic_type'])
-		{
-			case POST_GLOBAL:
-				$lang_var = 'FORUM_GLOBAL_ANNOUNCEMENTS';
-			break;
-			case POST_ANNOUNCE:
-				$lang_var = 'FORUM_ANNOUNCEMENTS';
-			break;
-			case POST_STICKY:
-				$lang_var = 'FORUM_STICKY_POSTS';
-			break;
-			case POST_NORMAL:
-			default:
-				$lang_var = 'FORUM_RECENT_TOPICS';
-				$lang_var = $this->sort_options[$this->settings['sort_key']] . '_CONTENT';
-			break;
-		}
-		$block_title = 'Test'; //$this->user->lang[$lang_var];
-
-		if (empty($type))
+		if (empty($this->settings['content_type']))
 		{
 			return array(
-				'title'		=> $block_title,
+				'title'		=> '',
 				'content'	=> ($edit_mode) ? $this->user->lang['NO_CONTENT_TYPE'] : '',
 			);
 		}
 
+		$type = $this->settings['content_type'];
+		$type_data = $this->displayer->get_type($type);
+		$forum_id = $type_data['forum_id'];
 		$enable_tracking = ($this->user->data['is_registered'] && $this->config['load_db_lastread'] && $this->settings['enable_tracking']) ? true : false;
+
+		switch ($this->settings['topic_type'])
+		{
+			case POST_GLOBAL:
+				$lang_var = 'CONTENT_GLOBAL_ANNOUNCEMENTS';
+			break;
+			case POST_ANNOUNCE:
+				$lang_var = 'CONTENT_ANNOUNCEMENTS';
+			break;
+			case POST_STICKY:
+				$lang_var = 'CONTENT_STICKY_POSTS';
+			break;
+			case POST_NORMAL:
+			default:
+				$lang_var = sprintf($this->user->lang['CONTENT_' . $this->sort_options[$this->settings['sort_key']]], $type_data['content_langname']);
+			break;
+		}
 
 		$sort_keys = array(
 			self::SORT_TOPIC_TIME	=> 't.topic_time',
 			self::SORT_TOPIC_VIEWS	=> 't.topic_views',
 			self::SORT_TOPIC_READ	=> 't.topic_last_view_time'
 		);
-
-		$type_data = $this->displayer->get_type($type);
-		$forum_id = $type_data['forum_id'];
 
 		$options = array(
 			'forum_id'			=> $forum_id,
@@ -197,11 +200,11 @@ class recent extends \primetime\core\services\blocks\driver\block
 			}
 
 			$this->ptemplate->assign_vars(array(
-				'S_IS_BOT'			=> $this->user->data['is_bot']
+				'S_IS_BOT'	=> $this->user->data['is_bot']
 			));
 
 			return array(
-				'title'		=> $block_title,
+				'title'		=> $lang_var,
 				'content'	=> $this->ptemplate->render_view('primetime/content', 'blocks/recent_content.html', 'recent_content_block')
 			);
 		}

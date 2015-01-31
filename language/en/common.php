@@ -41,6 +41,16 @@ $lang = array_merge($lang, array(
 	'READ_MORE'			=> 'Read More',
 	'COMMENTS'			=> 'Comments',
 	'CONTENT_NO_TOPICS'				=> 'Sorry! No topics have been posted for this content type',
+
+	// Whois info
 	'PRIMETIME_READING_TOPIC'		=> 'Reading topic in %s',
 	'PRIMETIME_BROWSING_CONTENT'	=> 'Browsing %s',
+
+	// Blocks titles
+	'CONTENT_TOPIC_TIME'			=> 'Recent %s',
+	'CONTENT_TOPIC_VIEWS'			=> 'Most Read %s',
+	'CONTENT_LAST_READ_TIME'		=> 'Last Read %s',
+	'CONTENT_STICKY_POSTS'			=> 'Featured %s',
+	'CONTENT_ANNOUNCEMENTS'			=> 'Recommended %s',
+	'CONTENT_GLOBAL_ANNOUNCEMENTS'	=> 'Must Read %s',
 ));
