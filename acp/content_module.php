@@ -457,38 +457,7 @@ class content_module
 			break;
 
 			case 'add':
-
-				$forum_id = 0;
-				$row = array(
-					'content_name'			=> '',
-					'content_langname'		=> '',
-					'content_enabled'		=> 1,
-					'content_desc'			=> '',
-					'req_approval'			=> 0,
-					'allow_comments'		=> 1,
-					'show_poster_info'		=> 0,
-					'show_poster_contents'	=> 0,
-					'show_pagination'		=> 1,
-					'index_show_desc'		=> 0,
-					'items_per_page'		=> 10,
-					'topics_per_group'		=> 1,
-					'display_type'			=> 'portal',
-					'summary_tpl'			=> '',
-					'detail_tpl'			=> '',
-					'content_desc_uid'		=> '',
-					'content_desc_options'	=> 7,
-					'content_desc_bitfield'	=> '',
-				);
-				// no break
-
 			case 'edit':
-
-				$content_desc_data = array(
-					'text'			=> '',
-					'allow_bbcode'	=> true,
-					'allow_smilies'	=> true,
-					'allow_urls'	=> true
-				);
 
 				$field_types = $this->form->get_form_fields();
 
@@ -562,6 +531,30 @@ class content_module
 							));
 						}
 					}
+				}
+				else
+				{
+					$forum_id = 0;
+					$row = array(
+						'content_name'			=> '',
+						'content_langname'		=> '',
+						'content_enabled'		=> 1,
+						'content_desc'			=> '',
+						'req_approval'			=> 0,
+						'allow_comments'		=> 1,
+						'show_poster_info'		=> 0,
+						'show_poster_contents'	=> 0,
+						'show_pagination'		=> 1,
+						'index_show_desc'		=> 0,
+						'items_per_page'		=> 10,
+						'topics_per_group'		=> 1,
+						'display_type'			=> 'portal',
+						'summary_tpl'			=> '',
+						'detail_tpl'			=> '',
+						'content_desc_uid'		=> '',
+						'content_desc_options'	=> 7,
+						'content_desc_bitfield'	=> '',
+					);
 				}
 
 				$action = 'edit';

@@ -108,7 +108,7 @@ class displayer extends types
 	{
 		$this->tags = array();
 		$this->type_fields = array();
-		$this->form_fields = null;
+		$this->form_fields = array();
 		$this->tpl_name = '';
 		$this->type_data = $this->get_type($type);
 
