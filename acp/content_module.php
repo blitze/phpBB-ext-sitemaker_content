@@ -26,6 +26,9 @@ class content_module
 	/** @var \phpbb\controller\helper */
 	protected $helper;
 
+	/** @var Container */
+	protected $phpbb_container;
+
 	/** @var \phpbb\request\request */
 	protected $request;
 
@@ -85,6 +88,7 @@ class content_module
 		$this->request	= $request;
 		$this->template	= $template;
 		$this->user		= $user;
+		$this->phpbb_container	= $phpbb_container;
 		$this->helper			= $phpbb_container->get('controller.helper');
 		$this->content			= $phpbb_container->get('primetime.content.types');
 		$this->form				= $phpbb_container->get('primetime.content.form');
@@ -108,7 +112,7 @@ class content_module
 		}
 	}
 
-	public function main($id, $mode)
+	public function main()
 	{
 		$action = $this->request->variable('action', '');
 		$content_type = $this->request->variable('type', '');
@@ -454,7 +458,6 @@ class content_module
 
 			case 'add':
 
-				$action = 'edit';
 				$forum_id = 0;
 				$row = array(
 					'content_name'			=> '',
@@ -489,70 +492,81 @@ class content_module
 
 				$field_types = $this->form->get_form_fields();
 
-				if (!$content_type)
+				if ($action == 'edit')
 				{
-					trigger_error($this->user->lang['NO_CONTENT_TYPE'] . adm_back_link($this->u_action), E_USER_WARNING);
-				}
-
-				$row = $this->content->get_type($content_type);
-
-				$forum_id = (int) $row['forum_id'];
-				$content_fields = (array) $row['content_fields'];
-
-				foreach ($content_fields as $data)
-				{
-					if (!isset($field_types[$data['field_type']]))
+					if (!$content_type)
 					{
-						continue;
+						trigger_error($this->user->lang['NO_CONTENT_TYPE'] . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 
-					$l_type = $field_types[$data['field_type']]->get_langname();
-					decode_message($data['field_explain'], $data['field_exp_uid']);
+					$row = $this->content->get_type($content_type);
+					$content_fields = $row['content_fields'];
+					$forum_id = (int) $row['forum_id'];
 
-					$data += array(
-						'TOKEN'			=> '{' . strtoupper($data['field_name']) . '}',
-						'TYPE_LABEL'	=> $l_type,
-						'DEFAULT_TYPE'	=> ($data['field_type'] == 'checkbox' || ($data['field_type'] == 'select' && $data['field_multi'])) ? 'checkbox' : 'radio',
-					);
-
-					$this->template->assign_block_vars('field', array_change_key_case($data, CASE_UPPER));
-
-					if (isset($data['field_options']))
+					foreach ($content_fields as $data)
 					{
-						$selected = array();
-						if (isset($data['field_value']))
+						if (!isset($field_types[$data['field_type']]))
 						{
-							$selected = array_flip($data['field_value']);
+							continue;
 						}
 
-						foreach ($data['field_options'] as $option)
+						$l_type = $field_types[$data['field_type']]->get_langname();
+						decode_message($data['field_explain'], $data['field_exp_uid']);
+
+						$data += array(
+							'TOKEN'			=> '{' . strtoupper($data['field_name']) . '}',
+							'TYPE_LABEL'	=> $l_type,
+							'DEFAULT_TYPE'	=> ($data['field_type'] == 'checkbox' || ($data['field_type'] == 'select' && $data['field_multi'])) ? 'checkbox' : 'radio',
+						);
+
+						$this->template->assign_block_vars('field', array_change_key_case($data, CASE_UPPER));
+
+						if (isset($data['field_options']))
 						{
-							$this->template->assign_block_vars('field.option', array(
-								'VALUE'		=> $option,
-								'S_CHECKED'	=> (isset($selected[$option])) ? true : false
+							$selected = array();
+							if (isset($data['field_value']))
+							{
+								$selected = array_flip($data['field_value']);
+							}
+
+							foreach ($data['field_options'] as $option)
+							{
+								$this->template->assign_block_vars('field.option', array(
+									'VALUE'		=> $option,
+									'S_CHECKED'	=> (isset($selected[$option])) ? true : false
+								));
+							}
+						}
+
+						// Parse description if specified
+						if ($row['content_desc'])
+						{
+							if (!isset($row['content_desc_uid']))
+							{
+								// Before we are able to display the preview and plane text, we need to parse our $this->request->variable()'d value...
+								$row['content_desc_uid'] = '';
+								$row['content_desc_bitfield'] = '';
+								$row['content_desc_options'] = 0;
+
+								generate_text_for_storage($row['content_desc'], $row['content_desc_uid'], $row['content_desc_bitfield'], $row['content_desc_options'], $this->request->variable('desc_allow_bbcode', false), $this->request->variable('desc_allow_urls', false), $this->request->variable('desc_allow_smilies', false));
+							}
+
+							// decode...
+							$content_desc_data = generate_text_for_edit($row['content_desc'], $row['content_desc_uid'], $row['content_desc_options']);
+
+							$this->template->assign_vars(array(
+								'CONTENT_DESC'				=> $content_desc_data['text'],
+								'S_DESC_BBCODE_CHECKED'		=> ($content_desc_data['allow_bbcode']) ? true : false,
+								'S_DESC_SMILIES_CHECKED'	=> ($content_desc_data['allow_smilies']) ? true : false,
+								'S_DESC_URLS_CHECKED'		=> ($content_desc_data['allow_urls']) ? true : false,
 							));
 						}
 					}
 				}
 
-				// Parse description if specified
-				if ($row['content_desc'])
-				{
-					if (!isset($row['content_desc_uid']))
-					{
-						// Before we are able to display the preview and plane text, we need to parse our $this->request->variable()'d value...
-						$row['content_desc_uid'] = '';
-						$row['content_desc_bitfield'] = '';
-						$row['content_desc_options'] = 0;
-
-						generate_text_for_storage($row['content_desc'], $row['content_desc_uid'], $row['content_desc_bitfield'], $row['content_desc_options'], $this->request->variable('desc_allow_bbcode', false), $this->request->variable('desc_allow_urls', false), $this->request->variable('desc_allow_smilies', false));
-					}
-
-					// decode...
-					$content_desc_data = generate_text_for_edit($row['content_desc'], $row['content_desc_uid'], $row['content_desc_options']);
-				}
-
+				$action = 'edit';
 				$asset_path = $this->primetime->asset_path;
+
 				$this->primetime->add_assets(array(
 					'js' => array(
 						'//ajax.googleapis.com/ajax/libs/jqueryui/' . JQUI_VERSION . '/jquery-ui.min.js',
@@ -580,7 +594,6 @@ class content_module
 					'LANGNAME'			=> $row['content_langname'],
 					'ITEMS_PER_PAGE'	=> $row['items_per_page'],
 					'TOPICS_PER_GROUP'	=> $row['topics_per_group'],
-					'CONTENT_DESC'		=> $content_desc_data['text'],
 					'POST_AUTHOR'		=> $this->user->data['username'],
 					'POST_DATE'			=> $this->user->format_date(time()),
 
@@ -595,15 +608,11 @@ class content_module
 					'S_POSTER_CONTENTS'	=> $row['show_poster_contents'],
 					'S_TYPE_OPS'		=> $this->get_field_options($field_types),
 					'S_FORUM_OPTIONS'	=> make_forum_select(false, ($action == 'edit') ? $forum_id : false, true, false, false),
-					'S_INDEX_SHOW_DESC'	=> $row['index_show_desc'],
-
+					'S_INDEX_SHOW_DESC'			=> $row['index_show_desc'],
 					'S_CAN_COPY_PERMISSIONS'	=> ($action != 'edit' || empty($forum_id) || ($this->auth->acl_get('a_fauth') && $this->auth->acl_get('a_authusers') && $this->auth->acl_get('a_authgroups') && $this->auth->acl_get('a_mauth'))) ? true : false,
-					'S_DESC_BBCODE_CHECKED'		=> ($content_desc_data['allow_bbcode']) ? true : false,
-					'S_DESC_SMILIES_CHECKED'	=> ($content_desc_data['allow_smilies']) ? true : false,
-					'S_DESC_URLS_CHECKED'		=> ($content_desc_data['allow_urls']) ? true : false,
 
-					'U_ACTION'		=> $this->u_action . "&amp;action=edit&amp;type=$content_type")
-				);
+					'U_ACTION'		=> $this->u_action . "&amp;action=edit&amp;type=$content_type"
+				));
 
 			break;
 

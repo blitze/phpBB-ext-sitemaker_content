@@ -53,7 +53,7 @@ class manager
 	/* @var \primetime\content\services\displayer */
 	protected $displayer;
 
-	/** @var \primetime\content\services\form\builder */
+	/** @var \primetime\content\services\form */
 	protected $form;
 
 	/** @var \primetime\core\services\forum\query */
@@ -252,6 +252,7 @@ class manager
 				break;
 				case 'make_normal':
 					$is_authed = (sizeof(array_intersect_key($forum_ids, $this->auth->acl_getf('f_announce', true))) || sizeof(array_intersect_key($content_forum, $this->auth->acl_getf('f_sticky', true)))) ? true : false;
+				break;
 				case 'make_sticky':
 					$is_authed = (sizeof(array_intersect_key($forum_ids, $this->auth->acl_getf('f_sticky', true)))) ? true : false;
 				break;
@@ -695,11 +696,13 @@ class manager
 							$user_data['email'] = '';
 						}
 
+						$attachments = $update_count = array();
+
 						$this->displayer->prepare_to_show($type, 'detail', $type_data['detail_tags'], $type_data['detail_tpl']);
-						$this->template->assign_vars($this->displayer->show($type, $subject, $post_data, $post_data, $user_data));
+						$this->template->assign_vars($this->displayer->show($type, $subject, $post_data, $post_data, $user_data, $attachments, $update_count));
 
 						$this->displayer->prepare_to_show($type, 'summary', $type_data['summary_tags'], $type_data['summary_tpl']);
-						$this->template->assign_block_vars('topic_row', $this->displayer->show($type, $subject, $post_data, $post_data, $user_data));
+						$this->template->assign_block_vars('topic_row', $this->displayer->show($type, $subject, $post_data, $post_data, $user_data, $attachments, $update_count));
 
 						$this->template->assign_vars(array(
 							'S_HIDE_HEADERS'	=> true,
@@ -884,7 +887,6 @@ class manager
 					$topic_deleted = $row['topic_visibility'] == ITEM_DELETED;
 					$view_type[$type_data['content_name']] = $type_data['content_langname'];
 
-					$topic_status = '';
 					$num_comments = 0;
 					$allow_comments = false;
 

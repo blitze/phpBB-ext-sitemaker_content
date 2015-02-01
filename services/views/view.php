@@ -112,23 +112,13 @@ abstract class view implements views_interface
 
 	public function show_topic($type, $topic_title, $topic_data, $post_data, $users_cache, $attachments, $topic_tracking_info = array(), $page = 1)
 	{
-		$max_post_time = 0;
 		$update_count = array();
-		$forum_id = $topic_data['forum_id'];
-		$topic_id = $topic_data['topic_id'];
-		$slug = $topic_data['topic_slug'];
 
-		// Set max_post_time
-		if ($post_data['post_time'] > $max_post_time)
-		{
-			$max_post_time = $post_data['post_time'];
-		}
-
-		$tpl_data = $this->get_common_template_data($topic_data, $post_data);
-		$tpl_data += $this->get_detail_template_data($type, $topic_data, $post_data, $users_cache);
-		$tpl_data += $this->displayer->show($type, $topic_title, $topic_data, $post_data, $users_cache[$topic_data['topic_poster']], $attachments, $update_count, $topic_tracking_info, $page);
-
-		$this->template->assign_vars($tpl_data);
+		$this->template->assign_vars(array_merge(
+			$this->get_common_template_data($topic_data, $post_data),
+			$this->get_detail_template_data($type, $topic_data, $post_data, $users_cache),
+			$this->displayer->show($type, $topic_title, $topic_data, $post_data, $users_cache[$topic_data['topic_poster']], $attachments, $update_count, $topic_tracking_info, $page)
+		));
 
 		return $update_count;
 	}

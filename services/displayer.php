@@ -31,20 +31,23 @@ class displayer extends types
 	/** @var \phpbb\template\template */
 	protected $template;
 
-	/** @var Twig */
+	/** @var \Twig_Environment */
 	protected $twig;
 
 	/** @var \phpbb\user */
 	protected $user;
 
-	/** @var \primetime\cotent\services\comments */
+	/** @var \primetime\content\services\comments */
 	protected $comments;
 
-	/** @var \primetime\cotent\services\form */
+	/** @var \primetime\content\services\form */
 	protected $form;
 
-	/** @var field object collection */
+	/** @var array */
 	protected $form_fields;
+
+	/** @var string */
+	protected $root_path;
 
 	/** @var array */
 	protected $tags;
@@ -76,8 +79,8 @@ class displayer extends types
 	 * @param Container										$phpbb_container		Service container
 	 * @param \phpbb\template\template						$template				Template object
 	 * @param \phpbb\user									$user					User object
-	 * @param \primetime\cotent\services\comments			$comments				Comments object
-	 * @param \primetime\cotent\services\form				$form					Form object
+	 * @param \primetime\content\services\comments			$comments				Comments object
+	 * @param \primetime\content\services\form				$form					Form object
 	 * @param string										$root_path				phpBB root path
 	 * @param string										$fields_table			Name of content fields database table
 	 * @param string										$types_table			Name of content types database table
@@ -148,6 +151,7 @@ class displayer extends types
 	public function show($type, $topic_title, $topic_data, $post_data, $user_cache, $attachments, &$update_count, $topic_tracking_info = array(), $page = 1)
 	{
 		$row = $topic_data;
+		$forum_id = $row['forum_id'];
 		$topic_id = $row['topic_id'];
 		$post_id = $post_data['post_id'];
 
@@ -176,7 +180,7 @@ class displayer extends types
 
 			'S_UNREAD_POST'			=> $post_unread,
 
-			'TOPIC_TITLE'			=> censor_text($topic_data['topic_title']),
+			'TOPIC_TITLE'			=> $topic_title,
 			'TOPIC_COMMENTS'		=> ($this->allow_comments) ? $this->comments->count($topic_data) : '',
 			'TOPIC_DATE'			=> $this->user->format_date($row['topic_time']),
 			'TOPIC_URL'				=> $topic_url,
@@ -283,7 +287,7 @@ class displayer extends types
 		$l_edited_by = $edit_reason = '';
 		if (($row['post_edit_count'] && $this->config['display_last_edited']) || $row['post_edit_reason'])
 		{
-			$display_postername	= $users_cache[$row['poster_id']]['username_full'];
+			$display_username	= $users_cache[$row['poster_id']]['username_full'];
 			$l_edited_by = $this->user->lang('EDITED_TIMES_TOTAL', (int) $row['post_edit_count'], $display_username, $this->user->format_date($row['post_edit_time'], false, true));
 			$edit_reason = $row['post_edit_reason'];
 		}
