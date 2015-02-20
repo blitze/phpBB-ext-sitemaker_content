@@ -44,7 +44,7 @@ class content_module
 	/** @var \primetime\content\services\form */
 	protected $form;
 
-	/** @var \primetime\core\services\forum\query */
+	/** @var \primetime\core\services\forum\manager */
 	protected $forum;
 
 	/** @var \primetime\core\util */

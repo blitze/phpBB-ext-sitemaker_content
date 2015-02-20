@@ -56,7 +56,7 @@ class manager
 	/** @var \primetime\content\services\form */
 	protected $form;
 
-	/** @var \primetime\core\services\forum\query */
+	/** @var \primetime\core\services\forum\data */
 	protected $forum;
 
 	/** @var string */
@@ -82,11 +82,11 @@ class manager
 	 * @param \primetime\cotent\services\comments		$comments			Comments object
 	 * @param \primetime\content\services\displayer		$displayer			Content displayer object
 	 * @param \primetime\content\services\form			$form				Form object
-	 * @param \primetime\core\services\forum\query		$forum				Forum object
+	 * @param \primetime\core\services\forum\data		$forum				Forum Data object
 	 * @param string									$phpbb_root_path	Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, Container $phpbb_container, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\comments $comments, \primetime\content\services\displayer $displayer, \primetime\content\services\form $form, \primetime\core\services\forum\query $forum, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, Container $phpbb_container, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\comments $comments, \primetime\content\services\displayer $displayer, \primetime\content\services\form $form, \primetime\core\services\forum\data $forum, $phpbb_root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->cache = $cache;
@@ -315,12 +315,11 @@ class manager
 		{
 			case 'view':
 
-				$options = array(
-					'topic_id'			=> $topic_id,
-					'check_visibility'	=> false,
-				);
+				$this->forum->query()
+					->fetch_topic($topic_id)
+					->fetch_tracking_info()
+					->build(false, false);
 
-				$this->forum->build_query($options);
 				$topic_data = $this->forum->get_topic_data();
 
 				if (!sizeof($topic_data))
@@ -820,24 +819,16 @@ class manager
 
 				$sql_where_array[] = $this->db->sql_in_set('t.forum_id', array_keys($content_forum));
 
-				$sql_array['WHERE'] = join(' AND ', $sql_where_array);
-
 				$params = array_filter(array(
 					'type'		=> $filter_content_type,
 					'status'	=> $filter_topic_status,
 					'search'	=> $filter_topic_search,
 				));
 
-				$options = array(
-					'sort_key'			=> 't.topic_time',
-					'topic_tracking'	=> true,
-					'check_visibility'	=> false,
-				);
-
 				// Get topics count
 				$sql = 'SELECT COUNT(*) as topics_count
 					FROM ' . TOPICS_TABLE . ' t
-					WHERE ' . $sql_array['WHERE'];
+					WHERE ' . join(' AND ', $sql_where_array);
 				$result = $this->db->sql_query($sql);
 
 				$topics_count = $this->db->sql_fetchfield('topics_count');
@@ -849,7 +840,12 @@ class manager
 				));
 
 				// grab the topics
-				$this->forum->build_query($options, $sql_array);
+				$this->forum->query()
+					->set_sorting('t.topic_time')
+					->fetch_tracking_info()
+					->fetch_custom(array('WHERE' => $sql_where_array))
+					->build(false, false);
+
 				$topic_data = $this->forum->get_topic_data($this->config['topics_per_page'], $start);
 				$topic_tracking_info = $this->forum->get_topic_tracking_info();
 

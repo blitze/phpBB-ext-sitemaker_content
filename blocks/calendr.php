@@ -24,7 +24,7 @@ class calendr extends \primetime\core\services\blocks\driver\block
 	/* @var \primetime\content\services\displayer */
 	protected $displayer;
 
-	/** @var \primetime\core\services\forum\query */
+	/** @var \primetime\core\services\forum\data */
 	protected $forum;
 
 	/** @var string phpBB root path */
@@ -39,11 +39,11 @@ class calendr extends \primetime\core\services\blocks\driver\block
 	 * @param \phpbb\config\db							$config				Config object
 	 * @param \phpbb\user								$user				User object
 	 * @param \primetime\content\services\displayer		$displayer			Content displayer object
-	 * @param \primetime\core\services\forum\query		$forum				Forum object
+	 * @param \primetime\core\services\forum\data		$forum				Forum object
 	 * @param string									$phpbb_root_path	phpBB root path
 	 * @param string									$php_ext			phpEx
 	 */
-	public function __construct(\phpbb\config\db $config, \phpbb\user $user, \primetime\content\services\displayer $displayer, \primetime\core\services\forum\query $forum, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\config\db $config, \phpbb\user $user, \primetime\content\services\displayer $displayer, \primetime\core\services\forum\data $forum, $phpbb_root_path, $php_ext)
 	{
 		$this->config = $config;
 		$this->user = $user;

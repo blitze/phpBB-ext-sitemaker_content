@@ -22,7 +22,7 @@ services:
             - @template
             - @user
             - @primetime.content.form
-            - @primetime.core.forum
+            - @primetime.core.forum.data
             - %core.root_path%
             - %core.php_ext%
 
@@ -38,7 +38,7 @@ services:
             - @template
             - @user
             - @primetime.content.displayer
-            - @primetime.core.forum
+            - @primetime.core.forum.data
             - %core.root_path%
             - %core.php_ext%
 
@@ -116,7 +116,7 @@ services:
             - @primetime.content.comments
             - @primetime.content.displayer
             - @primetime.content.form
-            - @primetime.core.forum
+            - @primetime.core.forum.data
             - %core.root_path%
             - %core.php_ext%
 

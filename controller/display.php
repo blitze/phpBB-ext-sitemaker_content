@@ -40,7 +40,7 @@ class display
 	/* @var \primetime\content\services\displayer */
 	protected $displayer;
 
-	/** @var \primetime\core\services\forum\query */
+	/** @var \primetime\core\services\forum\data */
 	protected $forum;
 
 	/** @var string */
@@ -61,11 +61,11 @@ class display
 	 * @param \phpbb\template\template					$template			Template object
 	 * @param \phpbb\user								$user				User object
 	 * @param \primetime\content\services\displayer		$displayer			Content displayer object
-	 * @param \primetime\core\services\forum\query		$forum				Forum object
+	 * @param \primetime\core\services\forum\data		$forum				Forum Data object
 	 * @param string									$root_path			Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\db $config, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, Container $phpbb_container, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\displayer $displayer, \primetime\core\services\forum\query $forum, $root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\db $config, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, Container $phpbb_container, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\displayer $displayer, \primetime\core\services\forum\data $forum, $root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -124,7 +124,10 @@ class display
 			'forum_id'	=> $forum_id
 		);
 
-		$sql_topics_count = $this->forum->build_query($options);
+		$sql_topics_count = $this->forum->query()
+			->fetch_forum($forum_id)
+			->get_sql_array();
+
 		$sql_topics_count['SELECT'] = 'COUNT(t.topic_id) as total_topics';
 
 		$view->customize_view($sql_topics_count, $sql_array, $type_data, $limit);
@@ -149,13 +152,11 @@ class display
 
 		$this->displayer->prepare_to_show($type, 'summary', $type_data['summary_tags'], $type_data['summary_tpl']);
 
-		$options = array(
-			'forum_id'			=> $forum_id,
-			'sort_key'			=> 't.topic_time',
-			'topic_tracking'	=> true,
-		);
-
-		$this->forum->build_query($options, $sql_array);
+		$this->forum->query()
+			->fetch_forum($forum_id)
+			->fetch_tracking_info()
+			->set_sorting('t.topic_time')
+			->build();
 
 		$topics_data = $this->forum->get_topic_data($limit, $start);
 		$posts_data = $this->forum->get_post_data('first');
@@ -192,13 +193,12 @@ class display
 
 		$forum_id = (int) $type_data['forum_id'];
 
-		$options = array(
-			'forum_id'			=> $forum_id,
-			'topic_id'			=> $topic_id,
-			'topic_tracking'	=> true,
-		);
+		$this->forum->query()
+			->fetch_forum($forum_id)
+			->fetch_topic($topic_id)
+			->fetch_tracking_info()
+			->build();
 
-		$this->forum->build_query($options);
 		$topic_data = $this->forum->get_topic_data();
 
 		if (!sizeof($topic_data))
@@ -400,18 +400,17 @@ class display
 		$topic_id = (int) $topic_data['topic_id'];
 		$username = $topic_data['topic_first_poster_name'];
 
-		$options = array(
-			'forum_id'			=> $forum_id,
-			'topic_tracking'	=> true,
-		);
-
 		$sql_array = array(
-			'WHERE'		=> "t.topic_poster = $user_id
-				AND t.topic_id <> $topic_id
-				AND " . time() . ' > t.topic_time',
+			'WHERE'		=> array('t.topic_id <> ' . $topic_id)
 		);
 
-		$this->forum->build_query($options, $sql_array);
+		$this->forum->query()
+			->fetch_forum($forum_id)
+			->fetch_topic_poster($user_id)
+			->fetch_tracking_info()
+			->fetch_custom($sql_array)
+			->build();
+
 		$topic_data = $this->forum->get_topic_data(5);
 		$topic_tracking_info = $this->forum->get_topic_tracking_info($forum_id);
 

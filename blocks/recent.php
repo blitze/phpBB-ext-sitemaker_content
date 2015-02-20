@@ -20,7 +20,7 @@ class recent extends \primetime\core\services\blocks\driver\block
 	/* @var \primetime\content\services\displayer */
 	protected $displayer;
 
-	/** @var \primetime\core\services\forum\query */
+	/** @var \primetime\core\services\forum\data */
 	protected $forum;
 
 	/** @var string phpBB root path */
@@ -47,11 +47,11 @@ class recent extends \primetime\core\services\blocks\driver\block
 	 * @param \phpbb\config\db							$config				Config object
 	 * @param \phpbb\user								$user				User object
 	 * @param \primetime\content\services\displayer		$displayer			Content displayer object
-	 * @param \primetime\core\services\forum\query		$forum				Forum object
+	 * @param \primetime\core\services\forum\data		$forum				Forum Data object
 	 * @param string									$phpbb_root_path	phpBB root path
 	 * @param string									$php_ext			phpEx
 	 */
-	public function __construct(\phpbb\config\db $config, \phpbb\user $user, \primetime\content\services\displayer $displayer, \primetime\core\services\forum\query $forum, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\config\db $config, \phpbb\user $user, \primetime\content\services\displayer $displayer, \primetime\core\services\forum\data $forum, $phpbb_root_path, $php_ext)
 	{
 		$this->config = $config;
 		$this->user = $user;
@@ -138,7 +138,6 @@ class recent extends \primetime\core\services\blocks\driver\block
 		$type = $this->settings['content_type'];
 		$type_data = $this->displayer->get_type($type);
 		$forum_id = $type_data['forum_id'];
-		$enable_tracking = ($this->user->data['is_registered'] && $this->config['load_db_lastread'] && $this->settings['enable_tracking']) ? true : false;
 
 		switch ($this->settings['topic_type'])
 		{
@@ -163,14 +162,16 @@ class recent extends \primetime\core\services\blocks\driver\block
 			self::SORT_TOPIC_READ	=> 't.topic_last_view_time'
 		);
 
-		$options = array(
-			'forum_id'			=> $forum_id,
-			'topic_type'		=> $this->settings['topic_type'],
-			'sort_key'			=> $sort_keys[$this->settings['sort_key']],
-			'topic_tracking'	=> $enable_tracking,
-		);
+		$range_info = $this->primetime->get_date_range($this->settings['date_range']);
 
-		$this->forum->build_query($options);
+		$this->forum->query()
+			->fetch_forum($forum_id)
+			->fetch_topic_type($this->settings['topic_type'])
+			->fetch_tracking_info($this->settings['enable_tracking'])
+			->fetch_date_range($range_info['start'], $range_info['stop'])
+			->set_sorting($sort_order[$this->settings['sort_key']])
+			->build();
+
 		$topics_data = $this->forum->get_topic_data($this->settings['max_topics'], $this->settings['offset_start']);
 
 		if (sizeof($topics_data) || $edit_mode !== false)

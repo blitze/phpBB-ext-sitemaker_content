@@ -41,7 +41,7 @@ class comments implements comments_interface
 	/** @var \primetime\content\services\form */
 	protected $form;
 
-	/** @var \primetime\core\services\forum\query */
+	/** @var \primetime\core\services\forum\data */
 	protected $forum;
 
 	/** @var string */
@@ -63,11 +63,11 @@ class comments implements comments_interface
 	 * @param \phpbb\template\template					$template			Template object
 	 * @param \phpbb\user								$user				User object
 	 * @param \primetime\content\services\form			$form				Form object
-	 * @param \primetime\core\services\forum\query		$forum				Forum object
+	 * @param \primetime\core\services\forum\data		$forum				Forum Data object
 	 * @param string									$root_path			Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\form $form, \primetime\core\services\forum\query $forum, $root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\form $form, \primetime\core\services\forum\data $forum, $root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
