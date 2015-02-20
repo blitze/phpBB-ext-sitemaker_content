@@ -37,33 +37,36 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'MORE_IN_CATEGORY'	=> 'More in %s',
-	'MORE_FROM_AUTHOR'	=> 'More from %s',
-	'CONTENT_EDIT'		=> 'Edit Content',
-	'CONTENT_REPORTED'	=> 'This content has been reported',
-
-	'PRON_MALE'			=> 'He',
-	'PRON_FEMALE'		=> 'She',
-	'PRON_NO_GENDER'	=> 'He/She',
-
-	'CONTENT_TOC'			=> 'Table of Contents',
-	'CONTENT_TOC_UNTITLED'	=> 'Untitled',
+	'AUTHOR_CONTENTS'		=> 'Other %1$s by %2$s',
 	'AUTHOR_INFO'			=> 'About the Author',
 	'AUTHOR_INFO_EXPLAIN'	=> '%1$s has been a member since %2$s. %3$s has posted a total of %4$s %5$s item(s) for a total of %6$s post(s).',
-	'AUTHOR_CONTENTS'		=> 'Other %1$s by %2$s',
 
-	'SEARCH_USER_POSTS'		=> 'Search all posts by %s',
-	'VIEW_AUTHOR_CONTENTS'	=> 'View all %1$s (items) by %2$s',
-	'NEW_COMMENT'			=> 'Leave a Comment',
-	'POST_COMMENT'			=> 'Post Comment',
-	'NO_COMMENTS'			=> 'No comments have been posted for this topic',
 	'COMMENT_POSTED'		=> 'Your comment has been successfully posted',
+	'CONTACT_AUTHOR'		=> 'Contact Author',
+	'CONTENT_EDIT'			=> 'Edit Content',
+	'CONTENT_NO_EXIST'		=> 'Sorry! The requested topic does not exist',
+	'CONTENT_REPORTED'		=> 'This content has been reported',
+	'CONTENT_TOC'			=> 'Table of Contents',
+	'CONTENT_TOC_UNTITLED'	=> 'Untitled',
+	'CONTENT_TYPE_NO_EXIST'	=> 'Oops! The requested content type does not exist',
+	'CONTENT_UNAPPROVED'	=> 'This content has not been approved',
+
 	'EDIT_REASON'			=> 'Edit Reason',
 
-	'NO_CONTENT_TYPES'			=> 'There are no existing content types',
-	'NO_CONTENT_ITEM'			=> 'Oops! The requested %s (item) does not exist.',
-	'CONTENT_TYPE_NO_EXIST'		=> 'Oops! The requested content type does not exist',
-	'CONTENT_NO_EXIST'			=> 'Sorry! The requested topic does not exist',
-	'CONTENT_UNAPPROVED'		=> 'This content has not been approved',
-	'CONTACT_AUTHOR'			=> 'Contact Author',
+	'MORE_FROM_AUTHOR'		=> 'More from %s',
+	'MORE_IN_CATEGORY'		=> 'More in %s',
+
+	'NEW_COMMENT'			=> 'Leave a Comment',
+	'NO_COMMENTS'			=> 'No comments have been posted for this topic',
+	'NO_CONTENT_ITEM'		=> 'Oops! The requested %s (item) does not exist.',
+	'NO_CONTENT_TYPES'		=> 'There are no existing content types',
+
+	'POST_COMMENT'			=> 'Post Comment',
+	'PRON_FEMALE'			=> 'She',
+	'PRON_MALE'				=> 'He',
+	'PRON_NO_GENDER'		=> 'He/She',
+
+	'SEARCH_USER_POSTS'		=> 'Search all posts by %s',
+
+	'VIEW_AUTHOR_CONTENTS'	=> 'View all %1$s (items) by %2$s',
 ));
