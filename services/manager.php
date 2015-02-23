@@ -733,7 +733,6 @@ class manager
 				$filter_topic_search = utf8_normalize_nfc($this->request->variable('search', '', true));
 
 				$time = time();
-				$sql_array = array();
 				$sql_where_array = array();
 				$filter_topic_status_ary 	= array(
 					'-1'				=> 'scheduled',

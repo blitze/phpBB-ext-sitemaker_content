@@ -120,10 +120,6 @@ class display
 
 		$sql_array = array();
 
-		$options = array(
-			'forum_id'	=> $forum_id
-		);
-
 		$sql_topics_count = $this->forum->query()
 			->fetch_forum($forum_id)
 			->get_sql_array();
