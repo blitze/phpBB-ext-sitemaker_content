@@ -23,6 +23,9 @@ class recent extends \primetime\core\services\blocks\driver\block
 	/** @var \primetime\core\services\forum\data */
 	protected $forum;
 
+	/** @var \primetime\core\services\util */
+	protected $primetime;
+
 	/** @var string phpBB root path */
 	protected $phpbb_root_path;
 
@@ -48,17 +51,20 @@ class recent extends \primetime\core\services\blocks\driver\block
 	 * @param \phpbb\user								$user				User object
 	 * @param \primetime\content\services\displayer		$displayer			Content displayer object
 	 * @param \primetime\core\services\forum\data		$forum				Forum Data object
+	 * @param \primetime\core\services\util				$primetime			Primetime Object
 	 * @param string									$phpbb_root_path	phpBB root path
 	 * @param string									$php_ext			phpEx
 	 */
-	public function __construct(\phpbb\config\db $config, \phpbb\user $user, \primetime\content\services\displayer $displayer, \primetime\core\services\forum\data $forum, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\config\db $config, \phpbb\user $user, \primetime\content\services\displayer $displayer, \primetime\core\services\forum\data $forum, \primetime\core\services\util $primetime, $phpbb_root_path, $php_ext)
 	{
 		$this->config = $config;
 		$this->user = $user;
 		$this->displayer = $displayer;
 		$this->forum = $forum;
+		$this->primetime = $primetime;
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
+
 		$this->sort_options = array(
 			self::SORT_TOPIC_TIME	=> 'TOPIC_TIME',
 			self::SORT_TOPIC_VIEWS	=> 'TOPIC_VIEWS',
@@ -169,7 +175,7 @@ class recent extends \primetime\core\services\blocks\driver\block
 			->fetch_topic_type($this->settings['topic_type'])
 			->fetch_tracking_info($this->settings['enable_tracking'])
 			->fetch_date_range($range_info['start'], $range_info['stop'])
-			->set_sorting($sort_order[$this->settings['sort_key']])
+			->set_sorting($sort_keys[$this->settings['sort_key']])
 			->build();
 
 		$topics_data = $this->forum->get_topic_data($this->settings['max_topics'], $this->settings['offset_start']);

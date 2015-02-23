@@ -37,6 +37,7 @@ services:
             - @user
             - @primetime.content.displayer
             - @primetime.core.forum.data
+            - @primetime.core.util
             - %core.root_path%
             - %core.php_ext%
         calls:
