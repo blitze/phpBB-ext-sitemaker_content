@@ -29,9 +29,9 @@ class radio extends choice
 	 */
 	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \primetime\core\services\template $ptemplate)
 	{
+		parent::__construct($user, $ptemplate);
+
 		$this->request = $request;
-		$this->user = $user;
-		$this->ptemplate = $ptemplate;
 	}
 
 	/**

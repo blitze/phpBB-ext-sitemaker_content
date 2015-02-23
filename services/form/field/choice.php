@@ -11,6 +11,22 @@ namespace primetime\content\services\form\field;
 
 abstract class choice extends base
 {
+	/** @var \primetime\core\services\template */
+	protected $ptemplate;
+
+	/**
+	 * Constructor
+	 *
+	 * @param \phpbb\user							$user			User object
+	 * @param \primetime\core\services\template		$ptemplate		Primetime template object
+	 */
+	public function __construct(\phpbb\user $user, \primetime\core\services\template $ptemplate)
+	{
+		parent::__construct($user, $ptemplate);
+
+		$this->ptemplate = $ptemplate;
+	}
+
 	/**
 	 * @inheritdoc
 	 */

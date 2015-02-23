@@ -18,6 +18,22 @@ abstract class duration extends base
 	protected $primetime;
 
 	/**
+	 * Constructor
+	 *
+	 * @param \phpbb\request\request_interface		$request		Request object
+	 * @param \phpbb\user							$user			User object
+	 * @param \primetime\core\services\template		$ptemplate		Primetime template object
+	 * @param \primetime\core\services\util			$primetime		Primetime object
+	 */
+	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \primetime\core\services\template $ptemplate, \primetime\core\services\util $primetime)
+	{
+		parent::__construct($user, $ptemplate);
+
+		$this->request = $request;
+		$this->primetime = $primetime;
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public function get_field_value($name, $value)
