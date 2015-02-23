@@ -20,7 +20,7 @@ class content_module
 	/** @var string */
 	var $u_action;
 
-	function main()
+	public function main()
 	{
 		global $phpbb_container, $template;
 

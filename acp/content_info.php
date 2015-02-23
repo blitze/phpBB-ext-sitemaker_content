@@ -11,7 +11,7 @@ namespace primetime\content\acp;
 
 class content_info
 {
-	function module()
+	public function module()
 	{
 		return array(
 			'filename'	=> '\primetime\content\acp\content_module',

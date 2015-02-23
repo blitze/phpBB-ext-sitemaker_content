@@ -11,7 +11,7 @@ namespace primetime\content\ucp;
 
 class content_info
 {
-	function module()
+	public function module()
 	{
 		return array(
 			'filename'	=> '\primetime\content\ucp\content_module',

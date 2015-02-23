@@ -47,7 +47,7 @@ class types
 	/**
 	 * Get all content types
 	 */
-	function get_all_types()
+	public function get_all_types()
 	{
 		return $this->get_type();
 	}

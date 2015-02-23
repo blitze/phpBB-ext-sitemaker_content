@@ -11,7 +11,7 @@ namespace primetime\content\mcp;
 
 class content_info
 {
-	function module()
+	public function module()
 	{
 		return array(
 			'filename'	=> '\primetime\content\mcp\content_module',
