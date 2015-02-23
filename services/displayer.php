@@ -178,7 +178,9 @@ class displayer extends types
 			'TOPIC_AUTHOR_URL'		=> $user_cache['user_profile'],
 			'TOPIC_AUTHOR_AVATAR'	=> $user_cache['avatar'],
 
-			'S_UNREAD_POST'			=> $post_unread,
+			'S_UNREAD_POST'				=> $post_unread,
+			'S_HAS_ATTACHMENTS'			=> (!empty($attachments[$post_id])) ? true : false,
+			'S_MULTIPLE_ATTACHMENTS'	=> !empty($attachments[$post_id]) && sizeof($attachments[$post_id]) > 1,
 
 			'TOPIC_TITLE'			=> $topic_title,
 			'TOPIC_COMMENTS'		=> ($this->allow_comments) ? $this->comments->count($topic_data) : '',

@@ -80,6 +80,8 @@ abstract class view implements views_interface
 
 	public function get_total_topics($forum_id, $sql_array)
 	{
+		$sql_array['WHERE'] = isset($sql_array['WHERE']) ? join(' AND ', array_filter($sql_array['WHERE'])) : '';
+
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 		$result = $this->db->sql_query($sql);
 
@@ -145,8 +147,6 @@ abstract class view implements views_interface
 			'POSTER_ID'				=> $poster_id,
 
 			'S_TOPIC_TYPE'				=> $topic_data['topic_type'],
-			'S_HAS_ATTACHMENTS'			=> (!empty($attachments[$row['post_id']])) ? true : false,
-			'S_MULTIPLE_ATTACHMENTS'	=> !empty($attachments[$row['post_id']]) && sizeof($attachments[$row['post_id']]) > 1,
 			'S_DISPLAY_NOTICE'			=> $display_notice && $row['post_attachment'],
 			'S_TOPIC_POSTER'			=> ($topic_data['topic_poster'] == $poster_id) ? true : false,
 			'S_POST_UNAPPROVED'			=> ($row['post_visibility'] == ITEM_UNAPPROVED || $row['post_visibility'] == ITEM_REAPPROVE) ? true : false,
