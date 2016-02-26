@@ -25,7 +25,7 @@ class image extends base
 	 *
 	 * @param \phpbb\request\request_interface		$request		Request object
 	 * @param \phpbb\user							$user			User object
-	 * @param \blitze\sitemaker\services\template		$ptemplate		Sitemaker template object
+	 * @param \blitze\sitemaker\services\template	$ptemplate		Sitemaker template object
 	 */
 	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \blitze\sitemaker\services\template $ptemplate)
 	{

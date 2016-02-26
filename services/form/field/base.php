@@ -23,7 +23,7 @@ abstract class base implements field_interface
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\user							$user			User object
+	 * @param \phpbb\user								$user			User object
 	 * @param \blitze\sitemaker\services\template		$ptemplate		Sitemaker template object
 	 */
 	public function __construct(\phpbb\user $user, \blitze\sitemaker\services\template $ptemplate)
