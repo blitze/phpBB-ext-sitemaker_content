@@ -37,7 +37,7 @@ class radio extends choice
 	/**
 	 * @inheritdoc
 	 */
-	public function get_field_value($name, $value, $mode = 'form')
+	public function get_field_value($name, $value)
 	{
 		return $this->request->variable($name, $value, true);
 	}

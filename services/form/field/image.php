@@ -37,7 +37,7 @@ class image extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function get_field_value($name, $value, $mode = 'form')
+	public function get_field_value($name, $value)
 	{
 		$value = $this->request->variable($name, $this->get_image_src($value));
 

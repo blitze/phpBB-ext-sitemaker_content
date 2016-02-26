@@ -37,7 +37,7 @@ class password extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function get_field_value($name, $value, $mode = 'form')
+	public function get_field_value($name, $value)
 	{
 		return $this->request->variable($name, (string) $value, true);
 	}
