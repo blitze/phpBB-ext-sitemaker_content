@@ -1,13 +1,13 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\services\form\field;
+namespace blitze\content\services\form\field;
 
 use Urodoz\Truncate\TruncateService;
 
@@ -19,11 +19,11 @@ class textarea extends base
 	/* @var \phpbb\user */
 	protected $user;
 
-	/** @var \primetime\core\services\template */
+	/** @var \blitze\sitemaker\services\template */
 	protected $ptemplate;
 
-	/** @var \primetime\core\services\util */
-	protected $primetime;
+	/** @var \blitze\sitemaker\services\util */
+	protected $sitemaker;
 
 	/** @var \Urodoz\Truncate\TruncateService */
 	protected $truncate;
@@ -33,24 +33,16 @@ class textarea extends base
 	 *
 	 * @param \phpbb\request\request_interface		$request			Request object
 	 * @param \phpbb\user							$user				User object
-	 * @param \primetime\core\services\template		$ptemplate			Primetime template object
-	 * @param \primetime\core\services\util			$primetime			Primetime object
+	 * @param \blitze\sitemaker\services\template		$ptemplate			Sitemaker template object
+	 * @param \blitze\sitemaker\services\util			$sitemaker			Sitemaker object
 	 */
-	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \primetime\core\services\template $ptemplate, \primetime\core\services\util $primetime)
+	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \blitze\sitemaker\services\template $ptemplate, \blitze\sitemaker\services\util $sitemaker)
 	{
 		$this->request = $request;
 		$this->user = $user;
 		$this->ptemplate = $ptemplate;
-		$this->primetime = $primetime;
+		$this->sitemaker = $sitemaker;
 		$this->truncate = new TruncateService();
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function get_field_value($name, $value)
-	{
-		return $this->request->variable($name, (string) $value, true);
 	}
 
 	/**
@@ -69,15 +61,15 @@ class textarea extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function render_view($name, &$data, $item_id = 0)
+	public function show_form_field($name, &$data, $item_id = 0)
 	{
 		if ($data['editor'])
 		{
-			$asset_path = $this->primetime->asset_path;
-			$this->primetime->add_assets(array(
+			$asset_path = $this->sitemaker->asset_path;
+			$this->sitemaker->add_assets(array(
 				'js'   => array(
 					$asset_path . 'assets/javascript/editor.js',
-					'@primetime_content/assets/content_posting.min.js'
+					'@blitze_content/assets/content_posting.min.js'
 				)
 			));
 		}
@@ -88,7 +80,7 @@ class textarea extends base
 			$data['field_rows'] = 25;
 		}
 
-		return parent::render_view($name, $data, $item_id);
+		return parent::show_form_field($name, $data, $item_id);
 	}
 
 	/**

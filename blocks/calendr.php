@@ -1,19 +1,19 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\blocks;
+namespace blitze\content\blocks;
 
 use Solution10\Calendar\Calendar;
 use Solution10\Calendar\Event;
 use Solution10\Calendar\Resolution\MonthResolution;
 
-class calendr extends \primetime\core\services\blocks\driver\block
+class calendr extends \blitze\sitemaker\services\blocks\driver\block
 {
 	/** @var \phpbb\config\db */
 	protected $config;
@@ -21,10 +21,10 @@ class calendr extends \primetime\core\services\blocks\driver\block
 	/** @var \phpbb\user */
 	protected $user;
 
-	/* @var \primetime\content\services\displayer */
+	/* @var \blitze\content\services\displayer */
 	protected $displayer;
 
-	/** @var \primetime\core\services\forum\data */
+	/** @var \blitze\sitemaker\services\forum\data */
 	protected $forum;
 
 	/** @var string phpBB root path */
@@ -38,12 +38,12 @@ class calendr extends \primetime\core\services\blocks\driver\block
 	 *
 	 * @param \phpbb\config\db							$config				Config object
 	 * @param \phpbb\user								$user				User object
-	 * @param \primetime\content\services\displayer		$displayer			Content displayer object
-	 * @param \primetime\core\services\forum\data		$forum				Forum object
+	 * @param \blitze\content\services\displayer		$displayer			Content displayer object
+	 * @param \blitze\sitemaker\services\forum\data		$forum				Forum object
 	 * @param string									$phpbb_root_path	phpBB root path
 	 * @param string									$php_ext			phpEx
 	 */
-	public function __construct(\phpbb\config\db $config, \phpbb\user $user, \primetime\content\services\displayer $displayer, \primetime\core\services\forum\data $forum, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\config\db $config, \phpbb\user $user, \blitze\content\services\displayer $displayer, \blitze\sitemaker\services\forum\data $forum, $phpbb_root_path, $php_ext)
 	{
 		$this->config = $config;
 		$this->user = $user;
@@ -56,7 +56,7 @@ class calendr extends \primetime\core\services\blocks\driver\block
 	/**
 	 * 
 	 */
-	public function display($bdata, $edit_mode = false)
+	public function display(array $bdata, $edit_mode = false)
 	{
 		$time = $this->user->create_datetime();
 
@@ -99,7 +99,7 @@ class calendr extends \primetime\core\services\blocks\driver\block
 
 		return array(
 			'title'		=> 'Calendar', //$this->user->lang[$lang_var],
-			'content'	=> $this->ptemplate->render_view('primetime/content', 'blocks/content_calendar.html', 'content_calendar_block')
+			'content'	=> $this->ptemplate->render_view('blitze/content', 'blocks/content_calendar.html', 'content_calendar_block')
 		);
 	}
 }

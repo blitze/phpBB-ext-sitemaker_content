@@ -1,8 +1,8 @@
 {
-	"name": "primetime/content",
+	"name": "blitze/content",
     "type": "phpbb-extension",
 	"description": "Create and manage content types",
-	"homepage": "https://github.com/blitze/primetime_content",
+	"homepage": "https://github.com/blitze/sitemaker_content",
 	"version": "2.0.0-dev",
 	"time": "2014-06-21 01:01:01",
 	"license": "GPL-2.0",
@@ -22,7 +22,7 @@
 		"phpbb/epv": "dev-master"
 	},
 	"extra": {
-		"display-name": "phpBB Primetime Content",
+		"display-name": "SiteMaker Content",
 		"soft-require": {
 			"phpbb/phpbb": "3.1.*@dev"
 		}

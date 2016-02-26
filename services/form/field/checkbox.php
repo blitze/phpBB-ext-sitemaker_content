@@ -1,13 +1,13 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\services\form\field;
+namespace blitze\content\services\form\field;
 
 class checkbox extends choice
 {
@@ -17,7 +17,7 @@ class checkbox extends choice
 	/* @var \phpbb\user */
 	protected $user;
 
-	/** @var \primetime\core\services\template */
+	/** @var \blitze\sitemaker\services\template */
 	protected $ptemplate;
 
 	/**
@@ -25,9 +25,9 @@ class checkbox extends choice
 	 *
 	 * @param \phpbb\request\request_interface		$request		Request object
 	 * @param \phpbb\user							$user			User object
-	 * @param \primetime\core\services\template		$ptemplate		Primetime template object
+	 * @param \blitze\sitemaker\services\template		$ptemplate		Sitemaker template object
 	 */
-	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \primetime\core\services\template $ptemplate)
+	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \blitze\sitemaker\services\template $ptemplate)
 	{
 		parent::__construct($user, $ptemplate);
 
@@ -42,7 +42,7 @@ class checkbox extends choice
 		$default = is_array($default) ? $default : explode("\n", $default);
 		$value =  $this->request->variable($name, $default, true);
 
-		if (empty($value) && $this->request->server('REQUEST_METHOD') != 'POST')
+		if (empty($value) && $this->request->server('REQUEST_METHOD') !== 'POST')
 		{
 			$value = $default;
 		}

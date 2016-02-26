@@ -1,29 +1,29 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\services\form\field;
+namespace blitze\content\services\form\field;
 
 class submit extends base
 {
 	/* @var \phpbb\user */
 	protected $user;
 
-	/** @var \primetime\core\services\template */
+	/** @var \blitze\sitemaker\services\template */
 	protected $ptemplate;
 
 	/**
 	 * Constructor
 	 *
 	 * @param \phpbb\user							$user			User object
-	 * @param \primetime\core\services\template		$ptemplate		Primetime template object
+	 * @param \blitze\sitemaker\services\template		$ptemplate		Sitemaker template object
 	 */
-	public function __construct(\phpbb\user $user, \primetime\core\services\template $ptemplate)
+	public function __construct(\phpbb\user $user, \blitze\sitemaker\services\template $ptemplate)
 	{
 		$this->user = $user;
 		$this->ptemplate = $ptemplate;

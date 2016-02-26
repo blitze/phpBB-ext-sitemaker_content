@@ -1,13 +1,13 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\migrations\converter;
+namespace blitze\content\migrations\converter;
 
 use Cocur\Slugify\Slugify;
 
@@ -30,8 +30,8 @@ class c2_update_data extends \phpbb\db\migration\migration
 	static public function depends_on()
 	{
 		return array(
-			'\primetime\content\migrations\v20x\m1_initial_schema',
-			'\primetime\content\migrations\v20x\m2_initial_data',
+			'\blitze\content\migrations\v20x\m1_initial_schema',
+			'\blitze\content\migrations\v20x\m2_initial_data',
 		);
 	}
 
@@ -51,10 +51,10 @@ class c2_update_data extends \phpbb\db\migration\migration
 		$return_data = array();
 		$topic_tags = array();
 		$display_maps = array(
-			0 => 'primetime.content.view.blog',
-			1 => 'primetime.content.view.portal',
-			2 => 'primetime.content.view.tiles',
-			3 => 'primetime.content.view.tiles'
+			0 => 'blitze.content.view.blog',
+			1 => 'blitze.content.view.portal',
+			2 => 'blitze.content.view.tiles',
+			3 => 'blitze.content.view.tiles'
 		);
 
 		$sql = 'SELECT t.topic_id, t.forum_id, t.topic_title, t.topic_tag, p.post_id, p.post_text, p.bbcode_uid, p.enable_bbcode, p.enable_smilies
@@ -185,8 +185,8 @@ class c2_update_data extends \phpbb\db\migration\migration
 		}
 		$this->db->sql_freeresult($result);
 
-		$this->import_data($content_types, 'pt_content_types');
-		$this->import_data($content_fields, 'pt_content_fields');
+		$this->import_data($content_types, 'sm_content_types');
+		$this->import_data($content_fields, 'sm_content_fields');
 
 		$return_data[] = array('config.remove', array('content_forum_id'));
 

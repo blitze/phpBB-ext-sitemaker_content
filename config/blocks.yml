@@ -1,46 +1,46 @@
 services:
 
-    primetime.content.block.archive:
-        class: primetime\content\blocks\archive
+    blitze.content.block.archive:
+        class: blitze\content\blocks\archive
         arguments:
             - @auth
             - @content.visibility
             - @dbal.conn
             - @controller.helper
             - @user
-            - @primetime.content.types
+            - @blitze.content.types
             - %core.root_path%
             - %core.php_ext%
         calls:
-            - [set_name, [primetime.content.block.archive]]
+            - [set_name, [blitze.content.block.archive]]
         tags:
-            - { name: primetime.block }
+            - { name: sitemaker.block }
 
-    primetime.content.block.calendr:
-        class: primetime\content\blocks\calendr
+    blitze.content.block.calendr:
+        class: blitze\content\blocks\calendr
         arguments:
             - @config
             - @user
-            - @primetime.content.displayer
-            - @primetime.core.forum.data
+            - @blitze.content.displayer
+            - @blitze.sitemaker.forum.data
             - %core.root_path%
             - %core.php_ext%
         calls:
-            - [set_name, [primetime.content.block.calendar]]
+            - [set_name, [blitze.content.block.calendar]]
         tags:
-            - { name: primetime.block }
+            - { name: sitemaker.block }
 
-    primetime.content.block.recent:
-        class: primetime\content\blocks\recent
+    blitze.content.block.recent:
+        class: blitze\content\blocks\recent
         arguments:
             - @config
             - @user
-            - @primetime.content.displayer
-            - @primetime.core.forum.data
-            - @primetime.core.util
+            - @blitze.content.displayer
+            - @blitze.sitemaker.date_range
+            - @blitze.sitemaker.forum.data
             - %core.root_path%
             - %core.php_ext%
         calls:
-            - [set_name, [primetime.content.block.recent]]
+            - [set_name, [blitze.content.block.recent]]
         tags:
-            - { name: primetime.block }
+            - { name: sitemaker.block }

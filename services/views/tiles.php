@@ -1,21 +1,21 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\services\views;
+namespace blitze\content\services\views;
 
 class tiles extends view
 {
 	/** @var \phpbb\request\request_interface */
 	protected $request;
 
-	/** @var \primetime\core\services\util */
-	protected $primetime;
+	/** @var \blitze\sitemaker\services\util */
+	protected $sitemaker;
 
 	/**
 	 * Constructor
@@ -27,16 +27,16 @@ class tiles extends view
 	 * @param \phpbb\request\request_interface			$request			Request object
 	 * @param \phpbb\template\template					$template			Template object
 	 * @param \phpbb\user								$user				User object
-	 * @param \primetime\content\services\displayer		$displayer			Content displayer object
-	 * @param \primetime\core\services\util				$primetime			Primetime object
+	 * @param \blitze\content\services\displayer		$displayer			Content displayer object
+	 * @param \blitze\sitemaker\services\util				$sitemaker			Sitemaker object
 	 * @param string									$root_path			Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\db\driver\driver_interface $db, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\displayer $displayer, \primetime\core\services\util $primetime, $root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\db\driver\driver_interface $db, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\displayer $displayer, \blitze\sitemaker\services\util $sitemaker, $root_path, $php_ext)
 	{
 		parent::__construct($auth, $cache, $config, $db, $template, $user, $displayer, $root_path, $php_ext);
 
-		$this->primetime = $primetime;
+		$this->sitemaker = $sitemaker;
 		$this->request = $request;
 	}
 
@@ -62,15 +62,15 @@ class tiles extends view
 			$this->template->assign_var('S_HIDE_HEADERS', true);
 		}
 
-		$asset_path = $this->primetime->asset_path;
-		$this->primetime->add_assets(array(
+		$asset_path = $this->sitemaker->asset_path;
+		$this->sitemaker->add_assets(array(
 			'js'   => array(
-				$asset_path . 'ext/primetime/content/components/imagesloaded/imagesloaded.pkgd.min.js',
-				$asset_path . 'ext/primetime/content/components/masonry/dist/masonry.pkgd.min.js',
-				'@primetime_content/assets/content_tiles.min.js',
+				$asset_path . 'ext/blitze/content/components/imagesloaded/imagesloaded.pkgd.min.js',
+				$asset_path . 'ext/blitze/content/components/masonry/dist/masonry.pkgd.min.js',
+				'@blitze_content/assets/content_tiles.min.js',
 			),
 			'css'	=> array(
-				'@primetime_content/assets/content_tiles.min.css',
+				'@blitze_content/assets/content_tiles.min.css',
 			),
 		));
 	}

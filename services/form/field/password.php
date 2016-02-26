@@ -1,13 +1,13 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\services\form\field;
+namespace blitze\content\services\form\field;
 
 class password extends base
 {
@@ -17,7 +17,7 @@ class password extends base
 	/* @var \phpbb\user */
 	protected $user;
 
-	/** @var \primetime\core\services\template */
+	/** @var \blitze\sitemaker\services\template */
 	protected $ptemplate;
 
 	/**
@@ -25,9 +25,9 @@ class password extends base
 	 *
 	 * @param \phpbb\request\request_interface		$request		Request object
 	 * @param \phpbb\user							$user			User object
-	 * @param \primetime\core\services\template		$ptemplate		Primetime template object
+	 * @param \blitze\sitemaker\services\template		$ptemplate		Sitemaker template object
 	 */
-	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \primetime\core\services\template $ptemplate)
+	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \blitze\sitemaker\services\template $ptemplate)
 	{
 		$this->request = $request;
 		$this->user = $user;
@@ -37,7 +37,7 @@ class password extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function get_field_value($name, $value)
+	public function get_field_value($name, $value, $mode = 'form')
 	{
 		return $this->request->variable($name, (string) $value, true);
 	}

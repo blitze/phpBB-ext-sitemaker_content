@@ -2,7 +2,9 @@
 	'use strict';
 
 	$(document).ready(function() {
-		var container = $('#primetime-content-grid');
+		var phpbb = window.phpbb || {};
+
+		var container = $('#sitemaker-content-grid');
 		var loadAnchor = $('#tile-load-more');
 
 		// initialize Masonry after all images have loaded
@@ -16,12 +18,12 @@
 		phpbb.ajaxify({
 			selector: '#tile-load-more',
 			refresh: false,
-			callback: 'primetime.content.load_more'
+			callback: 'blitze.content.load_more'
 		});
 
-		phpbb.addAjaxCallback('primetime.content.load_more', function(response) {
+		phpbb.addAjaxCallback('blitze.content.load_more', function(response) {
 			var respObj = $(response);
-			var items = respObj.find('#primetime-content-grid .item');
+			var items = respObj.find('#sitemaker-content-grid .item');
 			var nextUrl = respObj.find('#tile-load-more').attr('href');
 
 			container.append(items);

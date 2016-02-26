@@ -1,9 +1,10 @@
 {
-  "name": "Primetime Content",
+  "name": "SiteMaker Content",
   "dependencies": {
     "masonry": "latest",
     "datetimepicker": "latest",
-    "imagesloaded": "latest"
+    "imagesloaded": "latest",
+    "twig.js": "latest"
   },
   "overrides": {
     "masonry": {

@@ -1,15 +1,15 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\blocks;
+namespace blitze\content\blocks;
 
-class recent extends \primetime\core\services\blocks\driver\block
+class recent extends \blitze\sitemaker\services\blocks\driver\block
 {
 	/** @var \phpbb\config\db */
 	protected $config;
@@ -17,14 +17,14 @@ class recent extends \primetime\core\services\blocks\driver\block
 	/** @var \phpbb\user */
 	protected $user;
 
-	/* @var \primetime\content\services\displayer */
+	/* @var \blitze\content\services\displayer */
 	protected $displayer;
 
-	/** @var \primetime\core\services\forum\data */
-	protected $forum;
+	/** @var \blitze\sitemaker\services\date_range */
+	protected $date_range;
 
-	/** @var \primetime\core\services\util */
-	protected $primetime;
+	/** @var \blitze\sitemaker\services\forum\data */
+	protected $forum;
 
 	/** @var string phpBB root path */
 	protected $phpbb_root_path;
@@ -49,19 +49,19 @@ class recent extends \primetime\core\services\blocks\driver\block
 	 *
 	 * @param \phpbb\config\db							$config				Config object
 	 * @param \phpbb\user								$user				User object
-	 * @param \primetime\content\services\displayer		$displayer			Content displayer object
-	 * @param \primetime\core\services\forum\data		$forum				Forum Data object
-	 * @param \primetime\core\services\util				$primetime			Primetime Object
+	 * @param \blitze\content\services\displayer		$displayer			Content displayer object
+	 * @param \blitze\sitemaker\services\date_range		$date_range			Date Range Object
+	 * @param \blitze\sitemaker\services\forum\data		$forum				Forum Data object
 	 * @param string									$phpbb_root_path	phpBB root path
 	 * @param string									$php_ext			phpEx
 	 */
-	public function __construct(\phpbb\config\db $config, \phpbb\user $user, \primetime\content\services\displayer $displayer, \primetime\core\services\forum\data $forum, \primetime\core\services\util $primetime, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\config\db $config, \phpbb\user $user, \blitze\content\services\displayer $displayer, \blitze\sitemaker\services\date_range $date_range, \blitze\sitemaker\services\forum\data $forum, $phpbb_root_path, $php_ext)
 	{
 		$this->config = $config;
 		$this->user = $user;
 		$this->displayer = $displayer;
+		$this->date_range = $date_range;
 		$this->forum = $forum;
-		$this->primetime = $primetime;
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
 
@@ -75,11 +75,11 @@ class recent extends \primetime\core\services\blocks\driver\block
 	/**
 	 * Block config
 	 */
-	public function get_config($settings)
+	public function get_config(array $settings)
 	{
 		if (!function_exists('select_content_type'))
 		{
-			include($this->phpbb_root_path . 'ext/primetime/content/blocks.' . $this->php_ext);
+			include($this->phpbb_root_path . 'ext/blitze/content/blocks.' . $this->php_ext);
 		}
 
 		$content_types = $this->displayer->get_all_types();
@@ -118,7 +118,7 @@ class recent extends \primetime\core\services\blocks\driver\block
 			'block_tpl'			=> array('lang' => 'TEMPLATE', 'validate' => 'string', 'type' => 'textarea:5:50', 'maxlength' => 255, 'explain' => false, 'default' => ''),
 
 			'legend2'			=> $this->user->lang['SETTINGS'],
-			'topic_type'		=> array('lang' => 'TOPIC_TYPE', 'validate' => 'int', 'type' => 'select', 'params' => array($topic_type_options, $topic_type), 'default' => POST_NORMAL, 'explain' => false),
+			'topic_type'		=> array('lang' => 'TOPIC_TYPE', 'validate' => 'string', 'type' => 'select', 'params' => array($topic_type_options, $topic_type), 'default' => POST_NORMAL, 'explain' => false),
 			'max_topics'		=> array('lang' => 'MAX_TOPICS', 'validate' => 'int:0:20', 'type' => 'number:0:20', 'maxlength' => 2, 'explain' => false, 'default' => 5),
 			'offset_start'		=> array('lang' => 'OFFSET_START', 'validate' => 'int:0:20', 'type' => 'number:0:20', 'maxlength' => 2, 'explain' => false, 'default' => 0),
 			'topic_title_limit'	=> array('lang' => 'TOPIC_TITLE_LIMIT', 'validate' => 'int:0:255', 'type' => 'number:0:255', 'maxlength' => 3, 'explain' => false, 'default' => 25),
@@ -129,7 +129,7 @@ class recent extends \primetime\core\services\blocks\driver\block
 		);
 	}
 
-	public function display($bdata, $edit_mode = false)
+	public function display(array $bdata, $edit_mode = false)
 	{
 		$this->settings = $bdata['settings'];
 
@@ -168,15 +168,15 @@ class recent extends \primetime\core\services\blocks\driver\block
 			self::SORT_TOPIC_READ	=> 't.topic_last_view_time'
 		);
 
-		$range_info = $this->primetime->get_date_range($this->settings['date_range']);
+		$range_info = $this->date_range->get($this->settings['date_range']);
 
 		$this->forum->query()
 			->fetch_forum($forum_id)
-			->fetch_topic_type($this->settings['topic_type'])
+			->fetch_topic_type(array($this->settings['topic_type']))
 			->fetch_tracking_info($this->settings['enable_tracking'])
 			->fetch_date_range($range_info['start'], $range_info['stop'])
 			->set_sorting($sort_keys[$this->settings['sort_key']])
-			->build();
+			->build(true, true, false);
 
 		$topics_data = $this->forum->get_topic_data($this->settings['max_topics'], $this->settings['offset_start']);
 
@@ -214,7 +214,7 @@ class recent extends \primetime\core\services\blocks\driver\block
 
 			return array(
 				'title'		=> $lang_var,
-				'content'	=> $this->ptemplate->render_view('primetime/content', 'blocks/recent_content.html', 'recent_content_block')
+				'content'	=> $this->ptemplate->render_view('blitze/content', 'blocks/recent_content.html', 'recent_content_block')
 			);
 		}
 	}

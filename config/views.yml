@@ -1,7 +1,7 @@
 services:
 
-    primetime.content.view.blog:
-        class: primetime\content\services\views\blog
+    blitze.content.view.blog:
+        class: blitze\content\services\views\blog
         arguments:
             - @auth
             - @cache
@@ -9,14 +9,14 @@ services:
             - @dbal.conn
             - @template
             - @user
-            - @primetime.content.displayer
+            - @blitze.content.displayer
             - %core.root_path%
             - %core.php_ext%
         tags:
             - { name: content.view }
 
-    primetime.content.view.portal:
-        class: primetime\content\services\views\portal
+    blitze.content.view.portal:
+        class: blitze\content\services\views\portal
         arguments:
             - @auth
             - @cache
@@ -24,14 +24,14 @@ services:
             - @dbal.conn
             - @template
             - @user
-            - @primetime.content.displayer
+            - @blitze.content.displayer
             - %core.root_path%
             - %core.php_ext%
         tags:
             - { name: content.view }
 
-    primetime.content.view.tiles:
-        class: primetime\content\services\views\tiles
+    blitze.content.view.tiles:
+        class: blitze\content\services\views\tiles
         arguments:
             - @auth
             - @cache
@@ -40,8 +40,8 @@ services:
             - @request
             - @template
             - @user
-            - @primetime.content.displayer
-            - @primetime.core.util
+            - @blitze.content.displayer
+            - @blitze.sitemaker.util
             - %core.root_path%
             - %core.php_ext%
         tags:

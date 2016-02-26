@@ -1,13 +1,13 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\acp;
+namespace blitze\content\acp;
 
 class content_module
 {
@@ -38,17 +38,17 @@ class content_module
 	/** @var \phpbb\user */
 	protected $user;
 
-	/** @var \primetime\content\services\types */
+	/** @var \blitze\content\services\types */
 	protected $content;
 
-	/** @var \primetime\content\services\form */
+	/** @var \blitze\content\services\form */
 	protected $form;
 
-	/** @var \primetime\core\services\forum\manager */
+	/** @var \blitze\sitemaker\services\forum\manager */
 	protected $forum;
 
-	/** @var \primetime\core\util */
-	protected $primetime;
+	/** @var \blitze\sitemaker\util */
+	protected $sitemaker;
 
 	/** @var string */
 	protected $phpbb_admin_path;
@@ -90,18 +90,18 @@ class content_module
 		$this->user		= $user;
 		$this->phpbb_container	= $phpbb_container;
 		$this->helper			= $phpbb_container->get('controller.helper');
-		$this->content			= $phpbb_container->get('primetime.content.types');
-		$this->form				= $phpbb_container->get('primetime.content.form');
-		$this->forum			= $phpbb_container->get('primetime.core.forum.manager');
-		$this->primetime		= $phpbb_container->get('primetime.core.util');
+		$this->content			= $phpbb_container->get('blitze.content.types');
+		$this->form				= $phpbb_container->get('blitze.content.form');
+		$this->forum			= $phpbb_container->get('blitze.sitemaker.forum.manager');
+		$this->sitemaker		= $phpbb_container->get('blitze.sitemaker.util');
 		$this->phpbb_admin_path	= $phpbb_admin_path;
 		$this->phpbb_root_path	= $phpbb_root_path;
 		$this->php_ext			= $phpEx;
 
-		$this->content_fields_table	= $phpbb_container->getParameter('tables.primetime.content_fields');
-		$this->content_types_table	= $phpbb_container->getParameter('tables.primetime.content_types');
+		$this->content_fields_table	= $phpbb_container->getParameter('tables.blitze.content_fields');
+		$this->content_types_table	= $phpbb_container->getParameter('tables.blitze.content_types');
 
-		$this->load_views($phpbb_container->get('primetime.content.views_collection'));
+		$this->load_views($phpbb_container->get('blitze.content.views_collection'));
 	}
 
 	public function load_views($views)
@@ -148,6 +148,8 @@ class content_module
 					{
 						trigger_error($this->user->lang['NO_CONTENT_FIELDS'] . adm_back_link($this->u_action), E_USER_WARNING);
 					}
+
+					$this->db->sql_transaction('begin');
 
 					if ($content_type)
 					{
@@ -244,6 +246,8 @@ class content_module
 					}
 
 					$this->handle_content_fields($content_id, $fields_data);
+
+					$this->db->sql_transaction('commit');
 					$this->cache->destroy('_content_types');
 
 					if (!$message && $action != 'add')
@@ -304,7 +308,7 @@ class content_module
 
 					if (sizeof($block_ids))
 					{
-						$this->phpbb_container->get('primetime.blocks.manager')->delete_blocks($block_ids);
+						$this->phpbb_container->get('sitemaker.blocks.manager')->delete_blocks($block_ids);
 					}
 
 					$topic_ids = array();
@@ -459,6 +463,7 @@ class content_module
 			case 'add':
 			case 'edit':
 
+				$this->phpbb_container->get('blitze.sitemaker.auto_lang')->add('form_field');
 				$field_types = $this->form->get_form_fields();
 
 				if ($action == 'edit')
@@ -469,7 +474,7 @@ class content_module
 					}
 
 					$row = $this->content->get_type($content_type);
-					$content_fields = $row['content_fields'];
+					$content_fields = &$row['content_fields'];
 					$forum_id = (int) $row['forum_id'];
 
 					foreach ($content_fields as $data)
@@ -479,7 +484,7 @@ class content_module
 							continue;
 						}
 
-						$l_type = $field_types[$data['field_type']]->get_langname();
+						$l_type = $this->user->lang($field_types[$data['field_type']]->get_langname());
 						decode_message($data['field_explain'], $data['field_exp_uid']);
 
 						$data += array(
@@ -558,18 +563,18 @@ class content_module
 				}
 
 				$action = 'edit';
-				$asset_path = $this->primetime->asset_path;
+				$asset_path = $this->sitemaker->asset_path;
 
-				$this->primetime->add_assets(array(
+				$this->sitemaker->add_assets(array(
 					'js' => array(
 						'//ajax.googleapis.com/ajax/libs/jqueryui/' . JQUI_VERSION . '/jquery-ui.min.js',
 						'//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js',
-						$asset_path . 'ext/primetime/core/components/twig.js/twig.min.js',
-						'@primetime_content/assets/content_admin.min.js',
+						'@blitze_sitemaker/vendor/twig.js/twig.min.js',
+						'@blitze_content/assets/content_admin.min.js',
 					),
 					'css'	=> array(
 						'//ajax.googleapis.com/ajax/libs/jqueryui/' . JQUI_VERSION . '/themes/smoothness/jquery-ui.css',
-						'@primetime_content/assets/content_admin.min.css',
+						'@blitze_content/assets/content_admin.min.css',
 					)
 				));
 
@@ -620,7 +625,7 @@ class content_module
 					$forum_id = $row['forum_id'];
 					$type = $row['content_name'];
 					$langname = (isset($this->user->lang[$row['content_langname']])) ? $this->user->lang[$row['content_langname']] : $row['content_langname'];
-					$u_content_type = $this->helper->route('primetime_content_index', array(
+					$u_content_type = $this->helper->route('blitze_content_index', array(
 						'type'	=> $type,
 					));
 
@@ -635,7 +640,7 @@ class content_module
 						'U_ENABLE'		=> $this->u_action . '&amp;action=enable&amp;type=' . $row['content_name'],
 						'U_DISABLE'		=> $this->u_action . '&amp;action=disable&amp;type=' . $row['content_name'],
 						'U_VIEW'		=> $u_content_type,
-						'U_POST'		=> append_sid("{$this->phpbb_root_path}ucp." . $this->php_ext, "i=-primetime-content-ucp-content_module&amp;mode=content&amp;action=post&amp;type={$type}"),
+						'U_POST'		=> append_sid("{$this->phpbb_root_path}ucp." . $this->php_ext, "i=-blitze-content-ucp-content_module&amp;mode=content&amp;action=post&amp;type={$type}"),
 						'U_GROUP_PERMS'	=> append_sid("{$this->phpbb_admin_path}index." . $this->php_ext, "i=acp_permissions&amp;mode=setting_group_global"),
 						'U_FORUM_PERMS'	=> append_sid("{$this->phpbb_admin_path}index." . $this->php_ext, "i=acp_permissions&amp;mode=setting_forum_local&amp;forum_id[]=$forum_id"))
 					);
@@ -664,7 +669,7 @@ class content_module
 		$options = '';
 		foreach ($field_types as $service => $driver)
 		{
-			$options .= '<option value="' . $driver->get_name() . '">' . $driver->get_langname() . "</option>\n";
+			$options .= '<option value="' . $driver->get_name() . '">' . $this->user->lang($driver->get_langname()) . "</option>\n";
 		}
 
 		return $options;
@@ -699,7 +704,7 @@ class content_module
 					'forum_type'	=> FORUM_POST,
 					'forum_name'	=> (isset($this->user->lang[$content_langname])) ? $this->user->lang[$content_langname] : $content_langname,
 					'forum_desc'	=> '',
-					'parent_id'		=> $this->config['primetime_content_forum_id'],
+					'parent_id'		=> $this->config['blitze_content_forum_id'],
 				);
 
 				$errors = $this->forum->add($forum_data, $forum_perm_from);
@@ -740,8 +745,13 @@ class content_module
 
 			$field_options = utf8_normalize_nfc($this->request->variable($field . '_options', array(''), true));
 
-			$uid = $bitfield = $options = $settings = '';
-			generate_text_for_storage($row['description'], $uid, $bitfield, $options);
+			$options = 0;
+			$uid = $bitfield = $settings = '';
+
+			if ($row['description'])
+			{
+				generate_text_for_storage($row['description'], $uid, $bitfield, $options);
+			}
 
 			if (sizeof($field_options))
 			{

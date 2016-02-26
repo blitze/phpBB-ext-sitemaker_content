@@ -1,13 +1,13 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\controller;
+namespace blitze\content\controller;
 
 use Symfony\Component\DependencyInjection\Container;
 
@@ -37,10 +37,10 @@ class display
 	/** @var \phpbb\user */
 	protected $user;
 
-	/* @var \primetime\content\services\displayer */
+	/* @var \blitze\content\services\displayer */
 	protected $displayer;
 
-	/** @var \primetime\core\services\forum\data */
+	/** @var \blitze\sitemaker\services\forum\data */
 	protected $forum;
 
 	/** @var string */
@@ -60,12 +60,12 @@ class display
 	 * @param Container									$phpbb_container	Service container
 	 * @param \phpbb\template\template					$template			Template object
 	 * @param \phpbb\user								$user				User object
-	 * @param \primetime\content\services\displayer		$displayer			Content displayer object
-	 * @param \primetime\core\services\forum\data		$forum				Forum Data object
+	 * @param \blitze\content\services\displayer		$displayer			Content displayer object
+	 * @param \blitze\sitemaker\services\forum\data		$forum				Forum Data object
 	 * @param string									$root_path			Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\db $config, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, Container $phpbb_container, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\displayer $displayer, \primetime\core\services\forum\data $forum, $root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\db $config, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, Container $phpbb_container, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\displayer $displayer, \blitze\sitemaker\services\forum\data $forum, $root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -96,7 +96,7 @@ class display
 		}
 		else
 		{
-			$view = $this->phpbb_container->get('primetime.content.view.portal');
+			$view = $this->phpbb_container->get('blitze.content.view.portal');
 		}
 
 		$forum_id = (int) $type_data['forum_id'];
@@ -112,7 +112,7 @@ class display
 
 		$this->template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $type_data['content_langname'],
-			'U_VIEW_FORUM'	=> $this->helper->route('primetime_content_index', array('type' => $type))
+			'U_VIEW_FORUM'	=> $this->helper->route('blitze_content_index', array('type' => $type))
 		));
 
 		$start = ($page - 1) * $type_data['items_per_page'];
@@ -136,8 +136,8 @@ class display
 			$this->pagination->generate_template_pagination(
 				array(
 					'routes' => array(
-						'primetime_content_index',
-						'primetime_content_index_page',
+						'blitze_content_index',
+						'blitze_content_index_page',
 					),
 					'params' => array(
 						'type'	=> $type
@@ -152,7 +152,7 @@ class display
 			->fetch_forum($forum_id)
 			->fetch_tracking_info()
 			->set_sorting('t.topic_time')
-			->build();
+			->build(true, true, false);
 
 		$topics_data = $this->forum->get_topic_data($limit, $start);
 		$posts_data = $this->forum->get_post_data('first');
@@ -169,7 +169,7 @@ class display
 	public function show($type, $topic_id, $page = 1)
 	{
 		$this->user->add_lang('viewtopic');
-		$this->user->add_lang_ext('primetime/content', 'content');
+		$this->user->add_lang_ext('blitze/content', 'content');
 
 		$type_data = $this->displayer->get_type($type);
 
@@ -178,13 +178,13 @@ class display
 			return $this->helper->error($this->user->lang['INVALID_CONTENT_TYPE']);
 		}
 
-		if ($this->phpbb_container->has('primetime.content.view.tiles'))
+		if ($this->phpbb_container->has('blitze.content.view.tiles'))
 		{
-			$view = $this->phpbb_container->get('primetime.content.view.tiles');
+			$view = $this->phpbb_container->get('blitze.content.view.tiles');
 		}
 		else
 		{
-			$view = $this->phpbb_container->get('primetime.content.view.portal');
+			$view = $this->phpbb_container->get('blitze.content.view.portal');
 		}
 
 		$forum_id = (int) $type_data['forum_id'];
@@ -193,7 +193,7 @@ class display
 			->fetch_forum($forum_id)
 			->fetch_topic($topic_id)
 			->fetch_tracking_info()
-			->build();
+			->build(true, true, false);
 
 		$topic_data = $this->forum->get_topic_data();
 
@@ -223,7 +223,7 @@ class display
 		{
 			$this->template->assign_var('S_COMMENTS', true);
 
-			$comments = $this->phpbb_container->get('primetime.content.comments');
+			$comments = $this->phpbb_container->get('blitze.content.comments');
 			$comments->show($type, $topic_data, $page);
 		}
 
@@ -240,11 +240,11 @@ class display
 		$navlinks = array(
 			array(
 				'FORUM_NAME'	=> $type_data['content_langname'],
-				'U_VIEW_FORUM'	=> $this->helper->route('primetime_content_index', array('type' => $type))
+				'U_VIEW_FORUM'	=> $this->helper->route('blitze_content_index', array('type' => $type))
 			),
 			array(
 				'FORUM_NAME'	=> $topic_title,
-				'U_VIEW_FORUM'	=> $this->helper->route('primetime_content_show', array(
+				'U_VIEW_FORUM'	=> $this->helper->route('blitze_content_show', array(
 					'type'			=> $type,
 					'topic_id'		=> $topic_id,
 					'slug'			=> $slug
@@ -405,7 +405,7 @@ class display
 			->fetch_topic_poster($user_id)
 			->fetch_tracking_info()
 			->fetch_custom($sql_array)
-			->build();
+			->build(true, true, false);
 
 		$topic_data = $this->forum->get_topic_data(5);
 		$topic_tracking_info = $this->forum->get_topic_tracking_info($forum_id);
@@ -417,7 +417,7 @@ class display
 			foreach ($topic_data as $row)
 			{
 				$post_unread = (isset($topic_tracking_info[$topic_id]) && $row['topic_last_post_time'] > $topic_tracking_info[$topic_id]) ? true : false;
-				$topic_url = $this->helper->route('primetime_content_show', array(
+				$topic_url = $this->helper->route('blitze_content_show', array(
 					'type'		=> $content_type,
 					'topic_id'	=> $row['topic_id'],
 					'slug'		=> $row['topic_slug']

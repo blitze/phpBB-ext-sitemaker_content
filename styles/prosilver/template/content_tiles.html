@@ -8,15 +8,24 @@
 
 <!-- IF .topic_row -->
 	<div class="line">
-		<div id="primetime-content-grid" class="tile-grid">
+		<div id="sitemaker-content-grid" class="tile-grid">
 			<!-- BEGIN topic_row -->
-			<div class="unit item">
+			<div class="grid-col item">
 				<div class="panel post tile cms-block-spacing">
 					<div class="inner">
-						<div class="postbody pt-postbody">
+						<div class="postbody sm-postbody">
 							<!-- IF not topic_row.CUSTOM_DISPLAY -->
 							<h3 class="first"><a href="{topic_row.TOPIC_URL}">{topic_row.TOPIC_TITLE}</a></h3>
-							<p class="author">{topic_row.MINI_POST_IMG}<span class="responsive-hide">{L_POST_BY_AUTHOR} </span><strong>{topic_row.TOPIC_AUTHOR_FULL}</strong> | <i class="fa fa-calendar"></i> {topic_row.TOPIC_DATE|date("m/d/Y")}<!-- IF S_COMMENTS --> | <i class="fa fa-comments-o fa-lg"></i> <a href="{topic_row.TOPIC_URL}#comments">{topic_row.TOPIC_COMMENTS}</a><!-- ENDIF --></p>
+							<p class="author">
+							<!-- IF S_IS_BOT -->
+								<span><i class="icon fa-file fa-fw <!-- IF topic_row.S_UNREAD_POST -->icon-red<!-- ELSE -->icon-lightgray<!-- ENDIF --> icon-md" aria-hidden="true"></i><span class="sr-only">{topic_row.MINI_POST}</span></span>
+							<!-- ELSE -->
+								<a class="unread" href="{topic_row.U_MINI_POST}" title="{topic_row.MINI_POST}">
+									<i class="icon fa-file fa-fw <!-- IF topic_row.S_UNREAD_POST -->icon-red<!-- ELSE -->icon-lightgray<!-- ENDIF --> icon-md" aria-hidden="true"></i><span class="sr-only">{topic_row.MINI_POST}</span>
+								</a>
+							<!-- ENDIF -->
+								<span class="responsive-hide">{L_POST_BY_AUTHOR} </span><strong>{topic_row.TOPIC_AUTHOR_FULL}</strong> | <i class="fa fa-calendar"></i> {topic_row.TOPIC_DATE|date("m/d/Y")}<!-- IF S_COMMENTS --> | <i class="fa fa-comments-o fa-lg"></i> <a href="{topic_row.TOPIC_URL}#comments">{topic_row.TOPIC_COMMENTS}</a><!-- ENDIF -->
+							</p>
 							<!-- ENDIF -->
 							<div class="content">
 								<!-- IF topic_row.CUSTOM_DISPLAY -->
@@ -25,7 +34,7 @@
 								{topic_row.SEQ_DISPLAY}
 								<p>&nbsp;</p>
 
-								<div class="buttons rightside">
+								<div class="buttons right-box">
 									<a href="{topic_row.TOPIC_URL}" class="button icon-button">{L_READ_MORE}</a>
 								</div>
 								<!-- ENDIF -->

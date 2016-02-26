@@ -1,173 +1,173 @@
 services:
 
-    primetime.content.form.field.checkbox:
-        class: primetime\content\services\form\field\checkbox
+    blitze.content.form.field.checkbox:
+        class: blitze\content\services\form\field\checkbox
         arguments:
             - @request
             - @user
-            - @primetime.core.template
+            - @blitze.sitemaker.template
         tags:
             - { name: form.field }
 
-    primetime.content.form.field.color:
-        class: primetime\content\services\form\field\color
+    blitze.content.form.field.color:
+        class: blitze\content\services\form\field\color
         arguments:
             - @request
             - @user
-            - @primetime.core.template
+            - @blitze.sitemaker.template
         tags:
             - { name: form.field }
 
-    primetime.content.form.field.date:
-        class: primetime\content\services\form\field\date
+    blitze.content.form.field.date:
+        class: blitze\content\services\form\field\date
         arguments:
             - @request
             - @user
-            - @primetime.core.template
-            - @primetime.core.util
+            - @blitze.sitemaker.template
+            - @blitze.sitemaker.util
         tags:
             - { name: form.field }
 
-    primetime.content.form.field.datetime:
-        class: primetime\content\services\form\field\datetime
+    blitze.content.form.field.datetime:
+        class: blitze\content\services\form\field\datetime
         arguments:
             - @request
             - @user
-            - @primetime.core.template
-            - @primetime.core.util
+            - @blitze.sitemaker.template
+            - @blitze.sitemaker.util
         tags:
             - { name: form.field }
 
-    primetime.content.form.field.email:
-        class: primetime\content\services\form\field\email
+    blitze.content.form.field.email:
+        class: blitze\content\services\form\field\email
         arguments:
             - @request
             - @user
-            - @primetime.core.template
+            - @blitze.sitemaker.template
         tags:
             - { name: form.field }
 
-    primetime.content.form.field.hidden:
-        class: primetime\content\services\form\field\hidden
+    blitze.content.form.field.hidden:
+        class: blitze\content\services\form\field\hidden
         arguments:
             - @user
-            - @primetime.core.template
+            - @blitze.sitemaker.template
         tags:
             - { name: form.field }
 
-    primetime.content.form.field.image:
-        class: primetime\content\services\form\field\image
-        arguments:
-            - @request
-            - @user
-            - @primetime.core.template
-        tags:
-            - { name: form.field }
-
-    primetime.content.form.field.number:
-        class: primetime\content\services\form\field\number
+    blitze.content.form.field.image:
+        class: blitze\content\services\form\field\image
         arguments:
             - @request
             - @user
-            - @primetime.core.template
+            - @blitze.sitemaker.template
         tags:
             - { name: form.field }
 
-    primetime.content.form.field.password:
-        class: primetime\content\services\form\field\password
+    blitze.content.form.field.number:
+        class: blitze\content\services\form\field\number
         arguments:
             - @request
             - @user
-            - @primetime.core.template
+            - @blitze.sitemaker.template
         tags:
             - { name: form.field }
 
-    primetime.content.form.field.radio:
-        class: primetime\content\services\form\field\radio
+    blitze.content.form.field.password:
+        class: blitze\content\services\form\field\password
         arguments:
             - @request
             - @user
-            - @primetime.core.template
+            - @blitze.sitemaker.template
         tags:
             - { name: form.field }
 
-    primetime.content.form.field.range:
-        class: primetime\content\services\form\field\range
+    blitze.content.form.field.radio:
+        class: blitze\content\services\form\field\radio
         arguments:
             - @request
             - @user
-            - @primetime.core.template
+            - @blitze.sitemaker.template
         tags:
             - { name: form.field }
 
-    primetime.content.form.field.reset:
-        class: primetime\content\services\form\field\reset
-        arguments:
-            - @user
-            - @primetime.core.template
-        tags:
-            - { name: form.field }
-
-    primetime.content.form.field.select:
-        class: primetime\content\services\form\field\select
+    blitze.content.form.field.range:
+        class: blitze\content\services\form\field\range
         arguments:
             - @request
             - @user
-            - @primetime.core.template
+            - @blitze.sitemaker.template
         tags:
             - { name: form.field }
 
-    primetime.content.form.field.submit:
-        class: primetime\content\services\form\field\submit
+    blitze.content.form.field.reset:
+        class: blitze\content\services\form\field\reset
         arguments:
             - @user
-            - @primetime.core.template
+            - @blitze.sitemaker.template
         tags:
             - { name: form.field }
 
-    primetime.content.form.field.telephone:
-        class: primetime\content\services\form\field\telephone
-        arguments:
-            - @request
-            - @user
-            - @primetime.core.template
-        tags:
-            - { name: form.field }
-
-    primetime.content.form.field.text:
-        class: primetime\content\services\form\field\text
+    blitze.content.form.field.select:
+        class: blitze\content\services\form\field\select
         arguments:
             - @request
             - @user
-            - @primetime.core.template
+            - @blitze.sitemaker.template
         tags:
             - { name: form.field }
 
-    primetime.content.form.field.textarea:
-        class: primetime\content\services\form\field\textarea
+    blitze.content.form.field.submit:
+        class: blitze\content\services\form\field\submit
         arguments:
-            - @request
             - @user
-            - @primetime.core.template
-            - @primetime.core.util
+            - @blitze.sitemaker.template
         tags:
             - { name: form.field }
 
-    primetime.content.form.field.time:
-        class: primetime\content\services\form\field\time
+    blitze.content.form.field.telephone:
+        class: blitze\content\services\form\field\telephone
         arguments:
             - @request
             - @user
-            - @primetime.core.template
-            - @primetime.core.util
+            - @blitze.sitemaker.template
         tags:
             - { name: form.field }
 
-    primetime.content.form.field.url:
-        class: primetime\content\services\form\field\url
+    blitze.content.form.field.text:
+        class: blitze\content\services\form\field\text
         arguments:
             - @request
             - @user
-            - @primetime.core.template
+            - @blitze.sitemaker.template
+        tags:
+            - { name: form.field }
+
+    blitze.content.form.field.textarea:
+        class: blitze\content\services\form\field\textarea
+        arguments:
+            - @request
+            - @user
+            - @blitze.sitemaker.template
+            - @blitze.sitemaker.util
+        tags:
+            - { name: form.field }
+
+    blitze.content.form.field.time:
+        class: blitze\content\services\form\field\time
+        arguments:
+            - @request
+            - @user
+            - @blitze.sitemaker.template
+            - @blitze.sitemaker.util
+        tags:
+            - { name: form.field }
+
+    blitze.content.form.field.url:
+        class: blitze\content\services\form\field\url
+        arguments:
+            - @request
+            - @user
+            - @blitze.sitemaker.template
         tags:
             - { name: form.field }

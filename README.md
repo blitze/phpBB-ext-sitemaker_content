@@ -1,12 +1,12 @@
-# phpBB Primetime Content Extension
+# phpBB Sitemaker Content Extension
 
-phpBB Primetime Content is an Extension for [phpBB 3.1](https://www.phpbb.com/)
+phpBB Sitemaker Content is an Extension for [phpBB 3.1](https://www.phpbb.com/)
 
-[![Build Status](https://travis-ci.org/blitze/primetime_content.svg?branch=develop)](https://travis-ci.org/blitze/primetime_content)
+[![Build Status](https://travis-ci.org/blitze/blitze_content.svg?branch=develop)](https://travis-ci.org/blitze/blitze_content)
 
 ## Description
 
-Create and manage content types for phpBB Primetime Extension
+Create and manage content types for phpBB Sitemaker Extension
 
 ## Features
 
@@ -17,17 +17,17 @@ Create and manage content types for phpBB Primetime Extension
 
 ## Installation
 
-Clone into phpBB/ext/primetime/content:
+Clone into phpBB/ext/blitze/content:
 
-    git clone https://github.com/blitze/primetime_content.git phpBB/ext/primetime/content
+    git clone https://github.com/blitze/blitze_content.git phpBB/ext/blitze/content
 
-Go to "ACP" > "Customise" > "Extensions" and enable the "phpBB Primetime Content" extension.
+Go to "ACP" > "Customise" > "Extensions" and enable the "phpBB Sitemaker Content" extension.
 
 ## Collaborate
 
-* Create a issue in the [tracker](https://github.com/blitze/primetime_content/issues)
+* Create a issue in the [tracker](https://github.com/blitze/blitze_content/issues)
 * Note the restrictions for [branch names](https://wiki.phpbb.com/Git#Branch_Names) and [commit messages](https://wiki.phpbb.com/Git#Commit_Messages) are similar to phpBB3
-* Submit a [pull-request](https://github.com/blitze/primetime_content/pulls)
+* Submit a [pull-request](https://github.com/blitze/blitze_content/pulls)
 
 ## Testing
 

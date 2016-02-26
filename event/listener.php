@@ -1,13 +1,13 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\event;
+namespace blitze\content\event;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -22,10 +22,10 @@ class listener implements EventSubscriberInterface
 	/* @var \phpbb\user */
 	protected $user;
 
-	/* @var \primetime\content\services\types */
+	/* @var \blitze\content\services\types */
 	protected $content_types;
 
-	/* @var \primetime\content\services\displayer */
+	/* @var \blitze\content\services\displayer */
 	protected $displayer;
 
 	/** @var string */
@@ -44,10 +44,10 @@ class listener implements EventSubscriberInterface
 	 * @param \phpbb\db\driver\driver_interface		$db					Database object
 	 * @param \phpbb\controller\helper				$helper				Helper object
 	 * @param \phpbb\user							$user				User object
-	 * @param \primetime\content\services\types		$content_types		Content types object
-	 * @param \primetime\content\services\displayer	$displayer			Content displayer object
+	 * @param \blitze\content\services\types		$content_types		Content types object
+	 * @param \blitze\content\services\displayer	$displayer			Content displayer object
 	*/
-	public function __construct(\phpbb\config\db $config, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\user $user, \primetime\content\services\types $content_types, \primetime\content\services\displayer $displayer, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\config\db $config, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\user $user, \blitze\content\services\types $content_types, \blitze\content\services\displayer $displayer, $phpbb_root_path, $php_ext)
 	{
 		$this->db = $db;
 		$this->helper = $helper;
@@ -57,13 +57,14 @@ class listener implements EventSubscriberInterface
 		$this->root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
 
-		$this->content_forums = unserialize($config['primetime_content_forums']);
+		$this->content_forums = unserialize($config['blitze_content_forums']);
 	}
 
 	static public function getSubscribedEvents()
 	{
 		return array(
 			'core.user_setup'				=> 'load_block_language',
+			'core.page_header'				=> 'add_post_new_nav',
 			'core.search_get_posts_data'	=> 'modify_posts_data',
 			'core.search_get_topic_data'	=> 'modify_topic_data',
 			'core.search_modify_tpl_ary'	=> 'content_search',
@@ -78,10 +79,19 @@ class listener implements EventSubscriberInterface
 	{
 		$lang_set_ext = $event['lang_set_ext'];
 		$lang_set_ext[] = array(
-			'ext_name' => 'primetime/content',
+			'ext_name' => 'blitze/content',
 			'lang_set' => 'common',
 		);
 		$event['lang_set_ext'] = $lang_set_ext;
+	}
+
+	public function add_post_new_nav()
+	{
+		global $template;
+			$template->assign_vars(array(
+				'S_CAN_POST_CONTENT'	=> true,
+				'U_POST_NEW'			=> append_sid("{$this->root_path}ucp.{$this->php_ext}", 'i=-blitze-content-ucp-content_module&mode=content'),
+			));
 	}
 
 	public function modify_posts_data($event)
@@ -142,8 +152,8 @@ class listener implements EventSubscriberInterface
 				);
 			}
 
-			$topic_url = $this->helper->route('primetime_content_show', $params);
-			$forum_url = $this->helper->route('primetime_content_index', array(
+			$topic_url = $this->helper->route('blitze_content_show', $params);
+			$forum_url = $this->helper->route('blitze_content_index', array(
 				'type'		=> $type
 			));
 
@@ -161,7 +171,7 @@ class listener implements EventSubscriberInterface
 		{
 			$type = $this->content_forums[$event['forum_data']['forum_id']];
 
-			redirect($this->helper->route('primetime_content_index', array(
+			redirect($this->helper->route('blitze_content_index', array(
 				'type'		=> $type,
 			)));
 		}
@@ -173,7 +183,7 @@ class listener implements EventSubscriberInterface
 		{
 			$type = $this->content_forums[$event['forum_id']];
 
-			redirect($this->helper->route('primetime_content_show', array(
+			redirect($this->helper->route('blitze_content_show', array(
 				'type'		=> $type,
 				'topic_id'	=> $event['topic_id'],
 				'slug'		=> $event['topic_data']['topic_slug']
@@ -187,7 +197,7 @@ class listener implements EventSubscriberInterface
 		{
 			$type = $this->content_forums[$event['forum_id']];
 
-			redirect(append_sid("{$this->root_path}mcp.$this->php_ext", "i=-primetime-content-mcp-content_module&mode=content&action=edit&type={$type}&t=" . $event['topic_id']));
+			redirect(append_sid("{$this->root_path}mcp.$this->php_ext", "i=-blitze-content-mcp-content_module&mode=content&action=edit&type={$type}&t=" . $event['topic_id']));
 		}
 	}
 
@@ -201,7 +211,7 @@ class listener implements EventSubscriberInterface
 			if (sizeof($match))
 			{
 				$row = $this->content_types->get_type($match[1]);
-				$lang = (!empty($match[2])) ? 'PRIMETIME_READING_TOPIC' : 'PRIMETIME_BROWSING_CONTENT';
+				$lang = (!empty($match[2])) ? 'SITEMAKER_READING_TOPIC' : 'SITEMAKER_BROWSING_CONTENT';
 
 				$event['location'] = sprintf($this->user->lang($lang), $row['content_langname']);
 				$event['location_url'] = $event['row']['session_page'];

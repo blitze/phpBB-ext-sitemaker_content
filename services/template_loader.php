@@ -1,13 +1,13 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\services;
+namespace blitze\content\services;
 
 class template_loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface
 {
@@ -20,17 +20,17 @@ class template_loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterf
 	/**
 	 * Constructor
 	 *
-	 * @param \primetime\content\services\types		$content		Content types object
+	 * @param \blitze\content\services\types		$content		Content types object
 	 */
-	public function __construct(\primetime\content\services\types $content)
+	public function __construct(\blitze\content\services\types $content)
 	{
 		global $phpbb_container;
-		$blocks = $phpbb_container->get('primetime.blocks.display');
+		$blocks = $phpbb_container->get('blitze.sitemaker.blocks.display');
 
 		$sql_where = "bvar = 'block_tpl' OR bvar = 'last_modified'";
 
 		$types = $content->get_all_types();
-		$config_ary = $blocks->get_blocks_config($sql_where);
+		$config_ary = array(); // $blocks->get_blocks_config($sql_where);
 
 		foreach ($types as $type => $row)
 		{

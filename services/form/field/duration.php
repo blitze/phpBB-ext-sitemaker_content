@@ -1,44 +1,36 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\services\form\field;
+namespace blitze\content\services\form\field;
 
 abstract class duration extends base
 {
 	/** @var \phpbb\request\request_interface */
 	protected $request;
 
-	/** @var \primetime\core\services\util */
-	protected $primetime;
+	/** @var \blitze\sitemaker\services\util */
+	protected $sitemaker;
 
 	/**
 	 * Constructor
 	 *
 	 * @param \phpbb\request\request_interface		$request		Request object
 	 * @param \phpbb\user							$user			User object
-	 * @param \primetime\core\services\template		$ptemplate		Primetime template object
-	 * @param \primetime\core\services\util			$primetime		Primetime object
+	 * @param \blitze\sitemaker\services\template		$ptemplate		Sitemaker template object
+	 * @param \blitze\sitemaker\services\util			$sitemaker		Sitemaker object
 	 */
-	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \primetime\core\services\template $ptemplate, \primetime\core\services\util $primetime)
+	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \blitze\sitemaker\services\template $ptemplate, \blitze\sitemaker\services\util $sitemaker)
 	{
 		parent::__construct($user, $ptemplate);
 
 		$this->request = $request;
-		$this->primetime = $primetime;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function get_field_value($name, $value)
-	{
-		return $this->request->variable($name, $value);
+		$this->sitemaker = $sitemaker;
 	}
 
 	/**
@@ -58,19 +50,18 @@ abstract class duration extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function render_view($name, &$data, $item_id = 0)
+	public function show_form_field($name, &$data, $item_id = 0)
 	{
-		$asset_path = $this->primetime->asset_path;
-		$this->primetime->add_assets(array(
+		$this->sitemaker->add_assets(array(
 			'js'   => array(
-				$asset_path . 'ext/primetime/content/components/datetimepicker/jquery.datetimepicker.min.js',
-				'@primetime_content/assets/datetimepicker.min.js',
+				'@blitze_content/vendor/datetimepicker/jquery.datetimepicker.min.js',
+				'@blitze_content/assets/datetimepicker.min.js',
 			),
 			'css'   => array(
-				$asset_path . 'ext/primetime/content/components/datetimepicker/jquery.datetimepicker.min.css',
+				'@blitze_content/vendor/datetimepicker/jquery.datetimepicker.min.css',
 			)
 		));
 
-		return parent::render_view($name, $data, $item_id);
+		return parent::show_form_field($name, $data, $item_id);
 	}
 }

@@ -1,20 +1,20 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\services\form\field;
+namespace blitze\content\services\form\field;
 
 abstract class base implements field_interface
 {
 	/* @var \phpbb\user */
 	protected $user;
 
-	/** @var \primetime\core\services\template */
+	/** @var \blitze\sitemaker\services\template */
 	protected $ptemplate;
 
 	/** @var string */
@@ -24,9 +24,9 @@ abstract class base implements field_interface
 	 * Constructor
 	 *
 	 * @param \phpbb\user							$user			User object
-	 * @param \primetime\core\services\template		$ptemplate		Primetime template object
+	 * @param \blitze\sitemaker\services\template		$ptemplate		Sitemaker template object
 	 */
-	public function __construct(\phpbb\user $user, \primetime\core\services\template $ptemplate)
+	public function __construct(\phpbb\user $user, \blitze\sitemaker\services\template $ptemplate)
 	{
 		$this->user = $user;
 		$this->ptemplate = $ptemplate;
@@ -43,7 +43,15 @@ abstract class base implements field_interface
 	/**
 	 * @inheritdoc
 	 */
-	public function render_view($name, &$data, $item_id = 0)
+	public function get_field_value($name, $value, $display = 'form')
+	{
+		return $this->request->variable($name, $value, true);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function show_form_field($name, &$data, $item_id = 0)
 	{
 		$field = $this->get_name();
 		$data['field_name'] = $name;
@@ -52,7 +60,7 @@ abstract class base implements field_interface
 
 		$this->ptemplate->assign_vars(array_change_key_case($data, CASE_UPPER));
 
-		return $this->ptemplate->render_view('primetime/content', "fields/$field.html", $field . '_field');
+		return $this->ptemplate->render_view('blitze/content', "fields/$field.html", $field . '_field');
 	}
 
 	/**
@@ -104,6 +112,6 @@ abstract class base implements field_interface
 	 */
 	public function get_langname()
 	{
-		return $this->user->lang[strtoupper('FORM_FIELD_' . $this->get_name())];
+		return strtoupper('FORM_FIELD_' . $this->get_name());
 	}
 }

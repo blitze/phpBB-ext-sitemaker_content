@@ -1,13 +1,13 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\services;
+namespace blitze\content\services;
 
 use Symfony\Component\DependencyInjection\Container;
 use Cocur\Slugify\Slugify;
@@ -47,16 +47,16 @@ class manager
 	/** @var \phpbb\user */
 	protected $user;
 
-	/** @var \primetime\content\services\comments */
+	/** @var \blitze\content\services\comments */
 	protected $comments;
 
-	/* @var \primetime\content\services\displayer */
+	/* @var \blitze\content\services\displayer */
 	protected $displayer;
 
-	/** @var \primetime\content\services\form */
+	/** @var \blitze\content\services\form */
 	protected $form;
 
-	/** @var \primetime\core\services\forum\data */
+	/** @var \blitze\sitemaker\services\forum\data */
 	protected $forum;
 
 	/** @var string */
@@ -79,14 +79,14 @@ class manager
 	 * @param \phpbb\request\request_interface			$request			Request object
 	 * @param \phpbb\template\template					$template			Template object
 	 * @param \phpbb\user								$user				User object
-	 * @param \primetime\cotent\services\comments		$comments			Comments object
-	 * @param \primetime\content\services\displayer		$displayer			Content displayer object
-	 * @param \primetime\content\services\form			$form				Form object
-	 * @param \primetime\core\services\forum\data		$forum				Forum Data object
+	 * @param \sitemaker\cotent\services\comments		$comments			Comments object
+	 * @param \blitze\content\services\displayer		$displayer			Content displayer object
+	 * @param \blitze\content\services\form			$form				Form object
+	 * @param \blitze\sitemaker\services\forum\data		$forum				Forum Data object
 	 * @param string									$phpbb_root_path	Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, Container $phpbb_container, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\comments $comments, \primetime\content\services\displayer $displayer, \primetime\content\services\form $form, \primetime\core\services\forum\data $forum, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, Container $phpbb_container, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\comments $comments, \blitze\content\services\displayer $displayer, \blitze\content\services\form $form, \blitze\sitemaker\services\forum\data $forum, $phpbb_root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->cache = $cache;
@@ -134,7 +134,7 @@ class manager
 		$fields_data = array();
 		$find_tags = join('|', $fields);
 
-		if (preg_match_all("/\[tag=($find_tags)\](.*?)\[\/tag]/is", $post_text, $matches))
+		if (preg_match_all("/\[tag=($find_tags)\](.*?)\[\/tag]/s", $post_text, $matches))
 		{
 			$fields_data = array_combine($matches[1], $matches[2]);
 		}
@@ -168,13 +168,13 @@ class manager
 
 	public function handle_crud($mode, $u_action)
 	{
-		$this->user->add_lang_ext('primetime/content', 'manager');
+		$this->user->add_lang_ext('blitze/content', 'manager');
 
 		$topic_id	= $this->request->variable('t', 0);
 		$action		= $this->request->variable('action', '');
 		$type		= $this->request->variable('type', '');
 
-		$content_forum	= unserialize($this->config['primetime_content_forums']);
+		$content_forum	= unserialize($this->config['blitze_content_forums']);
 		$content_types	= $this->displayer->get_all_types();
 
 		if (!sizeof($content_types))
@@ -273,7 +273,7 @@ class manager
 			switch ($action)
 			{
 				case 'approve':
-					\mcp_queue::approve_topics($action, $topic_ids, '-primetime-content-mcp-content_module', 'content');
+					\mcp_queue::approve_topics($action, $topic_ids, '-blitze-content-mcp-content_module', 'content');
 				break;
 				case 'disapprove':
 					$sql = 'SELECT post_id
@@ -290,7 +290,7 @@ class manager
 
 					if (!empty($post_id_list))
 					{
-						\mcp_queue::disapprove_posts($post_id_list, '-primetime-content-mcp-content_module', 'content');
+						\mcp_queue::disapprove_posts($post_id_list, '-blitze-content-mcp-content_module', 'content');
 					}
 					else
 					{
@@ -306,7 +306,7 @@ class manager
 					include($this->phpbb_root_path . 'includes/mcp/mcp_main.' . $this->php_ext);
 
 					$mcp = new \mcp_main($mode);
-					$mcp->main("-primetime-content-mcp-content_module", $mcp_mode);
+					$mcp->main("-blitze-content-mcp-content_module", $mcp_mode);
 				break;
 			}
 		}
@@ -318,7 +318,7 @@ class manager
 				$this->forum->query()
 					->fetch_topic($topic_id)
 					->fetch_tracking_info()
-					->build(false, false);
+					->build(false, false, false);
 
 				$topic_data = $this->forum->get_topic_data();
 
@@ -578,6 +578,7 @@ class manager
 
 					$message = $this->generate_message($message_fields);
 
+
 					include($this->phpbb_root_path . 'includes/message_parser.' . $this->php_ext);
 
 					$message_parser = new \parse_message($message);
@@ -632,7 +633,7 @@ class manager
 					if ($preview)
 					{
 						$this->user->add_lang('viewtopic');
-						$this->user->add_lang_ext('primetime/content', 'content');
+						$this->user->add_lang_ext('blitze/content', 'content');
 
 						if (!function_exists('get_user_rank'))
 						{
@@ -645,7 +646,7 @@ class manager
 						}
 						else
 						{
-							$view = $this->phpbb_container->get('primetime.content.view.portal');
+							$view = $this->phpbb_container->get('blitze.content.view.portal');
 						}
 
 						$post_data['preview'] = true;
@@ -843,7 +844,7 @@ class manager
 					->set_sorting('t.topic_time')
 					->fetch_tracking_info()
 					->fetch_custom(array('WHERE' => $sql_where_array))
-					->build(false, false);
+					->build(false, false, false);
 
 				$topic_data = $this->forum->get_topic_data($this->config['topics_per_page'], $start);
 				$topic_tracking_info = $this->forum->get_topic_tracking_info();
@@ -926,7 +927,7 @@ class manager
 					}
 
 					$u_topic_review = $u_action . '&amp;action=view&amp;t=' . $topic_id;
-					$u_viewtopic = $this->helper->route('primetime_content_show', array(
+					$u_viewtopic = $this->helper->route('blitze_content_show', array(
 						'type'		=> $content_type,
 						'topic_id'	=> $topic_id,
 						'slug'		=> $row['topic_slug']
@@ -1023,7 +1024,6 @@ class manager
 				'U_VIEW'		=> $view_url . '&amp;type=' . $row['content_name']
 			));
 		}
-		$this->db->sql_freeresult();
 	}
 
 	public function generate_topic_status_filter($topic_status, $topic_status_ary, $view_url)

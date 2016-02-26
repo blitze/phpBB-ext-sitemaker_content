@@ -1,6 +1,6 @@
 parameters:
-    tables.primetime.content_types: %core.table_prefix%pt_content_types
-    tables.primetime.content_fields: %core.table_prefix%pt_content_fields
+    tables.blitze.content_types: %core.table_prefix%sm_content_types
+    tables.blitze.content_fields: %core.table_prefix%sm_content_fields
 
 imports:
     - { resource: views.yml }
@@ -9,8 +9,8 @@ imports:
 
 services:
 
-    primetime.content.comments:
-        class: primetime\content\services\comments
+    blitze.content.comments:
+        class: blitze\content\services\comments
         arguments:
             - @auth
             - @config
@@ -21,13 +21,13 @@ services:
             - @request
             - @template
             - @user
-            - @primetime.content.form
-            - @primetime.core.forum.data
+            - @blitze.content.form
+            - @blitze.sitemaker.forum.data
             - %core.root_path%
             - %core.php_ext%
 
-    primetime.content.display.controller:
-        class: primetime\content\controller\display
+    blitze.content.display.controller:
+        class: blitze\content\controller\display
         arguments:
             - @auth
             - @config
@@ -37,13 +37,13 @@ services:
             - @service_container
             - @template
             - @user
-            - @primetime.content.displayer
-            - @primetime.core.forum.data
+            - @blitze.content.displayer
+            - @blitze.sitemaker.forum.data
             - %core.root_path%
             - %core.php_ext%
 
-    primetime.content.displayer:
-        class: primetime\content\services\displayer
+    blitze.content.displayer:
+        class: blitze\content\services\displayer
         arguments:
             - @auth
             - @cache
@@ -54,53 +54,53 @@ services:
             - @service_container
             - @template
             - @user
-            - @primetime.content.comments
-            - @primetime.content.form
+            - @blitze.content.comments
+            - @blitze.content.form
             - %core.root_path%
-            - %tables.primetime.content_fields%
-            - %tables.primetime.content_types%
+            - %tables.blitze.content_fields%
+            - %tables.blitze.content_types%
 
-    primetime.content.form:
-        class: primetime\content\services\form
+    blitze.content.form:
+        class: blitze\content\services\form
         arguments:
             - @auth
             - @config
             - @request
-            - @primetime.content.form.fields_collection
+            - @blitze.content.form.fields_collection
             - @template_context
             - @user
-            - @primetime.core.template
+            - @blitze.sitemaker.template
             - %core.root_path%
             - %core.php_ext%
 
-    primetime.content.form.fields_collection:
+    blitze.content.form.fields_collection:
         class: phpbb\di\service_collection
         arguments:
             - @service_container
         tags:
             - { name: service_collection, tag: form.field }
 
-    primetime.content.listener:
-        class: primetime\content\event\listener
+    blitze.content.listener:
+        class: blitze\content\event\listener
         arguments:
             - @config
             - @dbal.conn
             - @controller.helper
             - @user
-            - @primetime.content.types
-            - @primetime.content.displayer
+            - @blitze.content.types
+            - @blitze.content.displayer
             - %core.root_path%
             - %core.php_ext%
         tags:
             - { name: event.listener }
 
-    primetime.content.loader:
-        class: primetime\content\services\template_loader
+    blitze.content.loader:
+        class: blitze\content\services\template_loader
         arguments:
-            - @primetime.content.types
+            - @blitze.content.types
 
-    primetime.content.manager:
-        class: primetime\content\services\manager
+    blitze.content.manager:
+        class: blitze\content\services\manager
         arguments:
             - @auth
             - @cache
@@ -113,23 +113,23 @@ services:
             - @request
             - @template
             - @user
-            - @primetime.content.comments
-            - @primetime.content.displayer
-            - @primetime.content.form
-            - @primetime.core.forum.data
+            - @blitze.content.comments
+            - @blitze.content.displayer
+            - @blitze.content.form
+            - @blitze.sitemaker.forum.data
             - %core.root_path%
             - %core.php_ext%
 
-    primetime.content.types:
-        class: primetime\content\services\types
+    blitze.content.types:
+        class: blitze\content\services\types
         arguments:
             - @cache
             - @config
             - @dbal.conn
-            - %tables.primetime.content_fields%
-            - %tables.primetime.content_types%
+            - %tables.blitze.content_fields%
+            - %tables.blitze.content_types%
 
-    primetime.content.views_collection:
+    blitze.content.views_collection:
         class: phpbb\di\service_collection
         arguments:
             - @service_container

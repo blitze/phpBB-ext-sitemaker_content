@@ -1,13 +1,13 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\migrations\converter;
+namespace blitze\content\migrations\converter;
 
 /**
  * Initial schema changes needed for Extension installation
@@ -31,7 +31,7 @@ class c3_update_tables extends \phpbb\db\migration\migration
 	static public function depends_on()
 	{
 		return array(
-			'\primetime\content\migrations\converter\c2_update_data',
+			'\blitze\content\migrations\converter\c2_update_data',
 		);
 	}
 

@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package phpBB Primetime [English]
+* @package phpBB Sitemaker [English]
 * @copyright (c) 2012 Daniel A. (blitze)
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
@@ -31,9 +31,9 @@ $lang = array_merge($lang, array(
 	'OFFSET_START'						=> 'Offset start',
 	'ORDER_BY'							=> 'Order By',
 
-	'PRIMETIME_CONTENT_BLOCK_ARCHIVE'	=> 'Content Archive',
-	'PRIMETIME_CONTENT_BLOCK_CALENDAR'	=> 'Content Calendar',
-	'PRIMETIME_CONTENT_BLOCK_RECENT'	=> 'Recent Content',
+	'BLITZE_CONTENT_BLOCK_ARCHIVE'	=> 'Content Archive',
+	'BLITZE_CONTENT_BLOCK_CALENDAR'	=> 'Content Calendar',
+	'BLITZE_CONTENT_BLOCK_RECENT'	=> 'Recent Content',
 
 	'SELECT_FIELDS'						=> 'Select Fields',
 

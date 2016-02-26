@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package phpBB Primetime [English]
+* @package phpBB Sitemaker [English]
 * @copyright (c) 2013 Pico88
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

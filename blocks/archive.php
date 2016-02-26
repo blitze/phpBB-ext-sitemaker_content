@@ -1,15 +1,15 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\blocks;
+namespace blitze\content\blocks;
 
-class archive extends \primetime\core\services\blocks\driver\block
+class archive extends \blitze\sitemaker\services\blocks\driver\block
 {
 	/** @var \phpbb\auth\auth */
 	protected $auth;
@@ -26,7 +26,7 @@ class archive extends \primetime\core\services\blocks\driver\block
 	/* @var \phpbb\user */
 	protected $user;
 
-	/* @var \primetime\content\services\types */
+	/* @var \blitze\content\services\types */
 	protected $content_types;
 
 	/** @var string */
@@ -43,9 +43,9 @@ class archive extends \primetime\core\services\blocks\driver\block
 	 * @param \phpbb\db\driver\driver_interface		$db						Database object
 	 * @param \phpbb\controller\helper				$helper					Helper object
 	 * @param \phpbb\user							$user					User object
-	 * @param \primetime\content\services\types		$content_types			Content types object
+	 * @param \blitze\content\services\types		$content_types			Content types object
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\user $user, \primetime\content\services\types $content_types, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\user $user, \blitze\content\services\types $content_types, $phpbb_root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->content_visibility = $content_visibility;
@@ -60,7 +60,7 @@ class archive extends \primetime\core\services\blocks\driver\block
 	/**
 	 * Block config
 	 */
-	public function get_config($settings)
+	public function get_config(array $settings)
 	{
 		$content_types = $this->content_types->get_all_types();
 
@@ -80,7 +80,7 @@ class archive extends \primetime\core\services\blocks\driver\block
 		);
 	}
 
-	public function display($bdata, $edit_mode = false)
+	public function display(array $bdata, $edit_mode = false)
 	{
 		$settings = $bdata['settings'];
 

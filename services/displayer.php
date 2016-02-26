@@ -1,13 +1,13 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\services;
+namespace blitze\content\services;
 
 use Symfony\Component\DependencyInjection\Container;
 
@@ -37,10 +37,10 @@ class displayer extends types
 	/** @var \phpbb\user */
 	protected $user;
 
-	/** @var \primetime\content\services\comments */
+	/** @var \blitze\content\services\comments */
 	protected $comments;
 
-	/** @var \primetime\content\services\form */
+	/** @var \blitze\content\services\form */
 	protected $form;
 
 	/** @var array */
@@ -79,13 +79,13 @@ class displayer extends types
 	 * @param Container										$phpbb_container		Service container
 	 * @param \phpbb\template\template						$template				Template object
 	 * @param \phpbb\user									$user					User object
-	 * @param \primetime\content\services\comments			$comments				Comments object
-	 * @param \primetime\content\services\form				$form					Form object
+	 * @param \blitze\content\services\comments			$comments				Comments object
+	 * @param \blitze\content\services\form				$form					Form object
 	 * @param string										$root_path				phpBB root path
 	 * @param string										$fields_table			Name of content fields database table
 	 * @param string										$types_table			Name of content types database table
 	 */
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, Container $phpbb_container, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\comments $comments, \primetime\content\services\form $form, $root_path, $fields_table, $types_table)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, Container $phpbb_container, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\comments $comments, \blitze\content\services\form $form, $root_path, $fields_table, $types_table)
 	{
 		parent::__construct($cache, $config, $db, $fields_table, $types_table);
 
@@ -164,7 +164,7 @@ class displayer extends types
 		$post_field_data = $this->get_fields_data_from_post($post_data['post_text'], $this->tags);
 		$post_unread = (isset($topic_tracking_info[$topic_id]) && $row['topic_last_post_time'] > $topic_tracking_info[$topic_id]) ? true : false;
 
-		$topic_url = $this->helper->route('primetime_content_show', array(
+		$topic_url = $this->helper->route('blitze_content_show', array(
 			'type'		=> $type,
 			'topic_id'	=> $topic_id,
 			'slug'		=> $topic_data['topic_slug']
@@ -193,7 +193,6 @@ class displayer extends types
 		{
 			$field_type		= $row['field_type'];
 			$field_value	= &$post_field_data[$field_name];
-
 			$field_contents	= $this->form_fields[$field_type]->display_field($field_value, $row, $this->view, $topic_id);
 
 			if (!$field_contents)
@@ -216,8 +215,8 @@ class displayer extends types
 							$this->phpbb_container->get('pagination')->generate_template_pagination(
 								array(
 									'routes' => array(
-										'primetime_content_show',
-										'primetime_content_show_page',
+										'blitze_content_show',
+										'blitze_content_show_page',
 									),
 									'params' => array(
 										'type'		=> $type,
@@ -331,7 +330,7 @@ class displayer extends types
 	public function get_twig()
 	{
 		$twig = new \Twig_Environment(
-			$this->phpbb_container->get('primetime.content.loader'),
+			$this->phpbb_container->get('blitze.content.loader'),
 			array(
 				'cache'			=> $this->root_path . 'cache/twig/',
 				'debug'			=> defined('DEBUG'),

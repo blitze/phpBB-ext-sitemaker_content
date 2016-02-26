@@ -1,26 +1,26 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\services\form\field;
+namespace blitze\content\services\form\field;
 
 abstract class choice extends base
 {
-	/** @var \primetime\core\services\template */
+	/** @var \blitze\sitemaker\services\template */
 	protected $ptemplate;
 
 	/**
 	 * Constructor
 	 *
 	 * @param \phpbb\user							$user			User object
-	 * @param \primetime\core\services\template		$ptemplate		Primetime template object
+	 * @param \blitze\sitemaker\services\template		$ptemplate		Sitemaker template object
 	 */
-	public function __construct(\phpbb\user $user, \primetime\core\services\template $ptemplate)
+	public function __construct(\phpbb\user $user, \blitze\sitemaker\services\template $ptemplate)
 	{
 		parent::__construct($user, $ptemplate);
 
@@ -54,7 +54,7 @@ abstract class choice extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function render_view($name, &$data, $item_id = 0)
+	public function show_form_field($name, &$data, $item_id = 0)
 	{
 		$field = $this->get_name();
 		$selected = $this->get_field_value($name, $data['field_value']);
@@ -84,6 +84,6 @@ abstract class choice extends base
 
 		$this->ptemplate->assign_vars(array_change_key_case($data, CASE_UPPER));
 
-		return $this->ptemplate->render_view('primetime/content', "fields/$field.html", $field . '_field');
+		return $this->ptemplate->render_view('blitze/content', "fields/$field.html", $field . '_field');
 	}
 }

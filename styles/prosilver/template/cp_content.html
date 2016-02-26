@@ -21,22 +21,37 @@
 			<ul class="post-buttons">
 				<!-- IF U_EDIT -->
 				<li>
-					<a href="{U_EDIT}" title="{L_EDIT_POST}" class="button icon-button edit-icon"><span>{L_BUTTON_EDIT}</span></a>
+					<a href="{U_EDIT}" title="{L_EDIT_POST}" class="button button-icon-only">
+						<i class="icon fa-pencil fa-fw" aria-hidden="true"></i><span class="sr-only">{L_BUTTON_EDIT}</span>
+					</a>
 				</li>
 				<!-- ENDIF -->
 				<!-- IF U_DELETE -->
 				<li>
-					<a href="{U_DELETE}" title="{L_DELETE_POST}" class="button icon-button delete-icon"><span>{L_DELETE_POST}</span></a>
+					<a href="{U_DELETE}" title="{L_DELETE_POST}" class="button button-icon-only">
+						<i class="icon fa-times fa-fw" aria-hidden="true"></i><span class="sr-only">{L_DELETE_POST}</span>
+					</a>
+				</li>
+				<!-- ENDIF -->
+				<!-- IF U_REPORT -->
+				<li>
+					<a href="{U_REPORT}" title="{L_REPORT_POST}" class="button button-icon-only">
+						<i class="icon fa-exclamation fa-fw" aria-hidden="true"></i><span class="sr-only">{L_REPORT_POST}</span>
+					</a>
 				</li>
 				<!-- ENDIF -->
 				<!-- IF U_WARN -->
 				<li>
-					<a href="{U_WARN}" title="{L_WARN_USER}" class="button icon-button warn-icon"><span>{L_WARN_USER}</span></a>
+					<a href="{U_WARN}" title="{L_WARN_USER}" class="button button-icon-only">
+						<i class="icon fa-exclamation-triangle fa-fw" aria-hidden="true"></i><span class="sr-only">{L_WARN_USER}</span>
+					</a>
 				</li>
 				<!-- ENDIF -->
 				<!-- IF U_INFO -->
 				<li>
-					<a href="{U_INFO}" title="{L_INFORMATION}" class="button icon-button info-icon"><span>{L_INFORMATION}</span></a>
+					<a href="{U_INFO}" title="{L_INFORMATION}" class="button button-icon-only">
+						<i class="icon fa-info fa-fw" aria-hidden="true"></i><span class="sr-only">{L_INFORMATION}</span>
+					</a>
 				</li>
 				<!-- ENDIF -->
 			</ul><br />
@@ -105,7 +120,7 @@
 	<!-- IF S_PREVIEW -->
 		<div class="tabs-container">
 			<h2>{L_PREVIEW}</h2>
-			<div id="minitabs" class="sub-panels" data-show-panel="preview-summary-panel" role="tablist">
+			<div id="minitabs" class="minitabs sub-panels" data-show-panel="preview-summary-panel" role="tablist">
 				<ul>
 					<li id="preview-detail-panel-tab" class="tab">
 						<a href="#minitabs" data-subpanel="preview-detail-panel" role="tab" aria-controls="preview-detail-panel">{L_DETAILS}</a>
@@ -195,9 +210,9 @@
 						<span title="{L_CONTENT_NEW}" class="button dropdown-trigger dropdown-select"><i class="fa fa-plus fa-green"></i> {L_CONTENT_NEW}</span>
 						<div class="dropdown hidden">
 							<div class="pointer"><div class="pointer-inner"></div></div>
-							<ul class="dropdown-contents" style="min-width: 150px">
+							<ul class="dropdown-contents dropdown-nonscroll">
 								<!-- BEGIN postable -->
-								<li><i class="fa fa-square" style="color: #{postable.COLOUR}"></i> <a href="{postable.U_POST}">{postable.TYPE}</a></li>
+								<li><a href="{postable.U_POST}"><i class="fa fa-square" style="color: #{postable.COLOUR}"></i>{postable.TYPE}</a></li>
 								<!-- END postable -->
 							</ul>
 						</div>
@@ -213,12 +228,12 @@
 						<span title="{L_TOPIC_STATUS}" class="button dropdown-trigger dropdown-select"><i class="fa <!-- IF S_STATUS_FILTER -->fa-filter fa-green<!-- ELSE -->fa-square-o<!-- ENDIF -->"></i> {L_TOPIC_STATUS}</span>
 						<div class="dropdown hidden">
 							<div class="pointer"><div class="pointer-inner"></div></div>
-							<ul class="dropdown-contents" style="min-width: 150px">
+							<ul class="dropdown-contents dropdown-nonscroll">
 							<!-- BEGIN status -->
 								<!-- IF status.S_SELECTED -->
-								<li><i class="fa fa-caret-right"></i> <strong>{status.TITLE}</strong></li>
+								<li><i class="fa fa-caret-right"></i><strong>{status.TITLE}</strong></li>
 								<!-- ELSE -->
-								<li><i class="fa fa-angle-right"></i> <a href="{status.U_VIEW}">{status.TITLE}</a></li>
+								<li><a href="{status.U_VIEW}"><i class="fa fa-angle-right"></i>{status.TITLE}</a></li>
 								<!-- ENDIF -->
 							<!-- END status -->
 							</ul>
@@ -233,12 +248,12 @@
 						<span title="{L_CONTENT_TYPE}" class="button dropdown-trigger dropdown-select"><i class="fa <!-- IF S_CONTENT_FILTER -->fa-filter fa-green<!-- ELSE -->fa-square-o<!-- ENDIF -->"></i> {L_CONTENT_TYPE}</span>
 						<div class="dropdown hidden">
 							<div class="pointer"><div class="pointer-inner"></div></div>
-							<ul class="dropdown-contents" style="min-width: 150px">
+							<ul class="dropdown-contents dropdown-nonscroll">
 							<!-- BEGIN content -->
 								<!-- IF content.S_SELECTED -->
-								<li><i class="fa fa-square" style="color: #{content.COLOUR}"></i> <strong>{content.TITLE}</strong></li>
+								<li><i class="fa fa-square" style="color: #{content.COLOUR}"></i><strong>{content.TITLE}</strong></li>
 								<!-- ELSE -->
-								<li><i class="fa fa-square" style="color: #{content.COLOUR}"></i> <a href="{content.U_VIEW}">{content.TITLE}</a></li>
+								<li><a href="{content.U_VIEW}"><i class="fa fa-square" style="color: #{content.COLOUR}"></i>{content.TITLE}</a></li>
 								<!-- ENDIF -->
 							<!-- END content -->
 							</ul>
@@ -266,7 +281,7 @@
 
 				<ul class="topiclist">
 					<li class="header">
-						<dl class="icon">
+						<dl class="row-item">
 							<dt><div class="list-inner align-center">{L_TITLE}</div></dt>
 							<dd class="posts">{L_STATUS}</dd>
 							<dd class="lastpost align-center"><span>{L_TYPE}</span></dd>
@@ -277,9 +292,9 @@
 				<ul class="topiclist cplist">
 					<!-- BEGIN topicrow -->
 					<li class="row<!-- IF topicrow.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF --><!-- IF topicrow.S_TOPIC_REPORTED --> reported<!-- ENDIF -->">
-						<dl class="icon {topicrow.TOPIC_IMG_STYLE}">
+						<dl class="row-item {topicrow.TOPIC_IMG_STYLE}">
 							<dt <!-- IF topicrow.TOPIC_ICON_IMG -->style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;"<!-- ENDIF -->>
-								<!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}" class="icon-link"></a><!-- ENDIF -->
+								<!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}" class="row-item-link"></a><!-- ENDIF -->
 								<div class="list-inner">
 									<a class="fa-orange" href="{topicrow.U_VIEW_TOPIC}" title="{L_GOTO_TOPIC}"><i class="fa fa-chevron-circle-right fa-lg"></i></a>
 									<a href="{topicrow.U_REVIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a>
@@ -303,7 +318,7 @@
 									<div class="responsive-hide">
 										<!-- IF topicrow.ATTACH_ICON_IMG -->{topicrow.ATTACH_ICON_IMG} <!-- ENDIF -->
 										<!-- IF MODE == 'mcp' -->{L_POST_BY_AUTHOR} <strong>{topicrow.TOPIC_AUTHOR_FULL}</strong>&nbsp;<!-- ENDIF -->
-										<i class="fa fa-calendar"></i> {L_POSTED}{L_COLON} <strong>{topicrow.FIRST_POST_TIME|date("m/d/Y")}</strong>&nbsp;
+										<i class="fa fa-calendar"></i> {L_POSTED}{L_COLON} <strong>{topicrow.FIRST_POST_TIME|date("m/d/Y")}</strong><br />
 										<i class="fa fa-eye"></i> {L_VIEWS}{L_COLON} <strong>{topicrow.TOPIC_VIEWS}</strong>&nbsp;
 										<!-- IF topicrow.S_COMMENTS --><i class="fa fa-comments"></i> {L_COMMENTS}{L_COLON} <a href="{topicrow.U_VIEW_TOPIC}#comments"><strong>{topicrow.TOPIC_COMMENTS}</strong></a><!-- ENDIF -->
 									</div>

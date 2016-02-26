@@ -1,13 +1,13 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\services\form\field;
+namespace blitze\content\services\form\field;
 
 class image extends base
 {
@@ -17,7 +17,7 @@ class image extends base
 	/* @var \phpbb\user */
 	protected $user;
 
-	/** @var \primetime\core\services\template */
+	/** @var \blitze\sitemaker\services\template */
 	protected $ptemplate;
 
 	/**
@@ -25,9 +25,9 @@ class image extends base
 	 *
 	 * @param \phpbb\request\request_interface		$request		Request object
 	 * @param \phpbb\user							$user			User object
-	 * @param \primetime\core\services\template		$ptemplate		Primetime template object
+	 * @param \blitze\sitemaker\services\template		$ptemplate		Sitemaker template object
 	 */
-	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \primetime\core\services\template $ptemplate)
+	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \blitze\sitemaker\services\template $ptemplate)
 	{
 		$this->request = $request;
 		$this->user = $user;
@@ -37,9 +37,31 @@ class image extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function get_field_value($name, $value)
+	public function get_field_value($name, $value, $mode = 'form')
 	{
-		return $this->request->variable($name, (string) $value, true);
+		$value = $this->request->variable($name, $this->get_image_src($value));
+
+		return ($value) ? '[img]' . $value . '[/img]' : '';
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function show_form_field($name, &$data, $item_id = 0)
+	{
+		$bbcode_value = $this->get_field_value($name, $data['field_value']);
+
+		$field = $this->get_name();
+		$data['field_name'] = $name;
+		$data['field_value'] = ($bbcode_value) ? $this->get_image_src($bbcode_value) : '';
+		$data['field_required']	= ($data['field_required']) ? ' required' : '';
+
+		$this->ptemplate->assign_vars(array_change_key_case($data, CASE_UPPER));
+		$field = $this->ptemplate->render_view('blitze/content', "fields/$field.html", $field . '_field');
+
+		$data['field_value'] = $bbcode_value;
+
+		return $field;
 	}
 
 	/**
@@ -47,7 +69,7 @@ class image extends base
 	 */
 	public function display_field($value, $data = array(), $view = 'detail', $item_id = 0)
 	{
-		return ($value) ? '<img class="img-ui" alt="' . $value . '" src="' . $value . '" />' : '';
+		return ($value) ? '<div class="img-ui">' . $value . '</div>' : '';
 	}
 
 	/**
@@ -70,5 +92,13 @@ class image extends base
 	public function get_name()
 	{
 		return 'image';
+	}
+
+	private function get_image_src($bbcode_string)
+	{
+		$match = array();
+		preg_match('#\[img](.*?)\[\/img]#', $bbcode_string, $match);
+
+		return isset($match[1]) ? $match[1] : '';
 	}
 }

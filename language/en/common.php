@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* @package phpBB Primetime [English]
+* @package phpBB Sitemaker [English]
 * @copyright (c) 2013 Pico88
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -50,8 +50,10 @@ $lang = array_merge($lang, array(
 
 	'LOAD_MORE'						=> 'Load more content',
 
-	'PRIMETIME_BROWSING_CONTENT'	=> 'Browsing %s',
-	'PRIMETIME_READING_TOPIC'		=> 'Reading topic in %s',
+	'POST_NEW'						=> 'Post New',
+
+	'SITEMAKER_BROWSING_CONTENT'	=> 'Browsing %s',
+	'SITEMAKER_READING_TOPIC'		=> 'Reading topic in %s',
 
 	'READ_MORE'						=> 'Read More',
 ));

@@ -1,13 +1,13 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\services\views;
+namespace blitze\content\services\views;
 
 abstract class view implements views_interface
 {
@@ -29,7 +29,7 @@ abstract class view implements views_interface
 	/** @var \phpbb\user */
 	protected $user;
 
-	/* @var \primetime\content\services\displayer */
+	/* @var \blitze\content\services\displayer */
 	protected $displayer;
 
 	/** @var string */
@@ -50,11 +50,11 @@ abstract class view implements views_interface
 	 * @param \phpbb\db\driver\driver_interface			$db					Database object
 	 * @param \phpbb\template\template					$template			Template object
 	 * @param \phpbb\user								$user				User object
-	 * @param \primetime\content\services\displayer		$displayer			Content displayer object
+	 * @param \blitze\content\services\displayer		$displayer			Content displayer object
 	 * @param string									$root_path			Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user, \primetime\content\services\displayer $displayer, $root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\db\driver\driver_interface $db, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\displayer $displayer, $root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->cache = $cache;
@@ -181,7 +181,7 @@ abstract class view implements views_interface
 			!$s_cannot_edit_locked)))
 		{
 			$class = ($this->user->data['user_id'] == $poster_id) ? 'ucp' : 'mcp';
-			$edit_url = append_sid("{$this->root_path}{$class}.$this->php_ext", "i=-primetime-content-{$class}-content_module&mode=content&action=edit&type={$type}&amp;t={$topic_id}");
+			$edit_url = append_sid("{$this->root_path}{$class}.$this->php_ext", "i=-blitze-content-{$class}-content_module&mode=content&action=edit&type={$type}&amp;t={$topic_id}");
 		}
 
 		$delete_allowed = $this->user->data['is_registered'] && (

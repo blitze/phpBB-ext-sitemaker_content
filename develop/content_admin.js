@@ -5,9 +5,13 @@
 	var fLabelObj = {};
 	var typeObj = {};
 	var nTypeObj = {};
-	var tplData = {};
 	var containerObj = {};
 	var editor = {};
+
+	var ace = window.ace || {};
+	var postData = window.postData || {};
+	var trans = window.trans || {};
+	var twig = window.twig || {};
 
 	var addFieldOption = function(fieldName) {
 		var ocontainer = $('#' + fieldName + '-options-container');
@@ -142,9 +146,6 @@
 		var cButtons = {};
 		var eButtons = {};
 		var fid = '';
-		var fieldType = '';
-		var editorLang = '';
-		var editorId = '';
 
 		// collect all templates
 		$('.tpl').each(function() {
@@ -174,7 +175,7 @@
 			}
 		};
 
-		cButtons[trans.delete] = function() {
+		cButtons[trans.remove] = function() {
 			removeElement(removeObj);
 			containerObj.sortable('refresh');
 			$(this).dialog('close');
@@ -218,7 +219,7 @@
 		});
 
 		var dialogEdit = $('#dialog-edit-field');
-		containerObj.on('click', 'a.edit-field', function(e) {
+		containerObj.on('click', 'a.edit-field', function() {
 			fid = $('#' + $(this).parent().prev().attr('id') + ' input[type="hidden"]').val();
 			$('#dialog-newtype').val($(this).parent().next().val());
 			dialogEdit.dialog('option', 'buttons', eButtons);

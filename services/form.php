@@ -1,13 +1,13 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\services;
+namespace blitze\content\services;
 
 class form
 {
@@ -26,7 +26,7 @@ class form
 	/** @var \phpbb\user */
 	protected $user;
 
-	/** @var \primetime\core\services\template */
+	/** @var \blitze\sitemaker\services\template */
 	protected $ptemplate;
 
 	/** @var string */
@@ -64,11 +64,11 @@ class form
 	 * @param \phpbb\template\context					$template_context		Template context object
 	 * @param \phpbb\request\request_interface			$request				Request object
 	 * @param \phpbb\user								$user					User object
-	 * @param \primetime\core\services\template			$ptemplate				Primetime template object
+	 * @param \blitze\sitemaker\services\template			$ptemplate				Sitemaker template object
 	 * @param string									$phpbb_root_path		Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	 */
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\db $config, \phpbb\request\request_interface $request, \phpbb\di\service_collection $field_drivers, \phpbb\template\context $template_context, \phpbb\user $user, \primetime\core\services\template $ptemplate, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\db $config, \phpbb\request\request_interface $request, \phpbb\di\service_collection $field_drivers, \phpbb\template\context $template_context, \phpbb\user $user, \blitze\sitemaker\services\template $ptemplate, $phpbb_root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -81,7 +81,7 @@ class form
 
 		$this->register_fields($field_drivers);
 
-		$this->user->add_lang_ext('primetime/content', 'form');
+		$this->user->add_lang_ext('blitze/content', 'form');
 	}
 
 	protected function register_fields($field_drivers)
@@ -117,7 +117,7 @@ class form
 			}
 
 			$field_data['field_type'] = $type;
-			$field_data['field_view'] = $obj->render_view($name, $field_data, $item_id);
+			$field_data['field_view'] = $obj->show_form_field($name, $field_data, $item_id);
 
 			$this->data[$name] = $field_data;
 		}
@@ -199,7 +199,7 @@ class form
 		$this->ptemplate->assign_block_vars_array('custom_tags', $this->custom_tags);
 		$this->ptemplate->assign_vars(array_change_key_case($this->form, CASE_UPPER));
 
-		return $this->ptemplate->render_view('primetime/content', 'form.html', 'form');
+		return $this->ptemplate->render_view('blitze/content', 'form.html', 'form');
 	}
 
 	public function handle_request($request)

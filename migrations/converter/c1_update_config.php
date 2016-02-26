@@ -1,13 +1,13 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\migrations\converter;
+namespace blitze\content\migrations\converter;
 
 class c1_update_config extends \phpbb\db\migration\migration
 {
@@ -25,7 +25,7 @@ class c1_update_config extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return array(
-			array('config.add', array('primetime_content_forum_id', (int) $this->config['content_forum_id']))
+			array('config.add', array('blitze_content_forum_id', (int) $this->config['content_forum_id']))
 		);
 	}
 }

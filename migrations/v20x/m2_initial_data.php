@@ -1,18 +1,18 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\migrations\v20x;
+namespace blitze\content\migrations\v20x;
 
 /**
  * Initial schema changes needed for Extension installation
  */
-class m2_initial_data extends \phpbb\db\migration\migration
+class m2_initial_data extends \phpbb\db\migration\container_aware_migration
 {
 	/**
 	 * @inheritdoc
@@ -20,8 +20,8 @@ class m2_initial_data extends \phpbb\db\migration\migration
 	static public function depends_on()
 	{
 		return array(
-			'\primetime\content\migrations\v20x\m1_initial_schema',
-			'\primetime\content\migrations\converter\c1_update_config',
+			'\blitze\content\migrations\v20x\m1_initial_schema',
+			'\blitze\content\migrations\converter\c1_update_config',
 		);
 	}
 
@@ -33,25 +33,23 @@ class m2_initial_data extends \phpbb\db\migration\migration
 		return array(
 			array('custom', array(array($this, 'create_forum'))),
 			array('custom', array(array($this, 'create_bbcodes'))),
-			array('config.add', array('primetime_content_forums', '')),
-			array('config.add', array('primetime_content_forum_id', 0)),
+			array('config.add', array('blitze_content_forums', '')),
+			array('config.add', array('blitze_content_forum_id', 0)),
 		);
 	}
 
 	public function create_forum()
 	{
-		global $phpbb_container, $config;
-
-		$forum = $phpbb_container->get('primetime.core.forum.manager');
+		$forum = $this->container->get('blitze.sitemaker.forum.manager');
 
 		$forum_data = array(
 			'forum_type'	=> FORUM_CAT,
-			'forum_name'	=> 'Primetime Content',
+			'forum_name'	=> 'Sitemaker Content',
 		);
 
-		if (!empty($this->config['primetime_content_forum_id']))
+		if (!empty($this->config['blitze_content_forum_id']))
 		{
-			$forum_data['forum_id'] = (int) $this->config['primetime_content_forum_id'];
+			$forum_data['forum_id'] = (int) $this->config['blitze_content_forum_id'];
 		}
 
 		$errors = $forum->add($forum_data);
@@ -59,14 +57,12 @@ class m2_initial_data extends \phpbb\db\migration\migration
 		if (!sizeof($errors))
 		{
 			$forum_id = (int) $forum_data['forum_id'];
-			$this->config->set('primetime_content_forum_id', $forum_id);
+			$this->config->set('blitze_content_forum_id', $forum_id);
 		}
 	}
 
 	public function create_bbcodes()
 	{
-		global $cache;
-
 		if (!class_exists('acp_bbcodes'))
 		{
 			include($this->phpbb_root_path . 'includes/acp/acp_bbcodes.' . $this->php_ext);
@@ -139,6 +135,6 @@ class m2_initial_data extends \phpbb\db\migration\migration
 			}
 		}
 
-		$cache->destroy('sql', BBCODES_TABLE);
+		$this->container->get('cache.driver')->destroy('sql', BBCODES_TABLE);
 	}
 }

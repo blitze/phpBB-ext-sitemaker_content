@@ -1,13 +1,13 @@
 <?php
 /**
  *
- * @package primetime
+ * @package sitemaker
  * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace primetime\content\mcp;
+namespace blitze\content\mcp;
 
 class content_module
 {
@@ -28,6 +28,6 @@ class content_module
 		$this->page_title = 'MCP_CONTENT';
 
 		$template->assign_var('MODE', 'mcp');
-		$phpbb_container->get('primetime.content.manager')->handle_crud('mcp', $this->u_action);
+		$phpbb_container->get('blitze.content.manager')->handle_crud('mcp', $this->u_action);
 	}
 }
