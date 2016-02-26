@@ -54,7 +54,7 @@ abstract class duration extends base
 	{
 		$this->sitemaker->add_assets(array(
 			'js'   => array(
-				'@blitze_content/vendor/datetimepicker/jquery.datetimepicker.min.js',
+				'@blitze_content/vendor/datetimepicker/build/jquery.datetimepicker.full.min.js',
 				'@blitze_content/assets/datetimepicker.min.js',
 			),
 			'css'   => array(

@@ -5,7 +5,7 @@ var gulp = require('gulp'),
 		camelize: true
 	}),
 	argv = require('yargs').argv,
-	production = !!(argv.production), // true if --production flag is used
+	development = !!(argv.development), // true if --development flag is used
 	paths = {
 		'dev': {
 			'scripts': 'develop/',
@@ -13,7 +13,7 @@ var gulp = require('gulp'),
 		},
 		'prod': {
 			'scripts': 'styles/all/theme/assets/',
-			'vendor': 'components/'
+			'vendor': 'styles/all/theme/vendor/'
 		}
 	};
 
@@ -34,7 +34,7 @@ gulp.task('scripts', function() {
 		.pipe(plugins.jshint())
 		.pipe(plugins.jshint.reporter(plugins.jshintStylish))
 		.pipe(plugins.rename({ suffix: '.min' }))
-		.pipe(plugins.if(production, plugins.uglify()))
+		.pipe(plugins.if(!development, plugins.uglify()))
 		.pipe(gulp.dest(paths.prod.scripts))
 		.pipe(jsFilter.restore())
 		.pipe(cssFilter)
@@ -44,7 +44,7 @@ gulp.task('scripts', function() {
 		.pipe(plugins.csslint.reporter())
 		.pipe(plugins.autoprefixer())
 		.pipe(plugins.rename({ suffix: '.min' }))
-		.pipe(plugins.minifyCss())
+		.pipe(plugins.if(!development, plugins.minifyCss()))
 		.pipe(gulp.dest(paths.prod.scripts))
 		.pipe(plugins.notify({ message: 'Scripts task complete' }));
 });
@@ -63,12 +63,12 @@ gulp.task('vendor', function() {
 	return gulp.src(mainFiles, {base: paths.dev.vendor })
 		.pipe(jsFilter)
 		.pipe(plugins.rename({ suffix: '.min' }))
-		.pipe(plugins.if(production, plugins.uglify()))
+		.pipe(plugins.if(!development, plugins.uglify()))
 		.pipe(gulp.dest(paths.prod.vendor))
 		.pipe(jsFilter.restore())
 		.pipe(cssFilter)
 		.pipe(plugins.rename({ suffix: '.min' }))
-		.pipe(plugins.minifyCss())
+		.pipe(plugins.if(!development, plugins.minifyCss()))
 		.pipe(gulp.dest(paths.prod.vendor))
 		.pipe(cssFilter.restore())
 		.pipe(gulp.dest(paths.prod.vendor))

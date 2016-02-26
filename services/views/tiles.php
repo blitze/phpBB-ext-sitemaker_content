@@ -62,11 +62,10 @@ class tiles extends view
 			$this->template->assign_var('S_HIDE_HEADERS', true);
 		}
 
-		$asset_path = $this->sitemaker->asset_path;
 		$this->sitemaker->add_assets(array(
 			'js'   => array(
-				$asset_path . 'ext/blitze/content/components/imagesloaded/imagesloaded.pkgd.min.js',
-				$asset_path . 'ext/blitze/content/components/masonry/dist/masonry.pkgd.min.js',
+				'@blitze_content/vendor/imagesloaded/imagesloaded.pkgd.min.js',
+				'@blitze_content/vendor/masonry/dist/masonry.pkgd.min.js',
 				'@blitze_content/assets/content_tiles.min.js',
 			),
 			'css'	=> array(
