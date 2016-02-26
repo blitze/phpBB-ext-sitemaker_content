@@ -98,6 +98,7 @@ services:
         class: blitze\content\services\template_loader
         arguments:
             - @blitze.content.types
+            - @blitze.sitemaker.mapper.factory
 
     blitze.content.manager:
         class: blitze\content\services\manager
@@ -119,6 +120,15 @@ services:
             - @blitze.sitemaker.forum.data
             - %core.root_path%
             - %core.php_ext%
+
+    blitze.content.types:
+        class: blitze\content\services\types
+        arguments:
+            - @cache
+            - @config
+            - @dbal.conn
+            - %tables.blitze.content_fields%
+            - %tables.blitze.content_types%
 
     blitze.content.types:
         class: blitze\content\services\types

@@ -12,7 +12,7 @@ namespace blitze\content\services;
 class template_loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface
 {
 	/* @var array */
-	protected $blocks_config = array();
+	protected $blocks_data = array();
 
 	/* @var array */
 	protected $content_types = array();
@@ -20,18 +20,12 @@ class template_loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterf
 	/**
 	 * Constructor
 	 *
-	 * @param \blitze\content\services\types		$content		Content types object
+	 * @param \blitze\content\services\types				$content			Content types object
+	 * @param \blitze\sitemaker\model\mapper_factory		$mapper_factory		Mapper factory object
 	 */
-	public function __construct(\blitze\content\services\types $content)
+	public function __construct(\blitze\content\services\types $content, \blitze\sitemaker\model\mapper_factory $mapper_factory)
 	{
-		global $phpbb_container;
-		$blocks = $phpbb_container->get('blitze.sitemaker.blocks.display');
-
-		$sql_where = "bvar = 'block_tpl' OR bvar = 'last_modified'";
-
 		$types = $content->get_all_types();
-		$config_ary = array(); // $blocks->get_blocks_config($sql_where);
-
 		foreach ($types as $type => $row)
 		{
 			$this->content_types[$type] = array(
@@ -41,19 +35,23 @@ class template_loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterf
 			);
 		}
 
-		foreach ($config_ary as $bid => $row)
+		$block_mapper = $mapper_factory->create('blocks', 'blocks');
+		$collection = $block_mapper->find(array("name = 'blitze.content.block.recent'"));
+
+		foreach ($collection as $entity)
 		{
-			$this->blocks_config[$bid] = array(
-				'block_tpl'		=> htmlspecialchars_decode($row['block_tpl']),
-				'last_modified'	=> $row['last_modified'],
+			$settings = $entity->get_settings();
+			$this->blocks_data[$entity->get_bid()] = array(
+				'block_tpl'		=> htmlspecialchars_decode($settings['block_tpl']),
+				'last_modified'	=> $settings['last_modified'],
 			);
 		}
-		unset($types, $config_ary);
 	}
 
 	public function getSource($name)
 	{
-		if (false === $source = $this->getValue('source', $name)) {
+		if (false === $source = $this->getValue('source', $name))
+		{
 			throw new Twig_Error_Loader(sprintf('Template "%s" does not exist.', $name));
 		}
 
@@ -88,7 +86,7 @@ class template_loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterf
 
 		if ($view == 'block')
 		{
-			$data = $this->blocks_config[$id];
+			$data = $this->blocks_data[$id];
 			$column_name = 'block_tpl';
 		}
 		else
