@@ -97,7 +97,7 @@ abstract class base_view implements views_interface
 		}
 
 		$this->fields->prepare_to_show($content_type, 'summary', $entity->get_summary_tags(), $entity->get_content_fields(), $entity->get_summary_tpl());
-		$this->display_topics($content_type, $forum_id, $items_per_page, $start, $entity->get_allow_comments());
+		$this->display_topics($content_type, $forum_id, $items_per_page, $start);
 	}
 
 	/**
@@ -105,11 +105,10 @@ abstract class base_view implements views_interface
 	 * @param int $forum_id
 	 * @param int $items_per_page
 	 * @param int $start
-	 * @param bool $allow_comments
 	 * @param array $topic_data_overwrite
 	 * @return void
 	 */
-	protected function display_topics($content_type, $forum_id, $items_per_page = 1, $start = 0, $allow_comments, $topic_data_overwrite = array())
+	protected function display_topics($content_type, $forum_id, $items_per_page = 1, $start = 0, $topic_data_overwrite = array())
 	{
 		$topics_data = $this->forum->get_topic_data($items_per_page, $start);
 		$posts_data = $this->forum->get_post_data('first');
@@ -153,7 +152,7 @@ abstract class base_view implements views_interface
 			->build(true, true, false);
 
 		$this->fields->prepare_to_show($content_type, 'detail', $entity->get_detail_tags(), $entity->get_content_fields(), $entity->get_detail_tpl());
-		return $this->display_topic($mode, $content_type, $entity->get_content_langname(), $forum_id, $topic_id, $entity->get_allow_comments(), $entity->get_show_poster_info(), $entity->get_show_poster_contents(), $update_count, $topic_data_overwrite);
+		return $this->display_topic($mode, $content_type, $entity->get_content_langname(), $forum_id, $topic_id, $entity->get_show_poster_info(), $entity->get_show_poster_contents(), $update_count, $topic_data_overwrite);
 	}
 
 	/**
@@ -162,7 +161,6 @@ abstract class base_view implements views_interface
 	 * @param string $content_langname
 	 * @param int $forum_id
 	 * @param int $topic_id
-	 * @param bool $allow_comments
 	 * @param bool $show_author_info
 	 * @param bool $show_author_contents
 	 * @param array $update_count
@@ -170,7 +168,7 @@ abstract class base_view implements views_interface
 	 * @return array
 	 * @throws \Exception
 	 */
-	protected function display_topic($mode, $content_type, $content_langname, $forum_id, $topic_id, $allow_comments, $show_author_info, $show_author_contents, array &$update_count, array $topic_data_overwrite)
+	protected function display_topic($mode, $content_type, $content_langname, $forum_id, $topic_id, $show_author_info, $show_author_contents, array &$update_count, array $topic_data_overwrite)
 	{
 		$topic_data = $this->forum->get_topic_data();
 		$post_data = $this->forum->get_post_data('first');
