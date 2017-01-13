@@ -1,8 +1,8 @@
 # phpBB Sitemaker Content Extension
 
-phpBB Sitemaker Content is an Extension for [phpBB 3.1](https://www.phpbb.com/)
+phpBB Sitemaker Content is an Extension for [phpBB 3.2](https://www.phpbb.com/)
 
-[![Build Status](https://travis-ci.org/blitze/blitze_content.svg?branch=develop)](https://travis-ci.org/blitze/blitze_content)
+[![Travis branch](https://img.shields.io/travis/blitze/phpBB-ext-sitemaker_content/develop.svg?style=flat)](https://travis-ci.org/blitze/phpBB-ext-sitemaker_content) [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/blitze/phpBB-ext-sitemaker_content/develop.svg?style=flat)](https://scrutinizer-ci.com/g/blitze/phpBB-ext-sitemaker_content/?branch=develop) [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/blitze/phpBB-ext-sitemaker_content/develop.svg?style=flat)](https://scrutinizer-ci.com/g/blitze/phpBB-ext-sitemaker_content/?branch=develop)
 
 ## Description
 
@@ -19,15 +19,15 @@ Create and manage content types for phpBB Sitemaker Extension
 
 Clone into phpBB/ext/blitze/content:
 
-    git clone https://github.com/blitze/blitze_content.git phpBB/ext/blitze/content
+    git clone https://github.com/blitze/phpBB-ext-sitemaker_content.git phpBB/ext/blitze/content
 
 Go to "ACP" > "Customise" > "Extensions" and enable the "phpBB Sitemaker Content" extension.
 
 ## Collaborate
 
-* Create a issue in the [tracker](https://github.com/blitze/blitze_content/issues)
+* Create a issue in the [tracker](https://github.com/blitze/phpBB-ext-sitemaker_content/issues)
 * Note the restrictions for [branch names](https://wiki.phpbb.com/Git#Branch_Names) and [commit messages](https://wiki.phpbb.com/Git#Commit_Messages) are similar to phpBB3
-* Submit a [pull-request](https://github.com/blitze/blitze_content/pulls)
+* Submit a [pull-request](https://github.com/blitze/phpBB-ext-sitemaker_content/pulls)
 
 ## Testing
 
