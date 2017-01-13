@@ -21,8 +21,8 @@ class calendr extends \blitze\sitemaker\services\blocks\driver\block
 	/** @var \phpbb\user */
 	protected $user;
 
-	/* @var \blitze\content\services\displayer */
-	protected $displayer;
+	/* @var \blitze\content\services\fields */
+	protected $fields;
 
 	/** @var \blitze\sitemaker\services\forum\data */
 	protected $forum;
@@ -38,24 +38,21 @@ class calendr extends \blitze\sitemaker\services\blocks\driver\block
 	 *
 	 * @param \phpbb\config\db							$config				Config object
 	 * @param \phpbb\user								$user				User object
-	 * @param \blitze\content\services\displayer		$displayer			Content displayer object
+	 * @param \blitze\content\services\fields			$fields				Content fields object
 	 * @param \blitze\sitemaker\services\forum\data		$forum				Forum object
 	 * @param string									$phpbb_root_path	phpBB root path
 	 * @param string									$php_ext			phpEx
 	 */
-	public function __construct(\phpbb\config\db $config, \phpbb\user $user, \blitze\content\services\displayer $displayer, \blitze\sitemaker\services\forum\data $forum, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\config\db $config, \phpbb\user $user, \blitze\content\services\fields $fields, \blitze\sitemaker\services\forum\data $forum, $phpbb_root_path, $php_ext)
 	{
 		$this->config = $config;
 		$this->user = $user;
-		$this->displayer = $displayer;
+		$this->fields = $fields;
 		$this->forum = $forum;
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
 	}
 
-	/**
-	 * 
-	 */
 	public function display(array $bdata, $edit_mode = false)
 	{
 		$time = $this->user->create_datetime();

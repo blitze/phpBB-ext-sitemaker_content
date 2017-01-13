@@ -2,7 +2,7 @@
 /**
  *
  * @package sitemaker
- * @copyright (c) 2013 Daniel A. (blitze)
+ * @copyright (c) 2016 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
@@ -13,41 +13,53 @@ interface views_interface
 {
 	/**
 	 * Short name of content view
+	 * @return string
 	 */
 	public function get_name();
 
 	/**
 	 * Lang name of content view
+	 * @return string
 	 */
 	public function get_langname();
 
 	/**
 	 * Template file of content index
+	 * @return string
 	 */
 	public function get_index_template();
 
 	/**
 	 * Template file of content details
+	 * @return string
 	 */
 	public function get_detail_template();
 
 	/**
-	 * Modify sql to retrieve topics
-	 */
-	public function customize_view(&$sql_topics_count, &$sql_topics_data, &$type_data, &$limit);
-
-	/**
-	 * Get topics count
-	 */
-	public function get_total_topics($forum_id, $sql_array);
-
-	/**
 	 * Display topics on content index
+	 *
+	 * @param \blitze\content\model\entity\type $entity
+	 * @param string $page
+	 * @param string $filter_type
+	 * @param string $filter_value
+	 * @return void
 	 */
-	public function display_topics($type, $topics_data, $posts_data, $users_cache, $attachments, $topic_tracking_info = array());
+	public function render_index(\blitze\content\model\entity\type $entity, $page, $filter_type, $filter_value);
 
 	/**
 	 * Show topic details
+	 *
+	 * @param \blitze\content\model\entity\type $entity
+	 * @param int $topic_id
+	 * @param array $update_count
+	 * @return array
 	 */
-	public function show_topic($type, $topic_title, $topic_data, $post_data, $users_cache, $attachments, $topic_tracking_info = array(), $page = 1);
+	public function render_detail(\blitze\content\model\entity\type $entity, $topic_id, array &$update_count);
+
+	/**
+	 * Build query to find topics to display on index
+	 *
+	 * @param int $forum_id
+	 */
+	public function build_index_query($forum_id);
 }

@@ -18,11 +18,12 @@ class c2_update_data extends \phpbb\db\migration\migration
 	 *
 	 * @return bool True to skip this migration, false to run it
 	 * @access public
-	 */
+	 *
 	public function effectively_installed()
 	{
 		return !$this->db_tools->sql_table_exists($this->table_prefix . 'content_types');
 	}
+	*/
 
 	/**
 	 * @inheritdoc
@@ -37,9 +38,12 @@ class c2_update_data extends \phpbb\db\migration\migration
 
 	public function update_data()
 	{
-		// required by message_parser
-		global $phpbb_root_path, $phpEx;
+		if (!$this->db_tools->sql_table_exists($this->table_prefix . 'content_types'))
+		{
+			return array();
+		}
 
+		include($this->phpbb_root_path . 'includes/bbcode.' . $this->php_ext);
 		include($this->phpbb_root_path . 'includes/message_parser.' . $this->php_ext);
 
 		$slugify = new Slugify();
@@ -129,14 +133,14 @@ class c2_update_data extends \phpbb\db\migration\migration
 				'content_desc_bitfield'	=> $row['content_desc_bitfield'],
 				'content_desc_options'	=> $row['content_desc_options'],
 				'content_desc_uid'		=> $row['content_desc_uid'],
+				'content_view'			=> $display_maps[$row['display_type']],
+				'content_view_settings'	=> '',
 				'req_approval'			=> (bool) $row['req_approval'],
 				'allow_comments'		=> (bool) $row['allow_comments'],
 				'show_poster_info'		=> (bool) $row['show_poster_info'],
 				'show_poster_contents'	=> (bool) $row['show_poster_contents'],
 				'show_pagination'		=> (bool) $row['show_pagination'],
 				'items_per_page'		=> (int) $row['items_per_page'],
-				'topics_per_group'		=> (int) $row['max_display'],
-				'display_type'			=> $display_maps[$row['display_type']],
 				'summary_tpl'			=> '',
 				'detail_tpl'			=> '',
 			);

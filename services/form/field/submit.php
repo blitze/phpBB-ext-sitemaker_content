@@ -11,24 +11,6 @@ namespace blitze\content\services\form\field;
 
 class submit extends base
 {
-	/* @var \phpbb\user */
-	protected $user;
-
-	/** @var \blitze\sitemaker\services\template */
-	protected $ptemplate;
-
-	/**
-	 * Constructor
-	 *
-	 * @param \phpbb\user							$user			User object
-	 * @param \blitze\sitemaker\services\template		$ptemplate		Sitemaker template object
-	 */
-	public function __construct(\phpbb\user $user, \blitze\sitemaker\services\template $ptemplate)
-	{
-		$this->user = $user;
-		$this->ptemplate = $ptemplate;
-	}
-
 	/**
 	 * @inheritdoc
 	 */
@@ -44,7 +26,6 @@ class submit extends base
 	{
 		return array(
 			'validate_form'		=> true,
-			'requires_item_id'	=> true,
 		);
 	}
 

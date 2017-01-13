@@ -14,11 +14,14 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 	/** @var \phpbb\config\db */
 	protected $config;
 
-	/** @var \phpbb\user */
-	protected $user;
+	/** @var\phpbb\language\language */
+	protected $language;
 
-	/* @var \blitze\content\services\displayer */
-	protected $displayer;
+	/** @var \blitze\content\services\types */
+	protected $content_types;
+
+	/* @var \blitze\content\services\fields */
+	protected $fields;
 
 	/** @var \blitze\sitemaker\services\date_range */
 	protected $date_range;
@@ -26,11 +29,8 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 	/** @var \blitze\sitemaker\services\forum\data */
 	protected $forum;
 
-	/** @var string phpBB root path */
-	protected $phpbb_root_path;
-
-	/** @var string phpEx */
-	protected $php_ext;
+	/** @var  array */
+	protected $settings;
 
 	/** @var array */
 	protected $sort_options = array();
@@ -48,22 +48,20 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 	 * Constructor
 	 *
 	 * @param \phpbb\config\db							$config				Config object
-	 * @param \phpbb\user								$user				User object
-	 * @param \blitze\content\services\displayer		$displayer			Content displayer object
+	 * @param \phpbb\language\language					$language			Language Object
+	 * @param \blitze\content\services\types			$content_types		Content types object
+	 * @param \blitze\content\services\fields			$fields				Content fields object
 	 * @param \blitze\sitemaker\services\date_range		$date_range			Date Range Object
 	 * @param \blitze\sitemaker\services\forum\data		$forum				Forum Data object
-	 * @param string									$phpbb_root_path	phpBB root path
-	 * @param string									$php_ext			phpEx
 	 */
-	public function __construct(\phpbb\config\db $config, \phpbb\user $user, \blitze\content\services\displayer $displayer, \blitze\sitemaker\services\date_range $date_range, \blitze\sitemaker\services\forum\data $forum, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\config\db $config, \phpbb\language\language $language, \blitze\content\services\types $content_types, \blitze\content\services\fields $fields, \blitze\sitemaker\services\date_range $date_range, \blitze\sitemaker\services\forum\data $forum)
 	{
 		$this->config = $config;
-		$this->user = $user;
-		$this->displayer = $displayer;
+		$this->language = $language;
+		$this->content_types = $content_types;
+		$this->fields = $fields;
 		$this->date_range = $date_range;
 		$this->forum = $forum;
-		$this->phpbb_root_path = $phpbb_root_path;
-		$this->php_ext = $php_ext;
 
 		$this->sort_options = array(
 			self::SORT_TOPIC_TIME	=> 'TOPIC_TIME',
@@ -74,94 +72,63 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 
 	/**
 	 * Block config
+	 * @param array $settings
+	 * @return array
 	 */
 	public function get_config(array $settings)
 	{
-		if (!function_exists('select_content_type'))
-		{
-			include($this->phpbb_root_path . 'ext/blitze/content/blocks.' . $this->php_ext);
-		}
-
-		$content_types = $this->displayer->get_all_types();
-
-		$default_type = '';
 		$content_type_options = $field_options = array();
-		if (sizeof($content_types))
-		{
-			foreach ($content_types as $type => $row)
-			{
-				$content_type_options[$type] = $row['content_langname'];
-				foreach ($row['content_fields'] as $field => $fdata)
-				{
-					$field_options[$type][$field] = $fdata['field_label'];
-				}
-			}
-
-			$row = array_shift($content_types);
-			$default_type = $row['content_name'];
-		}
-
-		$topic_type_options = array(POST_NORMAL => 'POST_NORMAL', POST_STICKY => 'POST_STICKY', POST_ANNOUNCE => 'POST_ANNOUNCEMENT', POST_GLOBAL => 'POST_GLOBAL');
-		$range_options = array('' => 'ALL_TIME', 'today' => 'TODAY', 'week' => 'THIS_WEEK', 'month' => 'THIS_MONTH', 'year' => 'THIS_YEAR');
-
-		$content_type	= (isset($settings['content_type'])) ? $settings['content_type'] : $default_type;
-		$fields		= (isset($settings['fields'])) ? $settings['fields'] : '';
-		$topic_type	= (isset($settings['topic_type'])) ? $settings['topic_type'] : POST_NORMAL;
-		$date_range	= (isset($settings['date_range'])) ? $settings['date_range'] : '';
-		$sort_key	= (isset($settings['sort_key'])) ? $settings['sort_key'] : self::SORT_TOPIC_TIME;
+		$default_type = $this->get_content_type_options($content_type_options, $field_options);
 
 		return array(
-			'legend1'			=> $this->user->lang['DISPLAY'],
-			'content_type'		=> array('lang' => 'CONTENT_TYPE', 'validate' => 'string', 'type' => 'select:1:toggable', 'function' => 'select_content_type', 'params' => array($content_type_options, $content_type), 'default' => $default_type, 'explain' => false),
+			'legend1'			=> 'DISPLAY',
+			'content_type'		=> array('lang' => 'CONTENT_TYPE', 'validate' => 'string', 'type' => 'select:1:toggable', 'object' => $this, 'method' => 'select_content_type', 'options' => $content_type_options, 'default' => $default_type, 'explain' => false),
 			'max_chars'			=> array('lang' => 'FIELD_MAX_CHARS', 'validate' => 'int:0:255', 'type' => 'number:0:255', 'maxlength' => 3, 'explain' => false, 'default' => 125),
-			'fields'			=> array('lang' => 'SELECT_FIELDS', 'validate' => 'string', 'type' => 'checkbox', 'params' => array($field_options, $fields), 'default' => '', 'explain' => true),
+			'fields'			=> array('lang' => 'SELECT_FIELDS', 'validate' => 'string', 'type' => 'checkbox', 'options' => $field_options, 'default' => array(), 'explain' => true),
 			'block_tpl'			=> array('lang' => 'TEMPLATE', 'validate' => 'string', 'type' => 'textarea:5:50', 'maxlength' => 255, 'explain' => false, 'default' => ''),
 
-			'legend2'			=> $this->user->lang['SETTINGS'],
-			'topic_type'		=> array('lang' => 'TOPIC_TYPE', 'validate' => 'string', 'type' => 'select', 'params' => array($topic_type_options, $topic_type), 'default' => POST_NORMAL, 'explain' => false),
+			'legend2'			=> 'SETTINGS',
+			'topic_type'		=> array('lang' => 'TOPIC_TYPE', 'validate' => 'string', 'type' => 'select', 'options' => $this->get_topic_type_options(), 'default' => POST_NORMAL, 'explain' => false),
 			'max_topics'		=> array('lang' => 'MAX_TOPICS', 'validate' => 'int:0:20', 'type' => 'number:0:20', 'maxlength' => 2, 'explain' => false, 'default' => 5),
 			'offset_start'		=> array('lang' => 'OFFSET_START', 'validate' => 'int:0:20', 'type' => 'number:0:20', 'maxlength' => 2, 'explain' => false, 'default' => 0),
 			'topic_title_limit'	=> array('lang' => 'TOPIC_TITLE_LIMIT', 'validate' => 'int:0:255', 'type' => 'number:0:255', 'maxlength' => 3, 'explain' => false, 'default' => 25),
-			'date_range'		=> array('lang' => 'LIMIT_POST_TIME', 'validate' => 'string', 'type' => 'select', 'params' => array($range_options, $date_range), 'default' => '', 'explain' => false),
-			'sort_key'			=> array('lang' => 'SORT_BY', 'validate' => 'string', 'type' => 'select', 'params' => array($this->sort_options, $sort_key), 'default' => self::SORT_TOPIC_TIME, 'explain' => false),
+			'date_range'		=> array('lang' => 'LIMIT_POST_TIME', 'validate' => 'string', 'type' => 'select', 'options' => $this->get_range_options(), 'default' => '', 'explain' => false),
+			'sort_key'			=> array('lang' => 'SORT_BY', 'validate' => 'string', 'type' => 'select', 'options' => $this->sort_options, 'default' => self::SORT_TOPIC_TIME, 'explain' => false),
 			'enable_tracking'	=> array('lang' => 'ENABLE_TOPIC_TRACKING', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => false, 'default' => 1),
 			'last_modified'		=> array('type' => 'hidden', 'default' => time()),
 		);
 	}
 
+	/**
+	 * @param array $bdata
+	 * @param bool $edit_mode
+	 * @return array
+	 */
 	public function display(array $bdata, $edit_mode = false)
 	{
 		$this->settings = $bdata['settings'];
+		$type = $this->settings['content_type'];
 
-		if (empty($this->settings['content_type']))
+		if (empty($this->settings['content_type']) || false === $entity = $this->content_types->get_type($type, false))
 		{
 			return array(
 				'title'		=> '',
-				'content'	=> ($edit_mode) ? $this->user->lang['NO_CONTENT_TYPE'] : '',
+				'content'	=> ($edit_mode) ? $this->language->lang('NO_CONTENT_TYPE') : '',
 			);
 		}
 
-		$type = $this->settings['content_type'];
-		$type_data = $this->displayer->get_type($type);
-		$forum_id = $type_data['forum_id'];
+		$forum_id = $entity->get_forum_id();
+		$topics_data = $this->get_topic_data($forum_id);
 
-		switch ($this->settings['topic_type'])
-		{
-			case POST_GLOBAL:
-				$lang_var = 'CONTENT_GLOBAL_ANNOUNCEMENTS';
-			break;
-			case POST_ANNOUNCE:
-				$lang_var = 'CONTENT_ANNOUNCEMENTS';
-			break;
-			case POST_STICKY:
-				$lang_var = 'CONTENT_STICKY_POSTS';
-			break;
-			case POST_NORMAL:
-			default:
-				$lang_var = sprintf($this->user->lang['CONTENT_' . $this->sort_options[$this->settings['sort_key']]], $type_data['content_langname']);
-			break;
-		}
+		return $this->show_topics($edit_mode, $bdata['bid'], $forum_id, $type, $topics_data, $entity);
+	}
 
+	/**
+	 * @param int $forum_id
+	 * @return array
+	 */
+	protected function get_topic_data($forum_id)
+	{
 		$sort_keys = array(
 			self::SORT_TOPIC_TIME	=> 't.topic_time',
 			self::SORT_TOPIC_VIEWS	=> 't.topic_views',
@@ -170,52 +137,150 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 
 		$range_info = $this->date_range->get($this->settings['date_range']);
 
-		$this->forum->query()
+		$this->forum->query($this->settings['enable_tracking'])
 			->fetch_forum($forum_id)
 			->fetch_topic_type(array($this->settings['topic_type']))
-			->fetch_tracking_info($this->settings['enable_tracking'])
 			->fetch_date_range($range_info['start'], $range_info['stop'])
 			->set_sorting($sort_keys[$this->settings['sort_key']])
 			->build(true, true, false);
 
-		$topics_data = $this->forum->get_topic_data($this->settings['max_topics'], $this->settings['offset_start']);
+		return $this->forum->get_topic_data($this->settings['max_topics'], $this->settings['offset_start']);
+	}
 
+	/**
+	 * @param bool $edit_mode
+	 * @param int $block_id
+	 * @param int $forum_id
+	 * @param string $type
+	 * @param array $topics_data
+	 * @param \blitze\content\model\entity\type $entity
+	 * @return array
+	 */
+	protected function show_topics($edit_mode, $block_id, $forum_id, $type, array $topics_data, \blitze\content\model\entity\type $entity)
+	{
+		$title = $content = '';
 		if (sizeof($topics_data) || $edit_mode !== false)
 		{
-			$fields = (!empty($this->settings['fields'])) ? $this->settings['fields'] : array();
 			$posts_data = $this->forum->get_post_data('first');
 			$users_cache = $this->forum->get_posters_info();
+			$attachments = $this->forum->get_attachments($forum_id);
 			$topic_tracking_info = $this->forum->get_topic_tracking_info($forum_id);
-			$fields = array_intersect_key($type_data['field_types'], array_flip($fields));
-			$tpl_name = $bdata['bid'] . '_block';
 
-			$this->displayer->prepare_to_show($type, 'block', $fields, $this->settings['block_tpl'], $tpl_name, $this->settings['max_chars']);
+			$this->fields->prepare_to_show($type, 'block', $this->get_block_fields($entity->get_field_types()), $entity->get_content_fields(), $this->settings['block_tpl'], $block_id . '_block', $this->settings['max_chars']);
 
 			$update_count = array();
 			$topics_data = array_values($topics_data);
-
 			for ($i = 0, $size = sizeof($topics_data); $i < $size; $i++)
 			{
 				$topic_data	= $topics_data[$i];
-				$topic_id	= $topic_data['topic_id'];
-				$poster_id	= $topic_data['topic_poster'];
-				$post_data	= array_shift($posts_data[$topic_id]);
-				$title		= censor_text($topic_data['topic_title']);
+				$post_data	= array_shift($posts_data[$topic_data['topic_id']]);
 
-				$tpl_data = $this->displayer->show($type, $title, $topic_data, $post_data, $users_cache[$poster_id], array(), $update_count, $topic_tracking_info);
-
+				$tpl_data = $this->fields->show($type, $topic_data, $post_data, $users_cache, $attachments, $update_count, $topic_tracking_info);
 				$this->ptemplate->assign_block_vars('topic_row', $tpl_data);
-				unset($topics_data[$i], $post_data[$topic_id]);
 			}
 
-			$this->ptemplate->assign_vars(array(
-				'S_IS_BOT'	=> $this->user->data['is_bot']
-			));
-
-			return array(
-				'title'		=> $lang_var,
-				'content'	=> $this->ptemplate->render_view('blitze/content', 'blocks/recent_content.html', 'recent_content_block')
-			);
+			$title = $this->get_block_title($entity->get_content_langname());
+			$content = $this->ptemplate->render_view('blitze/content', 'blocks/recent_content.html', 'recent_content_block');
 		}
+
+		return array(
+			'title'		=> $title,
+			'content'	=> $content,
+		);
+	}
+
+	/**
+	 * @param string $content_langname
+	 * @return string
+	 */
+	protected function get_block_title($content_langname)
+	{
+		$topic_types = array(
+			POST_GLOBAL		=> 'CONTENT_GLOBAL_ANNOUNCEMENTS',
+			POST_ANNOUNCE	=> 'CONTENT_ANNOUNCEMENTS',
+			POST_STICKY		=> 'CONTENT_STICKY_POSTS',
+		);
+
+		return (isset($topic_types[$this->settings['topic_type']])) ? $topic_types[$this->settings['topic_types']] :  $this->language->lang('CONTENT_' . $this->sort_options[$this->settings['sort_key']], $content_langname);
+	}
+
+	/**
+	 * @param array $field_types
+	 * @return array
+	 */
+	protected function get_block_fields(array $field_types)
+	{
+		$block_fields = (!empty($this->settings['fields'])) ? $this->settings['fields'] : array();
+		return array_intersect_key($field_types, array_flip($block_fields));
+	}
+
+	/**
+	 * @param array $type_options
+	 * @param array $field_options
+	 * @return array
+	 */
+	protected function get_content_type_options(array &$type_options, array &$field_options)
+	{
+		$content_types = $this->content_types->get_all_types();
+
+		$type_options = $field_options = array();
+		foreach ($content_types as $type => $entity)
+		{
+			/** @var \blitze\content\model\entity\type $entity */
+			$type_options[$type] = $entity->get_content_langname();
+
+			$content_fields = $entity->get_content_fields();
+			foreach ($content_fields as $field => $fdata)
+			{
+				$field_options[$type][$field] = $fdata['field_label'];
+			}
+		}
+		reset($content_types);
+
+		return key($content_types);
+	}
+
+	/**
+	 * @param array $content_types
+	 * @param string $type
+	 * @return string
+	 */
+	public function select_content_type(array $content_types, $type)
+	{
+		$html = '';
+		foreach ($content_types as $value => $title)
+		{
+			$selected = ($type == $value) ? ' selected="selected"' : '';
+			$html .= '<option value="' . $value . '"' . $selected . ' data-toggle-setting="#fields-col-' . $value . '">' . $title . '</option>';
+		}
+
+		return $html;
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function get_topic_type_options()
+	{
+		return array(
+			POST_NORMAL		=> 'POST_NORMAL',
+			POST_STICKY		=> 'POST_STICKY',
+			POST_ANNOUNCE	=> 'POST_ANNOUNCEMENT',
+			POST_GLOBAL		=> 'POST_GLOBAL',
+		);
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function get_range_options()
+	{
+		return array(
+			''		=> 'ALL_TIME',
+			'today'	=> 'TODAY',
+			'week'	=> 'THIS_WEEK',
+			'month'	=> 'THIS_MONTH',
+			'year'	=> 'THIS_YEAR',
+		);
 	}
 }

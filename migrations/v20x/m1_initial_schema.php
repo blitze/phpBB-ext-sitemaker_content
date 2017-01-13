@@ -40,15 +40,16 @@ class m1_initial_schema extends \phpbb\db\migration\migration
 						'content_desc_bitfield'	=> array('VCHAR:255', ''),
 						'content_desc_options'	=> array('UINT:11', 7),
 						'content_desc_uid'		=> array('VCHAR:8', ''),
+						'content_view'			=> array('VCHAR:155', ''),
+						'content_view_settings'	=> array('VCHAR:255', ''),
 						'req_approval'			=> array('BOOL', 1),
 						'allow_comments'		=> array('BOOL', 1),
+						'allow_views'			=> array('BOOL', 1),
 						'show_poster_info'		=> array('BOOL', 1),
 						'show_poster_contents'	=> array('BOOL', 1),
 						'show_pagination'		=> array('BOOL', 1),
 						'index_show_desc'		=> array('BOOL', 0),
 						'items_per_page'		=> array('TINT:4', 1),
-						'topics_per_group'		=> array('TINT:4', 1),
-						'display_type'			=> array('VCHAR:155', ''),
 						'summary_tpl'			=> array('TEXT_UNI', ''),
 						'detail_tpl'			=> array('TEXT_UNI', ''),
 						'last_modified'			=> array('TIMESTAMP', 0)
@@ -87,11 +88,15 @@ class m1_initial_schema extends \phpbb\db\migration\migration
 			'add_columns'	=> array(
 				$this->table_prefix . 'topics'		=> array(
 					'topic_slug'		=> array('VCHAR:255', ''),
+					'req_mod_input'		=> array('BOOL', 0),
 				)
 			),
 		);
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function revert_schema()
 	{
 		return array(
@@ -102,6 +107,7 @@ class m1_initial_schema extends \phpbb\db\migration\migration
 			'drop_columns'	=> array(
 				$this->table_prefix . 'topics'		=> array(
 					'topic_slug',
+					'req_mod_input'
 				)
 			),
 		);

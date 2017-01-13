@@ -1,4 +1,7 @@
+<!-- IF S_WRAP_FORM -->
 <form id="{FORM_NAME}" method="{FORM_METHOD}" action="{FORM_ACTION}">
+	<fieldset class="fields1">
+<!-- ENDIF -->
 	<!-- IF S_EDITOR -->
 	<script type="text/javascript">
 		// <![CDATA[
@@ -6,10 +9,12 @@
 		var text_name = '';
 		var load_draft = false;
 		var upload = false;
-		var imageTag = true;
+
 		// Define the bbCode tags
 		var bbcode = new Array();
 		var bbtags = new Array('[b]','[/b]','[i]','[/i]','[u]','[/u]','[quote]','[/quote]','[code]','[/code]','[list]','[/list]','[list=]','[/list]','[img]','[/img]','[url]','[/url]','[flash=]', '[/flash]','[size=]','[/size]'<!-- BEGIN custom_tags -->, {custom_tags.BBCODE_NAME}<!-- END custom_tags -->);
+		var imageTag = false;
+
 		// Helpline messages
 		var help_line = {
 			b: '{LA_BBCODE_B_HELP}',
@@ -28,24 +33,27 @@
 			d: '{LA_BBCODE_D_HELP}'
 			<!-- BEGIN custom_tags -->
 			,cb_{custom_tags.BBCODE_ID}: '{custom_tags.A_BBCODE_HELPLINE}'
-			<!-- END custom_tags -->
+				<!-- END custom_tags -->
 		}
-		function change_palette(field) {
+
+		function change_palette(field)
+		{
 			text_name = field;
 			phpbb.toggleDisplay(field + '_colour_palette');
 			e = document.getElementById(field + '_colour_palette');
-			if (e.style.display == 'block') {
+
+			if (e.style.display == 'block')
+			{
 				document.getElementById(field + '_bbpalette').value = '{LA_FONT_COLOR_HIDE}';
-			} else {
+			}
+			else
+			{
 				document.getElementById(field + '_bbpalette').value = '{LA_FONT_COLOR}';
 			}
 		}
 		// ]]>
 	</script>
 	<!-- ENDIF -->
-	<fieldset class="fields2">
-	<!-- IF FORM_LEGEND --><legend>{FORM_LEGEND}</legend><!-- ENDIF -->
-		<!-- IF ERRORS --><br /><div class="panel rules small">{ERRORS}</div><!-- ENDIF -->
 	<!-- BEGIN element -->
 		<dl>
 			<dt><!-- IF element.FIELD_LABEL --><label for="{element.FIELD_ID}">{element.FIELD_LABEL}<!-- IF element.FIELD_REQUIRED --><abbr class="req" title="required">*</abbr><!-- ENDIF -->{L_COLON}</label><br /><!-- ENDIF --><span>{element.FIELD_EXPLAIN}</span></dt>
@@ -57,16 +65,17 @@
 		<!-- ENDIF -->
 		</dl>
 	<!-- END element -->
+	<!-- BEGIN hidden -->
+		{hidden.FIELD_VIEW}
+	<!-- END hidden -->
+<!-- IF S_WRAP_FORM -->
 	</fieldset>
 
 	<fieldset class="submit-buttons">
 		{FORM_KEY}
-	<!-- BEGIN hidden -->
-		{hidden.FIELD_VIEW}
-	<!-- END hidden -->
-
 	<!-- BEGIN button -->
 		{button.FIELD_VIEW}
 	<!-- END button -->
 	</fieldset>
 </form>
+<!-- ENDIF -->

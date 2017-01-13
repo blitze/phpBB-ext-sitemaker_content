@@ -4,16 +4,16 @@
 	<li>
 		<div class="postbody sm-postbody">
 			<!-- IF not topic_row.CUSTOM_DISPLAY -->
-			<h3 class="topic-title"><a href="{topic_row.TOPIC_URL}">{topic_row.TOPIC_TITLE}</a></h3>
+			<h4 class="topic-title"><a href="{topic_row.TOPIC_URL}">{topic_row.TOPIC_TITLE}</a></h4>
 			<p class="author">
 				<!-- IF S_IS_BOT -->
 					<span><i class="icon fa-file fa-fw <!-- IF topic_row.S_UNREAD_POST -->icon-red<!-- ELSE -->icon-lightgray<!-- ENDIF --> icon-md" aria-hidden="true"></i><span class="sr-only">{topic_row.MINI_POST}</span></span>
 				<!-- ELSE -->
-					<a class="unread" href="{topic_row.U_MINI_POST}" title="{topic_row.MINI_POST}">
+					<a class="unread" href="{topic_row.U_MINI_POST}" title="">
 						<i class="icon fa-file fa-fw <!-- IF topic_row.S_UNREAD_POST -->icon-red<!-- ELSE -->icon-lightgray<!-- ENDIF --> icon-md" aria-hidden="true"></i><span class="sr-only">{topic_row.MINI_POST}</span>
 					</a>
 				<!-- ENDIF -->
-				<span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{topic_row.TOPIC_AUTHOR_FULL}</strong> &raquo; </span>{topic_row.TOPIC_TIME|date("m/d/Y")}
+				<span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{topic_row.USERNAME_FULL}</strong> &raquo; </span>{topic_row.TOPIC_DATE|date("m/d/Y")}
 			</p>
 			<!-- ENDIF -->
 			<!-- IF topic_row.CUSTOM_DISPLAY || topic_row.SEQ_DISPLAY -->
@@ -23,6 +23,7 @@
 			</div>
 			<!-- ENDIF -->
 		</div>
+		<div class="clear"></div><br />
 	</li>
 <!-- END topic_row -->
 </ul>

@@ -1,147 +1,151 @@
 parameters:
-    tables.blitze.content_types: %core.table_prefix%sm_content_types
-    tables.blitze.content_fields: %core.table_prefix%sm_content_fields
+    tables.blitze.content_types: '%core.table_prefix%sm_content_types'
+    tables.blitze.content_fields: '%core.table_prefix%sm_content_fields'
 
 imports:
-    - { resource: views.yml }
+    - { resource: actions.yml }
     - { resource: blocks.yml }
+    - { resource: controllers.yml }
     - { resource: form.yml }
+    - { resource: template.yml }
+    - { resource: views.yml }
 
 services:
+
+    blitze.content.action_handler:
+        class: blitze\content\services\action_handler
+        arguments:
+            - '@service_container'
+
+    blitze.content.builder:
+        class: blitze\content\services\builder
+        arguments:
+            - '@auth'
+            - '@language'
+            - '@request'
+            - '@service_container'
+            - '@user'
+            - '@blitze.content.fields'
+            - '@blitze.content.types'
+            - '@blitze.content.form'
+            - '%core.root_path%'
+            - '%core.php_ext%'
 
     blitze.content.comments:
         class: blitze\content\services\comments
         arguments:
-            - @auth
-            - @config
-            - @content.visibility
-            - @dbal.conn
-            - @controller.helper
-            - @pagination
-            - @request
-            - @template
-            - @user
-            - @blitze.content.form
-            - @blitze.sitemaker.forum.data
-            - %core.root_path%
-            - %core.php_ext%
+            - '@auth'
+            - '@config'
+            - '@content.visibility'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@pagination'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@blitze.content.form'
+            - '@blitze.sitemaker.forum.data'
+            - '%core.root_path%'
+            - '%core.php_ext%'
 
-    blitze.content.display.controller:
-        class: blitze\content\controller\display
+    blitze.content.fields:
+        class: blitze\content\services\fields
         arguments:
-            - @auth
-            - @config
-            - @dbal.conn
-            - @controller.helper
-            - @pagination
-            - @service_container
-            - @template
-            - @user
-            - @blitze.content.displayer
-            - @blitze.sitemaker.forum.data
-            - %core.root_path%
-            - %core.php_ext%
-
-    blitze.content.displayer:
-        class: blitze\content\services\displayer
-        arguments:
-            - @auth
-            - @cache
-            - @config
-            - @content.visibility
-            - @dbal.conn
-            - @controller.helper
-            - @service_container
-            - @template
-            - @user
-            - @blitze.content.comments
-            - @blitze.content.form
-            - %core.root_path%
-            - %tables.blitze.content_fields%
-            - %tables.blitze.content_types%
+            - '@config'
+            - '@content.visibility'
+            - '@controller.helper'
+            - '@dispatcher'
+            - '@language'
+            - '@blitze.content.template'
+            - '@user'
+            - '@blitze.content.form.fields.factory'
+            - '@blitze.content.helper'
 
     blitze.content.form:
-        class: blitze\content\services\form
+        class: blitze\content\services\form\form
         arguments:
-            - @auth
-            - @config
-            - @request
-            - @blitze.content.form.fields_collection
-            - @template_context
-            - @user
-            - @blitze.sitemaker.template
-            - %core.root_path%
-            - %core.php_ext%
+            - '@request'
+            - '@template_context'
+            - '@language'
+            - '@blitze.content.form.fields.factory'
+            - '@blitze.sitemaker.template'
 
     blitze.content.form.fields_collection:
         class: phpbb\di\service_collection
         arguments:
-            - @service_container
+            - '@service_container'
         tags:
-            - { name: service_collection, tag: form.field }
+            - { name: service_collection, tag: sitemaker.content.form.field }
 
-    blitze.content.listener:
+    blitze.content.form.fields.factory:
+        class: blitze\content\services\form\fields_factory
+        arguments:
+            - '@language'
+            - '@blitze.content.form.fields_collection'
+
+    blitze.content.helper:
+        class: blitze\content\services\helper
+        arguments:
+            - '@auth'
+            - '@config'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    blitze.content.event.listener:
         class: blitze\content\event\listener
         arguments:
-            - @config
-            - @dbal.conn
-            - @controller.helper
-            - @user
-            - @blitze.content.types
-            - @blitze.content.displayer
-            - %core.root_path%
-            - %core.php_ext%
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@language'
+            - '@blitze.content.types'
+            - '@blitze.content.fields'
+            - '%core.root_path%'
+            - '%core.php_ext%'
         tags:
             - { name: event.listener }
 
-    blitze.content.loader:
-        class: blitze\content\services\template_loader
+    blitze.content.event.posting:
+        class: blitze\content\event\posting
         arguments:
-            - @blitze.content.types
-            - @blitze.sitemaker.mapper.factory
+            - '@blitze.content.builder'
+        tags:
+            - { name: event.listener }
 
-    blitze.content.manager:
-        class: blitze\content\services\manager
+    blitze.content.mapper.factory:
+        class: blitze\content\model\mapper_factory
         arguments:
-            - @auth
-            - @cache
-            - @config
-            - @content.visibility
-            - @dbal.conn
-            - @controller.helper
-            - @pagination
-            - @service_container
-            - @request
-            - @template
-            - @user
-            - @blitze.content.comments
-            - @blitze.content.displayer
-            - @blitze.content.form
-            - @blitze.sitemaker.forum.data
-            - %core.root_path%
-            - %core.php_ext%
+            - '@dbal.conn'
+            - mappers:
+                types: '%tables.blitze.content_types%'
+                fields: '%tables.blitze.content_fields%'
 
-    blitze.content.types:
-        class: blitze\content\services\types
+    blitze.content.topic:
+        class: blitze\content\services\topic
         arguments:
-            - @cache
-            - @config
-            - @dbal.conn
-            - %tables.blitze.content_fields%
-            - %tables.blitze.content_types%
+            - '@config'
+            - '@content.visibility'
+            - '@controller.helper'
+            - '@dispatcher'
+            - '@language'
+            - '@user'
+            - '@blitze.content.helper'
 
     blitze.content.types:
         class: blitze\content\services\types
         arguments:
-            - @cache
-            - @config
-            - @dbal.conn
-            - %tables.blitze.content_fields%
-            - %tables.blitze.content_types%
+            - '@cache'
+            - '@blitze.content.mapper.factory'
 
     blitze.content.views_collection:
         class: phpbb\di\service_collection
         arguments:
-            - @service_container
+            - '@service_container'
         tags:
-            - { name: service_collection, tag: content.view }
+            - { name: service_collection, tag: sitemaker.content.view }
+
+    blitze.content.views.factory:
+        class: blitze\content\services\views\views_factory
+        arguments:
+            - '@language'
+            - '@blitze.content.views_collection'

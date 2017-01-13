@@ -39,25 +39,33 @@ interface field_interface
 	 * Display content field
 	 *
 	 * @param mixed $field_value	this is the value after bbcode parsing has occurred
-	 * @param array $field_data
-	 * @param string|detail $view
-	 * @param int|0 $item_id
 	 * @return string
 	 */
-	public function display_field($field_value, $field_data, $view = 'detail', $item_id = 0);
+	public function display_field($field_value);
 
 	/**
 	 * Render content field as form element
+	 *
+	 * @param string $field_name
+	 * @param array $field_data
+	 * @return string
 	 */
-	public function show_form_field($field_name, &$field_data, $item_id = 0);
-
-	/**
-	 * Validate content field
-	 */
-	public function validate_field($field_data);
+	public function show_form_field($field_name, array &$field_data);
 
 	/**
 	 * Save content field
+	 *
+	 * @param string $field_name
+	 * @param mixed $field_value
+	 * @return void
 	 */
-	public function save_field($field_name, $field_value, $item_id);
+	public function save_field($field_name, $field_value);
+
+	/**
+	 * Validate content field
+	 *
+	 * @param array $field_data
+	 * @return bool
+	 */
+	public function validate_field(array $field_data);
 }

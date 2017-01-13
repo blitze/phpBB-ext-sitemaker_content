@@ -1,201 +1,202 @@
 <!-- INCLUDE overall_header.html -->
 
 <!-- IF S_EDIT -->
+	<!-- INCLUDEJS @blitze_sitemaker/vendor/jquery-ui/jquery-ui.min.js -->
+	<!-- INCLUDEJS @blitze_sitemaker/vendor/codemirror/lib/codemirror.js -->
+	<!-- INCLUDEJS @blitze_sitemaker/vendor/codemirror/addon/display/autorefresh.js -->
+	<!-- INCLUDEJS @blitze_sitemaker/vendor/twig.js/twig.min.js -->
+	<!-- INCLUDEJS @blitze_content/assets/content_admin.min.js -->
 
-	<form id="edit_type" method="post" action="{U_ACTION}">
+	<!-- INCLUDECSS @blitze_sitemaker/vendor/jquery-ui/themes/smoothness/jquery-ui.min.css -->
+	<!-- INCLUDECSS @blitze_sitemaker/vendor/codemirror/lib/codemirror.css -->
+	<!-- INCLUDECSS @blitze_sitemaker/vendor/codemirror/theme/monokai.css -->
+	<!-- INCLUDECSS @blitze_content/assets/content_admin.min.css -->
+
+<form id="edit_type" method="post" action="{U_ACTION}">
 	<fieldset class="permissions">
-	<p class="small">{L_PT_REQUIRED_FIELDS}</p><br />
+		<p class="small">{L_PT_REQUIRED_FIELDS}</p><br />
 
-	<div class="permissions-category">
-		<ul>
-			<li class="activetab"><a id="ctype" class="ctab" href="#"><span class="tabbg">{L_CONTENT_TYPE}</span></a></li>
-			<li><a id="cfields" class="ctab" href="#"><span class="tabbg">{L_CONTENT_PARTS}*</span></a></li>
-			<li><a id="ctemplates" class="ctab" href="#"><span class="tabbg">{L_FIELDS_TEMPLATE}</span></a></li>
-			<li><a id="csettings" class="ctab" href="#"><span class="tabbg">{L_CONTENT_SETTINGS}</span></a></li>
-		</ul>
-	</div>
-	<div id="cctype" class="ctabcontent permissions-panel">
-		<span class="corners-top"><span></span></span>
-			<fieldset>
-				<dl>
-					<dt><label for="content_name">{L_CONTENT_NAME}:*</label><br /><span>{L_CONTENT_NAME_EXPLAIN}</span></dt>
-					<dd><input name="content_name" type="text" id="content_name" class="small" maxlength="50" value="{CONTENT_NAME}" /></dd>
-				</dl>
-				<dl>
-					<dt><label for="content_langname">{L_CONTENT_LANGNAME}:*</label><br /><span>{L_CONTENT_LANGNAME_EXPLAIN}</span></dt>
-					<dd><input name="content_langname" type="text" id="content_langname" class="medium" maxlength="75" value="{LANGNAME}" /></dd>
-				</dl>
-				<dl>
-					<dt><label for="content_desc">{L_CONTENT_DESC}:</label><br /><span>{L_CONTENT_DESC_EXPLAIN}</span></dt>
-					<dd><textarea id="content_desc" name="content_desc" rows="5" cols="45">{CONTENT_DESC}</textarea></dd>
-					<dd>
-						<label><input type="checkbox" class="radio" name="desc_parse_bbcode"<!-- IF S_DESC_BBCODE_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_BBCODE}</label>
-						<label><input type="checkbox" class="radio" name="desc_parse_smilies"<!-- IF S_DESC_SMILIES_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_SMILIES}</label>
-						<label><input type="checkbox" class="radio" name="desc_parse_urls"<!-- IF S_DESC_URLS_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_PARSE_URLS}</label>
-					</dd>
-				</dl>
-				<dl>
-					<dt><label for="index_show_desc">{L_SHOW_DESC_INDEX}:</label><br /><span>{L_SHOW_DESC_INDEX_EXPLAIN}</span></dt>
-					<dd>
-						<label><input type="radio" class="radio" id="index_show_desc" name="index_show_desc" value="1"<!-- IF S_INDEX_SHOW_DESC --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-						<label><input type="radio" class="radio" name="index_show_desc" value="0"<!-- IF not S_INDEX_SHOW_DESC --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
-					</dd>
-				</dl>
-				<dl>
-					<dt><label for="content_enabled">{L_CONTENT_ACTIVE}:</label></dt>
-					<dd>
-						<label><input type="radio" class="radio" id="content_enabled" name="content_enabled" value="1"<!-- IF S_ENABLED --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-						<label><input type="radio" class="radio" name="content_enabled" value="0"<!-- IF not S_ENABLED --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
-					</dd>
-				</dl>
-				<dl>
-					<dt><label for="display_type">{L_DISPLAY_TYPE}:</label></dt>
-					<dd>
-						<!-- BEGIN view -->
-						<label><input type="radio" class="radio"<!-- IF view.S_FIRST_ROW --> id="display_type"<!-- ENDIF --> name="display_type" value="{view.VALUE}"<!-- IF view.S_SELECTED --> checked="checked"<!-- ENDIF --> /> {view.LABEL}</label><br />
-						<!-- END view -->
-					</dd>
-				</dl>
-				<!-- IF S_CAN_COPY_PERMISSIONS -->
-				<dl>
-					<dt><label for="copy_forum_perm">{L_COPY_PERMISSION}:</label><br /><span>{L_COPY_PERMISSION_EXPLAIN}</span></dt>
-					<dd>
-						<select name="copy_forum_perm" id="copy_forum_perm"><option value="">{L_NO_COPY_PERMISSIONS}</option>{S_FORUM_OPTIONS}</select>
-					</dd>
-				</dl>
-				<!-- ENDIF -->
-			</fieldset>
-		<span class="corners-bottom"><span></span></span>
-	</div>
-	<div id="ccfields" class="ctabcontent permissions-panel" style="display: none;">
-		<span class="corners-top"><span></span></span>
-			<fieldset class="permissions">
+		<div class="permissions-category">
+			<ul>
+				<li class="activetab"><a id="ctype" class="ctab" href="#"><span class="tabbg">{L_CONTENT_TYPE}</span></a></li>
+				<li><a id="cfields" class="ctab" href="#"><span class="tabbg">{L_CONTENT_PARTS}*</span></a></li>
+				<li><a id="ctemplates" class="ctab" href="#"><span class="tabbg">{L_FIELDS_TEMPLATE}</span></a></li>
+				<li><a id="csettings" class="ctab" href="#"><span class="tabbg">{L_CONTENT_SETTINGS}</span></a></li>
+			</ul>
+		</div>
+		<div id="cctype" class="ctabcontent permissions-panel">
+			<span class="corners-top"><span></span></span>
+				<fieldset>
+					<dl>
+						<dt><label for="content_name">{L_CONTENT_NAME}{L_COLON}*</label><br /><span>{L_CONTENT_NAME_EXPLAIN}</span></dt>
+						<dd><input name="content_name" type="text" id="content_name" class="small" maxlength="50" value="{CONTENT_NAME}" /></dd>
+					</dl>
+					<dl>
+						<dt><label for="content_langname">{L_CONTENT_LANGNAME}{L_COLON}*</label><br /><span>{L_CONTENT_LANGNAME_EXPLAIN}</span></dt>
+						<dd><input name="content_langname" type="text" id="content_langname" class="medium" maxlength="75" value="{CONTENT_LANGNAME}" /></dd>
+					</dl>
+					<dl>
+						<dt><label for="content_desc">{L_CONTENT_DESC}{L_COLON}</label><br /><span>{L_CONTENT_DESC_EXPLAIN}</span></dt>
+						<dd><textarea id="content_desc" name="content_desc" rows="5" cols="45">{CONTENT_DESC}</textarea></dd>
+					</dl>
+					<dl>
+						<dt><label for="index_show_desc">{L_SHOW_DESC_INDEX}{L_COLON}</label><br /><span>{L_SHOW_DESC_INDEX_EXPLAIN}</span></dt>
+						<dd>
+							<label><input type="radio" class="radio" id="index_show_desc" name="index_show_desc" value="1"<!-- IF INDEX_SHOW_DESC --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+							<label><input type="radio" class="radio" name="index_show_desc" value="0"<!-- IF not INDEX_SHOW_DESC --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+						</dd>
+					</dl>
+					<dl>
+						<dt><label for="content_enabled">{L_CONTENT_ACTIVE}{L_COLON}</label></dt>
+						<dd>
+							<label><input type="radio" class="radio" id="content_enabled" name="content_enabled" value="1"<!-- IF CONTENT_ENABLED !== false --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+							<label><input type="radio" class="radio" name="content_enabled" value="0"<!-- IF CONTENT_ENABLED === false --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+						</dd>
+					</dl>
+					<dl>
+						<dt><label for="content_view">{L_CONTENT_VIEW}{L_COLON}</label></dt>
+						<dd>
+							<select id="content_view" name="content_view">
+							<!-- BEGIN view -->
+								<option value="{view.VALUE}"<!-- IF view.S_SELECTED --> selected="selected"<!-- ENDIF -->>{view.LABEL}</option>
+							<!-- END view -->
+							</select>
+						</dd>
+					</dl>
+					<!-- IF S_CAN_COPY_PERMISSIONS -->
+					<dl>
+						<dt><label for="copy_forum_perm">{L_COPY_PERMISSION}{L_COLON}</label><br /><span>{L_COPY_PERMISSION_EXPLAIN}</span></dt>
+						<dd>
+							<select name="copy_forum_perm" id="copy_forum_perm"><option value="">{L_NO_COPY_PERMISSIONS}</option>{S_FORUM_OPTIONS}</select>
+						</dd>
+					</dl>
+					<!-- ENDIF -->
+				</fieldset>
+			<span class="corners-bottom"><span></span></span>
+		</div>
+		<div id="ccfields" class="ctabcontent permissions-panel" style="display: none;">
+			<span class="corners-top"><span></span></span>
+				<fieldset class="permissions">
 
-				<p style="text-align: right">
-					<button id="add-field">{L_ADD_FIELD}</button>
-				</p>
+					<p style="text-align: right">
+						<button id="add-field">{L_ADD_FIELD}</button>
+					</p>
 
-				<div id="fields-container">
-					<!-- INCLUDE content_fields.html -->
-				</div>
-
-				<br />
-				<div id="add-field-info" class="ui-corner-all" style="text-align: center; background-color: #ee3; color: red; font-weight: bolder; display: none; padding: 8px">{L_ADD_LABEL_PROMPT}</div>
-
-			</fieldset>
-		<span class="corners-bottom"><span></span></span>
-	</div>
-	<div id="cctemplates" class="ctabcontent permissions-panel" style="display: none;">
-		<span class="corners-top"><span></span></span>
-			<fieldset class="permissions">
-				<div id="fields-template" class="full-width">
-					<div class="ui-tabs ui-widget tpl-tabs">
-						<ul class="rightside ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-corner-all">
-							<li id="custom-summary" class="toggle-tpl ui-state-default ui-corner-top"><a href="#">{L_SUMMARY_TEMPLATE}</a></li>
-							<li id="custom-detail" class="toggle-tpl ui-state-default ui-corner-top ui-state-active"><a href="#">{L_DETAIL_TEMPLATE}</a></li>
-						</ul>
-						<div class="clear"></div>
+					<div id="fields-container">
+						<!-- INCLUDE content_fields.html -->
 					</div>
 
-					<div class="tpl-boxes ui-helper-reset ui-helper-clearfix ui-corner-all">
-						<div class="summary-tpl toggle-panel" id="custom-summary-tpl">
-							<fieldset>
-								<p id="preview-summary" class="content"></p>
-							</fieldset>
-							<textarea id="tpl-custom-summary" class="custom-template" name="summary_tpl">{S_SUMMARY_TPL}</textarea>
-							<div style="width: 100%; height: 200px; position: relative" id="summary-editor"></div>
-							<p class="small">{L_SUMMARY_TEMPLATE_EXPLAIN}</p>
-						</div>
-
-						<div class="detail-tpl toggle-panel hide" id="custom-detail-tpl">
-							<fieldset>
-								<p id="preview-detail" class="content"></p>
-							</fieldset>
-							<textarea id="tpl-custom-detail" class="editor custom-template" name="detail_tpl">{S_DETAIL_TPL}</textarea>
-							<div style="width: 100%; height: 200px; position: relative" id="detail-editor"></div>
-							<p class="small">{L_DETAIL_TEMPLATE_EXPLAIN}</p>
-						</div>
-					</div>
-				</div>
-				<div class="tpl-fields-container">
-					<div id="available-fields">
-						<!-- BEGIN field -->
-						<a class="button" href="#" title="{field.FIELD_LABEL}" ftype="{field.FIELD_TYPE}">{field.FIELD_NAME}</a>
-						<!-- END field -->
-					</div>
 					<br />
-					<div id="post-info">
-						<a class="button" href="#" tag="TOPIC_TITLE">{L_TOPIC_TITLE}</a>
-						<a class="button" href="#" tag="TOPIC_URL">{L_TOPIC_URL}</a>
-						<a class="button" href="#" tag="TOPIC_AUTHOR">{L_TOPIC_AUTHOR}</a>
-						<a class="button" href="#" tag="TOPIC_AUTHOR_FULL">{L_TOPIC_AUTHOR_FULL}</a>
-						<a class="button" href="#" tag="TOPIC_AUTHOR_COLOUR">{L_TOPIC_AUTHOR_COLOUR}</a>
-						<a class="button" href="#" tag="TOPIC_AUTHOR_AVATAR">{L_TOPIC_AUTHOR_AVATAR}</a>
-						<a class="button" href="#" tag="TOPIC_AUTHOR_URL">{L_TOPIC_AUTHOR_URL}</a>
-						<a class="button" href="#" tag="TOPIC_DATE">{L_TOPIC_DATE}</a>
-						<a class="button" href="#" tag="TOPIC_COMMENTS">{L_TOPIC_COMMENTS}</a>
-						<a class="button" href="#" tag="TOPIC_VIEWS">{L_TOPIC_VIEWS}</a>
+					<div id="add-field-info" class="ui-corner-all" style="text-align: center; background-color: #ee3; color: red; font-weight: bolder; display: none; padding: 8px">{L_ADD_LABEL_PROMPT}</div>
+
+				</fieldset>
+			<span class="corners-bottom"><span></span></span>
+		</div>
+		<div id="cctemplates" class="ctabcontent permissions-panel" style="display: none;">
+			<span class="corners-top"><span></span></span>
+				<fieldset class="permissions">
+					<div id="fields-template" class="full-width">
+						<div class="ui-tabs ui-widget tpl-tabs">
+							<ul class="rightside ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-corner-all">
+								<li id="custom-summary" class="toggle-tpl ui-state-default ui-corner-top"><a href="#">{L_SUMMARY_TEMPLATE}</a></li>
+								<li id="custom-detail" class="toggle-tpl ui-state-default ui-corner-top ui-state-active"><a href="#">{L_DETAIL_TEMPLATE}</a></li>
+							</ul>
+							<div class="clear"></div>
+						</div>
+
+						<div class="tpl-boxes ui-helper-reset ui-helper-clearfix ui-corner-all">
+							<div class="summary-tpl toggle-panel" id="custom-summary-tpl">
+								<fieldset>
+									<p id="preview-summary" class="content"></p>
+								</fieldset>
+								<textarea id="tpl-custom-summary" class="custom-template" name="summary_tpl">{SUMMARY_TPL}</textarea>
+								<p class="small">{L_SUMMARY_TEMPLATE_EXPLAIN}</p>
+							</div>
+
+							<div class="detail-tpl toggle-panel hide" id="custom-detail-tpl">
+								<fieldset>
+									<p id="preview-detail" class="content"></p>
+								</fieldset>
+								<textarea id="tpl-custom-detail" class="editor custom-template" name="detail_tpl">{DETAIL_TPL}</textarea>
+								<p class="small">{L_DETAIL_TEMPLATE_EXPLAIN}</p>
+							</div>
+						</div>
 					</div>
-				</div>
-			</fieldset>
-		<span class="corners-bottom"><span></span></span>
-	</div>
-	<div id="ccsettings" class="ctabcontent permissions-panel" style="display: none;">
-		<span class="corners-top"><span></span></span>
-			<fieldset>
-				<dl>
-					<dt><label for="req_approval">{L_REQ_APPROVAL}:</label></dt>
-					<dd>
-						<label><input type="radio" class="radio" id="req_approval" name="req_approval" value="1"<!-- IF S_APPROVAL --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-						<label><input type="radio" class="radio" name="req_approval" value="0"<!-- IF not S_APPROVAL --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
-					</dd>
-				</dl>
-				<dl>
-					<dt><label for="allow_comments">{L_ALLOW_COMMENTS}:</label></dt>
-					<dd>
-						<label><input type="radio" class="radio" id="allow_comments" name="allow_comments" value="1"<!-- IF S_COMMENTS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-						<label><input type="radio" class="radio" name="allow_comments" value="0"<!-- IF not S_COMMENTS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
-					</dd>
-				</dl>
-				<dl>
-					<dt><label for="allow_urls">{L_SHOW_PAGINATION}:</label></dt>
-					<dd>
-						<label><input type="radio" class="radio" id="show_pagination" name="show_pagination" value="1"<!-- IF S_PAGINATION --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-						<label><input type="radio" class="radio" name="show_pagination" value="0"<!-- IF not S_PAGINATION --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
-					</dd>
-				</dl>
-				<dl>
-					<dt><label for="show_info">{L_SHOW_AUTHOR_INFO}:</label></dt>
-					<dd>
-						<label><input type="radio" class="radio" id="show_info" name="show_info" value="1"<!-- IF S_POSTER_INFO --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-						<label><input type="radio" class="radio" name="show_info" value="0"<!-- IF not S_POSTER_INFO --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
-					</dd>
-				</dl>
-				<dl>
-					<dt><label for="show_contents">{L_SHOW_AUTHOR_CONTENTS}:</label><br /><span>{L_AUTHOR_CONTENTS_EXPLAIN}</span></dt>
-					<dd>
-						<label><input type="radio" class="radio" id="show_contents" name="show_contents" value="1"<!-- IF S_POSTER_CONTENTS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-						<label><input type="radio" class="radio" name="show_contents" value="0"<!-- IF not S_POSTER_CONTENTS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
-					</dd>
-				</dl>
-				<dl>
-					<dt><label for="allow_views">{L_DISPLAY_VIEWS}:</label><br /><span>{L_DISPLAY_VIEWS_EXPLAIN}</span></dt>
-					<dd>
-						<label><input type="radio" class="radio" id="allow_views" name="allow_views" value="1"<!-- IF S_VIEWS --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-						<label><input type="radio" class="radio" name="allow_views" value="0"<!-- IF not S_VIEWS --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
-					</dd>
-				</dl>
-				<dl>
-					<dt><label for="items_per_page">{L_ITEMS_PER_PAGE}:</label></dt>
-					<dd><input type="text" id="items_per_page" class="small" maxlength="5" name="items_per_page" value="{ITEMS_PER_PAGE}" /></dd>
-				</dl>
-				<dl>
-					<dt><label for="topics_per_group">{L_TOPICS_PER_GROUP}:</label><br /><span>{L_TOPICS_PER_GROUP_EXPLAIN}</span></dt>
-					<dd><input type="text" id="topics_per_group" class="small" maxlength="5" name="topics_per_group" value="{TOPICS_PER_GROUP}" /></dd>
-				</dl>
-			</fieldset>
-		<span class="corners-bottom"><span></span></span>
-	</div>
+					<div class="tpl-fields-container">
+						<div id="available-fields">
+							<!-- BEGIN field -->
+							<a class="button" href="#" title="{field.FIELD_LABEL}" data-ftype="{field.FIELD_TYPE}">{field.FIELD_NAME}</a>
+							<!-- END field -->
+						</div>
+						<br />
+						<div id="post-info">
+							<a class="button" href="#" data-tag="TOPIC_TITLE">{L_TOPIC_TITLE}</a>
+							<a class="button" href="#" data-tag="TOPIC_URL">{L_TOPIC_URL}</a>
+							<a class="button" href="#" data-tag="TOPIC_AUTHOR">{L_TOPIC_AUTHOR}</a>
+							<a class="button" href="#" data-tag="TOPIC_AUTHOR_FULL">{L_TOPIC_AUTHOR_FULL}</a>
+							<a class="button" href="#" data-tag="TOPIC_AUTHOR_COLOUR">{L_TOPIC_AUTHOR_COLOUR}</a>
+							<a class="button" href="#" data-tag="TOPIC_AUTHOR_AVATAR">{L_TOPIC_AUTHOR_AVATAR}</a>
+							<a class="button" href="#" data-tag="TOPIC_AUTHOR_URL">{L_TOPIC_AUTHOR_URL}</a>
+							<a class="button" href="#" data-tag="TOPIC_DATE">{L_TOPIC_DATE}</a>
+							<a class="button" href="#" data-tag="TOPIC_COMMENTS">{L_TOPIC_COMMENTS}</a>
+							<a class="button" href="#" data-tag="TOPIC_VIEWS">{L_TOPIC_VIEWS}</a>
+						</div>
+					</div>
+				</fieldset>
+			<span class="corners-bottom"><span></span></span>
+		</div>
+		<div id="ccsettings" class="ctabcontent permissions-panel" style="display: none;">
+			<span class="corners-top"><span></span></span>
+				<fieldset>
+					<dl>
+						<dt><label for="req_approval">{L_REQ_APPROVAL}{L_COLON}</label></dt>
+						<dd>
+							<label><input type="radio" class="radio" id="req_approval" name="req_approval" value="1"<!-- IF REQ_APPROVAL --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+							<label><input type="radio" class="radio" name="req_approval" value="0"<!-- IF not REQ_APPROVAL --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+						</dd>
+					</dl>
+					<dl>
+						<dt><label for="allow_comments">{L_ALLOW_COMMENTS}{L_COLON}</label></dt>
+						<dd>
+							<label><input type="radio" class="radio" id="allow_comments" name="allow_comments" value="1"<!-- IF ALLOW_COMMENTS !== false --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+							<label><input type="radio" class="radio" name="allow_comments" value="0"<!-- IF ALLOW_COMMENTS === false --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+						</dd>
+					</dl>
+					<dl>
+						<dt><label for="allow_views">{L_DISPLAY_VIEWS}{L_COLON}</label><br /><span>{L_DISPLAY_VIEWS_EXPLAIN}</span></dt>
+						<dd>
+							<label><input type="radio" class="radio" id="allow_views" name="allow_views" value="1"<!-- IF ALLOW_VIEWS !== false --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+							<label><input type="radio" class="radio" name="allow_views" value="0"<!-- IF ALLOW_VIEWS === false --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+						</dd>
+					</dl>
+					<dl>
+						<dt><label for="show_pagination">{L_SHOW_PAGINATION}{L_COLON}</label></dt>
+						<dd>
+							<label><input type="radio" class="radio" id="show_pagination" name="show_pagination" value="1"<!-- IF SHOW_PAGINATION !== false --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+							<label><input type="radio" class="radio" name="show_pagination" value="0"<!-- IF SHOW_PAGINATION === false --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+						</dd>
+					</dl>
+					<dl>
+						<dt><label for="show_info">{L_SHOW_AUTHOR_INFO}{L_COLON}</label></dt>
+						<dd>
+							<label><input type="radio" class="radio" id="show_info" name="show_info" value="1"<!-- IF SHOW_POSTER_INFO !== false --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+							<label><input type="radio" class="radio" name="show_info" value="0"<!-- IF SHOW_POSTER_INFO === false --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+						</dd>
+					</dl>
+					<dl>
+						<dt><label for="show_contents">{L_SHOW_AUTHOR_CONTENTS}{L_COLON}</label><br /><span>{L_AUTHOR_CONTENTS_EXPLAIN}</span></dt>
+						<dd>
+							<label><input type="radio" class="radio" id="show_contents" name="show_contents" value="1"<!-- IF SHOW_POSTER_CONTENTS !== false --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+							<label><input type="radio" class="radio" name="show_contents" value="0"<!-- IF SHOW_POSTER_CONTENTS === false --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+						</dd>
+					</dl>
+					<dl>
+						<dt><label for="items_per_page">{L_ITEMS_PER_PAGE}{L_COLON}</label></dt>
+						<dd><input type="text" id="items_per_page" class="small" maxlength="5" name="items_per_page" value="{ITEMS_PER_PAGE}" /></dd>
+					</dl>
+				</fieldset>
+			<span class="corners-bottom"><span></span></span>
+		</div>
 	</fieldset>
 
 	<fieldset>
@@ -209,47 +210,34 @@
 	<!-- INCLUDE content_fields_js_tpl.html -->
 
 <!-- ELSEIF S_DELETE_TYPE -->
+	<a href="{U_ACTION}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
 
-	<!-- IF S_POPUP -->
-		<script type="text/javascript"> 
-		// <![CDATA[
-		window.onload = function(){
-			popup('{U_PATH}', 450, 90, '{L_CONVERTING_TYPE}');
-		}
-		// ]]>
-		</script>
+	<h1>{L_CONTENT_TYPE_DELETE}</h1>
 
+	<p>{L_CONFIRM_DELETE_TYPE}</p>
+
+	<form id="postform" method="post" action="{U_ACTION}">
 		<fieldset>
-			<p>{L_CONVERTING_TYPE_EXPLAIN}</p>
-			<p><a href="#" onClick="popup('{U_PATH}', 450, 90, '{L_CONVERTING_TYPE}');">{L_VIEW_POPUP}</a>
+			<legend>{L_INFORMATION}</legend>
+			<dl>
+				<dt><label>{L_CONTENT_TYPE}{L_COLON}</label></dt>
+				<dd><strong>{CONTENT_TYPE_TITLE}</strong></dd>
+			</dl>
+			<dl>
+				<dt><label for="delete_action">{L_ACTION}{L_COLON}</label></dt>
+				<dd><label><input type="radio" class="radio" id="delete_action" name="action_posts" value="delete" checked="checked" /> {L_DELETE_TOPICS}</label></dd>
+				<!-- IF S_MOVE_FORUM_OPTIONS -->
+				<dd><label><input type="radio" class="radio" name="action_posts" value="move" /> {L_TRANSFER_TOPICS}</label> <select name="transfer_to_id">{S_MOVE_FORUM_OPTIONS}</select></dd>
+				<!-- ENDIF -->
+			</dl>
+			<p class="submit-buttons">
+				{S_FORM_TOKEN}
+				<input type="hidden" name="action" value="delete" />
+				<input type="hidden" name="type" value="{CONTENT_TYPE}" />
+				<input class="button1" style="float: {S_CONTENT_FLOW_END}; margin: 4px" type="submit" id="fieldsubmit" name="submit" value="{L_PROCEED}" />
 			</p>
 		</fieldset>
-
-	<!-- ELSE -->
-		<p>&nbsp;</p>
-
-		<form id="postform" method="post" action="{U_ACTION}">
-		<fieldset>
-		<legend>{L_INFORMATION}</legend>
-		<p>{L_CONFIRM_DELETE_TYPE}</p><br />
-		<!-- IF CONTENT_TYPE_OPS -->
-		<dl>
-			<dt><label for="items_per_page">{L_TRANSFER_TOPICS}:</label><br /><span class="small">{L_TRANSFER_TOPICS_EXPLAIN}</span></dt>
-			<dd><select name="xfer_to"><option value="">{L_DELETE_TOPICS}</option>{CONTENT_TYPE_OPS}</select></dd>
-		</dl>
-		<!-- ELSE -->
-			<p class="error">{L_NO_COMPATIBLE_TYPES}</p>
-		<!-- ENDIF -->
-		<p class="submit-buttons">
-			<hr />
-			<input type="hidden" name="action" value="delete" />
-			<input type="hidden" name="t" value="{CONTENT_ID}" />
-			<input class="button1" style="float: right; margin: 4px" type="submit" id="fieldsubmit" name="submit" value="{L_PROCEED}" />
-			<input class="button2" style="float: right; margin: 4px" type="submit" id="fieldreset" name="reset" value="{L_CANCEL}" />
-		</p>
-		</fieldset>
-		</form>
-	<!-- ENDIF -->
+	</form>
 
 <!-- ELSE -->
 
@@ -268,7 +256,7 @@
 	<!-- BEGIN types -->
 		<tr <!-- IF types.S_ROW_COUNT is even -->class="row1"<!-- ELSE -->class="row2"<!-- ENDIF -->>
 			<td><a target="_blank" href="{types.U_VIEW}">{types.CONTENT_TYPE}</a></td>
-			<td style="text-align: center; vertical-align: middle;">&nbsp;<!-- IF types.S_ENABLED --><a href="{types.U_DISABLE}">{L_DISABLE}</a><!-- ELSE --><a href="{types.U_ENABLE}">{L_ENABLE}</a><!-- ENDIF -->&nbsp;</td>
+			<td style="text-align: center; vertical-align: middle;">&nbsp;<!-- IF types.S_ENABLED --><a href="{types.U_STATUS}">{L_DISABLE}</a><!-- ELSE --><a href="{types.U_STATUS}">{L_ENABLE}</a><!-- ENDIF -->&nbsp;</td>
 			<td style="white-space: nowrap; text-align: center; vertical-align: middle;">
 				<a href="{types.U_POST}" title="{L_POST}"><img src="images/file_new.gif" border="0" alt="{L_POST}" /></a>&nbsp;
 				<a href="{types.U_FORUM_PERMS}" title="{types.L_FORUM_PERMS}"><img src="images/file_not_modified.gif" border="0" alt="" /></a>&nbsp;

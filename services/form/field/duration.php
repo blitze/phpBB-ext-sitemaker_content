@@ -11,26 +11,22 @@ namespace blitze\content\services\form\field;
 
 abstract class duration extends base
 {
-	/** @var \phpbb\request\request_interface */
-	protected $request;
-
 	/** @var \blitze\sitemaker\services\util */
-	protected $sitemaker;
+	protected $util;
 
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\request\request_interface		$request		Request object
-	 * @param \phpbb\user							$user			User object
+	 * @param \phpbb\language\language                  $language       Language object
+	 * @param \phpbb\request\request_interface			$request		Request object
 	 * @param \blitze\sitemaker\services\template		$ptemplate		Sitemaker template object
-	 * @param \blitze\sitemaker\services\util			$sitemaker		Sitemaker object
+	 * @param \blitze\sitemaker\services\util			$util       	Sitemaker utility object
 	 */
-	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \blitze\sitemaker\services\template $ptemplate, \blitze\sitemaker\services\util $sitemaker)
+	public function __construct(\phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\sitemaker\services\template $ptemplate, \blitze\sitemaker\services\util $util)
 	{
-		parent::__construct($user, $ptemplate);
+		parent::__construct($language, $request, $ptemplate);
 
-		$this->request = $request;
-		$this->sitemaker = $sitemaker;
+		$this->util = $util;
 	}
 
 	/**
@@ -43,16 +39,15 @@ abstract class duration extends base
 			'field_max_date'	=> 'false',
 			'field_min_time'	=> 'false',
 			'field_max_time'	=> 'false',
-			'requires_item_id'	=> false,
 		);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function show_form_field($name, &$data, $item_id = 0)
+	public function show_form_field($name, array &$data)
 	{
-		$this->sitemaker->add_assets(array(
+		$this->util->add_assets(array(
 			'js'   => array(
 				'@blitze_content/vendor/datetimepicker/build/jquery.datetimepicker.full.min.js',
 				'@blitze_content/assets/datetimepicker.min.js',
@@ -62,6 +57,6 @@ abstract class duration extends base
 			)
 		));
 
-		return parent::show_form_field($name, $data, $item_id);
+		return parent::show_form_field($name, $data);
 	}
 }

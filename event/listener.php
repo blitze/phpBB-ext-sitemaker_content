@@ -19,63 +19,65 @@ class listener implements EventSubscriberInterface
 	/* @var \phpbb\controller\helper */
 	protected $helper;
 
-	/* @var \phpbb\user */
-	protected $user;
+	/** @var \phpbb\language\language */
+	protected $language;
 
 	/* @var \blitze\content\services\types */
 	protected $content_types;
 
-	/* @var \blitze\content\services\displayer */
-	protected $displayer;
+	/* @var \blitze\content\services\fields */
+	protected $fields;
 
 	/** @var string */
-	protected $root_path;
+	protected $phpbb_root_path;
 
 	/* @var string */
 	protected $php_ext;
 
-	/* @var array */
-	protected $content_forums;
-
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\config\db						$config				Config object
 	 * @param \phpbb\db\driver\driver_interface		$db					Database object
 	 * @param \phpbb\controller\helper				$helper				Helper object
-	 * @param \phpbb\user							$user				User object
+	 * @param \phpbb\language\language				$language			Language object
 	 * @param \blitze\content\services\types		$content_types		Content types object
-	 * @param \blitze\content\services\displayer	$displayer			Content displayer object
+	 * @param \blitze\content\services\fields		$fields				Content fields object
+	 * @param string								$phpbb_root_path	Path to the phpbb includes directory.
+	 * @param string								$php_ext			php file extension
 	*/
-	public function __construct(\phpbb\config\db $config, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\user $user, \blitze\content\services\types $content_types, \blitze\content\services\displayer $displayer, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\language\language $language, \blitze\content\services\types $content_types, \blitze\content\services\fields $fields, $phpbb_root_path, $php_ext)
 	{
 		$this->db = $db;
 		$this->helper = $helper;
-		$this->user = $user;
+		$this->language = $language;
 		$this->content_types = $content_types;
-		$this->displayer = $displayer;
-		$this->root_path = $phpbb_root_path;
+		$this->fields = $fields;
+		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
-
-		$this->content_forums = unserialize($config['blitze_content_forums']);
 	}
 
+	/**
+	 * @return array
+	 */
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.user_setup'				=> 'load_block_language',
-			'core.page_header'				=> 'add_post_new_nav',
-			'core.search_get_posts_data'	=> 'modify_posts_data',
-			'core.search_get_topic_data'	=> 'modify_topic_data',
-			'core.search_modify_tpl_ary'	=> 'content_search',
+			'core.user_setup'				                => 'load_block_language',
+			'core.search_get_posts_data'	                => 'modify_posts_data',
+			'core.search_get_topic_data'	                => 'modify_topic_data',
+			'core.search_modify_tpl_ary'	                => 'content_search',
 			'core.viewforum_get_topic_data'					=> 'viewforum_redirect',
 			'core.viewtopic_assign_template_vars_before'	=> 'viewtopic_redirect',
-			'core.posting_modify_template_vars'				=> 'posting_redirect',
+			'core.make_jumpbox_modify_forum_list'			=> 'update_jumpbox',
 			'core.viewonline_overwrite_location'			=> 'add_viewonline_location',
 		);
 	}
 
-	public function load_block_language($event)
+	/**
+	 * @param \phpbb\event\data $event
+	 * @return void
+	 */
+	public function load_block_language(\phpbb\event\data $event)
 	{
 		$lang_set_ext = $event['lang_set_ext'];
 		$lang_set_ext[] = array(
@@ -85,16 +87,11 @@ class listener implements EventSubscriberInterface
 		$event['lang_set_ext'] = $lang_set_ext;
 	}
 
-	public function add_post_new_nav()
-	{
-		global $template;
-			$template->assign_vars(array(
-				'S_CAN_POST_CONTENT'	=> true,
-				'U_POST_NEW'			=> append_sid("{$this->root_path}ucp.{$this->php_ext}", 'i=-blitze-content-ucp-content_module&mode=content'),
-			));
-	}
-
-	public function modify_posts_data($event)
+	/**
+	 * @param \phpbb\event\data $event
+	 * @return void
+	 */
+	public function modify_posts_data(\phpbb\event\data $event)
 	{
 		$sql_array = $event['sql_array'];
 		$sql_array['WHERE'] .= ' AND t.topic_time <= ' . time();
@@ -111,7 +108,11 @@ class listener implements EventSubscriberInterface
 		$event['total_match_count'] = $total_results;
 	}
 
-	public function modify_topic_data($event)
+	/**
+	 * @param \phpbb\event\data $event
+	 * @return void
+	 */
+	public function modify_topic_data(\phpbb\event\data $event)
 	{
 		$sql_where = $event['sql_where'];
 		$sql_where .= ' AND t.topic_time <= ' . time();
@@ -125,30 +126,30 @@ class listener implements EventSubscriberInterface
 		$event['total_match_count'] = $total_results;
 	}
 
-	public function content_search($event)
+	/**
+	 * @param \phpbb\event\data $event
+	 * @return void
+	 */
+	public function content_search(\phpbb\event\data $event)
 	{
 		$row = $event['row'];
 		$tpl_ary = $event['tpl_ary'];
 
 		$forum_id = $row['forum_id'];
-		$topic_id = $row['topic_id'];
-		$post_id = $row['post_id'];
 
-		if (isset($this->content_forums[$forum_id]))
+		if ($type = $this->content_types->get_forum_type($forum_id))
 		{
-			$type = $this->content_forums[$forum_id];
-
 			$params = array(
 				'type'		=> $type,
-				'topic_id'	=> $topic_id,
+				'topic_id'	=> $row['topic_id'],
 				'slug'		=> $event['row']['topic_slug']
 			);
 
-			if ($event['row']['topic_first_post_id'] !== $post_id)
+			if (isset($row['post_id']) && $row['topic_first_post_id'] !== $row['post_id'])
 			{
 				$params += array(
-					'p'	=> $post_id,
-					'#'	=> "p{$post_id}",
+					'p'	=> $row['post_id'],
+					'#'	=> "p{$row['post_id']}",
 				);
 			}
 
@@ -165,24 +166,28 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
-	public function viewforum_redirect($event)
+	/**
+	 * @param \phpbb\event\data $event
+	 * @return void
+	 */
+	public function viewforum_redirect(\phpbb\event\data $event)
 	{
-		if (isset($this->content_forums[$event['forum_data']['forum_id']]))
+		if ($type = $this->content_types->get_forum_type($event['forum_data']['forum_id']))
 		{
-			$type = $this->content_forums[$event['forum_data']['forum_id']];
-
 			redirect($this->helper->route('blitze_content_index', array(
-				'type'		=> $type,
+				'type' => $type,
 			)));
 		}
 	}
 
-	public function viewtopic_redirect($event)
+	/**
+	 * @param \phpbb\event\data $event
+	 * @return void
+	 */
+	public function viewtopic_redirect(\phpbb\event\data $event)
 	{
-		if (isset($this->content_forums[$event['forum_id']]))
+		if ($type = $this->content_types->get_forum_type($event['forum_id']))
 		{
-			$type = $this->content_forums[$event['forum_id']];
-
 			redirect($this->helper->route('blitze_content_show', array(
 				'type'		=> $type,
 				'topic_id'	=> $event['topic_id'],
@@ -191,21 +196,25 @@ class listener implements EventSubscriberInterface
 		}
 	}
 
-	public function posting_redirect($event)
+	/**
+	 * Remove content forums from forum jumpbox
+	 * @param \phpbb\event\data $event
+	 * @return void
+	 */
+	public function update_jumpbox(\phpbb\event\data $event)
 	{
-		if (isset($this->content_forums[$event['forum_id']]))
-		{
-			$type = $this->content_forums[$event['forum_id']];
-
-			redirect(append_sid("{$this->root_path}mcp.$this->php_ext", "i=-blitze-content-mcp-content_module&mode=content&action=edit&type={$type}&t=" . $event['topic_id']));
-		}
+		$event['rowset'] = array_diff_key($event['rowset'], $this->content_types->get_forum_types());
 	}
 
-	public function add_viewonline_location($event)
+	/**
+	 * @param \phpbb\event\data $event
+	 * @return void
+	 */
+	public function add_viewonline_location(\phpbb\event\data $event)
 	{
 		if ($event['on_page'][1] == 'app' && strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/content/') === 0)
 		{
-			$types = join('|', $this->content_forums);
+			$types = join('|', $this->content_types->get_forum_types());
 			preg_match("/\/content\/($types)(\/[0-9]\/.*)?/is", $event['row']['session_page'], $match);
 
 			if (sizeof($match))
@@ -213,7 +222,7 @@ class listener implements EventSubscriberInterface
 				$row = $this->content_types->get_type($match[1]);
 				$lang = (!empty($match[2])) ? 'SITEMAKER_READING_TOPIC' : 'SITEMAKER_BROWSING_CONTENT';
 
-				$event['location'] = sprintf($this->user->lang($lang), $row['content_langname']);
+				$event['location'] = $this->language->lang($lang, $row['content_langname']);
 				$event['location_url'] = $event['row']['session_page'];
 				unset($row);
 			}

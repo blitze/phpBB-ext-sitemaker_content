@@ -22,12 +22,14 @@ class content_module
 
 	public function main()
 	{
-		global $phpbb_container, $template;
+		global $phpbb_container, $request;
+
+		$action = $request->variable('do', 'index');
+
+		$controller = $phpbb_container->get('blitze.content.ucp.controller');
+		$controller->handle($action, $this->u_action);
 
 		$this->tpl_name = 'cp_content';
-		$this->page_title = 'MCP_CONTENT';
-
-		$template->assign_var('MODE', 'ucp');
-		$phpbb_container->get('blitze.content.manager')->handle_crud('ucp', $this->u_action);
+		$this->page_title = 'CONTENT_TYPES';
 	}
 }

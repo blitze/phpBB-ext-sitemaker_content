@@ -1,4 +1,4 @@
-;(function($, window, document, undefined) {
+;(function($, window, document) {
 	'use strict';
 
 	var fNameObj = {};
@@ -6,9 +6,12 @@
 	var typeObj = {};
 	var nTypeObj = {};
 	var containerObj = {};
-	var editor = {};
+	var view = 'summary';
+	var views = ['summary', 'detail'];
+	var textarea = {};
+	var preview = {};
 
-	var ace = window.ace || {};
+	var CodeMirror = window.CodeMirror || {};
 	var postData = window.postData || {};
 	var trans = window.trans || {};
 	var twig = window.twig || {};
@@ -140,6 +143,21 @@
 		return (error1 || error2) ? true : false;
 	};
 
+	var getEditor = function(view) {
+		return CodeMirror.fromTextArea($('#tpl-custom-' + view).get(0), {
+			theme: 'monokai',
+			mode: 'html',
+			lineNumbers: true,
+			lineWrapping : false,
+			autoRefresh: true,
+			styleActiveLine: true,
+			fixedGutter: true,
+			indentUnit: 4,
+			indentWithTabs: true,
+			coverGutterNextToScrollbar: false
+		});
+	};
+
 	$(document).ready(function() {
 		var removeObj = {};
 		var aButtons = {};
@@ -245,7 +263,7 @@
 		});
 
 		containerObj.on('click', 'a.add-option', function(e) {
-			addFieldOption($(this).attr('id').substring('11'));
+			addFieldOption($(this).attr('id').substring(11));
 			$(this).blur();
 			e.preventDefault();
 		});
@@ -297,44 +315,31 @@
 			checkRequired();
 		});
 
-		// ace editor
-		var view = 'summary';
-		var views = ['summary', 'detail'];
-		var textarea = {};
-		var preview = {};
-
+		// editor
 		$.each(views, function(i, view) {
-			editor[view] = ace.edit(view + '-editor');
-			textarea[view] = document.getElementById('tpl-custom-' + view);
 			preview[view] = $('#preview-' + view);
+			textarea[view] = getEditor(view);
 
-			textarea[view].style.display = 'none';
-
-			editor[view].setTheme('ace/theme/clouds_midnight');
-			editor[view].getSession().setMode('ace/mode/html');
-			editor[view].getSession().setValue(textarea[view].value);
-			editor[view].setShowPrintMargin(false);
-			editor[view].getSession().on('change', function() {
-				textarea[view].value = editor[view].getSession().getValue();
-				preview[view].html(twig({data: textarea[view].value}).render(postData));
+			textarea[view].on('change', function() {
+				preview[view].html(twig({data: textarea[view].getValue()}).render(postData));
 			});
 		});
 
 		$('#post-info > a.button').button({disabled: false}).click(function(e) {
 			e.preventDefault();
-			editor[view].insert('{{ ' + $(this).attr('tag') + ' }}');
+			textarea[view].replaceSelection('{{ ' + $(this).attr('tag') + ' }}');
 		});
 
 		$('#available-fields').on('click', 'a.button', function(e) {
 			e.preventDefault();
 			var field = '{{ ' + $(this).text().toUpperCase() + ' }}';
 			var ftype = $(this).attr('ftype');
-			editor[view].focus();
+			textarea[view].focus();
 
 			if (ftype === 'image') {
-				editor[view].insert('<img class="cms-teaser-medium-image" src="' + field + '" />');
+				textarea[view].replaceSelection('<img class="cms-teaser-medium-image" src="' + field + '" />');
 			} else {
-				editor[view].insert(field);
+				textarea[view].replaceSelection(field);
 			}
 		}).children('a.button').button({disabled: false});
 
@@ -344,8 +349,7 @@
 			$(this).removeClass('ui-state-active').parent().children('li').not(this).addClass('ui-state-active');
 			$('.toggle-panel').hide();
 			$('#' + id + '-tpl').show();
-			view = id.substring('7');
-			editor[view].resize();
+			view = id.substring(7);
 			e.preventDefault();
 		});
 

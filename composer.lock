@@ -1,10 +1,11 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "135c61b4ea011ada3cb8f6303eb2f221",
+    "hash": "71692cdcdee8723eea8c2fa9fbaa8f30",
+    "content-hash": "3a79bf67718fdeb1e48748a270ae8a48",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -160,6 +161,101 @@
             "time": "2014-11-29 01:29:17"
         },
         {
+            "name": "paquettg/php-html-parser",
+            "version": "1.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paquettg/php-html-parser.git",
+                "reference": "18845e09831dd0772b88b51e788a4f74c701224c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paquettg/php-html-parser/zipball/18845e09831dd0772b88b51e788a4f74c701224c",
+                "reference": "18845e09831dd0772b88b51e788a4f74c701224c",
+                "shasum": ""
+            },
+            "require": {
+                "paquettg/string-encode": "~0.1.0",
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9.0",
+                "phpunit/phpunit": "~4.8.0",
+                "satooshi/php-coveralls": "~0.6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPHtmlParser": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Gilles Paquette",
+                    "email": "paquettg@gmail.com",
+                    "homepage": "http://gillespaquette.ca"
+                }
+            ],
+            "description": "An HTML DOM parser. It allows you to manipulate HTML. Find tags on an HTML page with selectors just like jQuery.",
+            "homepage": "https://github.com/paquettg/php-html-parser",
+            "keywords": [
+                "dom",
+                "html",
+                "parser"
+            ],
+            "time": "2016-04-06 15:24:40"
+        },
+        {
+            "name": "paquettg/string-encode",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paquettg/string-encoder.git",
+                "reference": "cf08343649701979f581c1601d01247fa3782439"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paquettg/string-encoder/zipball/cf08343649701979f581c1601d01247fa3782439",
+                "reference": "cf08343649701979f581c1601d01247fa3782439",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "stringEncode": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Gilles Paquette",
+                    "email": "paquettg@gmail.com",
+                    "homepage": "http://gillespaquette.ca"
+                }
+            ],
+            "description": "Facilitating the process of altering string encoding in PHP.",
+            "homepage": "https://github.com/paquettg/string-encoder",
+            "keywords": [
+                "charset",
+                "encoding",
+                "string"
+            ],
+            "time": "2014-05-29 18:38:09"
+        },
+        {
             "name": "solution10/calendar",
             "version": "v1.1.0",
             "source": {
@@ -204,6 +300,56 @@
                 "calendar"
             ],
             "time": "2014-10-29 22:49:15"
+        },
+        {
+            "name": "urodoz/truncate-html",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/urodoz/truncateHTML.git",
+                "reference": "88fb29fd3a30c95b879f1642e08fd8746dd05bd7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/urodoz/truncateHTML/zipball/88fb29fd3a30c95b879f1642e08fd8746dd05bd7",
+                "reference": "88fb29fd3a30c95b879f1642e08fd8746dd05bd7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4",
+                "symfony/dependency-injection": "~2.4",
+                "symfony/http-kernel": "~2.4",
+                "twig/twig": "~1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Urodoz\\Truncate\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Albert Lacarta",
+                    "email": "urodoz@gmail.com",
+                    "homepage": "http://www.rqlogic.com"
+                }
+            ],
+            "description": "Handle truncate action on HTML strings",
+            "keywords": [
+                "content",
+                "html",
+                "shorten",
+                "truncate",
+                "truncating"
+            ],
+            "time": "2014-05-25 22:50:06"
         }
     ],
     "packages-dev": [
@@ -402,12 +548,12 @@
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Console.git",
+                "url": "https://github.com/symfony/console.git",
                 "reference": "ef825fd9f809d275926547c9e57cbf14968793e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/ef825fd9f809d275926547c9e57cbf14968793e8",
+                "url": "https://api.github.com/repos/symfony/console/zipball/ef825fd9f809d275926547c9e57cbf14968793e8",
                 "reference": "ef825fd9f809d275926547c9e57cbf14968793e8",
                 "shasum": ""
             },
@@ -599,9 +745,11 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "cocur/slugify": 0,
+        "urodoz/truncate-html": 0,
         "phpbb/epv": 20
     },
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": {
         "php": ">=5.3"
     },

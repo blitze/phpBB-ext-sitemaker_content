@@ -1,18 +1,15 @@
 <?php
 /**
-*
-* content [English]
-*
-* @package language
-* @version $Id: admin.php 824 2010-12-16 20:53:35Z blitze $
-* @copyright (c) 2007 phpBB Group 
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License 
-*
-*/
+ *
+ * @package phpBB Sitemaker [English]
+ * @copyright (c) 2013 Daniel A. (blitze)
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -42,14 +39,13 @@ $lang = array_merge($lang, array(
 	'ADD_OPTION'				=> 'Add Option',
 	'ADD_TYPE'					=> 'Add New Content Type',
 	'ALLOW_COMMENTS'			=> 'Allow Comments?',
-	'AUTHOR_CONTENTS_EXPLAIN'	=> 'Display other topics from content poster?',
+	'AUTHOR_CONTENTS_EXPLAIN'	=> 'Display other topics from topic author?',
 
 	'CANCEL'					=> 'Cancel',
 	'CHANGE_CONTENT_TYPE'		=> 'Change Content type',
 	'CHARS'						=> 'Characters',
 	'CONFIRM_DELETE'			=> 'Delete Field?',
-	'CONFIRM_DELETE_TYPE'		=> 'Are you sure you would like to delete <strong>%s</strong>?<br />Keep in mind that this will delete all topics and posts for this content type, unless you transfer it to another content type.',
-	'CONFIRM_SWITCH_TO_TYPE'	=> '<strong>Are you sure you would like to change this post\'s content type?</strong><br />Note that if the new content type has more input fields you may need to provide the missing fields or lose data if the new content type has less fields.',
+	'CONFIRM_DELETE_TYPE'		=> 'Are you sure you would like to delete this content type? Keep in mind that this will delete all topics and posts for this content type, unless you transfer it to another content type.',
 	'CONTENT_ACTIVE'			=> 'Active',
 	'CONTENT_CHANGE_TYPE'		=> 'Change content type',
 	'CONTENT_DESC'				=> 'Content Description',
@@ -59,6 +55,7 @@ $lang = array_merge($lang, array(
 	'CONTENT_DISPLAY_PORTAL'	=> 'Portal',
 	'CONTENT_DISPLAY_TILES'		=> 'Tiles',
 	'CONTENT_EDITED'			=> 'Your content has been successfully edited',
+	'CONTENT_FORUM_EXPLAIN'		=> 'This forum is used by the SiteMaker Content extension. PLEASE DO NOT DELETE.',
 	'CONTENT_INDEX'				=> 'Content summary',
 	'CONTENT_LANGNAME'			=> 'Display Name',
 	'CONTENT_LANGNAME_EXPLAIN'	=> 'The name that will be displayed e.g. Articles, Knowledge Base, etc.<br />Use language constant if name is served from language file.<br /><strong>Tip:</strong> If \'Content Parent\' and \'Display Name\' are the same, only the parent will be displayed on the menu.',
@@ -74,10 +71,12 @@ $lang = array_merge($lang, array(
 	'CONTENT_TYPE'				=> 'Content Type',
 	'CONTENT_TYPES'				=> 'Content Types',
 	'CONTENT_TYPE_CREATED'		=> 'Content type successfully created.<br /><br />You may now %1$sset permissions%2$s for this content type',
+	'CONTENT_TYPE_DELETE'		=> 'Delete Content Type',
 	'CONTENT_TYPE_DELETED'		=> 'Content type deleted successfully',
 	'CONTENT_TYPE_NO_EXIST'		=> 'The selected content type does not exist',
 	'CONTENT_TYPE_UPDATED'		=> 'Content type updated successfully',
-	'CONVERTING_TYPE_EXPLAIN'	=> 'This page requires javascript and popups to be enabled. Please do not close the popup window. It may take from a few seconds to several minutes to completely transfer all posts to the new content type.',
+	'CONTENT_VIEW'				=> 'View',
+	'CONTENT_VIEW_SETTINGS'		=> 'View Settings',
 	'COPY_PERMISSION'			=> 'Copy permissions',
 	'COPY_PERMISSION_EXPLAIN'	=> 'Copy permissions from the selected forum and apply it to this content type',
 
@@ -90,10 +89,8 @@ $lang = array_merge($lang, array(
 	'DELETE_TYPE'				=> 'Delete Content type',
 	'DETAIL_TEMPLATE'			=> 'Detail Template',
 	'DETAIL_TEMPLATE_EXPLAIN'	=> 'This template will be used to display the content fields when viewing the post body. If a template is not provided, all fields will be displayed',
-	'DISPLAY_TYPE'				=> 'Display Type',
-	'DISPLAY_VIEWS'				=> 'Display Views',
+	'DISPLAY_VIEWS'				=> 'Display views count',
 	'DISPLAY_VIEWS_EXPLAIN'		=> 'Display number of times topic has been viewed?',
-	'DONOT_CHANGE_CONTENT_TYPE'	=> 'Do not change content type',
 
 	'EDIT'						=> 'Edit',
 	'EDIT_FIELD'				=> 'Edit field',
@@ -109,7 +106,6 @@ $lang = array_merge($lang, array(
 	'FIELD_DETAIL_SHOW'			=> 'Show on content detail page',
 	'FIELD_DISPLAY'				=> 'Where should this field be displayed?',
 	'FIELD_DISPLAY_LABEL'		=> 'Display field label?',
-	'FIELD_INPUT_AUTHOR'		=> 'Topic Author',
 	'FIELD_INPUT_MODERATOR'		=> 'Moderators only',
 	'FIELD_LABEL'				=> 'Field Display Name',
 	'FIELD_LOCATION'			=> 'Where should this field be displayed?',
@@ -123,14 +119,14 @@ $lang = array_merge($lang, array(
 
 	'GROUP_INITIAL'				=> 'G',
 
-	'INDEX_MAX_CHARS'			=> 'Maximum characters displayed',
+	'INDEX_MAX_CHARS'			=> 'Maximum characters displayed on summary',
 	'INVALID_CONTENT_FIELD'		=> '%1$s is invalid (%2$s)',
 	'INVALID_CONTENT_TYPE'		=> 'Oops! Invalid content type',
 	'ITEMS_PER_PAGE'			=> 'Number of items per page',
 
 	'LABEL'						=> 'Label',
-	'LABEL_INLINE'				=> 'Yes - on the same line',
-	'LABEL_NEWLINE'				=> 'Yes - on a new line',
+	'LABEL_INLINE'				=> 'Yes - Same line',
+	'LABEL_NEWLINE'				=> 'Yes - New line',
 	'LARGE'						=> 'Large',
 	'LIVE_PREVIEW'				=> 'Live Preview',
 
@@ -140,15 +136,11 @@ $lang = array_merge($lang, array(
 	'MISSING_LABEL'				=> 'Missing field label!',
 	'MULTI_SELECT'				=> 'Allow multiple selections',
 
-	'NEW_TYPE_NO_EXIST'			=> 'The new Content type to transfer to was not found',
-	'NO_COMPATIBLE_TYPES'		=> '<strong>There are no suitable content types for transfer.</strong><br />To be compatible, this content type must have all content fields marked as <strong>required</strong>',
 	'NO_CONTENT_FIELDS'			=> '<strong>No content field was entered.</strong><br />A content field is required for content to be created or displayed.',
-	'NO_CONTENT_ID'				=> 'Oops! No content id specified',
 	'NO_CONTENT_TYPES'			=> 'No content types have been created',
 	'NO_COPY_PERMISSIONS'		=> 'Do not copy permissions',
 
 	'PENDING_TOPICS'			=> 'Pending Topics',
-	'PLEASE_WAIT'				=> 'Transferring, please wait...',
 	'PROCEED'					=> 'Proceed',
 	'PT_REQUIRED_FIELDS'		=> '* Required',
 
@@ -174,10 +166,6 @@ $lang = array_merge($lang, array(
 	'TOO_LONG'					=> 'Too long',
 	'TOO_SHORT'					=> 'Too short',
 	'TOO_SMALL'					=> 'Too small',
-	'TOPICS_CHANGE_FAILED'		=> 'The following topics could not be changed:',
-	'TOPICS_CHANGE_SUCCESS'		=> 'The following topics where successfully changed:',
-	'TOPICS_PER_GROUP'			=> 'Topics per group',
-	'TOPICS_PER_GROUP_EXPLAIN'	=> 'For content views that group topics (e.g. by category or author), this limits the number of topics per group',
 	'TOPIC_AUTHOR'				=> 'Author',
 	'TOPIC_AUTHOR_AVATAR'		=> 'Author Avatar',
 	'TOPIC_AUTHOR_COLOUR'		=> 'Author Colour',
@@ -188,19 +176,12 @@ $lang = array_merge($lang, array(
 	'TOPIC_TITLE'				=> 'Topic Title',
 	'TOPIC_URL'					=> 'Topic URL',
 	'TOPIC_VIEWS'				=> 'Topic Views',
-	'TRANSFERING_TYPE'			=> 'Transferring content type',
-	'TRANSFER_SUCCESSFULL'		=> 'The content type "<strong>%1$s</strong>" was successfully transferred to "<strong>%2$s</strong>".',
 	'TRANSFER_TOPICS'			=> 'Transfer Topics to',
-	'TRANSFER_TOPICS_EXPLAIN'	=> 'This will transfer all topics from this content type to the selected content type.',
 	'TYPE'						=> 'Type',
-	'TYPE_NOT_COMPATIBLE'		=> 'The selected content type, <strong>%1$s</strong>, is not suitable for transfer from <strong>%2$s</strong>',
 	'TYPE_NOT_FOUND'			=> 'The current content type was not found',
-	'TYPE_NOT_TRANSFERABLE'		=> 'This content type is <strong>not transferrable</strong> as no other content types exist',
-	'TYPE_NO_TOPICS'			=> 'The content type has no transferable topics',
 
 	'VALIDATE_EXPLAIN'			=> 'Should we validate this field?',
 	'VIEW_PENDING'				=> 'View Pending',
-	'VIEW_POPUP'				=> 'Open Popup',
 	'VIEW_SCHEDULED'			=> 'View Scheduled',
 	'VIEW_TYPE'					=> 'View content type',
 

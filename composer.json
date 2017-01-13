@@ -16,7 +16,9 @@
 		"cocur/slugify" : "@stable",
 		"solution10/calendar": "1.*",
 		"composer/installers": "~1.0",
-		"php": ">=5.3"
+		"php": ">=5.3",
+		"paquettg/php-html-parser": "^1.7",
+		"urodoz/truncate-html": "@stable"
 	},
 	"require-dev": {
 		"phpbb/epv": "dev-master"

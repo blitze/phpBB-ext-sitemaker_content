@@ -64,19 +64,16 @@ class archive extends \blitze\sitemaker\services\blocks\driver\block
 	{
 		$content_types = $this->content_types->get_all_types();
 
-		$forum_id = 0;
+		$forum_id = key($content_types);
 		$content_type_options = array();
-		foreach ($content_types as $type => $row)
+		foreach ($content_types as $type => $entity)
 		{
-			$forum_id = $row['forum_id'];
-			$content_type_options[$forum_id] = $row['content_langname'];
+			$content_type_options[$entity->get_forum_id()] = $entity->get_content_langname();
 		}
-
-		$forum_id = (isset($settings['forum_id'])) ? $settings['forum_id'] : $forum_id;
 
 		return array(
 			'legend1'		=> $this->user->lang['SETTINGS'],
-			'forum_id'		=> array('lang' => 'CONTENT_TYPE', 'validate' => 'string', 'type' => 'select', 'params' => array($content_type_options, $forum_id), 'default' => $forum_id, 'explain' => false),
+			'forum_id'		=> array('lang' => 'CONTENT_TYPE', 'validate' => 'string', 'type' => 'select', 'options' => $content_type_options, 'default' => $forum_id, 'explain' => false),
 		);
 	}
 

@@ -3,46 +3,42 @@ services:
     blitze.content.view.blog:
         class: blitze\content\services\views\blog
         arguments:
-            - @auth
-            - @cache
-            - @config
-            - @dbal.conn
-            - @template
-            - @user
-            - @blitze.content.displayer
-            - %core.root_path%
-            - %core.php_ext%
+            - '@language'
+            - '@pagination'
+            - '@template'
+            - '@blitze.content.fields'
+            - '@blitze.sitemaker.forum.data'
+            - '@blitze.content.helper'
+            - '%core.root_path%'
+            - '%core.php_ext%'
         tags:
-            - { name: content.view }
+            - { name: sitemaker.content.view }
 
     blitze.content.view.portal:
         class: blitze\content\services\views\portal
         arguments:
-            - @auth
-            - @cache
-            - @config
-            - @dbal.conn
-            - @template
-            - @user
-            - @blitze.content.displayer
-            - %core.root_path%
-            - %core.php_ext%
+            - '@language'
+            - '@pagination'
+            - '@template'
+            - '@blitze.content.fields'
+            - '@blitze.sitemaker.forum.data'
+            - '@blitze.content.helper'
+            - '%core.root_path%'
+            - '%core.php_ext%'
         tags:
-            - { name: content.view }
+            - { name: sitemaker.content.view }
 
     blitze.content.view.tiles:
         class: blitze\content\services\views\tiles
         arguments:
-            - @auth
-            - @cache
-            - @config
-            - @dbal.conn
-            - @request
-            - @template
-            - @user
-            - @blitze.content.displayer
-            - @blitze.sitemaker.util
-            - %core.root_path%
-            - %core.php_ext%
+            - '@language'
+            - '@pagination'
+            - '@request'
+            - '@template'
+            - '@blitze.content.fields'
+            - '@blitze.sitemaker.forum.data'
+            - '@blitze.content.helper'
+            - '%core.root_path%'
+            - '%core.php_ext%'
         tags:
-            - { name: content.view }
+            - { name: sitemaker.content.view }

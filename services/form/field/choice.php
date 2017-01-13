@@ -11,22 +11,6 @@ namespace blitze\content\services\form\field;
 
 abstract class choice extends base
 {
-	/** @var \blitze\sitemaker\services\template */
-	protected $ptemplate;
-
-	/**
-	 * Constructor
-	 *
-	 * @param \phpbb\user							$user			User object
-	 * @param \blitze\sitemaker\services\template		$ptemplate		Sitemaker template object
-	 */
-	public function __construct(\phpbb\user $user, \blitze\sitemaker\services\template $ptemplate)
-	{
-		parent::__construct($user, $ptemplate);
-
-		$this->ptemplate = $ptemplate;
-	}
-
 	/**
 	 * @inheritdoc
 	 */
@@ -37,53 +21,83 @@ abstract class choice extends base
 			'field_minlen'		=> 0,
 			'field_maxlen'		=> 200,
 			'field_options'		=> array(),
+			'field_defaults'	=> array(),
 			'field_multi'		=> false,
-			'requires_item_id'	=> false,
 		);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field($field_value, $fields_data = array(), $view = 'detail', $item_id = 0)
+	public function display_field($field_value)
 	{
-		$field_value = array_filter(explode("<br />", $field_value));
-		return sizeof($field_value) ? join(', ', $field_value) . '<br /><br />' : '';
+		$field_value = array_filter(explode("<br>", $field_value));
+		return sizeof($field_value) ? join(', ', $field_value) : '';
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function show_form_field($name, &$data, $item_id = 0)
+	public function show_form_field($name, array &$data)
 	{
 		$field = $this->get_name();
-		$selected = $this->get_field_value($name, $data['field_value']);
-		$selected = (is_array($selected)) ? $selected : array($selected);
+		$selected = $this->get_selected_options($name, $data);
 
 		$data['field_name'] = $name;
 		$data['field_value'] = join("\n", $selected);
-		$data['field_required']	= ($data['field_required']) ? ' required' : '';
-		$data['field_size'] = (sizeof($data['field_options']) < $data['field_size']) ? sizeof($data['field_options']) : $data['field_size'];
+		$data['field_size'] = $this->get_field_size($data);
 
-		if ($data['field_type'] == 'radio' || $data['field_type'] == 'checkbox')
+		$this->set_field_options($name, $data, $selected);
+
+		$this->ptemplate->assign_vars(array_change_key_case($data, CASE_UPPER));
+
+		return $this->ptemplate->render_view('blitze/content', "fields/$field.html", $field . '_field');
+	}
+
+	/**
+	 * @param $name
+	 * @param array $data
+	 * @param array $selected
+	 */
+	protected function set_field_options($name, array $data, array $selected)
+	{
+		if ($data['field_type'] === 'radio' || $data['field_type'] === 'checkbox')
 		{
 			$data['field_id'] .= '-0';
 		}
 
 		$count = 0;
-		foreach ($data['field_options'] as $value => $label)
+		foreach ($data['field_settings']['field_options'] as $value => $label)
 		{
 			$this->ptemplate->assign_block_vars('option', array(
 				'ID'		=> 'field-'. $name . '-' . $count,
-				'LABEL'		=> $label,
-				'SELECTED'	=> (in_array($value, $selected)) ? true : false,
-				'VALUE'		=> $value)
-			);
+				'LABEL'		=> $this->language->lang($label),
+				'SELECTED'	=> (in_array($value, $selected, true)) ? true : false,
+				'VALUE'		=> $value
+			));
 			$count++;
 		}
+	}
 
-		$this->ptemplate->assign_vars(array_change_key_case($data, CASE_UPPER));
+	/**
+	 * @param string $name
+	 * @param array $data
+	 * @return array
+	 */
+	protected function get_selected_options($name, array $data)
+	{
+		$selected = $this->get_field_value($name, ($data['field_value']) ? $data['field_value'] : $data['field_settings']['field_defaults']);
 
-		return $this->ptemplate->render_view('blitze/content', "fields/$field.html", $field . '_field');
+		return (is_array($selected)) ? $selected : array($selected);
+	}
+
+	/**
+	 * @param array $data
+	 * @return int
+	 */
+	protected function get_field_size(array $data)
+	{
+		$field_options_count = sizeof($data['field_settings']['field_options']);
+		return ($field_options_count < $data['field_settings']['field_size']) ? $field_options_count : $data['field_settings']['field_size'];
 	}
 }

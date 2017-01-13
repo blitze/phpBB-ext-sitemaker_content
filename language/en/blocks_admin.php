@@ -1,12 +1,15 @@
 <?php
 /**
-*
-* @package phpBB Sitemaker [English]
-* @copyright (c) 2012 Daniel A. (blitze)
-* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
-*
-*/
+ *
+ * @package phpBB Sitemaker [English]
+ * @copyright (c) 2013 Daniel A. (blitze)
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
 
+/**
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -31,11 +34,12 @@ $lang = array_merge($lang, array(
 	'OFFSET_START'						=> 'Offset start',
 	'ORDER_BY'							=> 'Order By',
 
-	'BLITZE_CONTENT_BLOCK_ARCHIVE'	=> 'Content Archive',
-	'BLITZE_CONTENT_BLOCK_CALENDAR'	=> 'Content Calendar',
-	'BLITZE_CONTENT_BLOCK_RECENT'	=> 'Recent Content',
+	'BLITZE_CONTENT_BLOCK_ARCHIVE'		=> 'Content Archive',
+	'BLITZE_CONTENT_BLOCK_CALENDAR'		=> 'Content Calendar',
+	'BLITZE_CONTENT_BLOCK_RECENT'		=> 'Recent Content',
 
 	'SELECT_FIELDS'						=> 'Select Fields',
+	'SELECT_FIELDS_EXPLAIN'				=> 'Only display the selected fields',
 
 	'TOPIC_TIME'						=> 'Topic Time',
 	'TOPIC_TYPE'						=> 'Topic Type',

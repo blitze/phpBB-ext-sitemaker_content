@@ -11,35 +11,13 @@ namespace blitze\content\services\form\field;
 
 class image extends base
 {
-	/** @var \phpbb\request\request_interface */
-	protected $request;
-
-	/* @var \phpbb\user */
-	protected $user;
-
-	/** @var \blitze\sitemaker\services\template */
-	protected $ptemplate;
-
-	/**
-	 * Constructor
-	 *
-	 * @param \phpbb\request\request_interface		$request		Request object
-	 * @param \phpbb\user							$user			User object
-	 * @param \blitze\sitemaker\services\template	$ptemplate		Sitemaker template object
-	 */
-	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \blitze\sitemaker\services\template $ptemplate)
-	{
-		$this->request = $request;
-		$this->user = $user;
-		$this->ptemplate = $ptemplate;
-	}
-
 	/**
 	 * @inheritdoc
 	 */
 	public function get_field_value($name, $value)
 	{
-		$value = $this->request->variable($name, $this->get_image_src($value));
+		$value = $this->request->variable($name, $value);
+		$value = $this->get_image_src($value);
 
 		return ($value) ? '[img]' . $value . '[/img]' : '';
 	}
@@ -47,14 +25,13 @@ class image extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function show_form_field($name, &$data, $item_id = 0)
+	public function show_form_field($name, array &$data)
 	{
 		$bbcode_value = $this->get_field_value($name, $data['field_value']);
 
 		$field = $this->get_name();
 		$data['field_name'] = $name;
-		$data['field_value'] = ($bbcode_value) ? $this->get_image_src($bbcode_value) : '';
-		$data['field_required']	= ($data['field_required']) ? ' required' : '';
+		$data['field_value'] = $this->get_image_src($bbcode_value);
 
 		$this->ptemplate->assign_vars(array_change_key_case($data, CASE_UPPER));
 		$field = $this->ptemplate->render_view('blitze/content', "fields/$field.html", $field . '_field');
@@ -67,7 +44,7 @@ class image extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field($value, $data = array(), $view = 'detail', $item_id = 0)
+	public function display_field($value)
 	{
 		return ($value) ? '<div class="img-ui">' . $value . '</div>' : '';
 	}
@@ -78,11 +55,10 @@ class image extends base
 	public function get_default_props()
 	{
 		return array(
-			'field_size'		=> 40,
+			'field_size'		=> 45,
 			'field_minlen'		=> 0,
 			'field_maxlen'		=> 200,
-			//'validation_filter'	=> FILTER_VALIDATE_URL,
-			'requires_item_id'	=> false,
+			'validation_filter'	=> FILTER_VALIDATE_URL,
 		);
 	}
 
@@ -94,11 +70,12 @@ class image extends base
 		return 'image';
 	}
 
+	/**
+	 * @param string $bbcode_string
+	 * @return string
+	 */
 	private function get_image_src($bbcode_string)
 	{
-		$match = array();
-		preg_match('#\[img](.*?)\[\/img]#', $bbcode_string, $match);
-
-		return isset($match[1]) ? $match[1] : '';
+		return str_replace(array('[img]', '[/img]'), '', $bbcode_string);
 	}
 }

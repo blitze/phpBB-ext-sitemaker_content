@@ -3,14 +3,14 @@ services:
     blitze.content.block.archive:
         class: blitze\content\blocks\archive
         arguments:
-            - @auth
-            - @content.visibility
-            - @dbal.conn
-            - @controller.helper
-            - @user
-            - @blitze.content.types
-            - %core.root_path%
-            - %core.php_ext%
+            - '@auth'
+            - '@content.visibility'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@user'
+            - '@blitze.content.types'
+            - '%core.root_path%'
+            - '%core.php_ext%'
         calls:
             - [set_name, [blitze.content.block.archive]]
         tags:
@@ -19,12 +19,12 @@ services:
     blitze.content.block.calendr:
         class: blitze\content\blocks\calendr
         arguments:
-            - @config
-            - @user
-            - @blitze.content.displayer
-            - @blitze.sitemaker.forum.data
-            - %core.root_path%
-            - %core.php_ext%
+            - '@config'
+            - '@user'
+            - '@blitze.content.fields'
+            - '@blitze.sitemaker.forum.data'
+            - '%core.root_path%'
+            - '%core.php_ext%'
         calls:
             - [set_name, [blitze.content.block.calendar]]
         tags:
@@ -33,13 +33,12 @@ services:
     blitze.content.block.recent:
         class: blitze\content\blocks\recent
         arguments:
-            - @config
-            - @user
-            - @blitze.content.displayer
-            - @blitze.sitemaker.date_range
-            - @blitze.sitemaker.forum.data
-            - %core.root_path%
-            - %core.php_ext%
+            - '@config'
+            - '@language'
+            - '@blitze.content.types'
+            - '@blitze.content.fields'
+            - '@blitze.sitemaker.date_range'
+            - '@blitze.sitemaker.forum.data'
         calls:
             - [set_name, [blitze.content.block.recent]]
         tags:

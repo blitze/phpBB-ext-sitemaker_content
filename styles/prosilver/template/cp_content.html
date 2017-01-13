@@ -1,90 +1,29 @@
 <!-- INCLUDE {MODE}_header.html -->
 
-<!-- IF not S_PREVIEW -->
 	<!-- IF S_ACTION -->
 	<div class="pull-right responsive-center">
 		<form method="post" action="{S_ACTION}">
 			<fieldset>
-				<input type="search" placeholder="{L_TOPIC_TITLE}" class="panel inputbox tiny" name="search" size="20" maxlength="128" value="" />
+				<input type="search" placeholder="{L_TOPIC_TITLE}" class="panel inputbox tiny" name="keyword" size="20" maxlength="128" value="" />
 				<input type="submit" class="panel bg3" value="{L_SEARCH}" />
 			</fieldset>
 		</form>
 	</div>
 	<!-- ENDIF -->
 <h2>{L_MANAGE_CONTENT}</h2>
-<!-- ENDIF -->
 
 <!-- IF S_VIEWING -->
 
 	<div class="panel post">
 		<div class="inner">
-			<ul class="post-buttons">
-				<!-- IF U_EDIT -->
-				<li>
-					<a href="{U_EDIT}" title="{L_EDIT_POST}" class="button button-icon-only">
-						<i class="icon fa-pencil fa-fw" aria-hidden="true"></i><span class="sr-only">{L_BUTTON_EDIT}</span>
-					</a>
-				</li>
-				<!-- ENDIF -->
-				<!-- IF U_DELETE -->
-				<li>
-					<a href="{U_DELETE}" title="{L_DELETE_POST}" class="button button-icon-only">
-						<i class="icon fa-times fa-fw" aria-hidden="true"></i><span class="sr-only">{L_DELETE_POST}</span>
-					</a>
-				</li>
-				<!-- ENDIF -->
-				<!-- IF U_REPORT -->
-				<li>
-					<a href="{U_REPORT}" title="{L_REPORT_POST}" class="button button-icon-only">
-						<i class="icon fa-exclamation fa-fw" aria-hidden="true"></i><span class="sr-only">{L_REPORT_POST}</span>
-					</a>
-				</li>
-				<!-- ENDIF -->
-				<!-- IF U_WARN -->
-				<li>
-					<a href="{U_WARN}" title="{L_WARN_USER}" class="button button-icon-only">
-						<i class="icon fa-exclamation-triangle fa-fw" aria-hidden="true"></i><span class="sr-only">{L_WARN_USER}</span>
-					</a>
-				</li>
-				<!-- ENDIF -->
-				<!-- IF U_INFO -->
-				<li>
-					<a href="{U_INFO}" title="{L_INFORMATION}" class="button button-icon-only">
-						<i class="icon fa-info fa-fw" aria-hidden="true"></i><span class="sr-only">{L_INFORMATION}</span>
-					</a>
-				</li>
-				<!-- ENDIF -->
-			</ul><br />
 			<h4>{L_TOPIC_REVIEW}</h4>
-			<div class="clear"></div>
 			<h3 id="review">
 				<span class="right-box"><a href="#review" onclick="viewableArea(getElementById('topicreview'), true); var rev_text = getElementById('review').getElementsByTagName('a').item(0).firstChild; if (rev_text.data == '{LA_EXPAND_VIEW}'){rev_text.data = '{LA_COLLAPSE_VIEW}'; } else if (rev_text.data == '{LA_COLLAPSE_VIEW}'){rev_text.data = '{LA_EXPAND_VIEW}'};">{L_EXPAND_VIEW}</a></span>
 				<span>&nbsp;</span>
 			</h3>
 
 			<div id="topicreview">
-				<div class="postbody pt-postbody">
-					<!-- IF not CUSTOM_DISPLAY -->
-					<h3 class="first"><a href="{TOPIC_URL}">{TOPIC_TITLE}</a></h3>
-					<p class="author">
-					<!-- IF S_IS_BOT -->
-						<span><i class="icon fa-file fa-fw <!-- IF topic_row.S_UNREAD_POST -->icon-red<!-- ELSE -->icon-lightgray<!-- ENDIF --> icon-md" aria-hidden="true"></i><span class="sr-only">{topic_row.MINI_POST}</span></span>
-					<!-- ELSE -->
-						<a class="unread" href="{topic_row.U_MINI_POST}" title="{topic_row.MINI_POST}">
-							<i class="icon fa-file fa-fw <!-- IF topic_row.S_UNREAD_POST -->icon-red<!-- ELSE -->icon-lightgray<!-- ENDIF --> icon-md" aria-hidden="true"></i><span class="sr-only">{topic_row.MINI_POST}</span>
-						</a>
-					<!-- ENDIF -->
-						<span class="responsive-hide">{L_POST_BY_AUTHOR} </span><strong>{TOPIC_AUTHOR_FULL}</strong> | <i class="fa fa-calendar"></i> {TOPIC_DATE|date("m/d/Y")}<!-- IF S_COMMENTS --> | <i class="fa fa-comments-o fa-lg"></i> <a href="#comments">{TOPIC_COMMENTS}<span class="responsive-hide"> {L_COMMENTS}</span></a><!-- ENDIF -->
-					</p>
-					<!-- ENDIF -->
-					<div class="content">
-						<!-- IF CUSTOM_DISPLAY -->
-						{CUSTOM_DISPLAY}
-						<!-- ELSE -->
-						{SEQ_DISPLAY}
-						<!-- ENDIF -->
-					</div>
-				</div>
+				<!-- INCLUDE {S_VIEWING} -->
 			</div>
 		</div>
 	</div>
@@ -125,92 +64,11 @@
 	</div>
 	<!-- ENDIF -->
 
-<!-- ELSEIF S_EDITING -->
-	<!-- IF S_PREVIEW -->
-		<div class="tabs-container">
-			<h2>{L_PREVIEW}</h2>
-			<div id="minitabs" class="minitabs sub-panels" data-show-panel="preview-summary-panel" role="tablist">
-				<ul>
-					<li id="preview-detail-panel-tab" class="tab">
-						<a href="#minitabs" data-subpanel="preview-detail-panel" role="tab" aria-controls="preview-detail-panel">{L_DETAILS}</a>
-					</li>
-					<li id="preview-summary-panel-tab" class="tab activetab">
-						<a href="#minitabs" data-subpanel="preview-summary-panel" role="tab" aria-controls="preview-summary-panel">{L_SUMMARY}</a>
-					</li>
-				</ul>
-			</div>
-		</div>
-		<div class="panel post">
-			<div class="inner">
-				<div id="preview-summary-panel" role="tabpanel">
-					<ul class="post-buttons">
-						<li id="summary_expand">
-							<a href="#review" onclick="viewableArea(getElementById('topicreview'), true); var rev_text = getElementById('summary_expand').getElementsByTagName('a').item(0).firstChild; if (rev_text.data.trim() == '{LA_EXPAND_VIEW}'){rev_text.data = '{LA_COLLAPSE_VIEW}'; } else if (rev_text.data.trim() == '{LA_COLLAPSE_VIEW}'){rev_text.data = '{LA_EXPAND_VIEW}';} return false;">
-								{L_EXPAND_VIEW}
-							</a>
-						</li>
-					</ul>
-					<div class="clear"></div>
-					<div id="topicreview">
-						<!-- INCLUDE {SUMMARY_TPL} -->
-					</div>
-				</div>
-				<div id="preview-detail-panel" role="tabpanel">
-					<ul class="post-buttons">
-						<li id="detail_expand">
-							<a href="#post_details" onclick="viewableArea(getElementById('post_details'), true); var rev_text = getElementById('detail_expand').getElementsByTagName('a').item(0).firstChild; if (rev_text.data.trim() == '{LA_EXPAND_VIEW}'){rev_text.data = '{LA_COLLAPSE_VIEW}'; } else if (rev_text.data.trim() == '{LA_COLLAPSE_VIEW}'){rev_text.data = '{LA_EXPAND_VIEW}';} return false;">
-								{L_EXPAND_VIEW}
-							</a>
-						</li>
-					</ul>
-					<div class="clear"></div>
-					<div id="post_details">
-						<div id="page-1" class="pages">
-							<!-- INCLUDE {DETAIL_TPL} -->
-						</div>
-						<!-- BEGIN pages -->
-						<div id="page-{pages.PAGE}" class="pages" style="display: none">
-							{pages.CONTENT}
-						</div>
-						<!-- END pages -->
-
-						<!-- IF .page -->
-						<br /><hr />
-						<div class="action-bar bottom">
-							<div class="pagination pull-left">
-								<ul>
-								<!-- BEGIN page -->
-									<!-- IF page.S_FIRST_ROW -->
-									<li><a class="first current" href="{page.PAGE_URL}" role="button">{page.PAGE_NUMBER}</a></li>
-									<!-- ELSE -->
-									<li><a href="{page.PAGE_URL}" role="button">{page.PAGE_NUMBER}</a></li>
-									<!-- ENDIF -->
-								<!-- END page -->
-								</ul>
-							</div>
-							<div class="clear"></div>
-						</div>
-						<br />
-						<!-- ENDIF -->
-					</div>
-				</div>
-			</div>
-		</div>
-	<!-- ENDIF -->
-
-	<div class="panel">
-		<div class="inner">
-			<!-- IF TYPE_DESC and not S_PREVIEW --><p>{TYPE_DESC}</p><!-- ENDIF -->
-			<p>&nbsp;</p>
-			{POST_FORM}
-		</div>
-	</div>
-
 <!-- ELSE -->
-	<!-- IF MODE == 'mcp' --><form method="post" id="mcp" action="{S_ACTION}"><!-- ENDIF -->
+	<!-- IF MODE == 'mcp' --><form method="post" id="mcp" action="{U_MCP_ACTION}"><!-- ENDIF -->
 	<div class="panel">
 		<div class="inner">
-			<!-- IF MODE == 'mcp' && NUM_PENDING --><span class="error">{L_PENDING_TOPICS}: <a href="{U_PENDING}"><strong>[{NUM_PENDING}]</strong></a></span><!-- ENDIF -->
+			<!-- IF MODE == 'mcp' && NUM_PENDING --><span class="error">{L_PENDING_TOPICS}{L_COLON} <a href="{U_PENDING}"><strong>[{NUM_PENDING}]</strong></a></span><!-- ENDIF -->
 
 			<!-- IF .postable -->
 			<div class="pull-left">
@@ -279,9 +137,9 @@
 				<div class="action-bar top">
 					<div class="pagination">
 						{TOTAL_TOPICS}
-						<!-- IF .pagination --> 
+						<!-- IF .pagination -->
 						<!-- INCLUDE pagination.html -->
-						<!-- ELSE --> 
+						<!-- ELSE -->
 						&bull; {PAGE_NUMBER}
 						<!-- ENDIF -->
 					</div>
@@ -303,42 +161,57 @@
 					<li class="row<!-- IF topicrow.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF --><!-- IF topicrow.S_TOPIC_REPORTED --> reported<!-- ENDIF -->">
 						<dl class="row-item {topicrow.TOPIC_IMG_STYLE}">
 							<dt <!-- IF topicrow.TOPIC_ICON_IMG -->style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;"<!-- ENDIF -->>
-								<!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}" class="row-item-link"></a><!-- ENDIF -->
 								<div class="list-inner">
-									<a class="fa-orange" href="{topicrow.U_VIEW_TOPIC}" title="{L_GOTO_TOPIC}"><i class="fa fa-chevron-circle-right fa-lg"></i></a>
+									<a class="unread" href="{topicrow.U_MINI_POST}" title="{L_GOTO_TOPIC}">
+										<i class="icon fa-file fa-fw <!-- IF topicrow.S_UNREAD_POST -->icon-red<!-- ELSE -->icon-lightgray<!-- ENDIF --> icon-md" aria-hidden="true"></i>
+									</a>
 									<a href="{topicrow.U_REVIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a>
-									<!-- IF MODE == 'mcp' -->
-									<!-- IF topicrow.S_TOPIC_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED --><a href="{topicrow.U_MCP_QUEUE}">{topicrow.UNAPPROVED_IMG}</a> <!-- ENDIF -->
-									<!-- IF topicrow.S_TOPIC_DELETED or topicrow.S_POSTS_DELETED --><a href="{topicrow.U_MCP_QUEUE}">{topicrow.DELETED_IMG}</a> <!-- ENDIF -->
-									<!-- IF topicrow.S_TOPIC_REPORTED --><a href="{topicrow.U_MCP_REPORT}">{REPORTED_IMG}</a><!-- ENDIF -->
-									<!-- IF topicrow.S_MOVED_TOPIC and S_CAN_DELETE -->&nbsp;<a href="{topicrow.U_DELETE_TOPIC}" class="topictitle">[ {L_DELETE_SHADOW_TOPIC} ]</a><!-- ENDIF -->
+								<!-- IF MODE == 'mcp' -->
+									<!-- IF topicrow.S_TOPIC_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED -->
+									<a href="{topicrow.U_MCP_QUEUE}" title="{L_TOPIC_UNAPPROVED}">
+										<i class="icon fa-question fa-fw icon-blue" aria-hidden="true"></i><span class="sr-only">{L_TOPIC_UNAPPROVED}</span>
+									</a>
 									<!-- ENDIF -->
+									<!-- IF topicrow.S_TOPIC_DELETED or topicrow.S_POSTS_DELETED -->
+									<a href="{topicrow.U_MCP_QUEUE}" title="{L_TOPIC_DELETED}">
+										<i class="icon fa-recycle fa-fw icon-green" aria-hidden="true"></i><span class="sr-only">{L_TOPIC_DELETED}</span>
+									</a>
+									<!-- ENDIF -->
+									<!-- IF topicrow.S_TOPIC_REPORTED -->
+									<a href="{topicrow.U_MCP_REPORT}" title="{L_TOPIC_REPORTED}">
+										<i class="icon fa-exclamation fa-fw icon-red" aria-hidden="true"></i><span class="sr-only">{L_TOPIC_REPORTED}</span>
+									</a>
+									<!-- ENDIF -->
+									<!-- IF topicrow.S_MOVED_TOPIC and S_CAN_DELETE -->&nbsp;<a href="{topicrow.U_DELETE_TOPIC}" class="topictitle">[ {L_DELETE_SHADOW_TOPIC} ]</a><!-- ENDIF -->
+								<!-- ENDIF -->
 									<br />
 
 									<div class="responsive-show" style="display: none;">
-										<!-- IF topicrow.ATTACH_ICON_IMG -->{topicrow.ATTACH_ICON_IMG} <!-- ENDIF -->
-										<!-- IF MODE == 'mcp' --><strong>{topicrow.TOPIC_AUTHOR_FULL}</strong>&nbsp;<!-- ENDIF -->
-										<i class="fa fa-calendar"></i> <strong>{topicrow.FIRST_POST_TIME|date("m/d/Y")}</strong>&nbsp;
-										<i class="fa fa-eye"></i> <strong>{topicrow.TOPIC_VIEWS}</strong>&nbsp;
-										<!-- IF topicrow.S_COMMENTS --><i class="fa fa-comments"></i> <a href="{topicrow.U_VIEW_TOPIC}#comments"><strong>{topicrow.TOPIC_COMMENTS}</strong></a><!-- ENDIF -->
+										<!-- IF topicrow.S_HAS_POLL --><i class="icon fa-bar-chart fa-fw" aria-hidden="true"></i><!-- ENDIF -->
+										<!-- IF topicrow.ATTACH_ICON_IMG --><i class="icon fa-paperclip fa-fw" aria-hidden="true"></i><!-- ENDIF -->
+										<!-- IF MODE == 'mcp' --><strong>{topicrow.USERNAME_FULL}</strong> | <!-- ENDIF -->
+										<i class="fa fa-calendar"></i> <strong>{topicrow.TOPIC_TIME|date("m/d/Y")}</strong> |
+										<i class="fa fa-eye"></i> <strong>{topicrow.TOPIC_VIEWS}</strong>
+										<!-- IF topicrow.S_COMMENTS --> | <i class="fa fa-comments"></i> <a href="{topicrow.U_VIEW_TOPIC}#comments"><strong>{topicrow.TOPIC_COMMENTS}</strong></a><!-- ENDIF -->
 									</div>
 									<span class="responsive-show left-box" style="display: none;">{L_TYPE}{L_COLON} <strong>{topicrow.CONTENT_TYPE}</strong></span>
 
 									<div class="responsive-hide">
-										<!-- IF topicrow.ATTACH_ICON_IMG -->{topicrow.ATTACH_ICON_IMG} <!-- ENDIF -->
-										<!-- IF MODE == 'mcp' -->{L_POST_BY_AUTHOR} <strong>{topicrow.TOPIC_AUTHOR_FULL}</strong>&nbsp;<!-- ENDIF -->
-										<i class="fa fa-calendar"></i> {L_POSTED}{L_COLON} <strong>{topicrow.FIRST_POST_TIME|date("m/d/Y")}</strong><br />
-										<i class="fa fa-eye"></i> {L_VIEWS}{L_COLON} <strong>{topicrow.TOPIC_VIEWS}</strong>&nbsp;
-										<!-- IF topicrow.S_COMMENTS --><i class="fa fa-comments"></i> {L_COMMENTS}{L_COLON} <a href="{topicrow.U_VIEW_TOPIC}#comments"><strong>{topicrow.TOPIC_COMMENTS}</strong></a><!-- ENDIF -->
+										<!-- IF topicrow.S_HAS_POLL --><i class="icon fa-bar-chart fa-fw" aria-hidden="true"></i><!-- ENDIF -->
+										<!-- IF topicrow.ATTACH_ICON_IMG --><i class="icon fa-paperclip fa-fw" aria-hidden="true"></i><!-- ENDIF -->
+										<!-- IF MODE == 'mcp' -->{L_POST_BY_AUTHOR} <strong>{topicrow.USERNAME_FULL}</strong> | <!-- ENDIF -->
+										<i class="fa fa-calendar"></i> {L_POSTED}{L_COLON} <strong>{topicrow.TOPIC_TIME|date("m/d/Y")}</strong> |
+										<i class="fa fa-eye"></i> {L_VIEWS}{L_COLON} <strong>{topicrow.TOPIC_VIEWS}</strong>
+										<!-- IF topicrow.S_COMMENTS --> | <i class="fa fa-comments"></i> {L_COMMENTS}{L_COLON} <a href="{topicrow.U_VIEW_TOPIC}#comments"><strong>{topicrow.TOPIC_COMMENTS}</strong></a><!-- ENDIF -->
 									</div>
 								</div>
 							</dt>
 							<dd class="posts"><a href="{topicrow.U_TOPIC_STATUS}" title="{topicrow.FIRST_POST_TIME}">{topicrow.TOPIC_STATUS}</a> <dfn>{L_STATUS}</dfn></dd>
-							<dd class="lastpost align-center badge"><a href="{topicrow.U_CONTENT_TYPE}"><span class="info" style="background-color: {topicrow.CONTENT_TYPE_COLOR}; color: white">{topicrow.CONTENT_TYPE}</span></a><dfn>{L_LAST_POST}</dfn></dd>
+							<dd class="lastpost align-center"><a href="{topicrow.U_CONTENT_TYPE}"><span class="badge" style="background-color: #{topicrow.CONTENT_TYPE_COLOR}; color: #fff">{topicrow.CONTENT_TYPE}</span></a><dfn>{L_LAST_POST}</dfn></dd>
 							<dd class="mark align-right">
-								<!-- IF topicrow.S_CAN_EDIT --><a href="{topicrow.U_EDIT_TOPIC}" title="{L_EDIT}"><i class="fa fa-cog fa-lg green"></i></a>&nbsp;<!-- ELSE --><i class="fa fa-cog fa-2x"></i>&nbsp;<!-- ENDIF -->
-								<!-- IF topicrow.S_CAN_DELETE --><a href="{topicrow.U_DELETE_TOPIC}" title="{L_DELETE}"><i class="fa fa-trash-o fa-lg red"></i></a>&nbsp;<!-- ENDIF -->
-								<!-- IF MODE == 'mcp' -->&nbsp;<input type="checkbox" name="topic_id_list[]" value="{topicrow.TOPIC_ID}"><!-- ENDIF -->
+								<!-- IF topicrow.U_EDIT --><a href="{topicrow.U_EDIT}" title="{L_EDIT}"><i class="fa fa-pencil fa-fw fa-lg fa-green" aria-hidden="true"></i></a><!-- ELSE --><i class="fa fa-pencil fa-fw fa-lg" aria-hidden="true"></i><!-- ENDIF -->
+								<!-- IF topicrow.U_DELETE --><a href="{topicrow.U_DELETE}" title="{L_DELETE}"><i class="fa fa-trash-o fa-fw fa-lg fa-red" aria-hidden="true"></i></a><!-- ENDIF -->
+								<!-- IF MODE == 'mcp' --><input type="checkbox" name="topic_id_list[]" value="{topicrow.TOPIC_ID}"<!-- IF topicrow.S_REQ_MOD_INPUT --> disabled="disabled" title="{L_REQ_MOD_INPUT}"<!-- ENDIF -->><!-- ENDIF -->
 							</dd>
 						</dl>
 					</li>

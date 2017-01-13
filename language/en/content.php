@@ -1,15 +1,15 @@
 <?php
 /**
-*
-* @package phpBB Sitemaker [English]
-* @copyright (c) 2013 Pico88
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-*/
+ *
+ * @package phpBB Sitemaker [English]
+ * @copyright (c) 2013 Daniel A. (blitze)
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -39,7 +39,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'AUTHOR_CONTENTS'		=> 'Other %1$s by %2$s',
 	'AUTHOR_INFO'			=> 'About the Author',
-	'AUTHOR_INFO_EXPLAIN'	=> '%1$s has been a member since %2$s. %3$s has posted a total of %4$s %5$s item(s) for a total of %6$s post(s).',
+	'AUTHOR_INFO_EXPLAIN'	=> '%1$s has been a member since %2$s, and has contributed %3$s %4$s item(s) for a total of %5$s post(s).',
 
 	'COMMENT_POSTED'		=> 'Your comment has been successfully posted',
 	'CONTACT_AUTHOR'		=> 'Contact Author',

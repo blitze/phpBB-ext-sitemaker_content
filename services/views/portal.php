@@ -9,20 +9,29 @@
 
 namespace blitze\content\services\views;
 
-class portal extends view
+class portal extends base_view
 {
+	/**
+	 * @inheritdoc
+	 */
 	public function get_name()
 	{
 		return 'portal';
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function get_langname()
 	{
 		return 'CONTENT_DISPLAY_PORTAL';
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function get_index_template()
 	{
-		return 'content_portal.html';
+		return 'views/content_portal.html';
 	}
 }

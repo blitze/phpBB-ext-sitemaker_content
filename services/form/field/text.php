@@ -11,29 +11,6 @@ namespace blitze\content\services\form\field;
 
 class text extends base
 {
-	/** @var \phpbb\request\request_interface */
-	protected $request;
-
-	/* @var \phpbb\user */
-	protected $user;
-
-	/** @var \blitze\sitemaker\services\template */
-	protected $ptemplate;
-
-	/**
-	 * Constructor
-	 *
-	 * @param \phpbb\request\request_interface		$request		Request object
-	 * @param \phpbb\user							$user			User object
-	 * @param \blitze\sitemaker\services\template		$ptemplate		Sitemaker template object
-	 */
-	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \blitze\sitemaker\services\template $ptemplate)
-	{
-		$this->request = $request;
-		$this->user = $user;
-		$this->ptemplate = $ptemplate;
-	}
-
 	/**
 	 * @inheritdoc
 	 */
@@ -43,7 +20,6 @@ class text extends base
 			'field_size'		=> 40,
 			'field_minlen'		=> 0,
 			'field_maxlen'		=> 200,
-			'requires_item_id'	=> false,
 		);
 	}
 

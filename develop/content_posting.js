@@ -1,8 +1,60 @@
-;(function($, window, document, undefined) {
+;(function($, window, document) {
 	'use strict';
 
 	$(document).ready(function() {
 		var phpbb = window.phpbb || {};
+		var bbcodeEditors = $('textarea[data-bbcode="true"]').focus(function() {
+			window['text_name'] = $(this).attr('name');
+		});
+
+		/**
+		 * Update the indices used in inline attachment bbcodes. This ensures that the
+		 * bbcodes correspond to the correct file after a file is added or removed.
+		 * This should be called before the phpbb.plupload,data and phpbb.plupload.ids
+		 * arrays are updated, otherwise it will not work correctly.
+		 *
+		 * @param {string} action	The action that occurred -- either "addition" or "removal"
+		 * @param {int} index		The index of the attachment from phpbb.plupload.ids that was affected.
+		 */
+		phpbb.plupload.updateBbcode = function(action, index) {
+			bbcodeEditors.each(function() {
+				var	textarea = $(this, phpbb.plupload.form);
+				var text = textarea.val();
+				var removal = (action === 'removal');
+
+				// Return if the bbcode isn't used at all.
+				if (text.indexOf('[attachment=') === -1) {
+					return;
+				}
+
+				function runUpdate(i) {
+					var regex = new RegExp('\\[attachment=' + i + '\\](.*?)\\[\\/attachment\\]', 'g');
+					text = text.replace(regex, function updateBbcode(_, fileName) {
+						// Remove the bbcode if the file was removed.
+						if (removal && index === i) {
+							return '';
+						}
+						var newIndex = i + ((removal) ? -1 : 1);
+						return '[attachment=' + newIndex + ']' + fileName + '[/attachment]';
+					});
+				}
+
+				// Loop forwards when removing and backwards when adding ensures we don't
+				// corrupt the bbcode index.
+				var i;
+				if (removal) {
+					for (i = index; i < phpbb.plupload.ids.length; i++) {
+						runUpdate(i);
+					}
+				} else {
+					for (i = phpbb.plupload.ids.length - 1; i >= index; i--) {
+						runUpdate(i);
+					}
+				}
+
+				textarea.val(text);
+			});
+		};
 
 		$('.color_palette').each(function() {
 			var el = $(this);

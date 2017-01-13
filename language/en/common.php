@@ -1,15 +1,15 @@
 <?php
 /**
-*
-* @package phpBB Sitemaker [English]
-* @copyright (c) 2013 Pico88
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-*/
+ *
+ * @package phpBB Sitemaker [English]
+ * @copyright (c) 2013 Daniel A. (blitze)
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -46,11 +46,11 @@ $lang = array_merge($lang, array(
 	'CONTENT_TOPIC_TIME'			=> 'Recent %s',
 	'CONTENT_TOPIC_VIEWS'			=> 'Most Read %s',
 
-	'INVALID_CONTENT_TYPE'			=> 'Invalid Content Type',
-
 	'LOAD_MORE'						=> 'Load more content',
 
 	'POST_NEW'						=> 'Post New',
+
+	'REQ_MOD_INPUT'					=> 'Requires moderator input',
 
 	'SITEMAKER_BROWSING_CONTENT'	=> 'Browsing %s',
 	'SITEMAKER_READING_TOPIC'		=> 'Reading topic in %s',

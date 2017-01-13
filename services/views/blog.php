@@ -9,20 +9,29 @@
 
 namespace blitze\content\services\views;
 
-class blog extends view
+class blog extends base_view
 {
+	/**
+	 * @inheritdoc
+	 */
 	public function get_name()
 	{
 		return 'blog';
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function get_langname()
 	{
 		return 'CONTENT_DISPLAY_BLOG';
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function get_index_template()
 	{
-		return 'content_blog.html';
+		return 'views/content_blog.html';
 	}
 }

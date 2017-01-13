@@ -2,14 +2,14 @@
 /**
  *
  * @package sitemaker
- * @copyright (c) 2013 Daniel A. (blitze)
+ * @copyright (c) 2016 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
 namespace blitze\content\services;
 
-class comments implements comments_interface
+class comments
 {
 	/** @var \phpbb\auth\auth */
 	protected $auth;
@@ -38,7 +38,7 @@ class comments implements comments_interface
 	/** @var \phpbb\user */
 	protected $user;
 
-	/** @var \blitze\content\services\form */
+	/** @var \blitze\content\services\form\form */
 	protected $form;
 
 	/** @var \blitze\sitemaker\services\forum\data */
@@ -62,12 +62,13 @@ class comments implements comments_interface
 	 * @param \phpbb\request\request_interface			$request			Request object
 	 * @param \phpbb\template\template					$template			Template object
 	 * @param \phpbb\user								$user				User object
-	 * @param \blitze\content\services\form			$form				Form object
+	 * @param \blitze\content\services\form\form		$form				Form object
 	 * @param \blitze\sitemaker\services\forum\data		$forum				Forum Data object
+	 * @param \blitze\content\services\topic			$topic				Content topic object
 	 * @param string									$root_path			Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\form $form, \blitze\sitemaker\services\forum\data $forum, $root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\pagination $pagination, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\form\form $form, \blitze\sitemaker\services\forum\data $forum, $root_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -85,195 +86,43 @@ class comments implements comments_interface
 	}
 
 	/**
-	 * Get comments count for topic
+	 * Show comments for topic
+	 * @param int $topic_id
+	 * @param int $total_comments
+	 * @param string $base_url
+	 * @param array $topic_data
+	 * @return void
 	 */
-	public function count($topic_data)
+	public function show($topic_id, $total_comments, $base_url, array $topic_data)
 	{
-		return $this->content_visibility->get_count('topic_posts', $topic_data, $topic_data['forum_id']) - 1;
+		if ($total_comments)
+		{
+			$action = $this->request->variable('action', 'reply');
+			$start = $this->request->variable('start', 0);
+			$post_id = $this->request->variable('p', 0);
+
+			$this->forum->query()
+				->fetch_topic($topic_id)
+				->build();
+			$this->build_pagination($start, $topic_data['forum_id'], $topic_id, $post_id, $total_comments, $action, $base_url);
+
+			$posts_data = $this->forum->get_post_data(false, array(), $this->config['posts_per_page'], $start, array(
+				'WHERE' => 'p.post_id <> ' . (int) $topic_data['topic_first_post_id'],
+			));
+
+			$topic_tracking_info = $this->forum->get_topic_tracking_info();
+			$users_cache = $this->forum->get_posters_info();
+
+			$this->show_posts($topic_data, array_values(array_shift($posts_data)), $topic_tracking_info, $users_cache);
+		}
 	}
 
-	/**
-	 * Show comments for topic
-	 */
-	public function show($content_type, $topic_data, $page)
+	protected function show_posts(array $topic_data, array $posts_data, array $topic_tracking_info, array $users_cache)
 	{
-		$action = $this->request->variable('action', 'reply');
-		$post_id = $this->request->variable('p', 0);
-
-		$topic_id = (int) $topic_data['topic_id'];
-		$forum_id = (int) $topic_data['forum_id'];
-
-		$start = ($page - 1) * $this->config['posts_per_page'];
-		$total_topics = $this->count($topic_data);
-		$current_page = generate_board_url() . '/' . ltrim(build_url(array('p', 'action')), './../');
-
-		if ($this->auth->acl_get('f_reply', $forum_id))
-		{
-			$this->post($content_type, rtrim($current_page, '?'), $action, $topic_data, $post_id);
-		}
-
-		if (!$total_topics)
-		{
-			return;
-		}
-
-		if ($post_id && !$action)
-		{
-			$sql = 'SELECT post_id, post_time, post_visibility
-				FROM ' . POSTS_TABLE . " p
-				WHERE p.topic_id = $topic_id
-					AND p.post_id = $post_id";
-			$result = $this->db->sql_query($sql);
-			$row = $this->db->sql_fetchrow($result);
-			$this->db->sql_freeresult($result);
-
-			$sql = 'SELECT COUNT(p.post_id) AS prev_posts
-				FROM ' . POSTS_TABLE . " p
-				WHERE p.topic_id = $topic_id
-					AND (p.post_time < {$row['post_time']} OR (p.post_time = {$row['post_time']} AND p.post_id <= {$row['post_id']}))
-					AND " . $this->content_visibility->get_visibility_sql('post', $forum_id, 'p.');
-
-			$result = $this->db->sql_query($sql);
-			$row = $this->db->sql_fetchrow($result);
-			$this->db->sql_freeresult($result);
-
-			$start = floor(($row['prev_posts'] - 2) / $this->config['posts_per_page']) * $this->config['posts_per_page'];
-		}
-
-		$start = $this->pagination->validate_start($start, $this->config['posts_per_page'], $total_topics) + 1;
-
-		$this->pagination->generate_template_pagination(
-			array(
-				'routes' => array(
-					'blitze_content_show',
-					'blitze_content_show_comments_page',
-				),
-				'params' => array(
-					'type'			=> $content_type,
-					'topic_id'		=> $topic_data['topic_id'],
-					'slug'			=> $topic_data['topic_slug'],
-					'#'				=> 'comments'
-				),
-			),
-			'pagination', 'page', $total_topics, $this->config['posts_per_page'], $start);
-
-		$posts_data = $this->forum->get_post_data(false, array(), $this->config['posts_per_page'], $start);
-		$topic_tracking_info = $this->forum->get_topic_tracking_info();
-		$users_cache = $this->forum->get_posters_info();
-
-		if (!sizeof($posts_data))
-		{
-			return;
-		}
-
-		$posts_data = array_values(array_shift($posts_data));
-
 		for ($i = 0, $size = sizeof($posts_data); $i < $size; $i++)
 		{
-			$row = $posts_data[$i];
-
-			$post_id = (int) $row['post_id'];
-			$poster_id = (int) $row['poster_id'];
-
-			$l_edited_by = '';
-			if (($row['post_edit_count'] && $this->config['display_last_edited']) || $row['post_edit_reason'])
-			{
-				$l_edited_by = $this->user->lang('EDITED_TIMES_TOTAL', (int) $row['post_edit_count'], $users_cache[$poster_id]['author_full'], $this->user->format_date($row['post_edit_time'], false, true));
-			}
-
-			$s_cannot_edit = !$this->auth->acl_get('f_edit', $forum_id) || $this->user->data['user_id'] != $poster_id;
-			$s_cannot_edit_time = $this->config['edit_time'] && $row['post_time'] <= time() - ($this->config['edit_time'] * 60);
-			$s_cannot_edit_locked = $topic_data['topic_status'] == ITEM_LOCKED || $row['post_edit_locked'];
-
-			$s_cannot_delete = $this->user->data['user_id'] != $poster_id || (
-				!$this->auth->acl_get('f_delete', $forum_id) &&
-				(!$this->auth->acl_get('f_softdelete', $forum_id) || $row['post_visibility'] == ITEM_DELETED)
-			);
-			$s_cannot_delete_lastpost = $topic_data['topic_last_post_id'] != $row['post_id'];
-			$s_cannot_delete_time = $this->config['delete_time'] && $row['post_time'] <= time() - ($this->config['delete_time'] * 60);
-			// we do not want to allow removal of the last post if a moderator locked it!
-			$s_cannot_delete_locked = $topic_data['topic_status'] == ITEM_LOCKED || $row['post_edit_locked'];
-
-			$edit_url = '';
-			if ($this->user->data['is_registered'] && ($this->auth->acl_get('m_edit', $forum_id) || (
-				!$s_cannot_edit &&
-				!$s_cannot_edit_time &&
-				!$s_cannot_edit_locked)))
-			{
-				$edit_url = reapply_sid($current_page . "action=edit&amp;p=$post_id#postform");
-			}
-
-			$u_delete_topic = '';
-			if ($this->user->data['is_registered'] && (
-				($this->auth->acl_get('m_delete', $forum_id) || ($this->auth->acl_get('m_softdelete', $forum_id) && $row['post_visibility'] != ITEM_DELETED)) ||
-				(!$s_cannot_delete && !$s_cannot_delete_lastpost && !$s_cannot_delete_time && !$s_cannot_delete_locked)
-			))
-			{
-				$u_delete_topic = append_sid("{$this->root_path}posting." . $this->php_ext, "mode=delete&amp;f=$forum_id&amp;p=" . $row['post_id']);
-			}
-
-			// Deleting information
-			$l_deleted_by = '';
-			if ($row['post_visibility'] == ITEM_DELETED && $row['post_delete_user'])
-			{
-				// User having deleted the post also being the post author?
-				if (!$row['post_delete_user'] || $row['post_delete_user'] == $row['poster_id'])
-				{
-					$display_username = get_username_string('full', $row['poster_id'], $row['username'], $row['user_colour'], $row['post_username']);
-				}
-				else
-				{
-					$sql = 'SELECT user_id, username, user_colour
-							FROM ' . USERS_TABLE . '
-							WHERE user_id = ' . (int) $row['post_delete_user'];
-					$result = $this->db->sql_query($sql);
-					$user_delete_row = $this->db->sql_fetchrow($result);
-					$this->db->sql_freeresult($result);
-					$display_username = get_username_string('full', $row['post_delete_user'], $user_delete_row['username'], $user_delete_row['user_colour']);
-				}
-
-				$this->user->add_lang('viewtopic');
-				$l_deleted_by = $this->user->lang('DELETED_INFORMATION', $display_username, $this->user->format_date($row['post_delete_time'], false, true));
-			}
-
-			$parse_flags = ($row['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
-			$row['post_text'] = generate_text_for_display($row['post_text'], $row['bbcode_uid'], $row['bbcode_bitfield'], $parse_flags, true);
-			$post_unread = (isset($topic_tracking_info[$forum_id][$topic_id]) && $row['post_time'] > $topic_tracking_info[$forum_id][$topic_id]) ? true : false;
-
-			$this->template->assign_block_vars('comment', array(
-				'POST_ID'			=> $post_id,
-				'POST_AUTHOR_FULL'	=> $users_cache[$poster_id]['username_full'],
-				'POST_AUTHOR'		=> $users_cache[$poster_id]['username'],
-				'POSTER_AVATAR'		=> $users_cache[$poster_id]['avatar'],
-				'U_POST_AUTHOR'		=> $users_cache[$poster_id]['user_profile'],
-
-				'POST_DATE'			=> $this->user->format_date($row['post_time']),
-				'MESSAGE'			=> $row['post_text'],
-				'MINI_POST_IMG'		=> ($post_unread) ? $this->user->img('icon_post_target_unread', 'UNREAD_POST') : $this->user->img('icon_post_target', 'POST'),
-
-				'S_POST_DELETED'		=> ($row['post_visibility'] == ITEM_DELETED) ? true : false,
-				'S_POST_REPORTED'		=> ($row['post_reported'] && $this->auth->acl_get('m_report', $forum_id)),
-				'S_POST_UNAPPROVED'		=> (($row['post_visibility'] == ITEM_UNAPPROVED || $row['post_visibility'] == ITEM_REAPPROVE) && $this->auth->acl_get('m_approve', $forum_id)),
-				'S_POST_DELETED'		=> ($row['post_visibility'] == ITEM_DELETED && $this->auth->acl_get('m_approve', $forum_id)),
-
-				'EDITED_MESSAGE'		=> $l_edited_by,
-				'EDIT_REASON'			=> $row['post_edit_reason'],
-				'DELETED_MESSAGE'		=> $l_deleted_by,
-				'DELETE_REASON'			=> $row['post_delete_reason'],
-
-				'U_INFO'				=> ($this->auth->acl_get('m_info', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", "i=main&amp;mode=post_details&amp;f=$forum_id&amp;p=" . $row['post_id'], true, $this->user->session_id) : '',
-				'U_MCP_REPORT'			=> ($this->auth->acl_get('m_report', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=reports&amp;mode=report_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
-				'U_MCP_APPROVE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=queue&amp;mode=approve_details&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
-				'U_MCP_RESTORE'			=> ($this->auth->acl_get('m_approve', $forum_id)) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=queue&amp;mode=' . (($topic_data['topic_visibility'] != ITEM_DELETED) ? 'deleted_posts' : 'deleted_topics') . '&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
-				'U_NOTES'				=> ($this->auth->acl_getf_global('m_')) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=notes&amp;mode=user_notes&amp;u=' . $poster_id, true, $this->user->session_id) : '',
-				'U_WARN'				=> ($this->auth->acl_get('m_warn') && $poster_id != $this->user->data['user_id'] && $poster_id != ANONYMOUS) ? append_sid("{$this->root_path}mcp.$this->php_ext", 'i=warn&amp;mode=warn_post&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $this->user->session_id) : '',
-
-				'U_EDIT'				=> $edit_url,
-				'U_DELETE'				=> $u_delete_topic,
-			));
+			$attachments = $update_count = array();
 		}
-
-		$this->template->assign_var('TOPIC_COMMENTS', $total_topics);
 	}
 
 	/**
@@ -366,5 +215,34 @@ class comments implements comments_interface
 		}
 
 		$this->template->assign_var('POST_FORM', $this->form->get_form());
+	}
+
+	protected function build_pagination(&$start, $forum_id, $topic_id, $post_id, $total_comments, $action, $base_url)
+	{
+		if ($post_id && !$action)
+		{
+			$sql = 'SELECT post_id, post_time, post_visibility
+				FROM ' . POSTS_TABLE . " p
+				WHERE p.topic_id = $topic_id
+					AND p.post_id = $post_id";
+			$result = $this->db->sql_query($sql);
+			$row = $this->db->sql_fetchrow($result);
+			$this->db->sql_freeresult($result);
+
+			$sql = 'SELECT COUNT(p.post_id) AS prev_posts
+				FROM ' . POSTS_TABLE . " p
+				WHERE p.topic_id = $topic_id
+					AND (p.post_time < {$row['post_time']} OR (p.post_time = {$row['post_time']} AND p.post_id <= {$row['post_id']}))
+					AND " . $this->content_visibility->get_visibility_sql('post', $forum_id, 'p.');
+
+			$result = $this->db->sql_query($sql);
+			$row = $this->db->sql_fetchrow($result);
+			$this->db->sql_freeresult($result);
+
+			$start = floor(($row['prev_posts'] - 2) / $this->config['posts_per_page']) * $this->config['posts_per_page'];
+		}
+
+		$start = $this->pagination->validate_start($start, $this->config['posts_per_page'], $total_comments) + 1;
+		$this->pagination->generate_template_pagination($base_url, 'pagination', 'page', $total_comments, $this->config['posts_per_page'], $start);
 	}
 }

@@ -9,68 +9,65 @@
 
 namespace blitze\content\services\views;
 
-class tiles extends view
+class tiles extends base_view
 {
 	/** @var \phpbb\request\request_interface */
 	protected $request;
 
-	/** @var \blitze\sitemaker\services\util */
-	protected $sitemaker;
-
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\auth\auth							$auth				Auth object
-	 * @param \phpbb\cache\service						$cache				Cache object
-	 * @param \phpbb\config\db							$config				Config object
-	 * @param \phpbb\db\driver\driver_interface			$db					Database object
+	 * @param \phpbb\language\language					$language			Language Object
+	 * @param \phpbb\pagination							$pagination			Pagination object
 	 * @param \phpbb\request\request_interface			$request			Request object
 	 * @param \phpbb\template\template					$template			Template object
-	 * @param \phpbb\user								$user				User object
-	 * @param \blitze\content\services\displayer		$displayer			Content displayer object
-	 * @param \blitze\sitemaker\services\util				$sitemaker			Sitemaker object
-	 * @param string									$root_path			Path to the phpbb includes directory.
+	 * @param \blitze\content\services\fields			$fields				Content fields object
+	 * @param \blitze\sitemaker\services\forum\data		$forum				Forum Data object
+	 * @param \blitze\content\services\helper			$helper				Content helper object
+	 * @param string									$phpbb_root_path	Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\db\driver\driver_interface $db, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\displayer $displayer, \blitze\sitemaker\services\util $sitemaker, $root_path, $php_ext)
+	public function __construct(\phpbb\language\language $language, \phpbb\pagination $pagination, \phpbb\request\request_interface $request, \phpbb\template\template $template, \blitze\content\services\fields $fields, \blitze\sitemaker\services\forum\data $forum, \blitze\content\services\helper $helper, $phpbb_root_path, $php_ext)
 	{
-		parent::__construct($auth, $cache, $config, $db, $template, $user, $displayer, $root_path, $php_ext);
+		parent::__construct($language, $pagination, $template, $fields, $forum, $helper, $phpbb_root_path, $php_ext);
 
-		$this->sitemaker = $sitemaker;
 		$this->request = $request;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function get_name()
 	{
 		return 'tiles';
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function get_langname()
 	{
 		return 'CONTENT_DISPLAY_TILES';
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function get_index_template()
 	{
-		return 'content_tiles.html';
+		return 'views/content_tiles.html';
 	}
 
-	public function customize_view(&$sql_topics_count, &$sql_topics_data, &$type_data, &$limit)
+	/**
+	 * @inheritdoc
+	 */
+	public function render_index(\blitze\content\model\entity\type $entity, $page, $filter_type, $filter_value)
 	{
+		parent::render_index($entity, $page, $filter_type, $filter_value);
+
 		if ($this->request->is_ajax())
 		{
 			$this->template->assign_var('S_HIDE_HEADERS', true);
 		}
-
-		$this->sitemaker->add_assets(array(
-			'js'   => array(
-				'@blitze_content/vendor/imagesloaded/imagesloaded.pkgd.min.js',
-				'@blitze_content/vendor/masonry/dist/masonry.pkgd.min.js',
-				'@blitze_content/assets/content_tiles.min.js',
-			),
-			'css'	=> array(
-				'@blitze_content/assets/content_tiles.min.css',
-			),
-		));
 	}
 }

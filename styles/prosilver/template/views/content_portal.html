@@ -1,0 +1,51 @@
+<!-- IF not S_HIDE_HEADERS --><!-- INCLUDE overall_header.html --><!-- ENDIF -->
+
+<!-- IF CONTENT_TYPE -->
+<!-- INCLUDE views/content_type.html -->
+<!-- ENDIF -->
+
+<!-- BEGIN topic_row -->
+<div class="panel post cms-block-spacing">
+	<div class="inner">
+		<div class="postbody sm-postbody">
+			<!-- IF not topic_row.CUSTOM_DISPLAY -->
+			<!-- INCLUDE views/content_summary_title.html -->
+			<!-- ENDIF -->
+			<div class="content">
+				<!-- IF topic_row.CUSTOM_DISPLAY -->
+					{topic_row.CUSTOM_DISPLAY}
+				<!-- ELSE -->
+					{topic_row.SEQ_DISPLAY}
+					<p>&nbsp;</p>
+
+					<div class="buttons right-box">
+						<a href="{topic_row.TOPIC_URL}" class="button icon-button">{L_READ_MORE}</a>
+					</div>
+				<!-- ENDIF -->
+			</div>
+		</div>
+	</div>
+</div>
+<!-- BEGINELSE -->
+<div class="panel post cms-block-spacing">
+	<div class="inner">
+		{L_CONTENT_NO_TOPICS}
+	</div>
+</div>
+<!-- END topic_row -->
+
+<!-- IF .pagination or TOTAL_POSTS -->
+<div class="action-bar bottom">
+	<div class="pagination">
+		{TOTAL_POSTS} 
+		<!-- IF .pagination -->
+		<!-- INCLUDE pagination.html -->
+		<!-- ELSE -->
+		&bull; {PAGE_NUMBER}
+		<!-- ENDIF -->
+	</div>
+	<div class="clear"></div>
+</div>
+<!-- ENDIF -->
+
+<!-- IF not S_HIDE_HEADERS --><!-- INCLUDE overall_footer.html --><!-- ENDIF -->

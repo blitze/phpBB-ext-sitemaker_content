@@ -11,29 +11,6 @@ namespace blitze\content\services\form\field;
 
 class range extends base
 {
-	/** @var \phpbb\request\request_interface */
-	protected $request;
-
-	/* @var \phpbb\user */
-	protected $user;
-
-	/** @var \blitze\sitemaker\services\template */
-	protected $ptemplate;
-
-	/**
-	 * Constructor
-	 *
-	 * @param \phpbb\request\request_interface		$request		Request object
-	 * @param \phpbb\user							$user			User object
-	 * @param \blitze\sitemaker\services\template		$ptemplate		Sitemaker template object
-	 */
-	public function __construct(\phpbb\request\request_interface $request, \phpbb\user $user, \blitze\sitemaker\services\template $ptemplate)
-	{
-		$this->request = $request;
-		$this->user = $user;
-		$this->ptemplate = $ptemplate;
-	}
-
 	/**
 	 * @inheritdoc
 	 */
@@ -53,7 +30,6 @@ class range extends base
 			'field_step'		=> 1,
 			'field_value'		=> 0,
 			'validation_filter'	=> FILTER_VALIDATE_INT,
-			'requires_item_id'	=> false,
 		);
 	}
 

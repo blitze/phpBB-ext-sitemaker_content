@@ -11,33 +11,43 @@ namespace blitze\content\services\form\field;
 
 abstract class base implements field_interface
 {
-	/* @var \phpbb\user */
-	protected $user;
+	/** @var \phpbb\language\language */
+	protected $language;
+
+	/** @var \phpbb\request\request_interface */
+	protected $request;
 
 	/** @var \blitze\sitemaker\services\template */
 	protected $ptemplate;
 
-	/** @var string */
-	protected $name;
-
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\user								$user			User object
+	 * @param \phpbb\language\language                  $language       Language object
+	 * @param \phpbb\request\request_interface			$request		Request object
 	 * @param \blitze\sitemaker\services\template		$ptemplate		Sitemaker template object
 	 */
-	public function __construct(\phpbb\user $user, \blitze\sitemaker\services\template $ptemplate)
+	public function __construct(\phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\sitemaker\services\template $ptemplate)
 	{
-		$this->user = $user;
+		$this->language = $language;
+		$this->request = $request;
 		$this->ptemplate = $ptemplate;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field($field_value, $fields_data = array(), $view = 'detail', $item_id = 0)
+	public function get_default_props()
 	{
-		return ($field_value) ? $field_value . '<br /><br />' : '';
+		return array();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function display_field($field_value)
+	{
+		return $field_value;
 	}
 
 	/**
@@ -51,12 +61,11 @@ abstract class base implements field_interface
 	/**
 	 * @inheritdoc
 	 */
-	public function show_form_field($name, &$data, $item_id = 0)
+	public function show_form_field($name, array &$data)
 	{
 		$field = $this->get_name();
 		$data['field_name'] = $name;
 		$data['field_value'] = $this->get_field_value($name, $data['field_value']);
-		$data['field_required']	= ($data['field_required']) ? ' required' : '';
 
 		$this->ptemplate->assign_vars(array_change_key_case($data, CASE_UPPER));
 
@@ -66,7 +75,7 @@ abstract class base implements field_interface
 	/**
 	 * @inheritdoc
 	 */
-	public function save_field($field, $value, $item_id = 0)
+	public function save_field($field, $value)
 	{
 		return false;
 	}
@@ -74,7 +83,32 @@ abstract class base implements field_interface
 	/**
 	 * @inheritdoc
 	 */
-	public function validate_field($data)
+	public function get_langname()
+	{
+		return strtoupper('FORM_FIELD_' . $this->get_name());
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function validate_field(array $data)
+	{
+		$options = $this->get_filter_options($data);
+
+		$message = '';
+		if (isset($data['validation_filter']) && !filter_var($data['field_value'], $data['validation_filter'], $options))
+		{
+			$message = $this->get_error_message($data);
+		}
+
+		return $message;
+	}
+
+	/**
+	 * @param array $data
+	 * @return array|false
+	 */
+	protected function get_filter_options(array &$data)
 	{
 		if (isset($data['field_minlength']))
 		{
@@ -86,32 +120,48 @@ abstract class base implements field_interface
 			$data['validation_options'] += array('max_range' => $data['field_maxlength']);
 		}
 
-		$options = (isset($data['validation_options'])) ? array('options' => $data['validation_options']) : false;
+		return (isset($data['validation_options'])) ? array('options' => $data['validation_options']) : false;
+	}
 
-		if (isset($data['validation_filter']) && !filter_var($data['field_value'], $data['validation_filter'], $options))
+	/**
+	 * @param array $data
+	 * @return string
+	 */
+	protected function get_error_message(array $data)
+	{
+		$length = utf8_strlen($data['field_value']);
+
+		if ($this->is_too_short($data, $length))
 		{
-			$length = utf8_strlen($data['field_value']);
-
-			if (isset($data['field_minlength']) && $length < $data['field_minlength'])
-			{
-				return sprintf($this->user->lang['FIELD_TOO_SHORT'], $data['field_label'], $data['field_minlength']);
-			}
-			else if (isset($data['field_maxlength']) && $length < $data['field_maxlength'])
-			{
-				return sprintf($this->user->lang['FIELD_TOO_LONG'], $data['field_label'], $data['field_maxlength']);
-			}
-			else
-			{
-				return sprintf($this->user->lang['FIELD_INVALID'], $data['field_label']);
-			}
+			return $this->language->lang('FIELD_TOO_SHORT', $data['field_label'], $data['field_minlength']);
+		}
+		else if ($this->is_too_long($data, $length))
+		{
+			return $this->language->lang('FIELD_TOO_LONG', $data['field_label'], $data['field_maxlength']);
+		}
+		else
+		{
+			return $this->language->lang('FIELD_INVALID', $data['field_label']);
 		}
 	}
 
 	/**
-	 * @inheritdoc
+	 * @param array $data
+	 * @param $length
+	 * @return bool
 	 */
-	public function get_langname()
+	protected function is_too_short(array $data, $length)
 	{
-		return strtoupper('FORM_FIELD_' . $this->get_name());
+		return (isset($data['field_minlength']) && $length < $data['field_minlength']) ? true : false;
+	}
+
+	/**
+	 * @param array $data
+	 * @param $length
+	 * @return bool
+	 */
+	protected function is_too_long(array $data, $length)
+	{
+		return (isset($data['field_maxlength']) && $length > $data['field_maxlength']) ? true : false;
 	}
 }

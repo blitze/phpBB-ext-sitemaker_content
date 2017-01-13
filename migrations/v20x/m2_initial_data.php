@@ -33,11 +33,13 @@ class m2_initial_data extends \phpbb\db\migration\container_aware_migration
 		return array(
 			array('custom', array(array($this, 'create_forum'))),
 			array('custom', array(array($this, 'create_bbcodes'))),
-			array('config.add', array('blitze_content_forums', '')),
 			array('config.add', array('blitze_content_forum_id', 0)),
 		);
 	}
 
+	/**
+	 *
+	 */
 	public function create_forum()
 	{
 		$forum = $this->container->get('blitze.sitemaker.forum.manager');
@@ -61,6 +63,9 @@ class m2_initial_data extends \phpbb\db\migration\container_aware_migration
 		}
 	}
 
+	/**
+	 *
+	 */
 	public function create_bbcodes()
 	{
 		if (!class_exists('acp_bbcodes'))
@@ -71,15 +76,17 @@ class m2_initial_data extends \phpbb\db\migration\container_aware_migration
 		$bbcodes_ary = array(
 			array(
 				'match'		=> '[tag={IDENTIFIER}]{TEXT}[/tag]',
-				'template'	=> '<!-- BEGIN {IDENTIFIER} -->{TEXT}<!-- END {IDENTIFIER} --><br />',
+				'template'	=> "<!-- begin field -->\n" .
+							"<h4>{IDENTIFIER}</h4><br />\n" .
+							"<div data-field=\"{IDENTIFIER}\">{TEXT}</div><br />\n" .
+							"<!-- end field -->\n",
 			),
 			array(
 				'match'		=> '[page={SIMPLETEXT}]{TEXT}[/page]',
-				'template'	=> '<!-- PAGE {SIMPLETEXT} -->{TEXT}<!-- ENDPAGE --><br />',
-			),
-			array(
-				'match'		=> '[page]{TEXT}[/page]',
-				'template'	=> '<!-- PAGE -->{TEXT}<!-- ENDPAGE --><br />',
+				'template'	=> "<!-- begin page -->\n" .
+							"<i>{SIMPLETEXT}</i>\n" .
+							"<div data-page=\"{SIMPLETEXT}\">{TEXT}</div><br />\n" .
+							"<!-- end page -->\n",
 			),
 		);
 

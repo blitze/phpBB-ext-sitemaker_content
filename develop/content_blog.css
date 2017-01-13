@@ -2,11 +2,11 @@
 * Based on tutorial at http://cssglobe.com/drawing-calendar-icon-with-css3/
 */
 .calendar {
-	font: bold 20px/40px Arial Black, Arial, Helvetica, sans-serif;
+	font: bold 1.3em/2em Arial Black, Arial, Helvetica, sans-serif;
 	position: relative;
 	float: left;
 	width: 50px;
-	margin: 0.25em 10px 10px 0;
+	margin: 0.25em 0.5em 0.5em 0;
 	padding-top: 5px;
 	text-align: center;
 	color: #000;
@@ -26,7 +26,7 @@
 }
 
 .calendar em {
-	font: bold 11px/30px Arial, Helvetica, sans-serif;
+	font: bold 1em/2em Arial, Helvetica, sans-serif;
 	display: block;
 	color: #fff;
 	border-top: 1px solid #00365a;
@@ -99,6 +99,13 @@
 	right: 9px;
 }
 
-.pt-postbody .first {
+.content-header {
+	margin-left: 6em;
+}
+
+.content-header .first,
+.content-header .author {
 	float: none;
+	clear: none;
+	display: inline-block;
 }

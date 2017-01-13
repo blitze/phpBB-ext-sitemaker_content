@@ -1,15 +1,15 @@
 <?php
 /**
-*
-* @package phpBB Sitemaker [English]
-* @copyright (c) 2013 Pico88
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*
-*/
+ *
+ * @package phpBB Sitemaker [English]
+ * @copyright (c) 2013 Daniel A. (blitze)
+ * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+ *
+ */
 
 /**
-* DO NOT CHANGE
-*/
+ * DO NOT CHANGE
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -42,6 +42,11 @@ $lang = array_merge($lang, array(
 	'CONTENT_TITLE'			=> 'Title',
 	'CONTENT_TYPE'			=> 'Content Type',
 
+	'FIELD_REQUIRED'		=> 'Missing required field: %s',
+	'FORCE_STATUS'			=> 'Force status',
+
+	'INVALID_REQUEST'		=> 'Invalid request: %s',
+
 	'NO_TOPICS_ALL'			=> 'There are no topics to display',
 	'NO_TOPICS_DELETED'		=> 'There are no deleted topics to display',
 	'NO_TOPICS_FEATURED'	=> 'There are no featured topics to display',
@@ -50,6 +55,10 @@ $lang = array_merge($lang, array(
 	'NO_TOPICS_RECOMMENDED'	=> 'There are no recommended topics to display',
 	'NO_TOPICS_SCHEDULED'	=> 'There are no scheduled topics to display',
 	'NO_TOPICS_UNAPPROVED'	=> 'There are no unapproved topics to display',
+
+	'STATUS_APPROVE'		=> 'Yes - Approve',
+	'STATUS_DISAPPROVE'		=> 'Yes - Disapprove',
+	'STATUS_REAPPROVE'		=> 'Yes - Reapprove',
 
 	'TOPIC_ALL'				=> 'All',
 	'TOPIC_DELETED'			=> 'Deleted',

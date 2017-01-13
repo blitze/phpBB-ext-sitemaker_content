@@ -1,0 +1,31 @@
+services:
+
+    blitze.content.admin.controller:
+        class: blitze\content\controller\admin_controller
+        arguments:
+            - '@language'
+            - '@blitze.content.action_handler'
+
+    blitze.content.main.controller:
+        class: blitze\content\controller\main_controller
+        arguments:
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '@blitze.content.comments'
+            - '@blitze.content.types'
+            - '@blitze.content.views.factory'
+
+    blitze.content.mcp.controller:
+        class: blitze\content\controller\mcp_controller
+        arguments:
+            - '@language'
+            - '@blitze.content.action_handler'
+
+    blitze.content.ucp.controller:
+        class: blitze\content\controller\ucp_controller
+        arguments:
+            - '@language'
+            - '@blitze.content.action_handler'

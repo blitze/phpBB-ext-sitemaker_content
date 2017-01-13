@@ -32,16 +32,23 @@ class m3_initial_module extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return array(
-			array('module.add', array('acp', 'ACP_SITEMAKER', array(
+			array('module.add', array(
+				'acp', 'ACP_SITEMAKER', array(
 					'module_basename'	=> '\blitze\content\acp\content_module',
+					'modes'				=> array('content'),
+					'before'			=> 'ACP_MENU',
 				),
 			)),
-			array('module.add', array('mcp', 'MCP_SITEMAKER_CONTENT', array(
+			array('module.add', array(
+				'mcp', 'MCP_SITEMAKER_CONTENT', array(
 					'module_basename'	=> '\blitze\content\mcp\content_module',
+					'modes'				=> array('content'),
 				),
 			)),
-			array('module.add', array('ucp', 'UCP_SITEMAKER_CONTENT', array(
+			array('module.add', array(
+				'ucp', 'UCP_SITEMAKER_CONTENT', array(
 					'module_basename'	=> '\blitze\content\ucp\content_module',
+					'modes'				=> array('content'),
 				),
 			)),
 		);

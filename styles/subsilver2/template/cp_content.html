@@ -1,298 +1,39 @@
-<!-- INCLUDE {MODE}_header.html -->
-
-<!-- IF not S_PREVIEW --><h2>{L_MANAGE_CONTENT}</h2><!-- ENDIF -->
-
-<!-- IF S_VIEWING -->
-
-	<div class="panel post">
-		<div class="inner">
-			<ul class="post-buttons">
-				<!-- IF U_EDIT -->
-				<li>
-					<a href="{U_EDIT}" title="{L_EDIT_POST}" class="button icon-button edit-icon"><span>{L_BUTTON_EDIT}</span></a>
-				</li>
-				<!-- ENDIF -->
-				<!-- IF U_DELETE -->
-				<li>
-					<a href="{U_DELETE}" title="{L_DELETE_POST}" class="button icon-button delete-icon"><span>{L_DELETE_POST}</span></a>
-				</li>
-				<!-- ENDIF -->
-				<!-- IF U_WARN -->
-				<li>
-					<a href="{U_WARN}" title="{L_WARN_USER}" class="button icon-button warn-icon"><span>{L_WARN_USER}</span></a>
-				</li>
-				<!-- ENDIF -->
-				<!-- IF U_INFO -->
-				<li>
-					<a href="{U_INFO}" title="{L_INFORMATION}" class="button icon-button info-icon"><span>{L_INFORMATION}</span></a>
-				</li>
-				<!-- ENDIF -->
-			</ul><br />
-			<h4>{L_TOPIC_REVIEW}</h4>
-			<div class="clear"></div>
-			<h3 id="review">
-				<span class="right-box"><a href="#review" onclick="viewableArea(getElementById('topicreview'), true); var rev_text = getElementById('review').getElementsByTagName('a').item(0).firstChild; if (rev_text.data == '{LA_EXPAND_VIEW}'){rev_text.data = '{LA_COLLAPSE_VIEW}'; } else if (rev_text.data == '{LA_COLLAPSE_VIEW}'){rev_text.data = '{LA_EXPAND_VIEW}'};">{L_EXPAND_VIEW}</a></span>
-				<span>&nbsp;</span>
-			</h3>
-
-			<div id="topicreview">
-				<div class="postbody pt-postbody">
-					<!-- IF not CUSTOM_DISPLAY -->
-					<h3 class="first"><a href="{TOPIC_URL}">{TOPIC_TITLE}</a></h3>
-					<p class="author">{MINI_POST_IMG}<span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{TOPIC_AUTHOR_FULL}</strong> &raquo; </span>{TOPIC_DATE}</p>
-					<!-- ENDIF -->
-					<div class="content">
-						<!-- IF CUSTOM_DISPLAY -->
-						{CUSTOM_DISPLAY}
-						<!-- ELSE -->
-						{SEQ_DISPLAY}
-						<!-- ENDIF -->
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- IF S_MODERATOR -->
-	<div class="panel post">
-		<div class="inner">
-			<h3>{L_TOOLS}</h3>
-
-				<!-- IF S_POST_UNAPPROVED -->
-				<form method="post" class="mcp_approve" action="{U_APPROVE_ACTION}">
-					<p class="post-notice unapproved">
-						<strong>{L_POST_UNAPPROVED_ACTION}</strong>
-						<input class="button2" type="submit" value="{L_DISAPPROVE}" name="action[disapprove]" />
-						<input class="button1" type="submit" value="{L_APPROVE}" name="action[approve]" />
-						<input type="hidden" name="post_id_list[]" value="{POST_ID}" />
-						{S_FORM_TOKEN}
-					</p>
-				</form>
-				<!-- ELSEIF S_POST_DELETED -->
-				<form method="post" class="mcp_approve" action="{U_APPROVE_ACTION}">
-					<p class="post-notice deleted">
-						<strong>{L_POST_DELETED_ACTION}</strong>
-						<input class="button2" type="submit" value="{L_DELETE}" name="action[disapprove]" />
-						<input class="button1" type="submit" value="{L_RESTORE}" name="action[restore]" />
-						<input type="hidden" name="post_id_list[]" value="{POST_ID}" />
-						{S_FORM_TOKEN}
-					</p>
-				</form>
-				<!-- ENDIF -->
-
-				<!-- IF S_POST_REPORTED -->
-				<p class="post-notice reported">
-					<a href="{U_MCP_REPORT}"><strong>{L_POST_REPORTED}</strong></a>
-				</p>
-				<!-- ENDIF -->
-		</div>
-	</div>
-	<!-- ENDIF -->
-
-<!-- ELSEIF S_EDITING -->
-	<!-- IF S_PREVIEW -->
-		<div class="tabs-container">
-			<h2>{L_CP_TITLE}</h2>
-			<div id="minitabs" class="sub-panels" data-show-panel="preview-summary-panel" role="tablist">
-				<ul>
-					<li id="preview-detail-panel-tab" class="tab">
-						<a href="#minitabs" data-subpanel="preview-detail-panel" role="tab" aria-controls="preview-detail-panel">{L_DETAILS}</a>
-					</li>
-					<li id="preview-summary-panel-tab" class="tab activetab">
-						<a href="#minitabs" data-subpanel="preview-summary-panel" role="tab" aria-controls="preview-summary-panel">{L_SUMMARY}</a>
-					</li>
-				</ul>
-			</div>
-		</div>
-		<div class="panel post">
-			<div class="inner">
-				<div id="preview-summary-panel" role="tabpanel">
-					<ul class="post-buttons">
-						<li id="summary_expand">
-							<a href="#review" onclick="viewableArea(getElementById('topicreview'), true); var rev_text = getElementById('summary_expand').getElementsByTagName('a').item(0).firstChild; if (rev_text.data.trim() == '{LA_EXPAND_VIEW}'){rev_text.data = '{LA_COLLAPSE_VIEW}'; } else if (rev_text.data.trim() == '{LA_COLLAPSE_VIEW}'){rev_text.data = '{LA_EXPAND_VIEW}';} return false;">
-								{L_EXPAND_VIEW}
-							</a>
-						</li>
-					</ul>
-					<div class="clear"></div>
-					<div id="topicreview">
-						<!-- INCLUDE {SUMMARY_TPL} -->
-					</div>
-				</div>
-				<div id="preview-detail-panel" role="tabpanel">
-					<ul class="post-buttons">
-						<li id="detail_expand">
-							<a href="#post_details" onclick="viewableArea(getElementById('post_details'), true); var rev_text = getElementById('detail_expand').getElementsByTagName('a').item(0).firstChild; if (rev_text.data.trim() == '{LA_EXPAND_VIEW}'){rev_text.data = '{LA_COLLAPSE_VIEW}'; } else if (rev_text.data.trim() == '{LA_COLLAPSE_VIEW}'){rev_text.data = '{LA_EXPAND_VIEW}';} return false;">
-								{L_EXPAND_VIEW}
-							</a>
-						</li>
-					</ul>
-					<div class="clear"></div>
-					<div id="post_details">
-						<!-- INCLUDE {DETAIL_TPL} -->
-					</div>
-				</div>
-			</div>
-		</div>
-	<!-- ENDIF -->
-
-	<div class="panel">
-		<div class="inner">
-			<!-- IF TYPE_DESC and not S_PREVIEW --><p>{TYPE_DESC}</p><!-- ENDIF -->
-			<p>&nbsp;</p>
-			{POST_FORM}
-		</div>
-	</div>
-
-<!-- ELSE -->
-	<div class="panel">
-		<div class="inner">
-			<!-- IF S_MODERATOR && NUM_PENDING --><span class="error">{L_PENDING_TOPICS}: <a href="{U_PENDING}"><strong>[{NUM_PENDING}]</strong></a></span><!-- ENDIF -->
-
-			<!-- IF .postable -->
-			<div class="action-bar top">
-				<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
-					<span title="{L_CONTENT_NEW}" class="button dropdown-trigger dropdown-select"><i class="fa fa-plus"></i> {L_CONTENT_NEW}</span>
-					<div class="dropdown hidden">
-						<div class="pointer"><div class="pointer-inner"></div></div>
-						<ul class="dropdown-contents" style="min-width: 150px">
-						<!-- BEGIN postable -->
-							<li><i class="fa fa-square" style="color: #{postable.COLOUR}"></i> <a href="{postable.U_POST}">{postable.TYPE}</a></li>
-							<!-- END postable -->
-						</ul>
-					</div>
-				</div>
-			</div>
-			<!-- ENDIF -->
-
-			<div class="right-box">
-				<form method="post" action="{U_ACTION}" style="margin-right: 5px">
-					<input type="search" placeholder="{L_TOPIC_TITLE}" id="search" class="panel inputbox autowidth" name="search" size="28" maxwidth="255" value="" />
-					<input type="submit" class="panel bg3" value="{L_SEARCH}" />
-				</form>
-
-				<div class="action-bar top right-box">
-					<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
-						<span title="{L_TOPIC_STATUS}" class="button dropdown-trigger dropdown-select"><i class="fa <!-- IF S_STATUS_FILTER -->fa-filter<!-- ELSE -->fa-square-o<!-- ENDIF -->"></i> {L_TOPIC_STATUS}</span>
+<div class="panel bg2" style="width: 70%; margin: 10px auto">
+	<div class="inner">
+		<dl>
+			<dt>
+				<strong>About the Author</strong>
+				<div class="profile-contact pull-right">
+					<strong>Contact:</strong>
+					<div class="dropdown-container dropdown-left">
+						<a href="#" class="dropdown-trigger" title="Contact admin">
+							<i class="icon fa-commenting-o fa-fw icon-lg" aria-hidden="true"></i><span class="sr-only">Contact admin</span>
+						</a>
 						<div class="dropdown hidden">
 							<div class="pointer"><div class="pointer-inner"></div></div>
-							<ul class="dropdown-contents" style="min-width: 150px">
-							<!-- BEGIN status -->
-								<!-- IF status.S_SELECTED -->
-								<li><i class="fa fa-caret-right"></i> <strong>{status.TITLE}</strong></li>
-								<!-- ELSE -->
-								<li><i class="fa fa-angle-right"></i> <a href="{status.U_VIEW}">{status.TITLE}</a></li>
-								<!-- ENDIF -->
-							<!-- END status -->
-							</ul>
+							<div class="dropdown-contents contact-icons">
+								<a href="./../../../../ucp.php?i=pm&amp;mode=compose&amp;u=2" title="Send private message">
+									<span class="contact-icon pm-icon">Send private message</span>
+								</a>
+								<a href="mailto:daniel@mavify.com" title="Send email" class="last-cell">
+									<span class="contact-icon email-icon">Send email</span>
+								</a>
+							</div>
 						</div>
 					</div>
 				</div>
-
-				<!-- IF .content > 1 -->
-				<div class="action-bar top right-box">
-					<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
-						<span title="{L_CONTENT_TYPE}" class="button dropdown-trigger dropdown-select"><i class="fa <!-- IF S_CONTENT_FILTER -->fa-filter<!-- ELSE -->fa-square-o<!-- ENDIF -->"></i> {L_CONTENT_TYPE}</span>
-						<div class="dropdown hidden">
-							<div class="pointer"><div class="pointer-inner"></div></div>
-							<ul class="dropdown-contents" style="min-width: 150px">
-							<!-- BEGIN content -->
-								<!-- IF content.S_SELECTED -->
-								<li><i class="fa fa-square" style="color: #{content.COLOUR}"></i> <strong>{content.TITLE}</strong></li>
-								<!-- ELSE -->
-								<li><i class="fa fa-square" style="color: #{content.COLOUR}"></i> <a href="{content.U_VIEW}">{content.TITLE}</a></li>
-								<!-- ENDIF -->
-							<!-- END content -->
-							</ul>
-						</div>
-					</div>
 				</div>
-				<!-- ENDIF -->
-			</div>
-			<div class="clear"></div><br />
-
-			<!-- IF .topicrow -->
-				<!-- IF S_MODERATOR --><form id="mcp" method="post" action="{S_MCP_ACTION}"><!-- ENDIF -->
-
-				<!-- IF PAGINATION or TOTAL_TOPICS -->
-				<div class="action-bar top">
-					<div class="pagination">
-						{TOTAL_TOPICS}
-						<!-- IF .pagination --> 
-						<!-- INCLUDE pagination.html -->
-						<!-- ELSE --> 
-						&bull; {PAGE_NUMBER}
-						<!-- ENDIF -->
-					</div>
-				</div>
-				<!-- ENDIF -->
-
-				<ul class="topiclist">
-					<li class="header">
-						<dl class="icon">
-							<dt><div class="list-inner">{L_TITLE}</div></dt>
-							<dd class="posts">{L_STATUS}</dd>
-							<dd class="lastpost align-center"><span>{L_TYPE}</span></dd>
-							<dd class="mark">{L_ACTION}</dd>
-						</dl>
-					</li>
-				</ul>
-				<ul class="topiclist cplist">
-					<!-- BEGIN topicrow -->
-					<li class="row<!-- IF topicrow.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF --><!-- IF topicrow.S_TOPIC_REPORTED --> reported<!-- ENDIF -->">
-						<dl class="icon {topicrow.TOPIC_IMG_STYLE}">
-							<dt <!-- IF topicrow.TOPIC_ICON_IMG -->style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;"<!-- ENDIF -->>
-								<!-- IF topicrow.S_UNREAD_TOPIC --><a href="{topicrow.U_NEWEST_POST}" class="icon-link"></a><!-- ENDIF -->
-								<div class="list-inner">
-									<a href="{topicrow.U_VIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a>
-									<!-- IF topicrow.S_TOPIC_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED --><a href="{topicrow.U_MCP_QUEUE}">{topicrow.UNAPPROVED_IMG}</a> <!-- ENDIF -->
-									<!-- IF topicrow.S_TOPIC_DELETED or topicrow.S_POSTS_DELETED --><a href="{topicrow.U_MCP_QUEUE}">{topicrow.DELETED_IMG}</a> <!-- ENDIF -->
-									<!-- IF topicrow.S_TOPIC_REPORTED --><a href="{topicrow.U_MCP_REPORT}">{REPORTED_IMG}</a><!-- ENDIF -->
-									<!-- IF topicrow.S_MOVED_TOPIC and S_CAN_DELETE -->&nbsp;<a href="{topicrow.U_DELETE_TOPIC}" class="topictitle">[ {L_DELETE_SHADOW_TOPIC} ]</a><!-- ENDIF -->
-									<br />
-
-									<div class="responsive-show" style="display: none;">
-										<!-- IF topicrow.ATTACH_ICON_IMG -->{topicrow.ATTACH_ICON_IMG} <!-- ENDIF -->
-										<i class="fa fa-calendar"></i> <strong>{topicrow.FIRST_POST_TIME|date("m/d/Y")}</strong>&nbsp;
-										<i class="fa fa-eye"></i> <strong>{topicrow.TOPIC_VIEWS}</strong>&nbsp;
-										<i class="fa fa-comments"></i> <strong>{topicrow.REPLIES}</strong>
-									</div>
-									<span class="responsive-show left-box" style="display: none;">{L_TYPE}{L_COLON} <strong>{topicrow.CONTENT_TYPE}</strong></span>
-
-									<div class="responsive-hide">
-										<!-- IF topicrow.ATTACH_ICON_IMG -->{topicrow.ATTACH_ICON_IMG} <!-- ENDIF -->
-										<i class="fa fa-calendar"></i> {L_POSTED}{L_COLON} <strong>{topicrow.FIRST_POST_TIME|date("m/d/Y")}</strong>&nbsp;
-										<i class="fa fa-eye"></i> {L_VIEWS}{L_COLON} <strong>{topicrow.TOPIC_VIEWS}</strong>&nbsp;
-										<i class="fa fa-comments"></i> {L_COMMENTS}{L_COLON} <strong>{topicrow.REPLIES}</strong>
-									</div>
-								</div>
-							</dt>
-							<dd class="posts"><a href="{topicrow.U_TOPIC_STATUS}" title="{topicrow.FIRST_POST_TIME}">{topicrow.TOPIC_STATUS}</a> <dfn>{L_STATUS}</dfn></dd>
-							<dd class="lastpost align-center badge"><a href="{topicrow.U_CONTENT_TYPE}"><span class="info" style="background-color: {topicrow.CONTENT_TYPE_COLOR}; color: white">{topicrow.CONTENT_TYPE}</span></a><dfn>{L_LAST_POST}</dfn></dd>
-							<dd class="mark align-center">
-								<!-- IF topicrow.S_CAN_EDIT --><a href="{topicrow.U_EDIT_TOPIC}" alt="{L_EDIT}"><i class="fa fa-cog fa-lg green"></i></a>&nbsp;<!-- ELSE --><i class="fa fa-cog fa-2x"></i>&nbsp;<!-- ENDIF -->
-								<!-- IF topicrow.S_CAN_DELETE --><a href="{topicrow.U_DELETE_TOPIC}" alt="{L_DELETE}"><i class="fa fa-trash-o fa-lg red"></i></a>&nbsp;<!-- ENDIF -->
-							</dd>
-						</dl>
-					</li>
-					<!-- END topicrow -->
-				</ul>
-
-				<!-- IF .pagination or TOTAL_TOPICS -->
-				<div class="pagination">
-					<!-- IF TOTAL_TOPICS --> {TOTAL_TOPICS}<!-- ENDIF -->
-					<!-- IF .pagination -->
-						<!-- INCLUDE pagination.html -->
-					<!-- ELSE -->
-						&bull; {PAGE_NUMBER}
-					<!-- ENDIF -->
-				</div>
-				<!-- ENDIF -->
-			<!-- ELSE -->
-				<p style="text-align: center"><strong>{L_NO_CONTENT_TOPICS}</strong></p>
-			<!-- ENDIF -->
-		</div>
-	</div>
-<!-- ENDIF -->
-
-<!-- INCLUDE {MODE}_footer.html -->
+			<hr />
+			</dt>
+		<dd>
+			<div class="pull-left medium-avatar img-circle" style="margin-right: 2.5em;">
+				<a class="img-ui" href="./../../../../memberlist.php?mode=viewprofile&amp;u=2"><img src="./../../../../styles/prosilver/theme/images/no_avatar.gif" alt="" /></a>
+				<div class="profile-rank">Site Admin</div>				</div>
+			<p class="gen"><a href="./../../../../memberlist.php?mode=viewprofile&amp;u=2" style="color: #AA0000;" class="username-coloured">admin</a> has been a member since 15 Nov 2016, and has contributed 11 News item(s) for a total of 12 post(s).</p>
+			<span class="gen">
+				<a href="./../../../../search.php?author=admin&amp;fid%5B%5D=7&amp;sc=0&amp;sf=titleonly&amp;sr=topics">View all News (items) by admin</a><br />					<a href="./../../../../search.php?author_id=2&amp;sr=posts">Search all posts by admin</a>
+			</span>
+		</dd>
+		</dl>
+</div>
+</div>
