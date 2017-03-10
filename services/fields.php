@@ -9,8 +9,6 @@
 
 namespace blitze\content\services;
 
-use Symfony\Component\DependencyInjection\Container;
-
 class fields extends topic
 {
 	/** @var \phpbb\template\template */

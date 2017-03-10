@@ -17,7 +17,6 @@ use blitze\sitemaker\model\base_entity;
  * @method integer get_content_id()
  * @method object set_field_name($field_name)
  * @method integer get_field_name()
- * @method object set_field_label($field_label)
  * @method integer get_field_label()
  * @method object set_field_type($field_type)
  * @method string get_field_type()
@@ -54,7 +53,7 @@ final class field extends base_entity
 	protected $field_name;
 
 	/** @var string */
-	protected $field_label = '';
+	protected $field_label;
 
 	/** @var string */
 	protected $field_explain = '';
@@ -66,22 +65,22 @@ final class field extends base_entity
 	protected $field_settings = '';
 
 	/** @var boolean */
-	protected $field_mod_only = 0;
+	protected $field_mod_only = false;
 
 	/** @var boolean */
-	protected $field_required = 0;
+	protected $field_required = false;
 
 	/** @var boolean */
-	protected $field_summary_show = 0;
+	protected $field_summary_show = false;
 
 	/** @var boolean */
-	protected $field_detail_show = 0;
+	protected $field_detail_show = false;
 
 	/** @var boolean */
-	protected $field_summary_ldisp = 0;
+	protected $field_summary_ldisp = false;
 
 	/** @var boolean */
-	protected $field_detail_ldisp = 0;
+	protected $field_detail_ldisp = false;
 
 	/** @var string */
 	protected $field_exp_uid = '';
@@ -96,7 +95,7 @@ final class field extends base_entity
 	protected $field_order = 0;
 
 	/** @var array */
-	protected $required_fields = array('content_id', 'field_name', 'field_type');
+	protected $required_fields = array('content_id', 'field_name', 'field_label', 'field_type');
 
 	/** @var array */
 	protected $db_fields = array(
@@ -133,6 +132,17 @@ final class field extends base_entity
 	}
 
 	/**
+	 * Set field label
+	 * @param string $label
+	 * @return $this
+	 */
+	public function set_field_label($label)
+	{
+		$this->field_label = utf8_ucfirst(trim($label));
+		return $this;
+	}
+
+	/**
 	 * @param string $explain
 	 * @param string $mode
 	 * @return $this
@@ -160,7 +170,8 @@ final class field extends base_entity
 		}
 		else
 		{
-			return generate_text_for_display($this->field_explain, $this->field_exp_uid, $this->field_exp_bitfield, $this->field_exp_options);
+			$parse_flags = ($this->field_exp_bitfield ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+			return generate_text_for_display($this->field_explain, $this->field_exp_uid, $this->field_exp_bitfield, $parse_flags);
 		}
 	}
 
@@ -171,7 +182,6 @@ final class field extends base_entity
 	 */
 	public function set_field_settings($settings)
 	{
-		$this->field_settings = '';
 		if (!is_array($settings))
 		{
 			$this->field_settings = $settings;

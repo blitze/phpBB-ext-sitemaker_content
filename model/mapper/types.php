@@ -28,8 +28,8 @@ class types extends base_mapper
 
 		if ($entity)
 		{
-			$fields = array_pop($this->find_fields($entity->get_content_id()));
-			$entity->set_content_fields($fields);
+			$fields = $this->find_fields($entity->get_content_id());
+			$entity->set_content_fields(array_pop($fields));
 		}
 
 		return $entity;

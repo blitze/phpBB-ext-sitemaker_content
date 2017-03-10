@@ -114,7 +114,7 @@ final class type extends base_entity
 	protected $show_pagination = true;
 
 	/** @var boolean */
-	protected $index_show_desc = true;
+	protected $index_show_desc = false;
 
 	/** @var boolean */
 	protected $items_per_page = 10;
@@ -234,7 +234,8 @@ final class type extends base_entity
 		}
 		else
 		{
-			return generate_text_for_display($this->content_desc, $this->content_desc_uid, $this->content_desc_bitfield, $this->content_desc_options);
+			$parse_flags = ($this->content_desc_bitfield ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
+			return generate_text_for_display($this->content_desc, $this->content_desc_uid, $this->content_desc_bitfield, $parse_flags);
 		}
 	}
 
