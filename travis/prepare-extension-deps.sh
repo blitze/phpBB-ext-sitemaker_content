@@ -13,10 +13,10 @@ set -x
 
 BRANCH=$1
 
+cd ../../phpBB3
+
 # Clone sitemaker
 git clone --depth=1 "git://github.com/blitze/phpBB-ext-sitemaker.git" "phpBB/ext/blitze/sitemaker" --branch=$BRANCH
 
 cd phpBB/ext/blitze/sitemaker
 composer install --no-interaction --prefer-source
-
-cd ../../../../phpBB3
