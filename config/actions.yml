@@ -84,7 +84,7 @@ services:
     blitze.content.actions.type.delete:
         class: blitze\content\services\actions\type\delete
         arguments:
-            - '@cache'
+            - '@cache.driver'
             - '@language'
             - '@request'
             - '@blitze.content.types'
@@ -96,7 +96,7 @@ services:
         class: blitze\content\services\actions\type\save
         arguments:
             - '@auth'
-            - '@cache'
+            - '@cache.driver'
             - '@config'
             - '@dbal.conn'
             - '@language'
@@ -111,6 +111,6 @@ services:
     blitze.content.actions.type.toggle_status:
         class: blitze\content\services\actions\type\toggle_status
         arguments:
-            - '@cache'
+            - '@cache.driver'
             - '@blitze.content.types'
             - '@blitze.content.mapper.factory'

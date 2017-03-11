@@ -134,7 +134,7 @@ services:
     blitze.content.types:
         class: blitze\content\services\types
         arguments:
-            - '@cache'
+            - '@cache.driver'
             - '@blitze.content.mapper.factory'
 
     blitze.content.views_collection:

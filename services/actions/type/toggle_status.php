@@ -13,7 +13,7 @@ use blitze\content\services\actions\action_interface;
 
 class toggle_status implements action_interface
 {
-	/** @var \phpbb\cache\service */
+	/** @var \phpbb\cache\driver\driver_interface */
 	protected $cache;
 
 	/** @var \blitze\content\services\types */
@@ -25,11 +25,11 @@ class toggle_status implements action_interface
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\cache\service						$cache					Cache object
+	 * @param \phpbb\cache\driver\driver_interface		$cache					Cache object
 	 * @param \blitze\content\services\types			$content_types			Content types object
 	 * @param \blitze\content\model\mapper_factory		$mapper_factory			Mapper factory object
 	*/
-	public function __construct(\phpbb\cache\service $cache, \blitze\content\services\types $content_types, \blitze\content\model\mapper_factory $mapper_factory)
+	public function __construct(\phpbb\cache\driver\driver_interface $cache, \blitze\content\services\types $content_types, \blitze\content\model\mapper_factory $mapper_factory)
 	{
 		$this->cache = $cache;
 		$this->content_types = $content_types;

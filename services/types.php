@@ -11,7 +11,7 @@ namespace blitze\content\services;
 
 class types
 {
-	/** @var \phpbb\cache\service */
+	/** @var \phpbb\cache\driver\driver_interface */
 	protected $cache;
 
 	/** @var \blitze\content\model\mapper_factory */
@@ -23,10 +23,10 @@ class types
 	/**
 	 * Construct
 	 *
-	 * @param \phpbb\cache\service						$cache				Cache object
+	 * @param \phpbb\cache\driver\driver_interface		$cache				Cache object
 	 * @param \blitze\content\model\mapper_factory		$mapper_factory		Mapper factory object
 	 */
-	public function __construct(\phpbb\cache\service $cache, \blitze\content\model\mapper_factory $mapper_factory)
+	public function __construct(\phpbb\cache\driver\driver_interface $cache, \blitze\content\model\mapper_factory $mapper_factory)
 	{
 		$this->cache = $cache;
 		$this->mapper_factory = $mapper_factory;
@@ -35,7 +35,7 @@ class types
 	/**
 	 * Get all content types
 	 *
-	 * @param string $mode
+	 * @param string $mode data|forums
 	 * @return array
 	 */
 	public function get_all_types($mode = 'data')

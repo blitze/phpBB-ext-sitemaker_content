@@ -13,7 +13,7 @@ use blitze\content\services\actions\action_interface;
 
 class delete implements action_interface
 {
-	/** @var \phpbb\cache\service */
+	/** @var \phpbb\cache\driver\driver_interface */
 	protected $cache;
 
 	/** @var\phpbb\language\language */
@@ -37,7 +37,7 @@ class delete implements action_interface
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\cache\service						$cache				Cache object
+	 * @param \phpbb\cache\driver\driver_interface		$cache				Cache object
 	 * @param \phpbb\language\language					$language			Language Object
 	 * @param \phpbb\request\request_interface			$request			Request object
 	 * @param \blitze\content\services\types			$content_types		Content types object
@@ -45,7 +45,7 @@ class delete implements action_interface
 	 * @param \blitze\content\model\mapper_factory		$cmapper_factory	Content Mapper factory object
 	 * @param \blitze\sitemaker\model\mapper_factory	$smapper_factory	Sitemaker Mapper factory object
 	*/
-	public function __construct(\phpbb\cache\service $cache, \phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\content\services\types $content_types, \blitze\sitemaker\services\forum\manager $forum_manager, \blitze\content\model\mapper_factory $cmapper_factory, \blitze\sitemaker\model\mapper_factory $smapper_factory)
+	public function __construct(\phpbb\cache\driver\driver_interface $cache, \phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\content\services\types $content_types, \blitze\sitemaker\services\forum\manager $forum_manager, \blitze\content\model\mapper_factory $cmapper_factory, \blitze\sitemaker\model\mapper_factory $smapper_factory)
 	{
 		$this->cache = $cache;
 		$this->language = $language;

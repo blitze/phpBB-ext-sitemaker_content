@@ -14,7 +14,7 @@ class save
 	/** @var \phpbb\auth\auth */
 	protected $auth;
 
-	/** @var \phpbb\cache\service */
+	/** @var \phpbb\cache\driver\driver_interface */
 	protected $cache;
 
 	/** @var \phpbb\config\db */
@@ -51,7 +51,7 @@ class save
 	 * Constructor
 	 *
 	 * @param \phpbb\auth\auth							$auth					Auth object
-	 * @param \phpbb\cache\service						$cache					Cache object
+	 * @param \phpbb\cache\driver\driver_interface		$cache					Cache object
 	 * @param \phpbb\config\db							$config					Config object
 	 * @param \phpbb\db\driver\driver_interface			$db						Database object
 	 * @param \phpbb\language\language					$language				Language Object
@@ -63,7 +63,7 @@ class save
 	 * @param string									$phpbb_admin_path       Relative admin root path
 	 * @param string									$php_ext				php file extension
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\service $cache, \phpbb\config\db $config, \phpbb\db\driver\driver_interface $db, \phpbb\language\language $language, \phpbb\request\request_interface $request, \phpbb\template\template $template, \blitze\content\services\types $content_types, \blitze\sitemaker\services\forum\manager $forum, \blitze\content\model\mapper_factory $mapper_factory, $phpbb_admin_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\driver\driver_interface $cache, \phpbb\config\db $config, \phpbb\db\driver\driver_interface $db, \phpbb\language\language $language, \phpbb\request\request_interface $request, \phpbb\template\template $template, \blitze\content\services\types $content_types, \blitze\sitemaker\services\forum\manager $forum, \blitze\content\model\mapper_factory $mapper_factory, $phpbb_admin_path, $php_ext)
 	{
 		$this->auth = $auth;
 		$this->cache = $cache;
