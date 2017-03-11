@@ -45,7 +45,6 @@ abstract class base_mapper extends \phpbb_database_test_case
 
 		$cache = new \phpbb_mock_cache();
 		$config = $this->config = new \phpbb\config\config(array());
-		//$phpbb_container = new \phpbb_mock_container_builder();
 		$phpbb_dispatcher = new \phpbb_mock_event_dispatcher();
 
 		$request = $this->getMock('\phpbb\request\request_interface');
