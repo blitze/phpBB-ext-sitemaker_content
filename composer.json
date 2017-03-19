@@ -1,9 +1,9 @@
 {
 	"name": "blitze/content",
     "type": "phpbb-extension",
-	"description": "Create and manage content types",
+	"description": "Create and manage content types for phpBB SiteMaker",
 	"homepage": "https://github.com/blitze/phpBB-ext-sitemaker_content",
-	"version": "2.0.0-dev",
+	"version": "3.0.0-dev",
 	"time": "2014-06-21 01:01:01",
 	"license": "GPL-2.0",
 	"authors": [{
@@ -13,11 +13,10 @@
 			"role": "Lead Developer"
 		}],
 	"require": {
-		"cocur/slugify" : "@stable",
-		"solution10/calendar": "1.*",
-		"composer/installers": "~1.0",
 		"php": ">=5.3",
-		"paquettg/php-html-parser": "^1.7",
+		"cocur/slugify" : "@stable",
+		"composer/installers": "~1.0",
+		"solution10/calendar": "1.*",
 		"urodoz/truncate-html": "@stable"
 	},
 	"require-dev": {

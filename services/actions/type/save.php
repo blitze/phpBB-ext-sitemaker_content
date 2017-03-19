@@ -9,7 +9,10 @@
 
 namespace blitze\content\services\actions\type;
 
-class save
+use blitze\content\services\actions\action_utils;
+use blitze\content\services\actions\action_interface;
+
+class save extends action_utils implements action_interface
 {
 	/** @var \phpbb\auth\auth */
 	protected $auth;
@@ -17,7 +20,7 @@ class save
 	/** @var \phpbb\cache\driver\driver_interface */
 	protected $cache;
 
-	/** @var \phpbb\config\db */
+	/** @var \phpbb\config\config */
 	protected $config;
 
 	/** @var \phpbb\db\driver\driver_interface */
@@ -29,14 +32,11 @@ class save
 	/** @var \phpbb\request\request_interface */
 	protected $request;
 
-	/** @var \phpbb\template\template */
-	protected $template;
-
 	/** @var \blitze\content\services\types */
 	protected $content_types;
 
 	/** @var \blitze\sitemaker\services\forum\manager */
-	protected $forum;
+	protected $forum_manager;
 
 	/** @var \blitze\content\model\mapper_factory */
 	protected $mapper_factory;
@@ -52,18 +52,18 @@ class save
 	 *
 	 * @param \phpbb\auth\auth							$auth					Auth object
 	 * @param \phpbb\cache\driver\driver_interface		$cache					Cache object
-	 * @param \phpbb\config\db							$config					Config object
+	 * @param \phpbb\config\config						$config					Config object
 	 * @param \phpbb\db\driver\driver_interface			$db						Database object
 	 * @param \phpbb\language\language					$language				Language Object
-	 * @param \phpbb\request\request_interface			$request				Request object
-	 * @param \phpbb\template\template					$template				Template object
+	 * @param \phpbb\request\request_interface			$request				Template object
 	 * @param \blitze\content\services\types			$content_types			Content types object
-	 * @param \blitze\sitemaker\services\forum\manager	$forum					Forum manager object
+	 * @param \blitze\sitemaker\services\forum\manager	$forum_manager			Forum manager object
 	 * @param \blitze\content\model\mapper_factory		$mapper_factory			Mapper factory object
 	 * @param string									$phpbb_admin_path       Relative admin root path
 	 * @param string									$php_ext				php file extension
+	 * @param boolean									$auto_refresh			Used for testing
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\driver\driver_interface $cache, \phpbb\config\db $config, \phpbb\db\driver\driver_interface $db, \phpbb\language\language $language, \phpbb\request\request_interface $request, \phpbb\template\template $template, \blitze\content\services\types $content_types, \blitze\sitemaker\services\forum\manager $forum, \blitze\content\model\mapper_factory $mapper_factory, $phpbb_admin_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\driver\driver_interface $cache, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\content\services\types $content_types, \blitze\sitemaker\services\forum\manager $forum_manager, \blitze\content\model\mapper_factory $mapper_factory, $phpbb_admin_path, $php_ext, $auto_refresh = true)
 	{
 		$this->auth = $auth;
 		$this->cache = $cache;
@@ -71,12 +71,12 @@ class save
 		$this->db = $db;
 		$this->language = $language;
 		$this->request = $request;
-		$this->template = $template;
 		$this->content_types = $content_types;
-		$this->forum = $forum;
+		$this->forum_manager = $forum_manager;
 		$this->mapper_factory = $mapper_factory;
 		$this->phpbb_admin_path = $phpbb_admin_path;
 		$this->php_ext = $php_ext;
+		$this->auto_refresh = $auto_refresh;
 	}
 
 	/**
@@ -84,7 +84,7 @@ class save
 	 */
 	public function execute($u_action, $type = '')
 	{
-		$fields_data = $this->request->variable('fdata', array('' => array('' => '')));
+		$fields_data = $this->request->variable('field_data', array('' => array('' => '')), true);
 
 		$types_mapper = $this->mapper_factory->create('types');
 		$unsaved_entity = $this->get_unsaved_entity($types_mapper);
@@ -192,35 +192,37 @@ class save
 		}
 		else
 		{
-			meta_refresh(3, $u_action);
+			$this->meta_refresh(3, $u_action);
 			$message = $this->language->lang('CONTENT_TYPE_UPDATED');
 		}
 
-		trigger_error($message . adm_back_link($u_action));
+		$this->trigger_error($message, $u_action);
 	}
 
 	/**
 	 * @param string $test_name
 	 * @param string $content_type
 	 * @return void
+	 * @throws \blitze\sitemaker\exception\invalid_argument
 	 */
 	protected function ensure_content_name_is_unique($test_name, $content_type)
 	{
 		if ($test_name !== $content_type && $this->content_types->exists($test_name))
 		{
-			trigger_error($this->language->lang('CONTENT_NAME_EXISTS', $test_name), E_USER_WARNING);
+			throw new \blitze\sitemaker\exception\invalid_argument(array($test_name, 'CONTENT_NAME_EXISTS'));
 		}
 	}
 
 	/**
 	 * @param array $fields_data
 	 * @return void
+	 * @throws \blitze\sitemaker\exception\invalid_argument
 	 */
 	protected function ensure_content_has_fields(array $fields_data)
 	{
-		if (!sizeof($fields_data))
+		if (!sizeof(array_filter($fields_data)))
 		{
-			trigger_error($this->language->lang('MISSING_CONTENT_FIELDS'), E_USER_WARNING);
+			throw new \blitze\sitemaker\exception\invalid_argument(array('content_fields', 'FIELD_MISSING'));
 		}
 	}
 
@@ -253,12 +255,8 @@ class save
 			'forum_desc'	=> $this->language->lang('CONTENT_FORUM_EXPLAIN'),
 			'parent_id'		=> (int) $this->config['blitze_content_forum_id'],
 		);
-		$errors = $this->forum->add($forum_data, $forum_perm_from);
 
-		if (sizeof($errors))
-		{
-			trigger_error($this->language->lang('CONTENT_CREATE_FORUM_ERROR', implode('<br />', $errors)), E_USER_WARNING);
-		}
+		$this->forum_manager->add($forum_data, $forum_perm_from);
 
 		return (int) $forum_data['forum_id'];
 	}
@@ -270,8 +268,9 @@ class save
 	 */
 	protected function handle_content_fields($content_id, array $fields_data)
 	{
-		$fields_settings = $this->request->variable('fsettings', array('' => array('' => '')), true);
-		$fields_defaults = $this->request->variable('fdefaults', array('' => array('' => '')), true);
+		$fields_settings = $this->request->variable('field_settings', array('' => array('' => '')), true);
+		$field_options = $this->request->variable('field_options', array('' => array(0 => '')), true);
+		$fields_defaults = $this->request->variable('field_defaults', array('' => array(0 => '')), true);
 
 		$mapper = $this->mapper_factory->create('fields');
 
@@ -290,7 +289,7 @@ class save
 				->set_content_id($content_id)
 				->set_field_order($i)
 				->set_field_explain($fields_data[$field]['field_explain'], 'storage')
-				->set_field_settings($this->get_field_settings($field, $fields_settings, $fields_defaults));
+				->set_field_settings($this->get_field_settings($field, $fields_settings, $field_options, $fields_defaults));
 
 			$form_fields[$field] = $entity->to_db();
 		}
@@ -301,16 +300,15 @@ class save
 	/**
 	 * @param string $field
 	 * @param array $fields_settings
+	 * @param array $fields_options
 	 * @param array $fields_defaults
 	 * @return array
 	 */
-	protected function get_field_settings($field, array $fields_settings, array $fields_defaults)
+	protected function get_field_settings($field, array $fields_settings, array $field_options, array $fields_defaults)
 	{
-		$field_options = $this->request->variable($field . '_options', array(''), true);
-
-		if (sizeof($field_options))
+		if (isset($field_options[$field]))
 		{
-			$fields_settings[$field]['field_options'] = array_combine($field_options, $field_options);
+			$fields_settings[$field]['field_options'] = $field_options[$field];
 		}
 
 		if (isset($fields_defaults[$field]))

@@ -63,10 +63,10 @@ class types_test extends \phpbb_database_test_case
 			->disableOriginalConstructor()
 			->getMock();
 
-		$this->translator = $this->getMockBuilder('\phpbb\language\language')
+		$this->language = $this->getMockBuilder('\phpbb\language\language')
 			->disableOriginalConstructor()
 			->getMock();
-		$this->translator->expects($this->any())
+		$this->language->expects($this->any())
 			->method('lang')
 			->willReturnCallback(function () {
 				return implode('-', func_get_args());
@@ -150,7 +150,7 @@ class types_test extends \phpbb_database_test_case
 		}
 		catch (\blitze\sitemaker\exception\out_of_bounds $e)
 		{
-			$this->assertEquals("EXCEPTION_OUT_OF_BOUNDS-{$type}", $e->get_message($this->translator));
+			$this->assertEquals("EXCEPTION_OUT_OF_BOUNDS-{$type}", $e->get_message($this->language));
 		}
 	}
 

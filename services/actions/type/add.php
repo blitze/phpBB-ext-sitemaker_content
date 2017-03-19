@@ -13,6 +13,9 @@ use blitze\content\services\actions\action_interface;
 
 class add implements action_interface
 {
+	/** @var \phpbb\auth\auth */
+	protected $auth;
+
 	/** @var\phpbb\language\language */
 	protected $language;
 
@@ -37,6 +40,7 @@ class add implements action_interface
 	/**
 	 * Constructor
 	 *
+	 * @param \phpbb\auth\auth									$auth					Auth object
 	 * @param \phpbb\language\language							$language				Language Object
 	 * @param \phpbb\template\template							$template				Template object
 	 * @param \phpbb\user										$user					User object
@@ -44,8 +48,9 @@ class add implements action_interface
 	 * @param \blitze\content\services\form\fields_factory		$fields_factory			Fields factory  object
 	 * @param \blitze\content\services\views\views_factory		$views_factory			Views factory object
 	*/
-	public function __construct(\phpbb\language\language $language, \phpbb\template\template $template, \phpbb\user $user, \blitze\sitemaker\services\auto_lang $auto_lang, \blitze\content\services\form\fields_factory $fields_factory, \blitze\content\services\views\views_factory $views_factory)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\language\language $language, \phpbb\template\template $template, \phpbb\user $user, \blitze\sitemaker\services\auto_lang $auto_lang, \blitze\content\services\form\fields_factory $fields_factory, \blitze\content\services\views\views_factory $views_factory)
 	{
+		$this->auth = $auth;
 		$this->language = $language;
 		$this->template = $template;
 		$this->user = $user;
@@ -76,7 +81,7 @@ class add implements action_interface
 
 			'S_TYPE_OPS'				=> $this->get_field_options(),
 			'S_FORUM_OPTIONS'			=> make_forum_select(false, $forum_id, true, false, false),
-			'S_CAN_COPY_PERMISSIONS'	=> true,
+			'S_CAN_COPY_PERMISSIONS'	=> ($this->auth->acl_get('a_fauth') && $this->auth->acl_get('a_authusers') && $this->auth->acl_get('a_authgroups') && $this->auth->acl_get('a_mauth')) ? true : false,
 			'S_EDIT'					=> true,
 		));
 	}
@@ -94,7 +99,7 @@ class add implements action_interface
 			$this->template->assign_block_vars('view', array(
 				'LABEL'			=> $this->language->lang($label),
 				'VALUE'			=> $service,
-				'S_SELECTED'	=> ($service === $view) ? true : false,
+				'S_SELECTED'	=> ($service === $view),
 			));
 		}
 	}
@@ -108,9 +113,9 @@ class add implements action_interface
 		unset($fields['reset'], $fields['submit']);
 
 		$options = '';
-		foreach ($fields as $object)
+		foreach ($fields as $field => $object)
 		{
-			$options .= '<option value="' . $object->get_name() . '">' . $this->language->lang($object->get_langname()) . "</option>\n";
+			$options .= '<option value="' . $field . '">' . $this->language->lang($object->get_langname()) . '</option>';
 		}
 
 		return $options;

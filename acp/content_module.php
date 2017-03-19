@@ -28,7 +28,6 @@ class content_module
 		$content_type = $request->variable('type', '');
 
 		$admin_controller = $phpbb_container->get('blitze.content.admin.controller');
-
 		$admin_controller->handle($action, $content_type, $this->u_action);
 
 		$this->tpl_name = 'acp_content';

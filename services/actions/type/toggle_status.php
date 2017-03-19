@@ -10,8 +10,9 @@
 namespace blitze\content\services\actions\type;
 
 use blitze\content\services\actions\action_interface;
+use blitze\content\services\actions\action_utils;
 
-class toggle_status implements action_interface
+class toggle_status extends action_utils implements action_interface
 {
 	/** @var \phpbb\cache\driver\driver_interface */
 	protected $cache;
@@ -28,12 +29,14 @@ class toggle_status implements action_interface
 	 * @param \phpbb\cache\driver\driver_interface		$cache					Cache object
 	 * @param \blitze\content\services\types			$content_types			Content types object
 	 * @param \blitze\content\model\mapper_factory		$mapper_factory			Mapper factory object
+	 * @param boolean									$redirect				Used for testing
 	*/
-	public function __construct(\phpbb\cache\driver\driver_interface $cache, \blitze\content\services\types $content_types, \blitze\content\model\mapper_factory $mapper_factory)
+	public function __construct(\phpbb\cache\driver\driver_interface $cache, \blitze\content\services\types $content_types, \blitze\content\model\mapper_factory $mapper_factory, $redirect = true)
 	{
 		$this->cache = $cache;
 		$this->content_types = $content_types;
 		$this->mapper_factory = $mapper_factory;
+		$this->redirect = $redirect;
 	}
 
 	/**
@@ -48,6 +51,6 @@ class toggle_status implements action_interface
 			->save($entity);
 		$this->cache->destroy('_content_types');
 
-		redirect($u_action);
+		$this->redirect($u_action);
 	}
 }

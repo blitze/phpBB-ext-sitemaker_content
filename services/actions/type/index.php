@@ -14,7 +14,7 @@ use blitze\content\services\actions\action_interface;
 class index implements action_interface
 {
 	/** @var \phpbb\controller\helper */
-	protected $helper;
+	protected $controller_helper;
 
 	/** @var\phpbb\language\language */
 	protected $language;
@@ -37,7 +37,7 @@ class index implements action_interface
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\controller\helper				$helper					Helper object
+	 * @param \phpbb\controller\helper				$controller_helper		Controller Helper object
 	 * @param \phpbb\language\language				$language				Language Object
 	 * @param \phpbb\template\template				$template				Template object
 	 * @param \blitze\content\services\types		$content_types			Content types object
@@ -45,9 +45,9 @@ class index implements action_interface
 	 * @param string								$relative_admin_path	Relative admin root path
 	 * @param string								$php_ext				php file extension
 	*/
-	public function __construct(\phpbb\controller\helper $helper, \phpbb\language\language $language, \phpbb\template\template $template, \blitze\content\services\types $content_types, $phpbb_root_path, $relative_admin_path, $php_ext)
+	public function __construct(\phpbb\controller\helper $controller_helper, \phpbb\language\language $language, \phpbb\template\template $template, \blitze\content\services\types $content_types, $phpbb_root_path, $relative_admin_path, $php_ext)
 	{
-		$this->helper = $helper;
+		$this->controller_helper = $controller_helper;
 		$this->language = $language;
 		$this->template = $template;
 		$this->content_types = $content_types;
@@ -62,6 +62,7 @@ class index implements action_interface
 	public function execute($u_action)
 	{
 		$types = $this->content_types->get_all_types();
+
 		/** @var \blitze\content\model\entity\type $entity */
 		foreach ($types as $type => $entity)
 		{
@@ -77,7 +78,7 @@ class index implements action_interface
 				'U_DELETE'		=> $u_action . '&amp;do=pre_delete&amp;type=' . $type,
 				'U_EDIT'		=> $u_action . '&amp;do=edit&amp;type=' . $type,
 				'U_STATUS'		=> $u_action . '&amp;do=toggle_status&amp;type=' . $type,
-				'U_VIEW'		=> $this->helper->route('blitze_content_index', array('type' => $type)),
+				'U_VIEW'		=> $this->controller_helper->route('blitze_content_index', array('type' => $type)),
 				'U_POST'		=> append_sid("{$this->phpbb_root_path}ucp." . $this->php_ext, "i=-blitze-content-ucp-content_module&amp;mode=content&amp;action=post&amp;type={$type}"),
 				'U_GROUP_PERMS'	=> append_sid("{$this->phpbb_admin_path}index." . $this->php_ext, "i=acp_permissions&amp;mode=setting_group_global"),
 				'U_FORUM_PERMS'	=> append_sid("{$this->phpbb_admin_path}index." . $this->php_ext, "i=acp_permissions&amp;mode=setting_forum_local&amp;forum_id[]=$forum_id"),

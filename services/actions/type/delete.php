@@ -10,8 +10,9 @@
 namespace blitze\content\services\actions\type;
 
 use blitze\content\services\actions\action_interface;
+use blitze\content\services\actions\action_utils;
 
-class delete implements action_interface
+class delete extends action_utils implements action_interface
 {
 	/** @var \phpbb\cache\driver\driver_interface */
 	protected $cache;
@@ -29,31 +30,35 @@ class delete implements action_interface
 	protected $forum_manager;
 
 	/** @var \blitze\content\model\mapper_factory */
-	protected $cmapper_factory;
+	protected $content_mapper_factory;
 
 	/** @var \blitze\sitemaker\model\mapper_factory */
-	protected $smapper_factory;
+	protected $sitemaker_mapper_factory;
 
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\cache\driver\driver_interface		$cache				Cache object
-	 * @param \phpbb\language\language					$language			Language Object
-	 * @param \phpbb\request\request_interface			$request			Request object
-	 * @param \blitze\content\services\types			$content_types		Content types object
-	 * @param \blitze\sitemaker\services\forum\manager	$forum_manager		Forum manager object
-	 * @param \blitze\content\model\mapper_factory		$cmapper_factory	Content Mapper factory object
-	 * @param \blitze\sitemaker\model\mapper_factory	$smapper_factory	Sitemaker Mapper factory object
+	 * @param \phpbb\cache\driver\driver_interface		$cache						Cache object
+	 * @param \phpbb\language\language					$language					Language Object
+	 * @param \phpbb\request\request_interface			$request					Request object
+	 * @param \blitze\content\services\types			$content_types				Content types object
+	 * @param \blitze\sitemaker\services\forum\manager	$forum_manager				Forum manager object
+	 * @param \blitze\content\model\mapper_factory		$content_mapper_factory		Content Mapper factory object
+	 * @param \blitze\sitemaker\model\mapper_factory	$sitemaker_mapper_factory	Sitemaker Mapper factory object
+	 * @param bool										$auto_refresh				Used during testing
+	 * @param bool										$trigger_error				Used during testing
 	*/
-	public function __construct(\phpbb\cache\driver\driver_interface $cache, \phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\content\services\types $content_types, \blitze\sitemaker\services\forum\manager $forum_manager, \blitze\content\model\mapper_factory $cmapper_factory, \blitze\sitemaker\model\mapper_factory $smapper_factory)
+	public function __construct(\phpbb\cache\driver\driver_interface $cache, \phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\content\services\types $content_types, \blitze\sitemaker\services\forum\manager $forum_manager, \blitze\content\model\mapper_factory $content_mapper_factory, \blitze\sitemaker\model\mapper_factory $sitemaker_mapper_factory, $auto_refresh = true, $trigger_error = true)
 	{
 		$this->cache = $cache;
 		$this->language = $language;
 		$this->request = $request;
 		$this->content_types = $content_types;
 		$this->forum_manager = $forum_manager;
-		$this->cmapper_factory = $cmapper_factory;
-		$this->smapper_factory = $smapper_factory;
+		$this->content_mapper_factory = $content_mapper_factory;
+		$this->sitemaker_mapper_factory = $sitemaker_mapper_factory;
+		$this->auto_refresh = $auto_refresh;
+		$this->trigger_error = $trigger_error;
 	}
 
 	/**
@@ -63,10 +68,10 @@ class delete implements action_interface
 	{
 		if (!check_form_key('delete_content_type'))
 		{
-			trigger_error($this->language->lang('FORM_INVALID') . adm_back_link($u_action));
+			$this->trigger_error($this->language->lang('FORM_INVALID'), $u_action);
 		}
 
-		$types_mapper = $this->cmapper_factory->create('types');
+		$types_mapper = $this->content_mapper_factory->create('types');
 		$entity = $this->content_types->get_type($type);
 
 		$this->delete_content_type_forum($entity->get_forum_id());
@@ -76,8 +81,8 @@ class delete implements action_interface
 		$types_mapper->delete($entity);
 		$this->cache->destroy('_content_types');
 
-		meta_refresh(3, $u_action);
-		trigger_error($this->language->lang('CONTENT_TYPE_DELETED') . adm_back_link($u_action));
+		$this->meta_refresh(3, $u_action);
+		$this->trigger_error($this->language->lang('CONTENT_TYPE_DELETED'), $u_action, true);
 
 	}
 
@@ -99,7 +104,7 @@ class delete implements action_interface
 	 */
 	protected function delete_content_type_blocks($type)
 	{
-		$block_mapper = $this->smapper_factory->create('blocks', 'blocks');
+		$block_mapper = $this->sitemaker_mapper_factory->create('blocks');
 		$collection = $block_mapper->find(array('name', 'LIKE', 'blitze.content.block%'));
 
 		foreach ($collection as $entity)

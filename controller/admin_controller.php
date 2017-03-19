@@ -47,7 +47,7 @@ class admin_controller
 		catch (\blitze\sitemaker\exception\base $e)
 		{
 			$message = $e->get_message($this->language);
-			trigger_error($this->language->lang($message) . adm_back_link($base_url));
+			trigger_error($this->language->lang($message) . adm_back_link($base_url), E_USER_WARNING);
 		}
 	}
 }

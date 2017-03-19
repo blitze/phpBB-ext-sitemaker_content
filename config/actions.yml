@@ -53,6 +53,7 @@ services:
     blitze.content.actions.type.add:
         class: blitze\content\services\actions\type\add
         arguments:
+            - '@auth'
             - '@language'
             - '@template'
             - '@user'
@@ -76,7 +77,6 @@ services:
     blitze.content.actions.type.pre_delete:
         class: blitze\content\services\actions\type\pre_delete
         arguments:
-            - '@config'
             - '@language'
             - '@template'
             - '@blitze.content.types'
@@ -101,7 +101,6 @@ services:
             - '@dbal.conn'
             - '@language'
             - '@request'
-            - '@template'
             - '@blitze.content.types'
             - '@blitze.sitemaker.forum.manager'
             - '@blitze.content.mapper.factory'

@@ -2,11 +2,11 @@
 	<dl id="{% verbatim %}{{ field_name }}{% endverbatim %}-options">
 		<dt><label>{L_OPTIONS}</label></dt>
 		<dd>
-			<label><input class="field-multi" type="checkbox" name="fsettings[{% verbatim %}{{ field_name }}{% endverbatim %}][field_multi]" value="1" /> {L_MULTI_SELECT}</label>
+			<label><input class="field-multi" type="checkbox" name="field_settings[{% verbatim %}{{ field_name }}{% endverbatim %}][field_multi]" value="1" /> {L_MULTI_SELECT}</label>
 			<div id="{% verbatim %}{{ field_name }}{% endverbatim %}-options-container">
 				<div class="field-option">
-					<label><input name="fdefaults[{% verbatim %}{{ field_name }}{% endverbatim %}][]" type="radio" class="field-defaults" value="" /></label>
-					<label><input name="{% verbatim %}{{ field_name }}{% endverbatim %}_options[]" type="text" class="field-option ui-corner-all" value="" /></label>
+					<label><input name="field_defaults[{% verbatim %}{{ field_name }}{% endverbatim %}][]" type="radio" class="field-defaults" value="" /></label>
+					<label><input name="field_options[{% verbatim %}{{ field_name }}{% endverbatim %}][]" type="text" class="field-option ui-corner-all" value="" /></label>
 					<label><a href="#" class="remove-option">{L_REMOVE}</a></label>
 				</div>
 			</div>
@@ -21,8 +21,8 @@
 		<dd>
 			<div id="{% verbatim %}{{ field_name }}{% endverbatim %}-options-container">
 				<div class="field-option">
-					<label><input name="fdefaults[{% verbatim %}{{ field_name }}{% endverbatim %}][]" type="radio" class="field-defaults" value="" /></label>
-					<label><input name="{% verbatim %}{{ field_name }}{% endverbatim %}_options[]" type="text" class="field-option ui-corner-all" value="" /></label>
+					<label><input name="field_defaults[{% verbatim %}{{ field_name }}{% endverbatim %}][]" type="radio" class="field-defaults" value="" /></label>
+					<label><input name="field_options[{% verbatim %}{{ field_name }}{% endverbatim %}][]" type="text" class="field-option ui-corner-all" value="" /></label>
 					<label><a href="#" class="remove-option">{L_REMOVE}</a></label>
 				</div>
 			</div>
@@ -37,8 +37,8 @@
 		<dd>
 			<div id="{% verbatim %}{{ field_name }}{% endverbatim %}-options-container">
 				<div class="field-option">
-					<label><input name="fdefaults[{% verbatim %}{{ field_name }}{% endverbatim %}][]" type="checkbox" class="field-defaults" value="" /></label>
-					<label><input name="{% verbatim %}{{ field_name }}{% endverbatim %}_options[]" type="text" class="field-option ui-corner-all" value="" /></label>
+					<label><input name="field_defaults[{% verbatim %}{{ field_name }}{% endverbatim %}][]" type="checkbox" class="field-defaults" value="" /></label>
+					<label><input name="field_options[{% verbatim %}{{ field_name }}{% endverbatim %}][]" type="text" class="field-option ui-corner-all" value="" /></label>
 					<label><a href="#" class="remove-option">{L_REMOVE}</a></label>
 				</div>
 			</div>
@@ -51,17 +51,17 @@
 	<dl id="{% verbatim %}{{ field_name }}{% endverbatim %}-options">
 		<dt><label for="{field.FIELD_NAME}_size">{L_SIZE}</label></dt>
 		<dd>
-			<label><input id="{% verbatim %}{{ field_name }}{% endverbatim %}_size" name="fsettings[{% verbatim %}{{ field_name }}{% endverbatim %}][size]" type="radio" value="small" checked="checked" /> {L_SMALL}</label>
-			<label><input name="fsettings[{% verbatim %}{{ field_name }}{% endverbatim %}][size]" type="radio" value="large" /> {L_LARGE}</label>
+			<label><input id="{% verbatim %}{{ field_name }}{% endverbatim %}_size" name="field_settings[{% verbatim %}{{ field_name }}{% endverbatim %}][size]" type="radio" value="small" checked="checked" /> {L_SMALL}</label>
+			<label><input name="field_settings[{% verbatim %}{{ field_name }}{% endverbatim %}][size]" type="radio" value="large" /> {L_LARGE}</label>
 		</dd>
 		<dt><label for="{% verbatim %}{{ field_name }}{% endverbatim %}_editor">{L_ENABLE_EDITOR}</label></dt>
 		<dd>
-			<label><input id="{% verbatim %}{{ field_name }}{% endverbatim %}_editor" name="fsettings[{% verbatim %}{{ field_name }}{% endverbatim %}][editor]" type="radio" value="1" checked="checked" /> {L_YES}</label>
-			<label><input name="fsettings[{% verbatim %}{{ field_name }}{% endverbatim %}][editor]" type="radio" value="0" /> {L_NO}</label>
+			<label><input id="{% verbatim %}{{ field_name }}{% endverbatim %}_editor" name="field_settings[{% verbatim %}{{ field_name }}{% endverbatim %}][editor]" type="radio" value="1" checked="checked" /> {L_YES}</label>
+			<label><input name="field_settings[{% verbatim %}{{ field_name }}{% endverbatim %}][editor]" type="radio" value="0" /> {L_NO}</label>
 		</dd>
 		<dt><label>{L_INDEX_MAX_CHARS}</label></dt>
 		<dd>
-			<label><input name="fsettings[{% verbatim %}{{ field_name }}{% endverbatim %}][max_chars]" type="number" class="input" size="3" maxlength="4" value="0" /> {L_CHARS}</label>
+			<label><input name="field_settings[{% verbatim %}{{ field_name }}{% endverbatim %}][max_chars]" type="number" class="input" size="3" maxlength="4" value="0" /> {L_CHARS}</label>
 		</dd>
 	</dl>
 </script>
@@ -69,8 +69,8 @@
 <!-- EVENT content_field_setup_js -->
 
 <script id="content-field-option" class="tpl" type="text/x-jquery-tmpl">
-	<label><input name="fdefaults[{% verbatim %}{{ field_name }}{% endverbatim %}][]" type="checkbox" class="field-defaults" value="" /></label>
-	<label><input name="{% verbatim %}{{ field_name }}{% endverbatim %}_options[]" type="text" class="field-option ui-corner-all" value="" /></label>
+	<label><input name="field_defaults[{% verbatim %}{{ field_name }}{% endverbatim %}][]" type="checkbox" class="field-defaults" value="" /></label>
+	<label><input name="field_options[{% verbatim %}{{ field_name }}{% endverbatim %}][]" type="text" class="field-option ui-corner-all" value="" /></label>
 	<label><a href="#" class="remove-option">{L_REMOVE}</a></label>
 </script>
 
@@ -78,34 +78,34 @@
 	<dl>
 		<dt><label>{L_FIELD_LABEL}</label></dt>
 		<dd>
-			<input type="text" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][field_label]" class="field_label text ui-corner-all" value="{% verbatim %}{{ field_label }}{% endverbatim %}" />
-			<input type="hidden" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][field_name]" value="{% verbatim %}{{ field_name }}{% endverbatim %}" />
+			<input type="text" name="field_data[{% verbatim %}{{ field_name }}{% endverbatim %}][field_label]" class="field_label text ui-corner-all" value="{% verbatim %}{{ field_label }}{% endverbatim %}" />
+			<input type="hidden" name="field_data[{% verbatim %}{{ field_name }}{% endverbatim %}][field_name]" value="{% verbatim %}{{ field_name }}{% endverbatim %}" />
 		</dd>
 	</dl>
 	<dl>
 		<dt><label for="{% verbatim %}{{ field_name }}{% endverbatim %}_field_explain">{L_FIELD_DESCRIPTION}:</label></dt>
 		<dd>
-			<textarea id="{% verbatim %}{{ field_name }}{% endverbatim %}_field_explain" class="text ui-corner-all" rows="3" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][field_explain]"></textarea>
+			<textarea id="{% verbatim %}{{ field_name }}{% endverbatim %}_field_explain" class="text ui-corner-all" rows="3" name="field_data[{% verbatim %}{{ field_name }}{% endverbatim %}][field_explain]"></textarea>
 		</dd>
 	</dl>
 	<dl>
 		<dt><label for="{% verbatim %}{{ field_name }}{% endverbatim %}_location">{L_FIELD_LOCATION}:</label></dt>
 		<dd>
-			<label><input type="checkbox" class="checkbox" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][field_summary_show]" value="1" checked="checked" id="{% verbatim %}{{ field_name }}{% endverbatim %}_location" /> {L_FIELD_SUMMARY_SHOW}</label><br />
-			<label><input type="checkbox" class="checkbox" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][field_detail_show]" value="1" checked="checked" /> {L_FIELD_DETAIL_SHOW}</label>
+			<label><input type="checkbox" class="checkbox" name="field_data[{% verbatim %}{{ field_name }}{% endverbatim %}][field_summary_show]" value="1" checked="checked" id="{% verbatim %}{{ field_name }}{% endverbatim %}_location" /> {L_FIELD_SUMMARY_SHOW}</label><br />
+			<label><input type="checkbox" class="checkbox" name="field_data[{% verbatim %}{{ field_name }}{% endverbatim %}][field_detail_show]" value="1" checked="checked" /> {L_FIELD_DETAIL_SHOW}</label>
 		</dd>
 	</dl>
 	<dl>
 		<dt><label for="{% verbatim %}{{ field_name }}{% endverbatim %}_poster">{L_FIELD_POSTER}</label></dt>
 		<dd>
-			<label><input type="checkbox" class="checkbox" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][field_mod_only]" value="1" /> {L_FIELD_INPUT_MODERATOR}</label><label>
+			<label><input type="checkbox" class="checkbox" name="field_data[{% verbatim %}{{ field_name }}{% endverbatim %}][field_mod_only]" value="1" /> {L_FIELD_INPUT_MODERATOR}</label><label>
 		</dd>
 	</dl>
 	<dl>
 		<dt><label for="{% verbatim %}{{ field_name }}{% endverbatim %}_required">{L_FIELD_REQUIRED}</label></dt>
 		<dd>
-			<label><input type="radio" id="{% verbatim %}{{ field_name }}{% endverbatim %}_field_required" class="radio" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][field_required]" value="1" /> {L_YES}</label>
-			<label><input type="radio" class="radio" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][field_required]" value="0" checked="checked" /> {L_NO}</label>
+			<label><input type="radio" id="{% verbatim %}{{ field_name }}{% endverbatim %}_field_required" class="radio" name="field_data[{% verbatim %}{{ field_name }}{% endverbatim %}][field_required]" value="1" /> {L_YES}</label>
+			<label><input type="radio" class="radio" name="field_data[{% verbatim %}{{ field_name }}{% endverbatim %}][field_required]" value="0" checked="checked" /> {L_NO}</label>
 		</dd>
 	</dl>
 	<dl>
@@ -113,15 +113,15 @@
 		<dd>
 			<div class="column1">
 				<h5>{L_CONTENT_INDEX}</h5>
-				<label><input type="radio" class="radio" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][field_summary_ldisp]" value="0" checked="checked" id="{% verbatim %}{{ field_name }}{% endverbatim %}_summary_ldisp" /> {L_NO}</label><br />
-				<label><input type="radio" class="radio" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][field_summary_ldisp]" value="1" /> {L_LABEL_INLINE}</label><br />
-				<label><input type="radio" class="radio" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][field_summary_ldisp]" value="2" /> {L_LABEL_NEWLINE}</label>
+				<label><input type="radio" class="radio" name="field_data[{% verbatim %}{{ field_name }}{% endverbatim %}][field_summary_ldisp]" value="0" checked="checked" id="{% verbatim %}{{ field_name }}{% endverbatim %}_summary_ldisp" /> {L_NO}</label><br />
+				<label><input type="radio" class="radio" name="field_data[{% verbatim %}{{ field_name }}{% endverbatim %}][field_summary_ldisp]" value="1" /> {L_LABEL_INLINE}</label><br />
+				<label><input type="radio" class="radio" name="field_data[{% verbatim %}{{ field_name }}{% endverbatim %}][field_summary_ldisp]" value="2" /> {L_LABEL_NEWLINE}</label>
 			</div>
 			<div class="column2">
 				<h5>{L_CONTENT_DETAIL}</h5>
-				<label><input type="radio" class="radio" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][field_detail_ldisp]" value="0" id="{% verbatim %}{{ field_name }}{% endverbatim %}_detail_ldisp" /> {L_NO}</label><br />
-				<label><input type="radio" class="radio" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][field_detail_ldisp]" value="1" /> {L_LABEL_INLINE}</label><br />
-				<label><input type="radio" class="radio" name="fdata[{% verbatim %}{{ field_name }}{% endverbatim %}][field_detail_ldisp]" value="2" checked="checked" /> {L_LABEL_NEWLINE}</label>
+				<label><input type="radio" class="radio" name="field_data[{% verbatim %}{{ field_name }}{% endverbatim %}][field_detail_ldisp]" value="0" id="{% verbatim %}{{ field_name }}{% endverbatim %}_detail_ldisp" /> {L_NO}</label><br />
+				<label><input type="radio" class="radio" name="field_data[{% verbatim %}{{ field_name }}{% endverbatim %}][field_detail_ldisp]" value="1" /> {L_LABEL_INLINE}</label><br />
+				<label><input type="radio" class="radio" name="field_data[{% verbatim %}{{ field_name }}{% endverbatim %}][field_detail_ldisp]" value="2" checked="checked" /> {L_LABEL_NEWLINE}</label>
 			</div>
 		</dd>
 	</dl>
@@ -141,7 +141,7 @@
 			<a href="#" class="edit-field field-icon ui-dialog-titlebar-close ui-corner-all" title="{L_EDIT}"><span class="ui-icon ui-icon-gear">{L_EDIT}</span></a>
 		</div>
 	{% verbatim %}
-		<input type="hidden" id="{{ field_name }}-type" name="fdata[{{ field_name }}][field_type]" value="{{ field_type }}" />
+		<input type="hidden" id="{{ field_name }}-type" name="field_data[{{ field_name }}][field_type]" value="{{ field_type }}" />
 	{% endverbatim %}
 	</div>
 </script>

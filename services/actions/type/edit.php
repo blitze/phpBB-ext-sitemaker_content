@@ -11,9 +11,6 @@ namespace blitze\content\services\actions\type;
 
 class edit extends add
 {
-	/** @var \phpbb\auth\auth */
-	protected $auth;
-
 	/** @var \blitze\content\services\types */
 	protected $content_types;
 
@@ -35,9 +32,8 @@ class edit extends add
 	*/
 	public function __construct(\phpbb\auth\auth $auth, \phpbb\language\language $language, \phpbb\template\template $template, \phpbb\user $user, \blitze\sitemaker\services\auto_lang $auto_lang, \blitze\content\services\types $content_types, \blitze\content\services\form\fields_factory $fields_factory, \blitze\content\model\mapper_factory $mapper_factory, \blitze\content\services\views\views_factory $views_factory)
 	{
-		parent::__construct($language, $template, $user, $auto_lang, $fields_factory, $views_factory);
+		parent::__construct($auth, $language, $template, $user, $auto_lang, $fields_factory, $views_factory);
 
-		$this->auth = $auth;
 		$this->content_types = $content_types;
 		$this->mapper_factory = $mapper_factory;
 	}
@@ -56,8 +52,7 @@ class edit extends add
 		$this->template->assign_vars(array_merge(
 			array_change_key_case($entity->to_array(), CASE_UPPER),
 			array(
-				'CONTENT_DESC'				=> $content_desc_data['text'],
-				'S_CAN_COPY_PERMISSIONS'	=> ($this->auth->acl_get('a_fauth') && $this->auth->acl_get('a_authusers') && $this->auth->acl_get('a_authgroups') && $this->auth->acl_get('a_mauth')) ? true : false,
+				'CONTENT_DESC'	=> $content_desc_data['text'],
 			)
 		));
 

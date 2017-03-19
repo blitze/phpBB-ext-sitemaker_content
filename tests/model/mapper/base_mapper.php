@@ -12,7 +12,6 @@ namespace blitze\content\tests\model\mapper;
 abstract class base_mapper extends \phpbb_database_test_case
 {
 	protected $config;
-	protected $translator;
 
 	/**
 	 * Define the extension to be tested.
@@ -63,15 +62,6 @@ abstract class base_mapper extends \phpbb_database_test_case
 	protected function get_mapper($type)
 	{
 		global $db;
-
-		$this->translator = $this->getMockBuilder('\phpbb\language\language')
-			->disableOriginalConstructor()
-			->getMock();
-		$this->translator->expects($this->any())
-			->method('lang')
-			->willReturnCallback(function () {
-				return implode('-', func_get_args());
-			});
 
 		$table_prefix = 'phpbb_';
 		$collection_class = '\\blitze\\content\\model\\collections\\' . $type;
