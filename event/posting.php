@@ -135,7 +135,6 @@ class posting implements EventSubscriberInterface
 
 			if ($event['preview'])
 			{
-				$page_data['PREVIEW_SUBJECT'] = '';
 				$page_data['PREVIEW_MESSAGE'] = $this->builder->generate_preview($this->content_type, $post_data);
 			}
 

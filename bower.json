@@ -1,21 +1,32 @@
 {
   "name": "SiteMaker Content",
   "dependencies": {
-    "masonry": "latest",
-    "datetimepicker": "latest",
-    "imagesloaded": "latest",
-    "twig.js": "latest"
+    "air-datepicker": "^2.2.3",
+    "imagesloaded": "^4.1.1",
+    "ion.rangeSlider": "ionrangeslider#^2.1.7",
+    "masonry": "^4.1.1",
+    "spectrum": "^1.8.0"
   },
   "overrides": {
-    "masonry": {
-      "dependencies": null,
-      "main": "dist/masonry.pkgd.min.js"
+    "air-datepicker": {
+      "dependencies": null
     },
     "imagesloaded": {
-      "dependencies": null,
-      "main": "imagesloaded.pkgd.min.js"
+      "main": "imagesloaded.pkgd.min.js",
+      "dependencies": null
     },
-    "datetimepicker": {
+    "ion.rangeSlider": {
+      "dependencies": null,
+	  "main": [
+        "./js/ion.rangeSlider.js",
+        "./css/ion.rangeSlider.*",
+        "./img/*"
+	  ]
+    },
+    "masonry": {
+      "dependencies": null
+    },
+    "spectrum": {
       "dependencies": null
     }
   }

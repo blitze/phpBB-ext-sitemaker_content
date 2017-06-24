@@ -152,18 +152,14 @@ class builder
 	public function generate_preview($content_type, array $post_data)
 	{
 		$dataref = $this->phpbb_container->get('template_context')->get_data_ref();
-		$preview_subject = $dataref['.'][0]['PREVIEW_SUBJECT'];
-		$preview_message = $dataref['.'][0]['PREVIEW_MESSAGE'];
+		$post_data['MESSAGE'] = $dataref['.'][0]['PREVIEW_MESSAGE'];
 
 		$entity = $this->types->get_type($content_type);
 
-		$this->fields->prepare_to_show($content_type, 'summary', $entity->get_summary_tags(), $entity->get_content_fields(), $entity->get_summary_tpl(), $entity->get_allow_comments());
-		$tpl_data = $this->fields->build_content($preview_message, $post_data);
-
 		$this->fields->prepare_to_show($content_type, 'detail', $entity->get_detail_tags(), $entity->get_content_fields(), $entity->get_detail_tpl(), $entity->get_allow_comments());
-		$tpl_data += $this->fields->build_content($preview_message, $post_data);
+		$detail = $this->fields->build_content($post_data);
 
-		return $preview_message;
+		return isset($detail['SEQ_DISPLAY']) ? $detail['SEQ_DISPLAY'] : $detail['CUSTOM_DISPLAY'];
 	}
 
 	/**
@@ -204,7 +200,10 @@ class builder
 
 		foreach ($this->content_fields as $field => $field_data)
 		{
-			$field_data += $page_data;
+			if ($field_data['field_type'] === 'textarea')
+			{
+				$field_data += $page_data;
+			}
 			$this->add_field($field, $field_data, $topic_id);
 		}
 		$this->add_moderator_fields($post_data);
@@ -240,15 +239,17 @@ class builder
 		{
 			$this->form->add('topic_time', 'hidden', array('field_value' => $post_data['topic_time']))
 				->add('publish_on', 'datetime', array(
-					'field_label'		=> $this->language->lang('CONTENT_POST_DATE'),
-					'field_value'		=> $this->user->format_date($post_data['topic_time'], 'm/d/Y H:i'),
-					'field_min_date'	=> 0,
+					'field_label'	=> $this->language->lang('CONTENT_POST_DATE'),
+					'field_value'	=> $this->user->format_date($post_data['topic_time'], 'm/d/Y H:i'),
+					'field_props'	=> array(
+						'min_date'	=> 0,
+					),
 				))
 				->add('force_status', 'radio', array(
-					'field_label'		=> 'FORCE_STATUS',
-					'field_value'		=> '',
-					'field_settings'	=> array(
-						'field_options' 	=> array(
+					'field_label'	=> 'FORCE_STATUS',
+					'field_value'	=> '',
+					'field_props'	=> array(
+						'options' 	=> array(
 							''					=> 'NO',
 							ITEM_UNAPPROVED		=> 'STATUS_DISAPPROVE',
 							ITEM_APPROVED		=> 'STATUS_APPROVE',

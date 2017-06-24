@@ -230,7 +230,8 @@ final class type extends base_entity
 	{
 		if ($mode === 'edit')
 		{
-			return generate_text_for_edit($this->content_desc, $this->content_desc_uid, $this->content_desc_options);
+			$data = generate_text_for_edit($this->content_desc, $this->content_desc_uid, $this->content_desc_options);
+			return $data['text'];
 		}
 		else
 		{

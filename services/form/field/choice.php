@@ -17,21 +17,35 @@ abstract class choice extends base
 	public function get_default_props()
 	{
 		return array(
-			'field_size'		=> 10,
-			'field_minlen'		=> 0,
-			'field_maxlen'		=> 200,
-			'field_options'		=> array(),
-			'field_defaults'	=> array(),
-			'field_multi'		=> false,
+			'defaults'		=> array(),
+			'options'		=> array(),
+			'multi_select'	=> false,
+			'per_col'		=> 1,
 		);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field($field_value)
+	public function get_field_value($name, $default)
 	{
-		$field_value = array_filter(explode("<br>", $field_value));
+		$default = is_array($default) ? $default : explode("\n", $default);
+		$value =  $this->request->variable($name, $default, true);
+
+		if (empty($value) && $this->request->server('REQUEST_METHOD') !== 'POST')
+		{
+			$value = $default;
+		}
+
+		return $value;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function display_field(array $data)
+	{
+		$field_value = array_filter(explode('<br>', $data['field_value']));
 		return sizeof($field_value) ? join(', ', $field_value) : '';
 	}
 
@@ -45,13 +59,16 @@ abstract class choice extends base
 
 		$data['field_name'] = $name;
 		$data['field_value'] = join("\n", $selected);
-		$data['field_size'] = $this->get_field_size($data);
+
+		if (isset($data['field_props']['per_col']) && $data['field_props']['per_col'] < 1)
+		{
+			$data['field_props']['per_col'] = 1;
+		}
 
 		$this->set_field_options($name, $data, $selected);
+		$this->ptemplate->assign_vars($data);
 
-		$this->ptemplate->assign_vars(array_change_key_case($data, CASE_UPPER));
-
-		return $this->ptemplate->render_view('blitze/content', "fields/$field.html", $field . '_field');
+		return $this->ptemplate->render_view('blitze/content', "fields/$field.twig", $field . '_field');
 	}
 
 	/**
@@ -59,7 +76,7 @@ abstract class choice extends base
 	 * @param array $data
 	 * @param array $selected
 	 */
-	protected function set_field_options($name, array $data, array $selected)
+	protected function set_field_options($name, array &$data, array $selected)
 	{
 		if ($data['field_type'] === 'radio' || $data['field_type'] === 'checkbox')
 		{
@@ -67,16 +84,21 @@ abstract class choice extends base
 		}
 
 		$count = 0;
-		foreach ($data['field_settings']['field_options'] as $value => $label)
+		$options = array();
+		if (is_array($data['field_props']['options']))
 		{
-			$this->ptemplate->assign_block_vars('option', array(
-				'ID'		=> 'field-'. $name . '-' . $count,
-				'LABEL'		=> $this->language->lang($label),
-				'SELECTED'	=> (in_array($value, $selected, true)) ? true : false,
-				'VALUE'		=> $value
-			));
-			$count++;
+			foreach ($data['field_props']['options'] as $option)
+			{
+				$options[] = array(
+					'id'		=> 'smc-'. $name . '-' . $count,
+					'label'		=> $this->language->lang($option),
+					'selected'	=> (in_array($option, $selected, true)) ? true : false,
+					'value'		=> $option,
+				);
+				$count++;
+			}
 		}
+		$data['field_props']['options'] = $options;
 	}
 
 	/**
@@ -86,18 +108,7 @@ abstract class choice extends base
 	 */
 	protected function get_selected_options($name, array $data)
 	{
-		$selected = $this->get_field_value($name, ($data['field_value']) ? $data['field_value'] : $data['field_settings']['field_defaults']);
-
+		$selected = $this->get_field_value($name, ($data['field_value']) ? $data['field_value'] : $data['field_props']['defaults']);
 		return (is_array($selected)) ? $selected : array($selected);
-	}
-
-	/**
-	 * @param array $data
-	 * @return int
-	 */
-	protected function get_field_size(array $data)
-	{
-		$field_options_count = sizeof($data['field_settings']['field_options']);
-		return ($field_options_count < $data['field_settings']['field_size']) ? $field_options_count : $data['field_settings']['field_size'];
 	}
 }

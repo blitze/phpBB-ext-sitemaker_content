@@ -61,6 +61,7 @@ class index implements action_interface
 	 */
 	public function execute($u_action)
 	{
+		$types_list = array();
 		$types = $this->content_types->get_all_types();
 
 		/** @var \blitze\content\model\entity\type $entity */
@@ -69,10 +70,10 @@ class index implements action_interface
 			$forum_id = $entity->get_forum_id();
 			$langname = $entity->get_content_langname();
 
-			$this->template->assign_block_vars('types', array(
+			$types_list[] = array(
 				'CONTENT_TYPE'	=> $langname,
+				'FORUM_PERMS'	=> $this->language->lang('EDIT_FORUM_PERMISSIONS', $langname),
 
-				'L_FORUM_PERMS'	=> $this->language->lang('EDIT_FORUM_PERMISSIONS', $langname),
 				'S_ENABLED'		=> $entity->get_content_enabled(),
 
 				'U_DELETE'		=> $u_action . '&amp;do=pre_delete&amp;type=' . $type,
@@ -82,9 +83,12 @@ class index implements action_interface
 				'U_POST'		=> append_sid("{$this->phpbb_root_path}ucp." . $this->php_ext, "i=-blitze-content-ucp-content_module&amp;mode=content&amp;action=post&amp;type={$type}"),
 				'U_GROUP_PERMS'	=> append_sid("{$this->phpbb_admin_path}index." . $this->php_ext, "i=acp_permissions&amp;mode=setting_group_global"),
 				'U_FORUM_PERMS'	=> append_sid("{$this->phpbb_admin_path}index." . $this->php_ext, "i=acp_permissions&amp;mode=setting_forum_local&amp;forum_id[]=$forum_id"),
-			));
+			);
 		}
 
-		$this->template->assign_var('U_ADD_TYPE', $u_action . "&amp;do=add");
+		$this->template->assign_vars(array(
+			'TYPES'			=> $types_list,
+			'U_ADD_TYPE'	=> $u_action . "&amp;do=add",
+		));
 	}
 }

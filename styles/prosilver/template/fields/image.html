@@ -1,4 +1,0 @@
-<input type="text" class="inputbox autowidth" name="{FIELD_NAME}" id="{FIELD_ID}" size="{FIELD_SETTINGS.field_size}" maxlength="{FIELD_MAXLEN}"<!-- IF FIELD_DISABLED --> disabled="disabled"<!-- ENDIF --> value="{FIELD_VALUE}" onChange="if(this.value){document.getElementById('preview-{FIELD_ID}').innerHTML='<img class=img-ui src='+this.value+' />';} else {document.getElementById('preview-{FIELD_ID}').innerHTML='';}" />
-<div id="preview-{FIELD_ID}" class="large-img">
-	<!-- IF FIELD_VALUE --><img class="img-ui" src="{FIELD_VALUE}" alt="" /><!-- ENDIF -->
-</div>

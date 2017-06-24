@@ -73,22 +73,43 @@ class textarea extends base
 	}
 
 	/**
+	 * @inheritdoc
+	 */
+	public function get_name()
+	{
+		return 'textarea';
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function get_default_props()
+	{
+		return array(
+			'size'		=> 'large',
+			'maxlength'	=> '',
+			'max_chars'	=> 200,
+			'editor'	=> true,
+		);
+	}
+
+	/**
 	 * Display content field
 	 *
 	 * @param string $field_value
+	 * @param array $field_data
 	 * @param string $view_mode
 	 * @param array $topic_data
-	 * @param array $field_data
 	 * @return mixed
 	 */
-	public function display_field($value, $view_mode = 'detail', array $topic_data = array(), array $field = array())
+	public function display_field(array $data = array(), $view_mode = 'detail', array $topic_data = array())
 	{
-		$value = $this->generate_field_pages($field['field_name'], $value, $topic_data['TOPIC_URL'], $view_mode);
+		$value = $this->generate_field_pages($data['field_name'], $data['field_value'], $topic_data['TOPIC_URL'], $view_mode);
 
-		if ($view_mode === 'summary' && $field['field_settings']['max_chars'])
+		if ($view_mode === 'summary' && $data['field_props']['max_chars'])
 		{
 			$truncateService = new TruncateService();
-			$value = $truncateService->truncate($value, $field['field_settings']['max_chars']);
+			$value = $truncateService->truncate($value, $data['field_props']['max_chars']);
 		}
 
 		return $value;
@@ -99,51 +120,20 @@ class textarea extends base
 	 */
 	public function show_form_field($name, array &$data, $forum_id = 0)
 	{
-		if ($data['field_settings']['editor'])
+		if ($data['field_props']['editor'])
 		{
 			$asset_path = $this->util->get_web_path();
 			$this->util->add_assets(array(
 				'js'   => array(
 					$asset_path . 'assets/javascript/editor.js',
-					'@blitze_content/assets/content_posting.min.js'
+					'@blitze_content/assets/form/textarea.min.js'
 				)
 			));
 
 			$data += $this->get_editor($forum_id);
 		}
 
-		if ($data['field_settings']['size'] === 'large')
-		{
-			$data['field_settings']['full_width'] = true;
-			$data['field_settings']['field_rows'] = 25;
-		}
-
 		return parent::show_form_field($name, $data, $forum_id);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function get_default_props()
-	{
-		return array(
-			'field_minlen'		=> 0,
-			'field_maxlen'		=> 20,
-			'field_rows'		=> 5,
-			'field_columns'		=> 25,
-			'full_width'		=> false,
-			'max_chars'			=> 0,
-			'editor'			=> false,
-			'size'				=> 'small',
-		);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function get_name()
-	{
-		return 'textarea';
 	}
 
 	/**

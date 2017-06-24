@@ -54,6 +54,7 @@ services:
         class: blitze\content\services\actions\type\add
         arguments:
             - '@auth'
+            - '@controller.helper'
             - '@language'
             - '@template'
             - '@user'
@@ -65,6 +66,7 @@ services:
         class: blitze\content\services\actions\type\edit
         arguments:
             - '@auth'
+            - '@controller.helper'
             - '@language'
             - '@template'
             - '@user'

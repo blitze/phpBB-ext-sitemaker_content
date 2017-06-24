@@ -33,7 +33,7 @@ class edit_test extends add_edit_base
 		$mapper_factory = new \blitze\content\model\mapper_factory($this->db, $tables);
 		$types = new \blitze\content\services\types($cache, $mapper_factory);
 
-		return new edit($this->auth, $this->language, $this->template, $this->user, $this->auto_lang, $types, $this->fields_factory, $mapper_factory, $this->views_factory);
+		return new edit($this->auth, $this->controller_helper, $this->language, $this->template, $this->user, $this->auto_lang, $types, $this->fields_factory, $mapper_factory, $this->views_factory);
 	}
 
 	/**
@@ -46,20 +46,12 @@ class edit_test extends add_edit_base
 		$result = $this->template->assign_display('test');
 
 		$expected_views = array(
-			array(
-				'LABEL'			=> 'CONTENT_DISPLAY_BAR',
-				'VALUE'			=> 'my.bar.view',
-				'S_SELECTED'	=> false,
-			),
-			array(
-				'LABEL'			=> 'CONTENT_DISPLAY_FOO',
-				'VALUE'			=> 'my.foo.view',
-				'S_SELECTED'	=> true,
-			),
+			'my.bar.view'		=> 'CONTENT_DISPLAY_BAR',
+			'my.foo.view'		=> 'CONTENT_DISPLAY_FOO',
 		);
 
 		// here we are confirming that the view for the content type was selected
-		$this->assertEquals($expected_views, $result['view']);
+		$this->assertEquals($expected_views, $result['CONTENT_VIEWS']);
 
 		$expected_content = array(
 			'CONTENT_ID'		=> 1,
@@ -81,7 +73,7 @@ class edit_test extends add_edit_base
             	'field_name'		=> 'foo',
             	'field_label'		=> 'Foo',
             	'field_type'		=> 'text',
-            	'field_settings'	=> array(),
+            	'field_props'	=> array(),
             	'field_order'		=> 0,
             ),
             'bar' => array(
@@ -90,7 +82,7 @@ class edit_test extends add_edit_base
             	'field_name'		=> 'bar',
             	'field_label'		=> 'Bar',
             	'field_type'		=> 'checkbox',
-            	'field_settings'	=> array(
+            	'field_props'	=> array(
             		'field_options'		=> array(
             			'Red'		=> 'Red',
             			'Blue'		=> 'Blue',
@@ -103,9 +95,10 @@ class edit_test extends add_edit_base
             ),
 		);
 
-		foreach ($expected_fields as $field => $expected)
+		foreach ($result['CONTENT_FIELDS'] as $field)
 		{
-			$this->assertEquals($expected, array_intersect_key($result['CONTENT_FIELDS'][$field], $expected));
+			$expected = $expected_fields[$field['FIELD_NAME']];
+			$this->assertEquals($expected, array_intersect_key($field, $expected));
 		}
 	}
 

@@ -33,8 +33,8 @@ class image extends base
 		$data['field_name'] = $name;
 		$data['field_value'] = $this->get_image_src($bbcode_value);
 
-		$this->ptemplate->assign_vars(array_change_key_case($data, CASE_UPPER));
-		$field = $this->ptemplate->render_view('blitze/content', "fields/$field.html", $field . '_field');
+		$this->ptemplate->assign_vars($data);
+		$field = $this->ptemplate->render_view('blitze/content', "fields/$field.twig", $field . '_field');
 
 		$data['field_value'] = $bbcode_value;
 
@@ -44,9 +44,9 @@ class image extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field($value)
+	public function display_field(array $data)
 	{
-		return ($value) ? '<div class="img-ui">' . $value . '</div>' : '';
+		return ($data['field_value']) ? '<div class="img-ui">' . $data['field_value'] . '</div>' : '';
 	}
 
 	/**
@@ -55,10 +55,9 @@ class image extends base
 	public function get_default_props()
 	{
 		return array(
-			'field_size'		=> 45,
-			'field_minlen'		=> 0,
-			'field_maxlen'		=> 200,
-			'validation_filter'	=> FILTER_VALIDATE_URL,
+			'min'	=> 0,
+			'max'	=> 200,
+			'size'	=> 45,
 		);
 	}
 

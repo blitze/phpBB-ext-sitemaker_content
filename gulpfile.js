@@ -1,52 +1,60 @@
 var gulp = require('gulp'),
+	argv = require('yargs').argv,
+	production = !!(argv.prod), // true if --prod flag is used
+	theme = argv.theme || 'all',
 	plugins = require("gulp-load-plugins")({
 		pattern: ['gulp-*', 'gulp.*', 'main-bower-files', 'jshint-stylish', 'del'],
+		scope: ['devDependencies'],
 		replaceString: /\bgulp[\-.]/,
-		camelize: true
+		camelize: true,
+		lazy: true
 	}),
-	argv = require('yargs').argv,
-	development = !!(argv.development), // true if --development flag is used
 	paths = {
 		'dev': {
 			'scripts': 'develop/',
 			'vendor': 'bower_components/'
 		},
 		'prod': {
-			'scripts': 'styles/all/theme/assets/',
-			'vendor': 'styles/all/theme/vendor/'
+			'scripts': 'styles/' + theme + '/theme/assets/',
+			'vendor': 'styles/' + theme + '/theme/vendor/'
 		}
-	};
+	},
+	supportedBrowsers = ["last 1 version", "> 1%", "ie 8"]
 
 // Bower
 gulp.task('bower', function() {
 	return plugins.bower()
-		.pipe(gulp.dest(paths.dev.vendor))
+		.pipe(gulp.dest(paths.dev.vendor));
 });
 
 // Scripts
 gulp.task('scripts', function() {
-	var jsFilter = plugins.filter(['**/*.js', '!**/*.min.js']);
+	var jsFilter = plugins.filter(['**/*.js', '!**/*.min.js'], {restore: true});
 	var cssFilter = plugins.filter(['**/*.css', '!**/*.min.css']);
 
 	return gulp.src(paths.dev.scripts + '**')
+		.pipe(plugins.changed(paths.prod.scripts))
 		.pipe(jsFilter)
-		.pipe(plugins.jscs())
-		.pipe(plugins.jshint())
-		.pipe(plugins.jshint.reporter(plugins.jshintStylish))
-		.pipe(plugins.rename({ suffix: '.min' }))
-		.pipe(plugins.if(!development, plugins.uglify()))
-		.pipe(gulp.dest(paths.prod.scripts))
-		.pipe(jsFilter.restore())
+			.pipe(plugins.eslint())
+			.pipe(plugins.eslint.format())
+			.pipe(plugins.rename({ suffix: '.min' }))
+			.pipe(plugins.if(production, plugins.uglify()))
+			.pipe(gulp.dest(paths.prod.scripts))
+			.pipe(jsFilter.restore)
 		.pipe(cssFilter)
-		.pipe(plugins.csscomb())
-		.pipe(gulp.dest(paths.dev.scripts))
-		.pipe(plugins.csslint())
-		.pipe(plugins.csslint.reporter())
-		.pipe(plugins.autoprefixer())
-		.pipe(plugins.rename({ suffix: '.min' }))
-		.pipe(plugins.if(!development, plugins.minifyCss()))
-		.pipe(gulp.dest(paths.prod.scripts))
-		.pipe(plugins.notify({ message: 'Scripts task complete' }));
+			.pipe(plugins.csscomb())
+			.pipe(gulp.dest(paths.dev.scripts))
+			.pipe(plugins.csslint({
+				'ids': false,
+				'adjoining-classes': false,
+				'box-sizing': false,
+				'order-alphabetical': false
+			}))
+			.pipe(plugins.csslint.formatter())
+			.pipe(plugins.autoprefixer(supportedBrowsers))
+			.pipe(plugins.rename({ suffix: '.min' }))
+			.pipe(plugins.if(production, plugins.minifyCss()))
+			.pipe(gulp.dest(paths.prod.scripts));
 });
 
 // Vendor
@@ -57,30 +65,29 @@ gulp.task('vendor', function() {
 		return;
 	}
 
-	var jsFilter = plugins.filter(['**/*.js', '!**/*.min.js']);
-	var cssFilter = plugins.filter(['**/*.css', '!**/*.min.css']);
+	var jsFilter = plugins.filter(['**/*.js', '!**/*.min.js'], {restore: true});
+	var cssFilter = plugins.filter(['**/*.css', '!**/*.min.css'], {restore: true});
 
 	return gulp.src(mainFiles, {base: paths.dev.vendor })
 		.pipe(jsFilter)
-		.pipe(plugins.rename({ suffix: '.min' }))
-		.pipe(plugins.if(!development, plugins.uglify()))
-		.pipe(gulp.dest(paths.prod.vendor))
-		.pipe(jsFilter.restore())
+			.pipe(plugins.rename({ suffix: '.min' }))
+			.pipe(plugins.uglify())
+			.pipe(gulp.dest(paths.prod.vendor))
+			.pipe(jsFilter.restore)
 		.pipe(cssFilter)
-		.pipe(plugins.rename({ suffix: '.min' }))
-		.pipe(plugins.if(!development, plugins.minifyCss()))
-		.pipe(gulp.dest(paths.prod.vendor))
-		.pipe(cssFilter.restore())
-		.pipe(gulp.dest(paths.prod.vendor))
-		.pipe(plugins.notify({ message: 'Vendor task complete' }));
+			.pipe(plugins.rename({ suffix: '.min' }))
+			.pipe(plugins.minifyCss())
+			.pipe(gulp.dest(paths.prod.vendor))
+			.pipe(cssFilter.restore)
+		.pipe(gulp.dest(paths.prod.vendor));
 });
 
 // Clean up
-gulp.task('clean', function(cb) {
-	plugins.del([
-		paths.prod.scripts,
-		paths.prod.vendor
-	], cb);
+gulp.task('clean', function() {
+	return plugins.del([
+		paths.prod.scripts + '**',
+		paths.prod.vendor + '**'
+	]);
 });
 
 gulp.task('watch', function() {

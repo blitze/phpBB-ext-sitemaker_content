@@ -16,6 +16,9 @@ class add implements action_interface
 	/** @var \phpbb\auth\auth */
 	protected $auth;
 
+	/** @var \phpbb\controller\helper */
+	protected $controller_helper;
+
 	/** @var\phpbb\language\language */
 	protected $language;
 
@@ -41,6 +44,7 @@ class add implements action_interface
 	 * Constructor
 	 *
 	 * @param \phpbb\auth\auth									$auth					Auth object
+	 * @param \phpbb\controller\helper							$controller_helper		Controller Helper object
 	 * @param \phpbb\language\language							$language				Language Object
 	 * @param \phpbb\template\template							$template				Template object
 	 * @param \phpbb\user										$user					User object
@@ -48,9 +52,10 @@ class add implements action_interface
 	 * @param \blitze\content\services\form\fields_factory		$fields_factory			Fields factory  object
 	 * @param \blitze\content\services\views\views_factory		$views_factory			Views factory object
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\language\language $language, \phpbb\template\template $template, \phpbb\user $user, \blitze\sitemaker\services\auto_lang $auto_lang, \blitze\content\services\form\fields_factory $fields_factory, \blitze\content\services\views\views_factory $views_factory)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\controller\helper $controller_helper, \phpbb\language\language $language, \phpbb\template\template $template, \phpbb\user $user, \blitze\sitemaker\services\auto_lang $auto_lang, \blitze\content\services\form\fields_factory $fields_factory, \blitze\content\services\views\views_factory $views_factory)
 	{
 		$this->auth = $auth;
+		$this->controller_helper = $controller_helper;
 		$this->language = $language;
 		$this->template = $template;
 		$this->user = $user;
@@ -69,15 +74,19 @@ class add implements action_interface
 	public function execute($u_action, $type = '', $view = 'blitze.content.view.portal', $forum_id = 0)
 	{
 		$this->auto_lang->add('form_fields');
+
 		$this->available_fields = $this->fields_factory->get_all();
-		$this->set_view_options($view);
 
 		$this->template->assign_vars(array(
+			'VIEW'				=> $view,
+			'CONTENT_VIEWS'		=> $this->views_factory->get_all_views(),
 			'POST_AUTHOR'		=> $this->user->data['username'],
 			'POST_DATE'			=> $this->user->format_date(time()),
 			'ITEMS_PER_PAGE'	=> 10,
 			'TOPICS_PER_GROUP'	=> 4,
+
 			'U_ACTION'			=> $u_action . "&amp;do=save&amp;type=$type",
+			'UA_AJAX_URL'		=> $this->controller_helper->route('blitze_content_field_settings', array(), false),
 
 			'S_TYPE_OPS'				=> $this->get_field_options(),
 			'S_FORUM_OPTIONS'			=> make_forum_select(false, $forum_id, true, false, false),
@@ -87,30 +96,14 @@ class add implements action_interface
 	}
 
 	/**
-	 * @param string $view
-	 * @return void
-	 */
-	protected function set_view_options($view)
-	{
-		$views = $this->views_factory->get_all_views();
-
-		foreach ($views as $service => $label)
-		{
-			$this->template->assign_block_vars('view', array(
-				'LABEL'			=> $this->language->lang($label),
-				'VALUE'			=> $service,
-				'S_SELECTED'	=> ($service === $view),
-			));
-		}
-	}
-
-	/**
 	 * @pram string
 	 */
 	protected function get_field_options()
 	{
-		$fields = $this->available_fields;
-		unset($fields['reset'], $fields['submit']);
+		$fields = array_diff_key(
+			$this->available_fields,
+			array_flip(array('hidden', 'password', 'reset', 'submit'))
+		);
 
 		$options = '';
 		foreach ($fields as $field => $object)

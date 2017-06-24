@@ -14,14 +14,6 @@ class radio extends choice
 	/**
 	 * @inheritdoc
 	 */
-	public function get_field_value($name, $value)
-	{
-		return $this->request->variable($name, $value, true);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	public function get_name()
 	{
 		return 'radio';

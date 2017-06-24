@@ -1,0 +1,3 @@
+{% for i in range(1, field_props.num_colors) %}
+<input type="text" class="inputbox autowidth colorpicker" id="smc-{{ field_name ~ '-' ~ loop.index }}" name="{{ field_name }}[]" value="{{ field_value[loop.index0] }}" data-palette="{{ field_props.palette }}"{% if field_props.palette_only %} data-show-palette-only="{{ field_props.palette_only }}"{% endif %}{% if !field_required %} data-allow-empty="true"{% endif %} size="7" />
+{%- endfor %}

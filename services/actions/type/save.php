@@ -94,6 +94,7 @@ class save extends action_utils implements action_interface
 		$this->db->sql_transaction('begin');
 
 		$this->handle_content_type($type, $unsaved_entity);
+
 		/** @var \blitze\content\model\entity\type $entity */
 		$entity = $types_mapper->save($unsaved_entity);
 
@@ -137,14 +138,14 @@ class save extends action_utils implements action_interface
 	{
 		$content_desc = $this->request->variable('content_desc', '', true);
 		$content_view = $this->request->variable('content_view', '');
-		$view_settings = $this->request->variable('view_settings', array('' => array('' => '')));
+		$view_settings = $this->request->variable(array('view_settings', $content_view), array('' => ''));
 
 		$entity = $mapper->create_entity(array(
 			'content_name'			=> $this->request->variable('content_name', ''),
 			'content_langname'		=> $this->request->variable('content_langname', '', true),
 			'content_enabled'		=> $this->request->variable('content_enabled', true),
 			'content_view'			=> $content_view,
-			'content_view_settings'	=> isset($view_settings[$content_view]) ? $view_settings[$content_view] : '',
+			'content_view_settings'	=> $view_settings,
 			'req_approval'			=> $this->request->variable('req_approval', 1),
 			'allow_comments'		=> $this->request->variable('allow_comments', 0),
 			'allow_views'			=> $this->request->variable('allow_views', 0),
@@ -157,6 +158,7 @@ class save extends action_utils implements action_interface
 			'detail_tpl'			=> $this->request->variable('detail_tpl', '', true),
 			'last_modified'			=> time(),
 		));
+
 		return $entity->set_content_desc($content_desc, 'storage');
 	}
 
@@ -268,10 +270,6 @@ class save extends action_utils implements action_interface
 	 */
 	protected function handle_content_fields($content_id, array $fields_data)
 	{
-		$fields_settings = $this->request->variable('field_settings', array('' => array('' => '')), true);
-		$field_options = $this->request->variable('field_options', array('' => array(0 => '')), true);
-		$fields_defaults = $this->request->variable('field_defaults', array('' => array(0 => '')), true);
-
 		$mapper = $this->mapper_factory->create('fields');
 
 		// delete all fields for this content type
@@ -289,7 +287,7 @@ class save extends action_utils implements action_interface
 				->set_content_id($content_id)
 				->set_field_order($i)
 				->set_field_explain($fields_data[$field]['field_explain'], 'storage')
-				->set_field_settings($this->get_field_settings($field, $fields_settings, $field_options, $fields_defaults));
+				->set_field_props($this->get_field_props($field));
 
 			$form_fields[$field] = $entity->to_db();
 		}
@@ -299,23 +297,17 @@ class save extends action_utils implements action_interface
 
 	/**
 	 * @param string $field
-	 * @param array $fields_settings
-	 * @param array $fields_options
-	 * @param array $fields_defaults
 	 * @return array
 	 */
-	protected function get_field_settings($field, array $fields_settings, array $field_options, array $fields_defaults)
+	protected function get_field_props($field)
 	{
-		if (isset($field_options[$field]))
-		{
-			$fields_settings[$field]['field_options'] = $field_options[$field];
-		}
+		$field_props = $this->request->variable(array('field_props', $field), array('' => ''), true);
+		$field_options = $this->request->variable(array('field_options', $field), array(0 => ''), true);
+		$fields_defaults = $this->request->variable(array('field_defaults', $field), array(0 => ''), true);
 
-		if (isset($fields_defaults[$field]))
-		{
-			$fields_settings[$field]['field_defaults'] = $fields_defaults[$field];
-		}
+		$field_props['options'] = $field_options;
+		$field_props['defaults'] = $fields_defaults;
 
-		return isset($fields_settings[$field]) ? $fields_settings[$field] : '';
+		return array_filter($field_props);
 	}
 }

@@ -14,24 +14,18 @@ class checkbox extends choice
 	/**
 	 * @inheritdoc
 	 */
-	public function get_field_value($name, $default)
+	public function get_name()
 	{
-		$default = is_array($default) ? $default : explode("\n", $default);
-		$value =  $this->request->variable($name, $default, true);
-
-		if (empty($value) && $this->request->server('REQUEST_METHOD') !== 'POST')
-		{
-			$value = $default;
-		}
-
-		return $value;
+		return 'checkbox';
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function get_name()
+	public function get_default_props()
 	{
-		return 'checkbox';
+		return array_merge(parent::get_default_props(), array(
+			'multi_select'	=> true,
+		));
 	}
 }

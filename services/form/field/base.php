@@ -45,9 +45,9 @@ abstract class base implements field_interface
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field($field_value)
+	public function display_field(array $data)
 	{
-		return $field_value;
+		return $data['field_value'];
 	}
 
 	/**
@@ -63,13 +63,13 @@ abstract class base implements field_interface
 	 */
 	public function show_form_field($name, array &$data)
 	{
-		$field = $this->get_name();
 		$data['field_name'] = $name;
 		$data['field_value'] = $this->get_field_value($name, $data['field_value']);
 
-		$this->ptemplate->assign_vars(array_change_key_case($data, CASE_UPPER));
+		$this->ptemplate->assign_vars($data);
 
-		return $this->ptemplate->render_view('blitze/content', "fields/$field.html", $field . '_field');
+		$field = $this->get_name();
+		return $this->ptemplate->render_view('blitze/content', "fields/$field.twig", $field . '_field');
 	}
 
 	/**

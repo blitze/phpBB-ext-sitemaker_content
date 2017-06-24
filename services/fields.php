@@ -143,7 +143,7 @@ class fields extends topic
 			{
 				if ($force_max_chars && $field_type === 'textarea')
 				{
-					$fields_data[$name]['field_settings']['max_chars'] = $force_max_chars;
+					$fields_data[$name]['field_props']['max_chars'] = $force_max_chars;
 				}
 
 				$this->tags[$name] = $name;
@@ -158,27 +158,31 @@ class fields extends topic
 	 */
 	protected function get_fields_data_for_display(array &$tpl_data)
 	{
-		$fields_data = array();
+		$display_data = array();
 		$post_field_data = $this->get_fields_data_from_post($tpl_data['MESSAGE']);
 		unset($tpl_data['MESSAGE']);
 
-		foreach ($this->content_fields as $field_name => $row)
+		foreach ($this->content_fields as $field_name => $field_data)
 		{
-			$field_type		= $row['field_type'];
-			$field_value	= &$post_field_data[$field_name];
-			$field_contents	= $this->form_fields[$field_type]->display_field($field_value, $this->view_mode, $tpl_data, $row);
+			$field_type = $field_data['field_type'];
+			$field_data['field_value'] = &$post_field_data[$field_name];
+			$field_data['field_props'] = array_replace_recursive($this->form_fields[$field_type]->get_default_props(), $field_data['field_props']);
+			$field_contents	= $this->form_fields[$field_type]->display_field($field_data, $this->view_mode, $tpl_data);
 
 			// this essentially hides other fields if the field returns an array
 			if (is_array($field_contents))
 			{
-				$fields_data = $field_contents;
+				$display_data = $field_contents;
 				break;
 			}
 
-			$fields_data[$field_name] = '<div class="field-label ' . $this->label[$row['field_' . $this->view_mode . '_ldisp']] . '">' . $row['field_label'] . ': </div>' . $field_contents;
+			if (!empty($field_contents))
+			{
+				$display_data[$field_name] = '<div class="field-label ' . $this->label[$field_data['field_' . $this->view_mode . '_ldisp']] . '">' . $field_data['field_label'] . $this->language->lang('COLON') . ' </div>' . $field_contents;
+			}
 		}
 
-		return $fields_data;
+		return $display_data;
 	}
 
 	/**

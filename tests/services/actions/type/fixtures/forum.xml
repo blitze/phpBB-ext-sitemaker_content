@@ -82,7 +82,7 @@
 		<column>field_label</column>
 		<column>field_explain</column>
 		<column>field_type</column>
-		<column>field_settings</column>
+		<column>field_props</column>
 		<column>field_order</column>
 		<row>
 			<value>1</value>

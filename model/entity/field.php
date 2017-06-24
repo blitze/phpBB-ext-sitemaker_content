@@ -62,7 +62,7 @@ final class field extends base_entity
 	protected $field_type;
 
 	/** @var string */
-	protected $field_settings = '';
+	protected $field_props = '';
 
 	/** @var boolean */
 	protected $field_mod_only = false;
@@ -104,7 +104,7 @@ final class field extends base_entity
 		'field_label',
 		'field_explain',
 		'field_type',
-		'field_settings',
+		'field_props',
 		'field_mod_only',
 		'field_required',
 		'field_summary_show',
@@ -166,7 +166,8 @@ final class field extends base_entity
 	{
 		if ($mode === 'edit')
 		{
-			return generate_text_for_edit($this->field_explain, $this->field_exp_uid, $this->field_exp_options);
+			$data = generate_text_for_edit($this->field_explain, $this->field_exp_uid, $this->field_exp_options);
+			return $data['text'];
 		}
 		else
 		{
@@ -176,19 +177,19 @@ final class field extends base_entity
 	}
 
 	/**
-	 * Set field settings
-	 * @param array|string $settings
+	 * Set field properties
+	 * @param array|string $props
 	 * @return $this
 	 */
-	public function set_field_settings($settings)
+	public function set_field_props($props)
 	{
-		if (!is_array($settings))
+		if (!is_array($props))
 		{
-			$this->field_settings = $settings;
+			$this->field_props = $props;
 		}
-		else if (sizeof($settings))
+		else if (sizeof($props))
 		{
-			$this->field_settings = json_encode($settings);
+			$this->field_props = json_encode($props);
 		}
 		return $this;
 	}
@@ -197,8 +198,8 @@ final class field extends base_entity
 	 * Get field settings
 	 * @return array
 	 */
-	public function get_field_settings()
+	public function get_field_props()
 	{
-		return ($this->field_settings) ? json_decode($this->field_settings, true) : array();
+		return ($this->field_props) ? json_decode($this->field_props, true) : array();
 	}
 }

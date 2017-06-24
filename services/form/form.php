@@ -100,7 +100,7 @@ class form
 			$obj = $this->fields_factory->get($type);
 
 			$field_data['field_type'] = $type;
-			$field_data['field_settings'] += $obj->get_default_props();
+			$field_data['field_props'] += $obj->get_default_props();
 			$field_data['field_label'] = $this->language->lang($field_data['field_label']);
 			$field_data['field_view'] = $obj->show_form_field($name, $field_data, $forum_id, $topic_id);
 
@@ -183,7 +183,7 @@ class form
 		{
 			$row += $this->get_default_field_data();
 
-			if (empty($row['field_settings']['exclude_from_message']))
+			if (empty($row['field_props']['exclude_from_message']))
 			{
 				$fields_data[$field] = $this->get_submitted_field_data($row, $req_mod_input, $cp_class);
 			}
@@ -232,7 +232,7 @@ class form
 			'field_explain'		=> '',
 			'field_value'		=> '',
 			'field_required'	=> false,
-			'field_settings'	=> array(),
+			'field_props'		=> array(),
 		);
 	}
 

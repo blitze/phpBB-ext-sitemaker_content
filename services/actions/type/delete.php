@@ -68,7 +68,7 @@ class delete extends action_utils implements action_interface
 	{
 		if (!check_form_key('delete_content_type'))
 		{
-			$this->trigger_error($this->language->lang('FORM_INVALID'), $u_action);
+			$this->trigger_error($this->language->lang('FORM_INVALID'), $u_action, E_USER_ERROR);
 		}
 
 		$types_mapper = $this->content_mapper_factory->create('types');

@@ -25,9 +25,9 @@ class password extends base
 	public function get_default_props()
 	{
 		return array(
-			'field_size'		=> 30,
-			'field_minlen'		=> 0,
-			'field_maxlen'		=> 200,
+			'min'	=> 0,
+			'max'	=> 200,
+			'size'	=> 30,
 		);
 	}
 

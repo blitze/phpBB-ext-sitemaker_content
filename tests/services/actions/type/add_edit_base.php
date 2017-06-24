@@ -14,6 +14,7 @@ require_once dirname(__FILE__) . '/../../../../../../../includes/functions_admin
 class add_edit_base extends \phpbb_database_test_case
 {
 	protected $auth;
+	protected $controller_helper;
 	protected $db;
 	protected $language;
 	protected $template;
@@ -57,6 +58,14 @@ class add_edit_base extends \phpbb_database_test_case
 			->method('acl_get')
 			->with($this->stringContains('_'), $this->anything())
 			->willReturn(true);
+
+		$this->controller_helper = $this->getMockBuilder('\phpbb\controller\helper')
+			->disableOriginalConstructor()
+			->getMock();
+		$this->controller_helper->expects($this->any())
+			->method('route')
+			->with($this->equalTo('blitze_content_field_settings'))
+			->willReturn('phpBB/app.php/content/admin/field');
 
 		$this->db = $db = $this->new_dbal();
 		$phpbb_dispatcher = new \phpbb_mock_event_dispatcher();

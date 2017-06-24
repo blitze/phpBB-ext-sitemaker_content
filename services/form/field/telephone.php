@@ -14,9 +14,29 @@ class telephone extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field($value)
+	public function get_name()
 	{
-		return '<a href="tel:' . $value . '">' . preg_replace("/^1?(\d{3})(\d{3})(\d{4})$/", "$1-$2-$3", $value) . '</a>';
+		return 'telephone';
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function get_default_props()
+	{
+		return array(
+			'min'	=> 0,
+			'max'	=> 200,
+			'size'	=> 10,
+		);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function display_field(array $data)
+	{
+		return '<a href="tel:' . $data['field_value'] . '">' . preg_replace("/^1?(\d{3})(\d{3})(\d{4})$/", "$1-$2-$3", $data['field_value']) . '</a>';
 	}
 
 	/**
@@ -26,26 +46,5 @@ class telephone extends base
 	{
 		$value = $this->request->variable($name, (int) $value);
 		return ($value) ? $value : '';
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function get_default_props()
-	{
-		return array(
-			'field_size'		=> 10,
-			'field_minlen'		=> 0,
-			'field_maxlen'		=> 200,
-			'field_value'		=> '',
-		);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function get_name()
-	{
-		return 'telephone';
 	}
 }

@@ -21,7 +21,7 @@ class add_test extends add_edit_base
 	{
 		parent::get_command($call_count);
 
-		return new add($this->auth, $this->language, $this->template, $this->user, $this->auto_lang, $this->fields_factory, $this->views_factory);
+		return new add($this->auth, $this->controller_helper, $this->language, $this->template, $this->user, $this->auto_lang, $this->fields_factory, $this->views_factory);
 	}
 
 	public function test_add_type()
@@ -30,17 +30,10 @@ class add_test extends add_edit_base
 		$command->execute('admin_url', '', 'my.bar.view');
 
 		$expected = array(
-			'view'				=> array(
-				array(
-					'LABEL'			=> 'CONTENT_DISPLAY_BAR',
-					'VALUE'			=> 'my.bar.view',
-					'S_SELECTED'	=> true,
-				),
-				array(
-					'LABEL'			=> 'CONTENT_DISPLAY_FOO',
-					'VALUE'			=> 'my.foo.view',
-					'S_SELECTED'	=> false,
-				),
+			'VIEW'				=> 'my.bar.view',
+			'CONTENT_VIEWS'		=> array(
+				'my.bar.view'		=> 'CONTENT_DISPLAY_BAR',
+				'my.foo.view'		=> 'CONTENT_DISPLAY_FOO'
 			),
 		    'POST_AUTHOR'		=> 'admin',
 		    'POST_DATE'			=> 'NOW',
@@ -53,8 +46,9 @@ class add_test extends add_edit_base
 		    						'<option value="2">Your first forum</option>' .
 		    						'<option value="6">Sitemaker Content</option>' .
 		    						'<option value="7">News</option>',
-		    'S_CAN_COPY_PERMISSIONS' => true,
-		    'S_EDIT' => true,
+		    'S_CAN_COPY_PERMISSIONS'	=> true,
+		    'S_EDIT'					=> true,
+			'UA_AJAX_URL'				=> 'phpBB/app.php/content/admin/field',
 		);
 
 		$this->assertEquals($expected, $this->template->assign_display('test'));

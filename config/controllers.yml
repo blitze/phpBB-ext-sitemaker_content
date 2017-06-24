@@ -6,6 +6,14 @@ services:
             - '@language'
             - '@blitze.content.action_handler'
 
+    blitze.content.field.controller:
+        class: blitze\content\controller\field_controller
+        arguments:
+            - '@request'
+            - '@template'
+            - '@blitze.sitemaker.auto_lang'
+            - '@blitze.content.form.fields.factory'
+
     blitze.content.main.controller:
         class: blitze\content\controller\main_controller
         arguments:

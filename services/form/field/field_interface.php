@@ -38,16 +38,24 @@ interface field_interface
 	/**
 	 * Display content field
 	 *
-	 * @param mixed $field_value	this is the value after bbcode parsing has occurred
+	 * @param array $field_data		This holds field props and field value after bbcode parsing has occurred
+	 *								Which means, line breaks have been replaced with <br>
 	 * @return string
 	 */
-	public function display_field($field_value);
+	public function display_field(array $field_data);
 
 	/**
 	 * Render content field as form element
 	 *
 	 * @param string $field_name
-	 * @param array $field_data
+	 * @param array $field_data  Ex. array(
+	 * 								'field_type'	=> 'foo',		// string
+	 *								'field_value'	=> '',			// string/array
+	 *								'field_props'	=> array(
+	 *									'options'		=> array(),
+	 *									'defaults'		=> array(),
+	 *								),
+	 *							)
 	 * @return string
 	 */
 	public function show_form_field($field_name, array &$field_data);

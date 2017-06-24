@@ -15,15 +15,6 @@ services:
             - '@language'
             - '@request'
             - '@blitze.sitemaker.template'
-        tags:
-            - { name: sitemaker.content.form.field }
-
-    blitze.content.form.field.date:
-        class: blitze\content\services\form\field\date
-        arguments:
-            - '@language'
-            - '@request'
-            - '@blitze.sitemaker.template'
             - '@blitze.sitemaker.util'
         tags:
             - { name: sitemaker.content.form.field }
@@ -33,6 +24,7 @@ services:
         arguments:
             - '@language'
             - '@request'
+            - '@user'
             - '@blitze.sitemaker.template'
             - '@blitze.sitemaker.util'
         tags:
@@ -98,6 +90,7 @@ services:
             - '@language'
             - '@request'
             - '@blitze.sitemaker.template'
+            - '@blitze.sitemaker.util'
         tags:
             - { name: sitemaker.content.form.field }
 
@@ -160,16 +153,6 @@ services:
             - '@blitze.sitemaker.util'
             - '%core.root_path%'
             - '%core.php_ext%'
-        tags:
-            - { name: sitemaker.content.form.field }
-
-    blitze.content.form.field.time:
-        class: blitze\content\services\form\field\time
-        arguments:
-            - '@language'
-            - '@request'
-            - '@blitze.sitemaker.template'
-            - '@blitze.sitemaker.util'
         tags:
             - { name: sitemaker.content.form.field }
 

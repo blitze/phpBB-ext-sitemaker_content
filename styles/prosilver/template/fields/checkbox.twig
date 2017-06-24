@@ -1,0 +1,11 @@
+{% if field_props.per_col > 1 %}
+	{% set delim = '<br />' %}
+	{% set wrapper = ['<div class="left-box" style="margin-right: 1em">', '</div>'] %}
+{% endif %}
+{% for column in field_props.options|batch(field_props.per_col) %}
+{{- wrapper[0] -}}
+{% for option in column %}
+	<label for="{{ option.id }}"><input type="checkbox" id="{{ option.id }}" name="{{ field_name }}[]" value="{{ option.value }}"{% if option.selected %} checked="checked"{% endif %} /> {{ option.label }}</label>{{ delim }}
+{% endfor %}
+{{- wrapper[1] -}}
+{% endfor %}

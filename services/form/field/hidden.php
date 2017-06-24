@@ -14,22 +14,6 @@ class hidden extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field($value)
-	{
-		return '';
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function get_field_value($name, $value)
-	{
-		return $value;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	public function get_name()
 	{
 		return 'hidden';

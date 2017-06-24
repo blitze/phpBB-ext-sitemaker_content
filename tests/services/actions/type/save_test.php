@@ -113,27 +113,22 @@ class save_test extends trigger_error_db_test_case
 				'field_label'	=> 'Field 1',
 				'field_name'	=> 'field1',
 				'field_explain'	=> '',
-				'field_type'	=> 'checkbox',		
+				'field_type'	=> 'checkbox',
 			),
 			'field2'	=> array(
 				'field_label'	=> 'Field 2',
 				'field_name'	=> 'field2',
 				'field_explain'	=> '',
-				'field_type'	=> 'textarea',		
+				'field_type'	=> 'textarea',
 			),
 		);
-		$fields_options = array(
-			'field1'		=> array('Option 1', 'Option 2', 'Option 3'),
-		);
-		$fields_defaults = array(
-			'field1'		=> array('Option 1', 'Option 3'),
-		);
-		$fields_settings = array(
-			'field2'	=> array(
-				'editor'	=> 1,
-				'max_chars'	=> 300,
-				'size'		=> 'small',
-			),
+		$field1_options = array('Option 1', 'Option 2', 'Option 3');
+		$field1_defaults = array('Option 1', 'Option 3');
+		$field2_settings = array(
+			'size'		=> 'small',
+			'maxlength'	=> '',
+			'max_chars'	=> 300,
+			'editor'	=> true,
 		);
 
 		return array(
@@ -181,7 +176,7 @@ class save_test extends trigger_error_db_test_case
 					array('copy_forum_perm', 0, false, request_interface::REQUEST, 1),
 					array('view_settings', array('' => array('' => '')), true, request_interface::REQUEST, array()),
 					array('field_data', array('' => array('' => '')), true, request_interface::REQUEST, $fields_data),
-					array('field_settings', array('' => array('' => '')), true, request_interface::REQUEST, $fields_settings),
+					array('field_props', array('' => array('' => '')), true, request_interface::REQUEST, $fields_settings),
 					array('field_defaults', array('' => array(0 => '')), true, request_interface::REQUEST, $fields_defaults),
 					array('field_options', array('' => array(0 => '')), true, request_interface::REQUEST, $fields_options),
 				),
@@ -200,9 +195,9 @@ class save_test extends trigger_error_db_test_case
 					array('copy_forum_perm', 0, false, request_interface::REQUEST, 1),
 					array('view_settings', array('' => array('' => '')), true, request_interface::REQUEST, array()),
 					array('field_data', array('' => array('' => '')), true, request_interface::REQUEST, $fields_data),
-					array('field_settings', array('' => array('' => '')), true, request_interface::REQUEST, $fields_settings),
-					array('field_defaults', array('' => array(0 => '')), true, request_interface::REQUEST, $fields_defaults),
-					array('field_options', array('' => array(0 => '')), true, request_interface::REQUEST, $fields_options),
+					array(array('field_props', 'field2'), array('' => ''), true, request_interface::REQUEST, $field2_settings),
+					array(array('field_defaults', 'field1'), array(0 => ''), true, request_interface::REQUEST, $field1_defaults),
+					array(array('field_options', 'field1'), array(0 => ''), true, request_interface::REQUEST, $field1_options),
 				),
 				2,
 				array(
@@ -215,16 +210,20 @@ class save_test extends trigger_error_db_test_case
 							'content_id'		=> 2,
 							'field_id'			=> 3,
 							'field_order'		=> 0,
-							'field_settings'	=> array(
-								'field_options'		=> $fields_options['field1'],
-								'field_defaults'	=> $fields_defaults['field1'],
+							'field_props'	=> array(
+								'options'	=> array('Option 1', 'Option 2', 'Option 3'),
+								'defaults'	=> array('Option 1', 'Option 3'),
 							),
 						),
 						'field2'	=> array(
 							'content_id'		=> 2,
 							'field_id'			=> 4,
 							'field_order'		=> 1,
-							'field_settings'	=> $fields_settings['field2'],
+							'field_props'	=> array(
+								'size'			=> 'small',
+								'max_chars'		=> 300,
+								'editor'		=> true,
+							),
 						),
 					),
 				),
@@ -241,9 +240,9 @@ class save_test extends trigger_error_db_test_case
 					array('copy_forum_perm', 0, false, request_interface::REQUEST, 0),
 					array('view_settings', array('' => array('' => '')), true, request_interface::REQUEST, array()),
 					array('field_data', array('' => array('' => '')), true, request_interface::REQUEST, $fields_data),
-					array('field_settings', array('' => array('' => '')), true, request_interface::REQUEST, $fields_settings),
-					array('field_defaults', array('' => array(0 => '')), true, request_interface::REQUEST, $fields_defaults),
-					array('field_options', array('' => array(0 => '')), true, request_interface::REQUEST, $fields_options),
+					array(array('field_props', 'field2'), array('' => ''), true, request_interface::REQUEST, $field2_settings),
+					array(array('field_defaults', 'field1'), array(0 => ''), true, request_interface::REQUEST, $field1_defaults),
+					array(array('field_options', 'field1'), array(0 => ''), true, request_interface::REQUEST, $field1_options),
 				),
 				1,
 				array(
@@ -254,18 +253,20 @@ class save_test extends trigger_error_db_test_case
 					'content_fields'	=> array(
 						'field1'	=> array(
 							'content_id'		=> 1,
-							'field_id'			=> 3,
 							'field_order'		=> 0,
-							'field_settings'	=> array(
-								'field_options'		=> $fields_options['field1'],
-								'field_defaults'	=> $fields_defaults['field1'],
+							'field_props'		=> array(
+								'options'	=> array('Option 1', 'Option 2', 'Option 3'),
+								'defaults'	=> array('Option 1', 'Option 3'),
 							),
 						),
 						'field2'	=> array(
-							'content_id'		=> 1,
-							'field_id'			=> 4,
-							'field_order'		=> 1,
-							'field_settings'	=> $fields_settings['field2'],
+							'content_id'	=> 1,
+							'field_order'	=> 1,
+							'field_props'	=> array(
+								'size'			=> 'small',
+								'max_chars'		=> 300,
+								'editor'		=> true,
+							),
 						),
 					),
 				),

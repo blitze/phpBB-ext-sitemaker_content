@@ -25,11 +25,10 @@ class number extends base
 	public function get_default_props()
 	{
 		return array(
-			'field_minlen'		=> 0,
-			'field_maxlen'		=> 200,
-			'field_step'		=> 1,
-			'field_value'		=> 0,
-			'validation_filter'	=> FILTER_VALIDATE_INT,
+			'min'	=> 0,
+			'max'	=> 0,
+			'step'	=> 1,
+			'size'	=> 10,
 		);
 	}
 

@@ -14,9 +14,9 @@ class url extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field($value)
+	public function display_field(array $data)
 	{
-		return make_clickable($value);
+		return make_clickable($data['field_value']);
 	}
 
 	/**
@@ -25,10 +25,7 @@ class url extends base
 	public function get_default_props()
 	{
 		return array(
-			'field_size'		=> 40,
-			'field_minlen'		=> 0,
-			'field_maxlen'		=> 200,
-			'validation_filter'	=> FILTER_VALIDATE_URL,
+			'max'	=> 255,
 		);
 	}
 

@@ -14,20 +14,19 @@ class text extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function get_default_props()
+	public function get_name()
 	{
-		return array(
-			'field_size'		=> 40,
-			'field_minlen'		=> 0,
-			'field_maxlen'		=> 200,
-		);
+		return 'text';
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function get_name()
+	public function get_default_props()
 	{
-		return 'text';
+		return array(
+			'maxlength'	=> 255,
+			'size'		=> 40,
+		);
 	}
 }

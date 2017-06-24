@@ -150,24 +150,24 @@ class c2_update_data extends \phpbb\db\migration\migration
 
 			for ($i = 0, $size = sizeof($fields); $i < $size; $i++)
 			{
-				$field_settings = '';
+				$field_props = '';
 				$field_type = $fields[$i]['name'];
 
 				if ($field_type == 'content')
 				{
 					$field_type = 'textarea';
-					$field_settings = serialize(array(
+					$field_props = json_encode(array(
 						'max_chars' => $row['char_limit'],
-						'size'		=> 'large',
+						'rows'		=> 25,
 						'editor'	=> true,
 					));
 				}
 				else if ($field_type == 'summary')
 				{
 					$field_type = 'textarea';
-					$field_settings = serialize(array(
+					$field_props = json_encode(array(
 						'max_chars' => $row['char_limit'],
-						'size'		=> 'small',
+						'rows'		=> 5,
 						'editor'	=> true,
 					));
 				}
@@ -178,7 +178,7 @@ class c2_update_data extends \phpbb\db\migration\migration
 					'field_label'			=> $fields[$i]['label'],
 					'field_explain'			=> '',
 					'field_type'			=> $field_type,
-					'field_settings'		=> $field_settings,
+					'field_props	'		=> $field_props,
 					'field_mod_only'		=> !$fields[$i]['input'],
 					'field_required'		=> $fields[$i]['required'],
 					'field_summary_show'	=> $fields[$i]['teaser'],

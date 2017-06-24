@@ -2,9 +2,9 @@
 <form id="{FORM_NAME}" method="{FORM_METHOD}" action="{FORM_ACTION}">
 	<fieldset class="fields1">
 <!-- ENDIF -->
-	<!-- IF S_EDITOR -->
 	<script type="text/javascript">
 		// <![CDATA[
+	<!-- IF S_EDITOR -->
 		var form_name = '{FORM_NAME}';
 		var text_name = '';
 		var load_draft = false;
@@ -33,7 +33,7 @@
 			d: '{LA_BBCODE_D_HELP}'
 			<!-- BEGIN custom_tags -->
 			,cb_{custom_tags.BBCODE_ID}: '{custom_tags.A_BBCODE_HELPLINE}'
-				<!-- END custom_tags -->
+			<!-- END custom_tags -->
 		}
 
 		function change_palette(field)
@@ -51,9 +51,78 @@
 				document.getElementById(field + '_bbpalette').value = '{LA_FONT_COLOR}';
 			}
 		}
+	<!-- ENDIF -->
+
+		// Translations for datetime picker
+		var dpLang = {
+			// hard-code this till phpBB 3.2.1
+			days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+			daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+			daysMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+			months: ['January','February','March','April','May','June', 'July','August','September','October','November','December'],
+			monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+
+			/*
+			Comment this out till phpBB 3.2.1
+			days: [
+				'{{ lang(['datetime', 'Sunday']) }}',
+				'{{ lang(['datetime', 'Monday']) }}',
+				'{{ lang(['datetime', 'Tuesday']) }}',
+				'{{ lang(['datetime', 'Wednesday']) }}',
+				'{{ lang(['datetime', 'Thursday']) }}',
+				'{{ lang(['datetime', 'Friday']) }}',
+				'{{ lang(['datetime', 'Saturday']) }}',
+			],
+			daysShort: [
+				'{{ lang(['datetime', 'Sun']) }}',
+				'{{ lang(['datetime', 'Mon']) }}',
+				'{{ lang(['datetime', 'Tue']) }}',
+				'{{ lang(['datetime', 'Wed']) }}',
+				'{{ lang(['datetime', 'Thu']) }}',
+				'{{ lang(['datetime', 'Fri']) }}',
+				'{{ lang(['datetime', 'Sat']) }}',
+			],
+			daysMin: [
+				'{{ lang(['datetime', 'Su']) }}',
+				'{{ lang(['datetime', 'Mo']) }}',
+				'{{ lang(['datetime', 'Tu']) }}',
+				'{{ lang(['datetime', 'We']) }}',
+				'{{ lang(['datetime', 'Th']) }}',
+				'{{ lang(['datetime', 'Fr']) }}',
+				'{{ lang(['datetime', 'Sa']) }}',
+			],
+			months: [
+				'{{ lang(['datetime', 'January']) }}',
+				'{{ lang(['datetime', 'February']) }}',
+				'{{ lang(['datetime', 'March']) }}',
+				'{{ lang(['datetime', 'April']) }}',
+				'{{ lang(['datetime', 'May']) }}',
+				'{{ lang(['datetime', 'June']) }}',
+				'{{ lang(['datetime', 'July']) }}',
+				'{{ lang(['datetime', 'August']) }}',
+				'{{ lang(['datetime', 'September']) }}',
+				'{{ lang(['datetime', 'October']) }}',
+				'{{ lang(['datetime', 'November']) }}',
+				'{{ lang(['datetime', 'December']) }}',
+			],
+			monthsShort: [
+				'{{ lang(['datetime', 'Jan']) }}',
+				'{{ lang(['datetime', 'Feb']) }}',
+				'{{ lang(['datetime', 'Mar']) }}',
+				'{{ lang(['datetime', 'Apr']) }}',
+				'{{ lang(['datetime', 'May_short']) }}',
+				'{{ lang(['datetime', 'Jun']) }}',
+				'{{ lang(['datetime', 'Jul']) }}',
+				'{{ lang(['datetime', 'Aug']) }}',
+				'{{ lang(['datetime', 'Sep']) }}',
+				'{{ lang(['datetime', 'Oct']) }}',
+				'{{ lang(['datetime', 'Nov']) }}',
+				'{{ lang(['datetime', 'Dec']) }}',
+			],
+			*/
+		};
 		// ]]>
 	</script>
-	<!-- ENDIF -->
 	<!-- BEGIN element -->
 		<dl>
 			<dt><!-- IF element.FIELD_LABEL --><label for="{element.FIELD_ID}">{element.FIELD_LABEL}<!-- IF element.FIELD_REQUIRED --><abbr class="req" title="required">*</abbr><!-- ENDIF -->{L_COLON}</label><br /><!-- ENDIF --><span>{element.FIELD_EXPLAIN}</span></dt>

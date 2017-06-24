@@ -112,7 +112,7 @@ class index_test extends \phpbb_database_test_case
 		$expected = array(
 			array(
 				'CONTENT_TYPE'		=> 'Foo',
-				'L_FORUM_PERMS'		=> 'EDIT_FORUM_PERMISSIONS Foo',
+				'FORUM_PERMS'		=> 'EDIT_FORUM_PERMISSIONS Foo',
 				'S_ENABLED'			=> true,
 				'U_DELETE'			=> 'admin_url&amp;do=pre_delete&amp;type=foo',
 				'U_EDIT'			=> 'admin_url&amp;do=edit&amp;type=foo',
@@ -124,7 +124,7 @@ class index_test extends \phpbb_database_test_case
         	),
         	array(
         		'CONTENT_TYPE'		=> 'Bar',
-        		'L_FORUM_PERMS'		=> 'EDIT_FORUM_PERMISSIONS Bar',
+        		'FORUM_PERMS'		=> 'EDIT_FORUM_PERMISSIONS Bar',
         		'S_ENABLED'			=> false,
         		'U_DELETE'			=> 'admin_url&amp;do=pre_delete&amp;type=bar',
         		'U_EDIT'			=> 'admin_url&amp;do=edit&amp;type=bar',
@@ -136,6 +136,6 @@ class index_test extends \phpbb_database_test_case
         	),
         );
 
-        $this->assertEquals($expected, $result['types']);
+        $this->assertEquals($expected, $result['TYPES']);
 	}
 }

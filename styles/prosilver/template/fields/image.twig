@@ -1,0 +1,6 @@
+<div style="width: {{ field_props.size|default('100') }}%">
+	<input type="text" class="inputbox image-field" id="smc-{{ field_name }} name="{{ field_name }}" maxlength="{{ field_props.max }}" value="{{ field_value }}" />
+	<div id="preview-{{ field_id }}" class="large-img">
+		{% if field_value %}<img class="img-ui" src="{{ field_value }}" alt="" />{% endif %}
+	</div>
+</div>

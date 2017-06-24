@@ -45,7 +45,7 @@ abstract class action_utils
 	 * @param int $errno
 	 * @return void
 	 */
-	protected function trigger_error($message, $u_action = '', $errno = E_USER_WARNING)
+	protected function trigger_error($message, $u_action = '', $errno = E_USER_NOTICE)
 	{
 		$message .= $u_action ? adm_back_link($u_action) : '';
 		$this->trigger_error ? trigger_error($message, $errno) : null;

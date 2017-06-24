@@ -67,7 +67,7 @@ class m1_initial_schema extends \phpbb\db\migration\migration
 						'field_label'			=> array('VCHAR:125', ''),
 						'field_explain'			=> array('VCHAR:255', ''),
 						'field_type'			=> array('VCHAR:55', ''),
-						'field_settings'		=> array('VCHAR:255', ''),
+						'field_props'			=> array('VCHAR:255', ''),
 						'field_mod_only'		=> array('BOOL', 0),
 						'field_required'		=> array('BOOL', 0),
 						'field_summary_show'	=> array('BOOL', 0),

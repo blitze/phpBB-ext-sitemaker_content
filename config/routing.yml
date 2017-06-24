@@ -36,3 +36,7 @@ blitze_content_index_filter_page:
     defaults: { _controller: blitze.content.main.controller:index, page: 1 }
     requirements:
         page: \d+
+
+blitze_content_field_settings:
+    path: /content/admin/field
+    defaults: { _controller: blitze.content.field.controller:handle }
