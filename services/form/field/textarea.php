@@ -16,8 +16,11 @@ class textarea extends base
 	/** @var \phpbb\auth\auth */
 	protected $auth;
 
-	/** @var \phpbb\config\db */
+	/** @var \phpbb\config\config */
 	protected $config;
+
+	/** @var \phpbb\language\language */
+	protected $language;
 
 	/** @var \phpbb\pagination */
 	protected $pagination;
@@ -47,7 +50,7 @@ class textarea extends base
 	 * Constructor
 	 *
 	 * @param \phpbb\auth\auth							$auth				Auth object
-	 * @param \phpbb\config\db							$config				Config object
+	 * @param \phpbb\config\config						$config				Config object
 	 * @param \phpbb\language\language					$language			Language object
 	 * @param \phpbb\pagination							$pagination			Pagination object
 	 * @param \phpbb\request\request_interface			$request			Request object
@@ -58,7 +61,7 @@ class textarea extends base
 	 * @param string									$phpbb_root_path	Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	 */
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\db $config, \phpbb\language\language $language, \phpbb\pagination $pagination, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\template\context $template_context, \blitze\sitemaker\services\template $ptemplate, \blitze\sitemaker\services\util $util, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\language\language $language, \phpbb\pagination $pagination, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\template\context $template_context, \blitze\sitemaker\services\template $ptemplate, \blitze\sitemaker\services\util $util, $phpbb_root_path, $php_ext)
 	{
 		parent::__construct($language, $request, $ptemplate);
 
@@ -96,23 +99,28 @@ class textarea extends base
 	/**
 	 * Display content field
 	 *
-	 * @param string $field_value
-	 * @param array $field_data
+	 * @param array $data
 	 * @param string $view_mode
 	 * @param array $topic_data
 	 * @return mixed
 	 */
-	public function display_field(array $data = array(), $view_mode = 'detail', array $topic_data = array())
+	public function display_field(array $data = array(), $view_mode = 'summary', array $topic_data = array())
 	{
-		$value = $this->generate_field_pages($data['field_name'], $data['field_value'], $topic_data['TOPIC_URL'], $view_mode);
+		$toc_pattern = '(<h4>(.*?)</h4>)?';
+		$pages_pattern = '<!-- pagebreak -->';
+		$split_pattern = $pages_pattern . (($view_mode === 'summary') ? $toc_pattern : '');
 
-		if ($view_mode === 'summary' && $data['field_props']['max_chars'])
+		$pages = array_filter(preg_split('#' . $split_pattern . '#s', $data['field_value']));
+
+		if ($view_mode === 'summary')
 		{
-			$truncateService = new TruncateService();
-			$value = $truncateService->truncate($value, $data['field_props']['max_chars']);
+			return $this->get_summary_value(trim($pages[0]), $data['field_props']['max_chars']);
 		}
 
-		return $value;
+		// get page titles to generate TOC
+		preg_match_all('#' . $pages_pattern . $toc_pattern . '#s', $data['field_value'], $matches);
+
+		return $this->get_detail_value($pages, $matches[2], $data, $topic_data['TOPIC_URL']);
 	}
 
 	/**
@@ -166,34 +174,45 @@ class textarea extends base
 	}
 
 	/**
-	 * Get topic subpages from textarea field
-	 *
-	 * @param string $field_name
-	 * @param string $value
-	 * @param string $topic_url
-	 * @param string $view_mode
-	 * @return void
+	 * @param string $html
+	 * @param int $max_chars
+	 * @return string
 	 */
-	protected function generate_field_pages($field_name, $value, $topic_url, $view_mode)
-	{
-		if (preg_match_all("#<div data-page=\"(.*?)\">(.*?)</div><br><!-- end page -->#s", $value, $matches))
+	 protected function get_summary_value($html, $max_chars)
+	 {
+	 	if ($max_chars)
 		{
-			$start = 0;
-			if ($view_mode === 'detail')
-			{
-				$start = $this->request->variable('page', 0);
-				$this->generate_page_nav($matches[2], $matches[1], $start, $topic_url, $view_mode);
-			}
+			$truncateService = new TruncateService();
+			$html = $truncateService->truncate($html, $max_chars);
+		}
+		return $html;
+	 }
 
-			$value = trim($matches[2][$start]);
+	/**
+	 * @param array $pages
+	 * @param array $titles
+	 * @param array $data
+	 * @param string $topic_url
+	 * @return mixed
+	 */
+	protected function get_detail_value(array $pages, array $titles, array $data, $topic_url)
+	{
+		$page = $this->request->variable('page', 0);
 
-			// Hide all other fields if we're looking at page 2+
-			if ($start)
-			{
-				$value = array(
-					$field_name => $value,
-				);
-			}
+		$start = isset($pages[$page]) ? $page : 0;
+		$value = trim($pages[$start]);
+		$total_pages = sizeof($pages);
+
+		$this->generate_page_nav($topic_url, $total_pages, $start);
+		$this->generate_toc($start, $topic_url, array_slice($titles, 0, $total_pages - 1));
+		$this->handle_preview($pages);
+
+		// Hide all other fields if we're looking at page 2+
+		if ($start)
+		{
+			return array(
+				$data['field_name'] => $value,
+			);
 		}
 
 		return $value;
@@ -202,41 +221,40 @@ class textarea extends base
 	/**
 	 * Generate pagination for topic subpages
 	 *
-	 * @param array $pages
-	 * @param array $page_titles
-	 * @param int $start
 	 * @param string $topic_url
-	 * @param string $view_mode
+	 * @param int $total_pages
+	 * @param int $start
 	 * @return void
 	 */
-	protected function generate_page_nav(array $pages, array $page_titles, &$start, $topic_url, $view_mode)
+	protected function generate_page_nav($topic_url, $total_pages, &$start)
 	{
-		$total_pages = sizeof($pages);
 		$start = $this->pagination->validate_start($start, 1, $total_pages);
 		$this->pagination->generate_template_pagination($topic_url, 'page', 'page', $total_pages, 1, $start);
 		$this->template->assign_var('S_NOT_LAST_PAGE', !($start === ($total_pages - 1)));
-
-		$this->generate_toc($start, array_filter($page_titles), $topic_url);
-		$this->handle_preview($pages);
 	}
 
 	/**
 	 * Generate Table of contents
 	 *
 	 * @param int $start
-	 * @param $page_titles
+	 * @param string $topic_url
+	 * @param array $page_titles
 	 * @return void
 	 */
-	protected function generate_toc($start, $page_titles, $topic_url)
+	protected function generate_toc($start, $topic_url, array $page_titles)
 	{
-		foreach ($page_titles as $page => $title)
+		if (sizeof(array_filter($page_titles)))
 		{
-			$title = ($title) ? $title : $this->language->lang('CONTENT_TOC_UNTITLED');
-			$this->template->assign_block_vars('toc', array(
-				'TITLE'		=> $title,
-				'S_PAGE'	=> ($page === $start),
-				'U_VIEW'	=> append_sid($topic_url, 'page=' . $page),
-			));
+			$page_titles = array_merge(array($this->language->lang('CONTENT_TOC_OVERVIEW')), $page_titles);
+
+			foreach ($page_titles as $page => $title)
+			{
+				$this->template->assign_block_vars('toc', array(
+					'TITLE'		=> ($title) ? $title : $this->language->lang('CONTENT_TOC_UNTITLED'),
+					'S_PAGE'	=> ($page === $start),
+					'U_VIEW'	=> append_sid($topic_url, ($page) ? 'page=' . $page : false),
+				));
+			}
 		}
 	}
 

@@ -153,7 +153,7 @@ class datetime_test extends base_form_field
 				'</div>'
 			),
 			array(
-				'foo',
+				'foo2',
 				array(
 					'field_value'	=> 'bar',
 					'field_props'	=> array(
@@ -161,10 +161,10 @@ class datetime_test extends base_form_field
 					),
 				),
 				array(
-					array('foo', 'bar', true, request_interface::REQUEST, 'foo_bar'),
+					array('foo2', 'bar', true, request_interface::REQUEST, 'foo_bar'),
 				),
 				'<div style="width: 10%; max-width: 100%;">' .
-					'<input type="text" id="smc-foo" name="foo" class="inputbox datetimepicker" data-date-format="" data-range="" value="foo_bar" />' . 
+					'<input type="text" id="smc-foo2" name="foo2" class="inputbox datetimepicker" data-date-format="" data-range="" value="foo_bar" />' . 
 				'</div>'
 			),
 		);

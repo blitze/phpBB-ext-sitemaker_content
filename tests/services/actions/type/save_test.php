@@ -108,6 +108,7 @@ class save_test extends trigger_error_db_test_case
 	public function save_type_test_data()
 	{
 		$description = '';
+		$content_view = 'blitze.content.view.blog';
 		$fields_data = array(
 			'field1'	=> array(
 				'field_label'	=> 'Field 1',
@@ -184,6 +185,7 @@ class save_test extends trigger_error_db_test_case
 				array(),
 				'EXCEPTION_INVALID_ARGUMENT news CONTENT_NAME_EXISTS',
 			),
+			// save new content type
 			array(
 				'',
 				array(
@@ -193,7 +195,7 @@ class save_test extends trigger_error_db_test_case
 					array('content_enabled', true, false, request_interface::REQUEST, true),
 					array('content_view', '', false, request_interface::REQUEST, 'blitze.content.view.blog'),
 					array('copy_forum_perm', 0, false, request_interface::REQUEST, 1),
-					array('view_settings', array('' => array('' => '')), true, request_interface::REQUEST, array()),
+					array(array('view_settings', $content_view), array('' => ''), true, request_interface::REQUEST, array('' => '')),
 					array('field_data', array('' => array('' => '')), true, request_interface::REQUEST, $fields_data),
 					array(array('field_props', 'field2'), array('' => ''), true, request_interface::REQUEST, $field2_settings),
 					array(array('field_defaults', 'field1'), array(0 => ''), true, request_interface::REQUEST, $field1_defaults),
@@ -236,9 +238,9 @@ class save_test extends trigger_error_db_test_case
 					array('content_langname', '', true, request_interface::REQUEST, 'Foo'),
 					array('content_desc', '', true, request_interface::REQUEST, ''),
 					array('content_enabled', true, false, request_interface::REQUEST, true),
-					array('content_view', '', false, request_interface::REQUEST, 'blitze.content.view.blog'),
+					array('content_view', '', false, request_interface::REQUEST, $content_view),
 					array('copy_forum_perm', 0, false, request_interface::REQUEST, 0),
-					array('view_settings', array('' => array('' => '')), true, request_interface::REQUEST, array()),
+					array(array('view_settings', $content_view), array('' => ''), true, request_interface::REQUEST, array('' => '')),
 					array('field_data', array('' => array('' => '')), true, request_interface::REQUEST, $fields_data),
 					array(array('field_props', 'field2'), array('' => ''), true, request_interface::REQUEST, $field2_settings),
 					array(array('field_defaults', 'field1'), array(0 => ''), true, request_interface::REQUEST, $field1_defaults),

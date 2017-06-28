@@ -68,30 +68,35 @@ class edit_test extends add_edit_base
 
 		$expected_fields = array(
             'foo' => array(
-            	'field_id'			=> 1,
-            	'content_id'		=> 1,
-            	'field_name'		=> 'foo',
-            	'field_label'		=> 'Foo',
-            	'field_type'		=> 'text',
-            	'field_props'	=> array(),
-            	'field_order'		=> 0,
+            	'FIELD_ID'			=> 1,
+            	'CONTENT_ID'		=> 1,
+            	'FIELD_NAME'		=> 'foo',
+            	'FIELD_LABEL'		=> 'Foo',
+            	'FIELD_TYPE'		=> 'text',
+            	'FIELD_PROPS'		=> array(
+            		'maxlength'	=> 255,
+            		'size'		=> 40,
+            	),
+            	'FIELD_ORDER'		=> 0,
             ),
             'bar' => array(
-            	'field_id'			=> 2,
-            	'content_id'		=> 1,
-            	'field_name'		=> 'bar',
-            	'field_label'		=> 'Bar',
-            	'field_type'		=> 'checkbox',
-            	'field_props'	=> array(
-            		'field_options'		=> array(
+            	'FIELD_ID'			=> 2,
+            	'CONTENT_ID'		=> 1,
+            	'FIELD_NAME'		=> 'bar',
+            	'FIELD_LABEL'		=> 'Bar',
+            	'FIELD_TYPE'		=> 'checkbox',
+            	'FIELD_PROPS'		=> array(
+            		'defaults'	=> array('Blue', 'Yellow'),
+            		'options'	=> array(
             			'Red'		=> 'Red',
             			'Blue'		=> 'Blue',
             			'Green'		=> 'Green',
             			'Yellow'	=> 'Yellow',
             		),
-            		'field_defaults'	=> array('Blue', 'Yellow'),
+            		'multi_select'	=> true,
+            		'per_col'		=> 1,
             	),
-            	'field_order'		=> 1,
+            	'FIELD_ORDER'		=> 1,
             ),
 		);
 

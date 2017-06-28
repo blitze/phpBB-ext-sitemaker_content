@@ -9,6 +9,8 @@
 
 namespace blitze\content\tests\services\form\field;
 
+use phpbb\request\request_interface;
+
 class checkbox_test extends base_form_field
 {
 	public function test_name()
@@ -76,6 +78,9 @@ class checkbox_test extends base_form_field
 						'per_col'		=> 1,
 					),
 				),
+				array(
+					array('foo', '', true, request_interface::REQUEST, ''),
+				),
 				'<label for="smc-foo-0"><input type="checkbox" id="smc-foo-0" name="foo[]" value="option1" /> option1</label>' .
 				'<label for="smc-foo-1"><input type="checkbox" id="smc-foo-1" name="foo[]" value="option2" /> option2</label>' .
 				'<label for="smc-foo-2"><input type="checkbox" id="smc-foo-2" name="foo[]" value="option3" /> option3</label>',
@@ -83,12 +88,15 @@ class checkbox_test extends base_form_field
 			array(
 				'foo',
 				array(
-					'field_value'	=> "option1\noption2",
+					'field_value'	=> "option2\noption3",
 					'field_props'	=> array(
 						'options'		=> array('option1', 'option2', 'option3'),
 						'defaults'		=> array(),
 						'per_col'		=> 1,
 					),
+				),
+				array(
+					array('foo', array('option2', 'option3'), true, request_interface::REQUEST, array('option1', 'option2')),
 				),
 				'<label for="smc-foo-0"><input type="checkbox" id="smc-foo-0" name="foo[]" value="option1" checked="checked" /> option1</label>' .
 				'<label for="smc-foo-1"><input type="checkbox" id="smc-foo-1" name="foo[]" value="option2" checked="checked" /> option2</label>' .
@@ -104,6 +112,9 @@ class checkbox_test extends base_form_field
 						'per_col'		=> 3,
 					),
 				),
+				array(
+					array('foo', '', true, request_interface::REQUEST, ''),
+				),
 				'<div class="left-box" style="margin-right: 1em">' .
 					'<label for="smc-foo-0"><input type="checkbox" id="smc-foo-0" name="foo[]" value="option1" checked="checked" /> option1</label><br />' .
 					'<label for="smc-foo-1"><input type="checkbox" id="smc-foo-1" name="foo[]" value="option2" /> option2</label><br />' .
@@ -111,21 +122,24 @@ class checkbox_test extends base_form_field
 				'</div>',
 			),
 			array(
-				'foo',
+				'bar',
 				array(
-					'field_value'	=> array('option2'),
+					'field_value'	=> array('option1'),
 					'field_props'	=> array(
 						'options'		=> array('option1', 'option2', 'option3'),
 						'defaults'		=> array('option1', 'option3'),
 						'per_col'		=> 2,
 					),
 				),
+				array(
+					array('bar', array('option1'), true, request_interface::REQUEST, array('option2')),
+				),
 				'<div class="left-box" style="margin-right: 1em">' .
-					'<label for="smc-foo-0"><input type="checkbox" id="smc-foo-0" name="foo[]" value="option1" /> option1</label><br />' .
-					'<label for="smc-foo-1"><input type="checkbox" id="smc-foo-1" name="foo[]" value="option2" checked="checked" /> option2</label><br />' .
+					'<label for="smc-bar-0"><input type="checkbox" id="smc-bar-0" name="bar[]" value="option1" /> option1</label><br />' .
+					'<label for="smc-bar-1"><input type="checkbox" id="smc-bar-1" name="bar[]" value="option2" checked="checked" /> option2</label><br />' .
 				'</div>' .
 				'<div class="left-box" style="margin-right: 1em">' .
-					'<label for="smc-foo-2"><input type="checkbox" id="smc-foo-2" name="foo[]" value="option3" /> option3</label><br />' .
+					'<label for="smc-bar-2"><input type="checkbox" id="smc-bar-2" name="bar[]" value="option3" /> option3</label><br />' .
 				'</div>',
 			),
 		);
@@ -135,12 +149,13 @@ class checkbox_test extends base_form_field
 	 * @dataProvider show_form_field_test_data
 	 * @param string $name
 	 * @param array $data
+	 * @param array $variable_map
 	 * @param string $expected
 	 * @return void
 	 */
-	public function test_show_checkbox_field($name, array $data, $expected)
+	public function test_show_checkbox_field($name, array $data, array $variable_map, $expected)
 	{
-		$field = $this->get_form_field('checkbox');
+		$field = $this->get_form_field('checkbox', $variable_map);
 		$data = $this->get_data('checkbox', $name, $data, $field->get_default_props());
 
 		$this->assertEquals($expected, str_replace(array("\n", "\t"), '', $field->show_form_field($name, $data)));

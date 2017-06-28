@@ -20,8 +20,8 @@ class fields_factory
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\language\language					$language				Language object
-	 * @param \phpbb\di\service_collection				$field_drivers			Form fields
+	 * @param \phpbb\language\language			$language			Language object
+	 * @param \phpbb\di\service_collection		$field_drivers		Form fields
 	 */
 	public function __construct(\phpbb\language\language $language, \phpbb\di\service_collection $field_drivers)
 	{
@@ -61,11 +61,6 @@ class fields_factory
 	 */
 	public function get($service_name)
 	{
-		if (!$this->exists($service_name))
-		{
-			// throw exception
-		}
-
 		return $this->fields[$service_name];
 	}
 

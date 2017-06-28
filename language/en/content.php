@@ -47,6 +47,7 @@ $lang = array_merge($lang, array(
 	'CONTENT_NO_EXIST'		=> 'Sorry! The requested topic does not exist',
 	'CONTENT_REPORTED'		=> 'This content has been reported',
 	'CONTENT_TOC'			=> 'Table of Contents',
+	'CONTENT_TOC_OVERVIEW'	=> 'Overview',
 	'CONTENT_TOC_UNTITLED'	=> 'Untitled',
 	'CONTENT_TYPE_NO_EXIST'	=> 'Oops! The requested content type does not exist',
 	'CONTENT_UNAPPROVED'	=> 'This content has not been approved',

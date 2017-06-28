@@ -93,15 +93,15 @@ class number_test extends base_form_field
 				'</div>',
 			),
 			array(
-				'foo',
+				'bar',
 				array(
 					'field_value'	=> 20,
 				),
 				array(
-					array('foo', 20, false, request_interface::REQUEST, 20),
+					array('bar', 20, false, request_interface::REQUEST, 20),
 				),
 				'<div style="width: 10%">' .
-					'<input type="number" class="inputbox" id="smc-foo" name="foo" step="1" value="20" />' .
+					'<input type="number" class="inputbox" id="smc-bar" name="bar" step="1" value="20" />' .
 				'</div>',
 			),
 		);

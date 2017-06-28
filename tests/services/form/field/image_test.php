@@ -78,37 +78,37 @@ class image_test extends base_form_field
 					array('foo', '', false, request_interface::REQUEST, ''),
 				),
 				'<div style="width: 45%">' .
-					'<input type="text" class="inputbox image-field" id="smc-foo name="foo" maxlength="200" value="" />' .
+					'<input type="text" class="inputbox image-field" id="smc-foo" name="foo" maxlength="200" value="" />' .
 					'<div id="preview-foo" class="large-img"></div>' .
 				'</div>',
 			),
 			array(
 				'foo',
 				array(
-					'field_value' => 'bar',
+					'field_value' => '',
 					'field_props' => array(
 						'size'	=> 65,
 					),
 				),
 				array(
-					array('foo', 'bar', false, request_interface::REQUEST, 'bar'),
+					array('foo', '', false, request_interface::REQUEST, 'bar'),
 				),
 				'<div style="width: 65%">' .
-					'<input type="text" class="inputbox image-field" id="smc-foo name="foo" maxlength="200" value="bar" />' .
+					'<input type="text" class="inputbox image-field" id="smc-foo" name="foo" maxlength="200" value="bar" />' .
 					'<div id="preview-foo" class="large-img"><img class="img-ui" src="bar" alt="" /></div>' .
 				'</div>',
 			),
 			array(
-				'foo',
+				'foo2',
 				array(
-					'field_value' => 'foo_bar',
+					'field_value' => 'bar',
 				),
 				array(
-					array('foo', 'bar', false, request_interface::REQUEST, 'foo_bar'),
+					array('foo2', 'bar', false, request_interface::REQUEST, 'foo_bar'),
 				),
 				'<div style="width: 45%">' .
-					'<input type="text" class="inputbox image-field" id="smc-foo name="foo" maxlength="200" value="" />' .
-					'<div id="preview-foo" class="large-img"></div>' .
+					'<input type="text" class="inputbox image-field" id="smc-foo2" name="foo2" maxlength="200" value="foo_bar" />' .
+					'<div id="preview-foo2" class="large-img"><img class="img-ui" src="foo_bar" alt="" /></div>' .
 				'</div>',
 			),
 		);

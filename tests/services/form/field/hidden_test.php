@@ -62,34 +62,34 @@ class hidden_test extends base_form_field
 	{
 		return array(
 			array(
-				'foo',
+				'foo1',
 				array(
 					'field_value'	=> '',
 				),
 				array(
-					array('foo', '', true, request_interface::REQUEST, ''),
+					array('foo1', '', true, request_interface::REQUEST, ''),
 				),
-				'<input type="hidden" id="smc-foo" name="foo" value="" />',
+				'<input type="hidden" id="smc-foo1" name="foo1" value="" />',
 			),
 			array(
-				'foo',
+				'foo2',
 				array(
 					'field_value'	=> 'bar',
 				),
 				array(
-					array('foo', 'bar', true, request_interface::REQUEST, 'bar'),
+					array('foo2', 'bar', true, request_interface::REQUEST, 'bar'),
 				),
-				'<input type="hidden" id="smc-foo" name="foo" value="bar" />',
+				'<input type="hidden" id="smc-foo2" name="foo2" value="bar" />',
 			),
 			array(
-				'foo',
+				'foo3',
 				array(
 					'field_value'	=> 'bar',
 				),
 				array(
-					array('foo', 'bar', true, request_interface::REQUEST, 'foo_bar'),
+					array('foo3', 'bar', true, request_interface::REQUEST, 'foo_bar'),
 				),
-				'<input type="hidden" id="smc-foo" name="foo" value="foo_bar" />',
+				'<input type="hidden" id="smc-foo3" name="foo3" value="foo_bar" />',
 			),
 		);
 	}

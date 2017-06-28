@@ -242,16 +242,6 @@ class form
 	 */
 	protected function get_field_key($field_type)
 	{
-		switch ($field_type)
-		{
-			case 'submit':
-			case 'reset':
-				return 'button';
-			case 'hidden':
-				return 'hidden';
-			case 'file':
-			default:
-				return 'element';
-		}
+		return ($field_type === 'hidden') ? 'hidden' : 'element';
 	}
 }

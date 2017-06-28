@@ -86,10 +86,10 @@ class range extends base
 
 		if (sizeof($range))
 		{
-			array_walk($range, array($this, 'set_prepost'), $data['field_props']);
+			array_walk($range, array($this, 'set_prefix'), $data['field_props']['prefix']);
 		}
 
-		return join($range, ' - ');
+		return join($range, ' - ') . $data['field_props']['postfix'];
 	}
 
 	/**
@@ -115,18 +115,20 @@ class range extends base
 
 			$from = array_search($from, $values);
 			$to = array_search($to, $values);
-		}
 
-		$data['field_props']['from'] = $from;
-		$data['field_props']['to'] = $to;
+			$data['field_props']['from'] = $from;
+			$data['field_props']['to'] = $to;
+		}
 	}
 
 	/**
-	 * @param array $data
-	 * @return array
+	 * @param string $item
+	 * @param int $key
+	 * @param string $prefix
+	 * @return void
 	 */
-	protected function set_prepost(&$item, $key, array $props)
+	protected function set_prefix(&$item, $key, $prefix)
 	{
-		$item = $props['prefix'] . $item . $props['postfix'];
+		$item = $prefix . $item;
 	}
 }

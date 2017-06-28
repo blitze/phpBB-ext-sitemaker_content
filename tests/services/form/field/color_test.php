@@ -65,21 +65,42 @@ class color_test extends base_form_field
 	public function display_field_test_data()
 	{
 		return array(
-			array('', ''),
-			array('foo', 'foo'),
+			array(
+				array(
+					'field_value'	=> '',
+				),
+				'',
+			),
+			array(
+				array(
+					'field_value'	=> '#ccc',
+					'field_props'	=> array(
+						'display'		=> 'hash',
+					),
+				),
+				'#ccc',
+			),
+			array(
+				array(
+					'field_value'	=> '#ccc',
+					'field_props'	=> array(
+						'display'		=> 'box',
+					),
+				),
+				'<div style="display: inline-block; width: 15px; height: 15px; border: 1 solid #fff; border-radius: 4px; background-color: #ccc" title="#ccc"></div>',
+			),
 		);
 	}
 
 	/**
 	 * @dataProvider display_field_test_data
-	 * @param string $field_value
+	 * @param array $data
 	 * @param string $expected
 	 * @return void
 	 */
-	public function test_display_field($field_value, $expected)
+	public function test_display_field(array $data, $expected)
 	{
 		$field = $this->get_form_field('color');
-		$data = array('field_value' => $field_value);
 		$this->assertEquals($expected, $field->display_field($data));
 	}
 
@@ -92,8 +113,6 @@ class color_test extends base_form_field
 			array(
 				'foo',
 				array(
-					'field_id'		=> 'foo',
-					'field_type'	=> 'color',
 					'field_value'	=> '',
 					'field_props'	=> array(),
 				),
@@ -105,8 +124,6 @@ class color_test extends base_form_field
 			array(
 				'foo',
 				array(
-					'field_id'		=> 'foo',
-					'field_type'	=> 'color',
 					'field_value'	=> 'bar',
 					'field_props'	=> array(
 						'num_colors'	=> 2,
@@ -121,10 +138,8 @@ class color_test extends base_form_field
 				'<input type="text" class="inputbox autowidth colorpicker" id="smc-foo-2" name="foo[]" value="" data-palette="" data-allow-empty="true" size="7" />',
 			),
 			array(
-				'foo',
+				'foo2',
 				array(
-					'field_id'		=> 'foo',
-					'field_type'	=> 'color',
 					'field_value'	=> 'bar',
 					'field_props'	=> array(
 						'display'		=> 'box',
@@ -134,9 +149,9 @@ class color_test extends base_form_field
 					),
 				),
 				array(
-					array('foo', 'bar', true, request_interface::REQUEST, 'foo_bar'),
+					array('foo2', 'bar', true, request_interface::REQUEST, 'foo_bar'),
 				),
-				'<input type="text" class="inputbox autowidth colorpicker" id="smc-foo-1" name="foo[]" value="bar" data-palette="#cc3, #334, #455" data-show-palette-only="1" data-allow-empty="true" size="7" />',
+				'<input type="text" class="inputbox autowidth colorpicker" id="smc-foo2-1" name="foo2[]" value="bar" data-palette="#cc3, #334, #455" data-show-palette-only="1" data-allow-empty="true" size="7" />',
 			),
 		);
 	}

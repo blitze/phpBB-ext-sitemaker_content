@@ -138,7 +138,7 @@ class save extends action_utils implements action_interface
 	{
 		$content_desc = $this->request->variable('content_desc', '', true);
 		$content_view = $this->request->variable('content_view', '');
-		$view_settings = $this->request->variable(array('view_settings', $content_view), array('' => ''));
+		$view_settings = $this->request->variable(array('view_settings', $content_view), array('' => ''), true);
 
 		$entity = $mapper->create_entity(array(
 			'content_name'			=> $this->request->variable('content_name', ''),

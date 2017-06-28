@@ -101,7 +101,7 @@
 			<value>Bar</value>
 			<value></value>
 			<value>checkbox</value>
-			<value>{"field_options":{"Red":"Red","Blue":"Blue","Green":"Green","Yellow":"Yellow"},"field_defaults":["Blue","Yellow"]}</value>
+			<value>{"options":{"Red":"Red","Blue":"Blue","Green":"Green","Yellow":"Yellow"},"defaults":["Blue","Yellow"]}</value>
 			<value>1</value>
 		</row>
 	</table>
