@@ -30,15 +30,6 @@ services:
         tags:
             - { name: sitemaker.content.form.field }
 
-    blitze.content.form.field.email:
-        class: blitze\content\services\form\field\email
-        arguments:
-            - '@language'
-            - '@request'
-            - '@blitze.sitemaker.template'
-        tags:
-            - { name: sitemaker.content.form.field }
-
     blitze.content.form.field.hidden:
         class: blitze\content\services\form\field\hidden
         arguments:
@@ -66,15 +57,6 @@ services:
         tags:
             - { name: sitemaker.content.form.field }
 
-    blitze.content.form.field.password:
-        class: blitze\content\services\form\field\password
-        arguments:
-            - '@language'
-            - '@request'
-            - '@blitze.sitemaker.template'
-        tags:
-            - { name: sitemaker.content.form.field }
-
     blitze.content.form.field.radio:
         class: blitze\content\services\form\field\radio
         arguments:
@@ -94,26 +76,8 @@ services:
         tags:
             - { name: sitemaker.content.form.field }
 
-    blitze.content.form.field.reset:
-        class: blitze\content\services\form\field\reset
-        arguments:
-            - '@language'
-            - '@request'
-            - '@blitze.sitemaker.template'
-        tags:
-            - { name: sitemaker.content.form.field }
-
     blitze.content.form.field.select:
         class: blitze\content\services\form\field\select
-        arguments:
-            - '@language'
-            - '@request'
-            - '@blitze.sitemaker.template'
-        tags:
-            - { name: sitemaker.content.form.field }
-
-    blitze.content.form.field.submit:
-        class: blitze\content\services\form\field\submit
         arguments:
             - '@language'
             - '@request'
