@@ -1,0 +1,39 @@
+services:
+
+    blitze.content.event.bbcodes:
+        class: blitze\content\event\bbcodes
+        tags:
+            - { name: event.listener }
+
+    blitze.content.event.listener:
+        class: blitze\content\event\listener
+        arguments:
+            - '@language'
+            - '@blitze.content.types'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }
+
+    blitze.content.event.posting:
+        class: blitze\content\event\posting
+        arguments:
+            - '@blitze.content.builder'
+        tags:
+            - { name: event.listener }
+
+    blitze.content.event.search:
+        class: blitze\content\event\search
+        arguments:
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@blitze.content.types'
+        tags:
+            - { name: event.listener }
+
+    blitze.content.event.viewtopic:
+        class: blitze\content\event\viewtopic
+        arguments:
+            - '@controller.helper'
+            - '@blitze.content.types'
+        tags:
+            - { name: event.listener }
