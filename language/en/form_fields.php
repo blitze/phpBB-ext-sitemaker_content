@@ -132,5 +132,5 @@ $lang = array_merge($lang, array(
 	'TEXTAREA_MAXLENGTH'		=> 'Maximum input characters',
 	'TEXTAREA_SIZE'				=> 'Size',
 	'TEXTAREA_SMALL'			=> 'Small',
-	'TEXTAREA_TIPS'				=> '<strong>TIP</strong>: You can insert a page break using [pagebreak] or [pagebreak title=Page Title]', 
+	'TEXTAREA_TIPS'				=> '<strong>TIP</strong>: You can insert a page break using [pagebreak] or [pagebreak title=Page Title]',
 ));

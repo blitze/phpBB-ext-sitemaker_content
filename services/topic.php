@@ -196,7 +196,7 @@ class topic
 	{
 		$parse_flags = ($post_data['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
 		$message = generate_text_for_display($post_data['post_text'], $post_data['bbcode_uid'], $post_data['bbcode_bitfield'], $parse_flags, true);
-
+	
 		if (!empty($attachments[$post_data['post_id']]))
 		{
 			parse_attachments($post_data['forum_id'], $message, $attachments[$post_data['post_id']], $update_count);
@@ -211,9 +211,9 @@ class topic
 	 * @param array $post_data
 	 * @return array
 	 */
-	 protected function get_topic_status_data($type, array $topic_data, array $post_data)
-	 {
-	 	return array(
+	protected function get_topic_status_data($type, array $topic_data, array $post_data)
+	{
+		return array(
 			'S_POST_UNAPPROVED'		=> $this->helper->post_is_unapproved($post_data),
 			'S_POSTS_UNAPPROVED'	=> $this->helper->topic_has_unapproved_posts($topic_data),
 			'S_TOPIC_REPORTED'		=> $this->helper->topic_is_reported($topic_data),
@@ -223,23 +223,23 @@ class topic
 			'U_MCP_REPORT'			=> $this->helper->get_mcp_report_url($post_data),
 			'U_MCP_REVIEW'			=> $this->helper->get_mcp_review_url($type, $topic_data['topic_id']),
 			'U_MCP_QUEUE'			=> $this->helper->get_mcp_queue_url($topic_data['topic_id']),
-	 	);
-	 }
+		);
+	}
 
 	/**
 	 * @param array $topic_data
 	 * @param array $post_data
 	 * @return array
 	 */
-	 protected function get_mini_post_url(array $topic_data, array $post_data)
-	 {
+	protected function get_mini_post_url(array $topic_data, array $post_data)
+	{
 		if ($topic_data['topic_first_post_id'] === $post_data['post_id'])
 		{
 			return append_sid($topic_data['topic_url'], 'view=unread') . '#unread';
 		}
 
- 		return append_sid($topic_data['topic_url'], 'p=' . $post_data['post_id']) . '#p' . $post_data['post_id'];
-	 }
+		return append_sid($topic_data['topic_url'], 'p=' . $post_data['post_id']) . '#p' . $post_data['post_id'];
+	}
 
 	/**
 	 * @param array $row

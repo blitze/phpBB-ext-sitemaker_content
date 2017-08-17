@@ -73,7 +73,7 @@ class main_controller
 	 * @param string $filter_value
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function index($type, $page = 1, $filter_type, $filter_value)
+	public function index($type, $page, $filter_type, $filter_value)
 	{
 		$entity = $this->get_type_entity($type);
 

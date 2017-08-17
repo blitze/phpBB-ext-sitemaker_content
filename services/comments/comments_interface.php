@@ -15,7 +15,7 @@ interface comments_interface
 	 * Get comments count for topic
 	 */
 	public function count(array $topic_data);
-
+	
 	/**
 	 * Show comments for topic
 	 *
@@ -24,7 +24,7 @@ interface comments_interface
 	 * @return void
 	 */
 	public function show_comments($content_type, array $topic_data);
-
+	
 	/**
 	 * @param array $topic_data
 	 * @return void

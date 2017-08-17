@@ -169,15 +169,15 @@ class textarea extends base
 	 * @param int $max_chars
 	 * @return string
 	 */
-	 protected function get_summary_value($html, $max_chars)
-	 {
-	 	if ($max_chars)
+	protected function get_summary_value($html, $max_chars)
+	{
+		if ($max_chars)
 		{
 			$truncateService = new TruncateService();
 			$html = $truncateService->truncate($html, $max_chars);
 		}
 		return $html;
-	 }
+	}
 
 	/**
 	 * @param array $pages

@@ -103,72 +103,72 @@ class form
 	 * @param array $topic_data
 	 * @return bool
 	 */
-	 protected function topic_is_locked(array $topic_data)
-	 {
-	 	return (($topic_data['forum_status'] == ITEM_UNLOCKED && $topic_data['topic_status'] == ITEM_UNLOCKED) || $this->auth->acl_get('m_edit', $topic_data['forum_id'])) ? true : false;
-	 }
+	protected function topic_is_locked(array $topic_data)
+	{
+		return (($topic_data['forum_status'] == ITEM_UNLOCKED && $topic_data['topic_status'] == ITEM_UNLOCKED) || $this->auth->acl_get('m_edit', $topic_data['forum_id'])) ? true : false;
+	}
 
 	/**
 	 * @param int $forum_id
 	 * @param array $qr_hidden_fields
 	 * @return bool
 	 */
-	 protected function set_smilies($forum_id, array &$qr_hidden_fields)
-	 {
-	 	if (!($this->config['allow_smilies'] && $this->user->optionget('smilies') && $this->auth->acl_get('f_smilies', $forum_id)))
-	 	{
-	 		 $qr_hidden_fields['disable_smilies'] = 1;
-	 	}
-	 }
+	protected function set_smilies($forum_id, array &$qr_hidden_fields)
+	{
+		if (!($this->config['allow_smilies'] && $this->user->optionget('smilies') && $this->auth->acl_get('f_smilies', $forum_id)))
+		{
+			$qr_hidden_fields['disable_smilies'] = 1;
+		}
+	}
 
 	/**
 	 * @param int $forum_id
 	 * @param array $qr_hidden_fields
 	 * @return bool
 	 */
-	 protected function set_bbcode($forum_id, array &$qr_hidden_fields)
-	 {
-	 	if (!($this->config['allow_bbcode'] && $this->user->optionget('bbcode') && $this->auth->acl_get('f_bbcode', $forum_id)))
-	 	{
-	 		$qr_hidden_fields['disable_bbcode'] = 1;
-	 	}
-	 }
+	protected function set_bbcode($forum_id, array &$qr_hidden_fields)
+	{
+		if (!($this->config['allow_bbcode'] && $this->user->optionget('bbcode') && $this->auth->acl_get('f_bbcode', $forum_id)))
+		{
+			$qr_hidden_fields['disable_bbcode'] = 1;
+		}
+	}
 
 	/**
 	 * @param bool $is_watching
 	 * @param array $qr_hidden_fields
 	 * @return bool
 	 */
-	 protected function set_notification($is_watching, array &$qr_hidden_fields)
-	 {
-	 	if ($this->config['allow_topic_notify'] && ($this->user->data['user_notify'] || $is_watching))
-	 	{
-	 		$qr_hidden_fields['notify'] = 1;
-	 	}
-	 }
+	protected function set_notification($is_watching, array &$qr_hidden_fields)
+	{
+		if ($this->config['allow_topic_notify'] && ($this->user->data['user_notify'] || $is_watching))
+		{
+			$qr_hidden_fields['notify'] = 1;
+		}
+	}
 
 	/**
 	 * @param int $topic_status
 	 * @param array $qr_hidden_fields
 	 * @return bool
 	 */
-	 protected function set_topic_lock($topic_status, array &$qr_hidden_fields)
-	 {
-	 	if ($topic_status == ITEM_LOCKED)
-	 	{
-	 		$qr_hidden_fields['lock_topic'] = 1;
-	 	}
-	 }
+	protected function set_topic_lock($topic_status, array &$qr_hidden_fields)
+	{
+		if ($topic_status == ITEM_LOCKED)
+		{
+			$qr_hidden_fields['lock_topic'] = 1;
+		}
+	}
 
 	/**
 	 * @param array $qr_hidden_fields
 	 * @return bool
 	 */
-	 protected function set_magic_urls(array &$qr_hidden_fields)
-	 {
-	 	if (!$this->config['allow_post_links'])
-	 	{
-	 		$qr_hidden_fields['disable_magic_url'] = 1;
-	 	}
-	 }
+	protected function set_magic_urls(array &$qr_hidden_fields)
+	{
+		if (!$this->config['allow_post_links'])
+		{
+			$qr_hidden_fields['disable_magic_url'] = 1;
+		}
+	}
 }

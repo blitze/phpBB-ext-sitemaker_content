@@ -41,9 +41,9 @@ class bbcodes implements EventSubscriberInterface
 
 		// Let's create the new BBCode
 		$configurator->BBCodes->addCustom(
-		    '[pagebreak title={SIMPLETEXT;optional;postFilter=ucwords}]',
-		    '<p><!-- pagebreak --></p>' .
-		    '<xsl:if test="@title"><h4>{SIMPLETEXT}</h4><br /></xsl:if>'
+			'[pagebreak title={SIMPLETEXT;optional;postFilter=ucwords}]',
+			'<p><!-- pagebreak --></p>' .
+			'<xsl:if test="@title"><h4>{SIMPLETEXT}</h4><br /></xsl:if>'
 		);
 	}
 
@@ -62,8 +62,8 @@ class bbcodes implements EventSubscriberInterface
 
 		// Let's create the new BBCode
 		$configurator->BBCodes->addCustom(
-		    '[tag={IDENTIFIER}]{TEXT}[/tag]',
-		    "<!-- begin field -->\n" .
+			'[tag={IDENTIFIER}]{TEXT}[/tag]',
+			"<!-- begin field -->\n" .
 			"<div data-field=\"{IDENTIFIER}\">{TEXT}</div><br />\n" .
 			"<!-- end field -->\n"
 		);

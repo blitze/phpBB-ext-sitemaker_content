@@ -214,21 +214,11 @@ class helper
 	/**
 	 * @param array $topic_data
 	 * @return bool
-	 *
-	 public function topic_is_unapproved(array $topic_data)
-	 {
-	 	return (($topic_data['topic_visibility'] == ITEM_UNAPPROVED || $topic_data['topic_visibility'] == ITEM_REAPPROVE) && $this->auth->acl_get('m_approve', $topic_data['forum_id']));
-	 }
 	 */
-
-	/**
-	 * @param array $topic_data
-	 * @return bool
-	 */
-	 public function topic_has_unapproved_posts(array $topic_data)
-	 {
-	 	return ($topic_data['topic_visibility'] == ITEM_APPROVED && $topic_data['topic_posts_unapproved'] && $this->auth->acl_get('m_approve', $topic_data['forum_id']));
-	 }
+	public function topic_has_unapproved_posts(array $topic_data)
+	{
+		return ($topic_data['topic_visibility'] == ITEM_APPROVED && $topic_data['topic_posts_unapproved'] && $this->auth->acl_get('m_approve', $topic_data['forum_id']));
+	}
 
 	/**
 	 * @param array $topic_data

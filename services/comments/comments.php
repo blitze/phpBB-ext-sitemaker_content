@@ -162,9 +162,9 @@ class comments extends form implements comments_interface
 	 * @param array $topic_data
 	 * @retrun void
 	 */
-	 protected function find_unread($view, array $topic_data)
-	 {
-	 	if ($view === 'unread')
+	protected function find_unread($view, array $topic_data)
+	{
+		if ($view === 'unread')
 		{
 			$forum_id = (int) $topic_data['forum_id'];
 			$topic_id = (int) $topic_data['topic_id'];
@@ -172,7 +172,7 @@ class comments extends form implements comments_interface
 			// Get topic tracking info
 			$topic_tracking_info = get_complete_topic_tracking($forum_id, $topic_id);
 			$topic_last_read = (isset($topic_tracking_info[$topic_id])) ? $topic_tracking_info[$topic_id] : 0;
-	
+
 			$sql = 'SELECT post_id, topic_id, forum_id
 				FROM ' . POSTS_TABLE . "
 				WHERE topic_id = $topic_id
@@ -189,7 +189,7 @@ class comments extends form implements comments_interface
 				redirect(append_sid($topic_data['topic_url'], 'p=' . $row['post_id']) . '#p' . $row['post_id']);
 			}
 		}
-	 }
+	}
 
 	/**
 	 * This is for determining where we are (page)
@@ -235,7 +235,7 @@ class comments extends form implements comments_interface
 			{
 				redirect($base_url);
 			}
-	
+
 			trigger_error('NO_TOPIC');
 		}
 	}
