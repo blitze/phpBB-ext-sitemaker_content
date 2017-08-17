@@ -66,7 +66,7 @@ class color extends base
 	 */
 	public function display_field(array $data)
 	{
-		$sep = ', ';
+		$sep = $this->language->lang('COMMA_SEPARATOR');
 		$field_value = array_filter(explode('<br>', $data['field_value']));
 
 		if ($data['field_props']['display'] === 'box')

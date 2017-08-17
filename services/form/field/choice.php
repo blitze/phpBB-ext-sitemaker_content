@@ -45,7 +45,7 @@ abstract class choice extends base
 	public function display_field(array $data)
 	{
 		$field_value = array_filter(explode('<br>', $data['field_value']));
-		return sizeof($field_value) ? join(', ', $field_value) : '';
+		return sizeof($field_value) ? join($this->language->lang('COMMA_SEPARATOR'), $field_value) : '';
 	}
 
 	/**
