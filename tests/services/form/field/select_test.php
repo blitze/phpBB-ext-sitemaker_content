@@ -29,7 +29,6 @@ class select_test extends base_form_field
 	{
 		$field = $this->get_form_field('select');
 		$this->assertEquals(array(
-			'per_col'		=> 1,
 			'options'		=> array(),
 			'defaults'		=> array(),
 			'multi_select'	=> false,

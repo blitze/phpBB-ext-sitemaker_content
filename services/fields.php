@@ -11,14 +11,17 @@ namespace blitze\content\services;
 
 class fields extends topic
 {
-	/** @var \phpbb\template\template */
-	protected $template;
+	/** @var \blitze\content\services\comments\comments_interface */
+	protected $comments;
 
 	/** @var \blitze\content\services\form\fields_factory */
 	protected $fields_factory;
 
 	/** @var array */
 	protected $form_fields;
+
+	/** @var string */
+	protected $content_type;
 
 	/** @var array */
 	protected $content_fields;
@@ -30,6 +33,9 @@ class fields extends topic
 	protected $tpl_name = '';
 
 	/** @var string */
+	protected $display_mode = '';
+
+	/** @var string */
 	protected $view_mode = '';
 
 	/** @var array */
@@ -38,48 +44,60 @@ class fields extends topic
 	/**
 	 * Construct
 	 *
-	 * @param \phpbb\config\db								$config					Config object
-	 * @param \phpbb\content_visibility						$content_visibility		Phpbb Content visibility object
-	 * @param \phpbb\controller\helper						$controller_helper		Controller Helper object
-	 * @param \phpbb\event\dispatcher_interface				$phpbb_dispatcher		Event dispatcher object
-	 * @param \phpbb\language\language						$language				Language object
-	 * @param \phpbb\template\template						$template				Template object
-	 * @param \phpbb\user									$user					User object
-	 * @param \blitze\content\services\form\fields_factory	$fields_factory			Form fields factory
-	 * @param \blitze\content\services\helper				$helper					Content helper object
+	 * @param \phpbb\config\db										$config					Config object
+	 * @param \phpbb\controller\helper								$controller_helper		Controller Helper object
+	 * @param \phpbb\event\dispatcher_interface						$phpbb_dispatcher		Event dispatcher object
+	 * @param \phpbb\language\language								$language				Language object
+	 * @param \phpbb\template\template								$template				Template object
+	 * @param \phpbb\user											$user					User object
+	 * @param \blitze\content\services\form\fields_factory			$fields_factory			Form fields factory
+	 * @param \blitze\content\services\comments\comments_interface	$comments				Comments object
+	 * @param \blitze\content\services\helper						$helper					Content helper object
 	 */
-	public function __construct(\phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\controller\helper $controller_helper, \phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\language\language $language, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\form\fields_factory $fields_factory, \blitze\content\services\helper $helper)
+	public function __construct(\phpbb\config\db $config, \phpbb\controller\helper $controller_helper, \phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\language\language $language, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\comments\comments_interface $comments, \blitze\content\services\form\fields_factory $fields_factory, \blitze\content\services\helper $helper)
 	{
-		parent::__construct($config, $content_visibility, $controller_helper, $phpbb_dispatcher, $language, $user, $helper);
+		parent::__construct($config, $controller_helper, $phpbb_dispatcher, $language, $template, $user, $helper);
 
-		$this->template = $template;
+		$this->comments = $comments;
 		$this->fields_factory = $fields_factory;
 	}
 
 	/**
-	 * Set type data needed to display posts
+	 * Set type data needed to display topics
 	 *
-	 * @param string $content_type
-	 * @param string $view_mode
+	 * @param \blitze\content\model\entity\type $entity
+	 * @param array $topic_ids
 	 * @param array $view_mode_fields
-	 * @param array $fields_data
 	 * @param string $custom_tpl
-	 * @param string $tpl_name
-	 * @param int $force_max_chars
+	 * @param string $view_mode
 	 * @return void
 	 */
-	public function prepare_to_show($content_type, $view_mode, array $view_mode_fields, array $fields_data, $custom_tpl = '', $tpl_name = '', $force_max_chars = 0)
+	public function prepare_to_show(\blitze\content\model\entity\type $entity, array $topic_ids, array $view_mode_fields, $custom_tpl, $view_mode)
 	{
 		$this->reset();
+		$db_fields = array_fill_keys($topic_ids, array());
 
-		if (!empty($custom_tpl))
-		{
-			$this->tpl_name	= ($tpl_name) ? $tpl_name : $content_type . '_' . $view_mode;
-		}
+		/**
+		 * Event to set the values for fields that are stored in the database, as opposed to post text
+		 *
+		 * @event blitze.content.fields.set_values
+		 * @var string								view_mode			The current view mode (summary|detail|block)
+		 * @var	array								view_mode_fields	Array containing fields for current view_mode
+		 * @var \blitze\content\model\entity\type	entity				Content type entity
+		 * @var array								db_fields			This array allows extensions that provide fields to list field values for current topic ids.
+		 *																Extensions should merge and not overwrite/replace these entries, unless it is necessary to do so
+		 *																Ex. array([topic_id] => array([field_name] => [field_value]))
+		 */
+		$vars = array('view_mode', 'view_mode_fields', 'entity', 'db_fields');
+		extract($this->phpbb_dispatcher->trigger_event('blitze.content.fields.set_values', compact($vars)));
 
+		$this->display_mode = $view_mode;
+		$this->content_type = $entity->get_content_name();
+		$this->tpl_name	= ($custom_tpl) ? $this->content_type . '_' . $view_mode : '';
 		$this->view_mode = (in_array($view_mode, array('summary', 'detail'))) ? $view_mode : 'summary';
 		$this->form_fields = array_intersect_key($this->fields_factory->get_all(), array_flip($view_mode_fields));
-		$this->set_content_fields($view_mode_fields, $fields_data, $force_max_chars);
+		$this->db_fields = $db_fields;
+		$this->set_content_fields($view_mode_fields, $entity->get_content_fields());
 	}
 
 	/**
@@ -94,11 +112,14 @@ class fields extends topic
 	 * @param string $mode
 	 * @return array
 	 */
-	public function show($type, array $topic_data, array $post_data, array $users_cache, array $attachments, array &$update_count, array $topic_tracking_info, array $topic_data_overwrite = array(), $mode = '')
+	public function show($type, array $topic_data, array $post_data, array $users_cache, array &$attachments, array &$update_count, array $topic_tracking_info, array $topic_data_overwrite = array(), $mode = '')
 	{
 		$callable = 'get_' . $this->view_mode . '_template_data';
-		$tpl_data = array_merge(
-			$this->{$callable}($type, $topic_data, $post_data, $users_cache, $attachments, $update_count, $topic_tracking_info, $mode),
+		$tpl_data = array_merge(array(
+				'TOPIC_COMMENTS'	=> $this->comments->count($topic_data),
+				'S_USER_LOGGED_IN'	=> $this->user->data['is_registered'],
+			),
+			$this->{$callable}($type, $topic_data, $post_data, $users_cache, $attachments, $topic_tracking_info, $update_count, $mode),
 			$topic_data_overwrite
 		);
 
@@ -115,15 +136,13 @@ class fields extends topic
 
 		if ($this->tpl_name)
 		{
-			$this->template->assign_vars(array_change_key_case(array_merge($tpl_data, $fields_data, array(
-				'S_USER_LOGGED_IN' => true
-			)), CASE_UPPER));
+			$this->template->assign_vars(array_change_key_case(array_merge($tpl_data, $fields_data), CASE_UPPER));
 			$this->template->set_filenames(array('content' => $this->tpl_name));
 			$tpl_data['CUSTOM_DISPLAY'] = $this->template->assign_display('content');
 		}
 		else
 		{
-			$tpl_data['SEQ_DISPLAY'] = join('<br />', $fields_data);
+			$tpl_data['SEQ_DISPLAY'] = join("\n", $fields_data);
 		}
 
 		return $tpl_data;
@@ -132,20 +151,14 @@ class fields extends topic
 	/**
 	 * @param array $view_mode_fields
 	 * @param array $fields_data
-	 * @param int $force_max_chars
 	 * @return void
 	 */
-	protected function set_content_fields(array $view_mode_fields, array $fields_data, $force_max_chars)
+	protected function set_content_fields(array $view_mode_fields, array $fields_data)
 	{
 		foreach ($view_mode_fields as $name => $field_type)
 		{
 			if (isset($this->form_fields[$field_type]))
 			{
-				if ($force_max_chars && $field_type === 'textarea')
-				{
-					$fields_data[$name]['field_props']['max_chars'] = $force_max_chars;
-				}
-
 				$this->tags[$name] = $name;
 				$this->content_fields[$name] = $fields_data[$name];
 			}
@@ -158,16 +171,17 @@ class fields extends topic
 	 */
 	protected function get_fields_data_for_display(array &$tpl_data)
 	{
-		$display_data = array();
-		$post_field_data = $this->get_fields_data_from_post($tpl_data['MESSAGE']);
+		$field_values = array_merge($this->db_fields[$tpl_data['TOPIC_ID']], $this->get_fields_data_from_post($tpl_data['MESSAGE']));
 		unset($tpl_data['MESSAGE']);
 
+		$display_data = array();
 		foreach ($this->content_fields as $field_name => $field_data)
 		{
 			$field_type = $field_data['field_type'];
-			$field_data['field_value'] = &$post_field_data[$field_name];
 			$field_data['field_props'] = array_replace_recursive($this->form_fields[$field_type]->get_default_props(), $field_data['field_props']);
-			$field_contents	= $this->form_fields[$field_type]->display_field($field_data, $this->view_mode, $tpl_data);
+			$field_data['field_value'] = &$field_values[$field_name];
+
+			$field_contents	= $this->form_fields[$field_type]->display_field($field_data, $this->display_mode, $tpl_data, $this->content_type);
 
 			// this essentially hides other fields if the field returns an array
 			if (is_array($field_contents))

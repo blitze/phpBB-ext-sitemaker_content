@@ -165,19 +165,18 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 			$users_cache = $this->forum->get_posters_info();
 			$attachments = $this->forum->get_attachments($forum_id);
 			$topic_tracking_info = $this->forum->get_topic_tracking_info($forum_id);
+			$block_fields = $this->get_block_fields($entity->get_field_types());
 
-			$this->fields->prepare_to_show($type, 'block', $this->get_block_fields($entity->get_field_types()), $entity->get_content_fields(), $this->settings['block_tpl'], $block_id . '_block', $this->settings['max_chars']);
+			$this->fields->prepare_to_show($entity, array_keys($topics_data), $block_fields, $this->settings['block_tpl'], 'block');
 
 			$update_count = array();
-			$topics_data = array_values($topics_data);
-			for ($i = 0, $size = sizeof($topics_data); $i < $size; $i++)
+			foreach ($posts_data as $topic_id => $posts)
 			{
-				$topic_data	= $topics_data[$i];
-				$post_data	= array_shift($posts_data[$topic_data['topic_id']]);
-
-				$tpl_data = $this->fields->show($type, $topic_data, $post_data, $users_cache, $attachments, $update_count, $topic_tracking_info);
-				$this->ptemplate->assign_block_vars('topic_row', $tpl_data);
+				$post_data	= array_shift($posts);
+				$topic_data	= $topics_data[$topic_id];
+				$this->ptemplate->assign_block_vars('topicrow', $this->fields->show($type, $topic_data, $post_data, $users_cache, $attachments, $update_count, $topic_tracking_info));
 			}
+			unset($topics_data, $posts_data, $users_cache, $attachments, $topic_tracking_info);
 
 			$title = $this->get_block_title($entity->get_content_langname());
 			$content = $this->ptemplate->render_view('blitze/content', 'blocks/recent_content.html', 'recent_content_block');
@@ -212,6 +211,23 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 	{
 		$block_fields = (!empty($this->settings['fields'])) ? $this->settings['fields'] : array();
 		return array_intersect_key($field_types, array_flip($block_fields));
+	}
+
+	/**
+	 * @param array $fields
+	 * @param array $fields_data
+	 * @return array
+	 */
+	protected function get_block_fields_data(array $fields, array $fields_data)
+	{
+		$textarea_fields = array_keys($fields, 'textarea');
+
+		foreach ($textarea_fields as $field)
+		{
+			$fields_data[$field]['field_props']['max_chars'] = $this->settings['max_chars'];
+		}
+
+		return $fields_data;
 	}
 
 	/**

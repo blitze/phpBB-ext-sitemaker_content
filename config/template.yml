@@ -7,13 +7,14 @@ services:
             - '@path_helper'
             - '%core.template.cache_path%'
             - '@ext.manager'
-            - '@blitze.content.template_loader'
+            - '@blitze.content.template.loader'
+            - '@dispatcher'
             - []
         calls:
             - [setLexer, ['@template.twig.lexer']]
 
-    blitze.content.template_loader:
-        class: blitze\content\services\template_loader
+    blitze.content.template.loader:
+        class: blitze\content\services\template\loader
         arguments:
             - '@blitze.content.types'
             - '@blitze.sitemaker.mapper.factory'

@@ -1,202 +1,211 @@
 {% include('overall_header.html') %}
 
 {% if S_EDIT %}
-	<!-- INCLUDEJS @blitze_sitemaker/vendor/jquery-ui/jquery-ui.min.js -->
-	<!-- INCLUDEJS @blitze_sitemaker/vendor/codemirror/lib/codemirror.js -->
-	<!-- INCLUDEJS @blitze_sitemaker/vendor/codemirror/addon/display/autorefresh.js -->
-	<!-- INCLUDEJS @blitze_sitemaker/vendor/twig.js/index.js -->
-	<!-- INCLUDEJS @blitze_content/assets/acp/content_admin.min.js -->
+	{% INCLUDEJS '@blitze_sitemaker/vendor/jquery-ui/jquery-ui.min.js' %}
+	{% INCLUDEJS '@blitze_sitemaker/vendor/codemirror/lib/codemirror.js' %}
+	{% INCLUDEJS '@blitze_sitemaker/vendor/codemirror/addon/display/autorefresh.js' %}
+	{% INCLUDEJS '@blitze_sitemaker/vendor/twig.js/index.js' %}
+	{% INCLUDEJS '@blitze_content/assets/acp/content_admin.min.js' %}
 
-	<!-- INCLUDECSS @blitze_sitemaker/vendor/jquery-ui/themes/smoothness/jquery-ui.min.css -->
-	<!-- INCLUDECSS @blitze_sitemaker/vendor/codemirror/lib/codemirror.css -->
-	<!-- INCLUDECSS @blitze_sitemaker/vendor/codemirror/theme/monokai.css -->
-	<!-- INCLUDECSS @blitze_content/assets/acp/content_admin.min.css -->
+	{% INCLUDECSS '@blitze_sitemaker/vendor/jquery-ui/themes/smoothness/jquery-ui.min.css' %}
+	{% INCLUDECSS '@blitze_sitemaker/vendor/codemirror/lib/codemirror.css' %}
+	{% INCLUDECSS '@blitze_sitemaker/vendor/codemirror/theme/monokai.css' %}
+	{% INCLUDECSS '@blitze_content/assets/acp/content_admin.min.css' %}
 
 	<form id="edit-type" method="post" action="{{ U_ACTION }}">
 	<fieldset class="permissions">
-		<p class="small">{{ lang('PT_REQUIRED_FIELDS') }}</p><br />
+		<p class="small">{{ lang('REQUIRED_FIELDS') }}</p><br />
 
 		<div class="permissions-category">
-			<ul>
-				<li class="activetab"><a id="ctype" class="ctab" href="#"><span class="tabbg">{{ lang('CONTENT_TYPE') }}</span></a></li>
-				<li><a id="cfields" class="ctab" href="#"><span class="tabbg">{{ lang('CONTENT_FIELDS') }}*</span></a></li>
-				<li><a id="ctemplates" class="ctab" href="#"><span class="tabbg">{{ lang('FIELDS_TEMPLATE') }}</span></a></li>
-				<li><a id="csettings" class="ctab" href="#"><span class="tabbg">{{ lang('CONTENT_SETTINGS') }}</span></a></li>
+			<ul id="content-tabs">
+				<li class="activetab"><a class="ctab" href="#ctype"><span class="tabbg">{{ lang('CONTENT_TYPE') }}</span></a></li>
+				<li><a class="ctab" href="#cfields"><span class="tabbg">{{ lang('CONTENT_FIELDS') }}*</span></a></li>
+				<li><a class="ctab" href="#ctemplates"><span class="tabbg">{{ lang('FIELDS_TEMPLATE') }}</span></a></li>
+				<li><a class="ctab" href="#csettings"><span class="tabbg">{{ lang('CONTENT_SETTINGS') }}</span></a></li>
 			</ul>
 		</div>
-		<div id="cctype" class="ctabcontent permissions-panel">
-			<span class="corners-top"><span></span></span>
-				<fieldset>
-					<dl>
-						<dt><label for="content-name">{{ lang('CONTENT_NAME') ~ lang('COLON') }}*</label><br /><span>{{ lang('CONTENT_NAME_EXPLAIN') }}</span></dt>
-						<dd><input id="content-name" name="content_name" type="text" class="small" maxlength="50" value="{{ CONTENT_NAME }}" /></dd>
-					</dl>
-					<dl>
-						<dt><label for="content-langname">{{ lang('CONTENT_LANGNAME') ~ lang('COLON') }}*</label><br /><span>{{ lang('CONTENT_LANGNAME_EXPLAIN') }}</span></dt>
-						<dd><input id="content-langname" name="content_langname" type="text" class="medium" maxlength="75" value="{{ CONTENT_LANGNAME }}" /></dd>
-					</dl>
-					<dl>
-						<dt><label for="content-desc">{{ lang('CONTENT_DESC') ~ lang('COLON') }}</label><br /><span>{{ lang('CONTENT_DESC_EXPLAIN') }}</span></dt>
-						<dd><textarea id="content-desc" name="content_desc" rows="5" cols="45">{{ CONTENT_DESC }}</textarea></dd>
-					</dl>
-					<dl>
-						<dt><label for="index_show_desc">{{ lang('SHOW_DESC_INDEX') ~ lang('COLON') }}</label><br /><span>{{ lang('SHOW_DESC_INDEX_EXPLAIN') }}</span></dt>
-						<dd>
-							<label><input type="radio" class="radio" id="index-show-desc" name="index_show_desc" value="1"{% if INDEX_SHOW_DESC %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-							<label><input type="radio" class="radio" name="index_show_desc" value="0"{% if !INDEX_SHOW_DESC %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
-						</dd>
-					</dl>
-					<dl>
-						<dt><label for="content-enabled">{{ lang('CONTENT_ACTIVE') ~ lang('COLON') }}</label></dt>
-						<dd>
-							<label><input type="radio" class="radio" id="content-enabled" name="content_enabled" value="1"{% if CONTENT_ENABLED !== false %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-							<label><input type="radio" class="radio" name="content_enabled" value="0"{% if CONTENT_ENABLED === false %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
-						</dd>
-					</dl>
-					{% if S_CAN_COPY_PERMISSIONS %}
-					<dl>
-						<dt><label for="copy-forum-perm">{{ lang('COPY_PERMISSION') ~ lang('COLON') }}</label><br /><span>{{ lang('COPY_PERMISSION_EXPLAIN') }}</span></dt>
-						<dd>
-							<select id="copy-forum-perm" name="copy_forum_perm"><option value="">{{ lang('NO_COPY_PERMISSIONS') }}</option>{{ S_FORUM_OPTIONS }}</select>
-						</dd>
-					</dl>
-					{% endif %}
-					<dl>
-						<dt><label for="content-view">{{ lang('CONTENT_VIEW') ~ lang('COLON') }}</label></dt>
-						<dd>
-							<select id="content-view" name="content_view" data-togglable-settings="true">
-							{% for service, label in CONTENT_VIEWS %}
-								<option value="{{ service }}"{% if service === VIEW %} selected="selected"{% endif %} data-toggle-setting="{{ '#content-view-' ~ service }}">{{ lang(label) }}</option>
-							{% endfor %}
-							</select>
-						</dd>
-					</dl>
-					<div class="content-view-settings">
-						{% EVENT content_view_settings %}
-					</div>
-				</fieldset>
-			<span class="corners-bottom"><span></span></span>
-		</div>
-		<div id="ccfields" class="ctabcontent permissions-panel" style="display: none;">
-			<span class="corners-top"><span></span></span>
-				<fieldset class="permissions">
-					<p style="text-align: right">
-						<button id="add-field">{{ lang('ADD_FIELD') }}</button>
-					</p>
-
-					<div id="fields-container">
-						{% include('content_fields.html') %}
-					</div>
-
-					<br />
-					<div id="add-field-info" class="ui-corner-all">{{ lang('ADD_LABEL_PROMPT') }}</div>
-				</fieldset>
-			<span class="corners-bottom"><span></span></span>
-		</div>
-		<div id="cctemplates" class="ctabcontent permissions-panel" style="display: none;">
-			<span class="corners-top"><span></span></span>
-				<fieldset class="permissions">
-					<div id="fields-template" class="full-width">
-						<div class="ui-tabs ui-widget tpl-tabs">
-							<ul class="rightside ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-corner-all">
-								<li id="custom-summary" class="toggle-tpl ui-state-default ui-corner-top"><a href="#">{{ lang('SUMMARY_TEMPLATE') }}</a></li>
-								<li id="custom-detail" class="toggle-tpl ui-state-default ui-corner-top ui-state-active"><a href="#">{{ lang('DETAIL_TEMPLATE') }}</a></li>
-							</ul>
-							<div class="clear"></div>
+		<div class="panels">
+			<div id="ctype" class="permissions-panel">
+				<span class="corners-top"><span></span></span>
+					<fieldset>
+						<dl>
+							<dt><label for="content-name">{{ lang('CONTENT_NAME') ~ lang('COLON') }}*</label><br /><span>{{ lang('CONTENT_NAME_EXPLAIN') }}</span></dt>
+							<dd><input id="content-name" name="content_name" type="text" class="small" maxlength="50" value="{{ CONTENT_NAME }}" /></dd>
+						</dl>
+						<dl>
+							<dt><label for="content-langname">{{ lang('CONTENT_LANGNAME') ~ lang('COLON') }}*</label><br /><span>{{ lang('CONTENT_LANGNAME_EXPLAIN') }}</span></dt>
+							<dd><input id="content-langname" name="content_langname" type="text" class="medium" maxlength="75" value="{{ CONTENT_LANGNAME }}" /></dd>
+						</dl>
+						<dl>
+							<dt><label for="content-desc">{{ lang('CONTENT_DESC') ~ lang('COLON') }}</label><br /><span>{{ lang('CONTENT_DESC_EXPLAIN') }}</span></dt>
+							<dd><textarea id="content-desc" name="content_desc" rows="5" cols="45">{{ CONTENT_DESC }}</textarea></dd>
+						</dl>
+						<dl>
+							<dt><label for="index_show_desc">{{ lang('SHOW_DESC_INDEX') ~ lang('COLON') }}</label><br /><span>{{ lang('SHOW_DESC_INDEX_EXPLAIN') }}</span></dt>
+							<dd>
+								<label><input type="radio" class="radio" id="index-show-desc" name="index_show_desc" value="1"{% if INDEX_SHOW_DESC %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+								<label><input type="radio" class="radio" name="index_show_desc" value="0"{% if !INDEX_SHOW_DESC %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
+							</dd>
+						</dl>
+						<dl>
+							<dt><label for="content-enabled">{{ lang('CONTENT_ACTIVE') ~ lang('COLON') }}</label></dt>
+							<dd>
+								<label><input type="radio" class="radio" id="content-enabled" name="content_enabled" value="1"{% if CONTENT_ENABLED !== false %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+								<label><input type="radio" class="radio" name="content_enabled" value="0"{% if CONTENT_ENABLED === false %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
+							</dd>
+						</dl>
+						{% if S_CAN_COPY_PERMISSIONS %}
+						<dl>
+							<dt><label for="copy-forum-perm">{{ lang('COPY_PERMISSION') ~ lang('COLON') }}</label><br /><span>{{ lang('COPY_PERMISSION_EXPLAIN') }}</span></dt>
+							<dd>
+								<select id="copy-forum-perm" name="copy_forum_perm"><option value="">{{ lang('NO_COPY_PERMISSIONS') }}</option>{{ S_FORUM_OPTIONS }}</select>
+							</dd>
+						</dl>
+						{% endif %}
+						<dl>
+							<dt><label for="content-view">{{ lang('CONTENT_VIEW') ~ lang('COLON') }}</label></dt>
+							<dd>
+								<select id="content-view" name="content_view" data-togglable-settings="true">
+								{% for service, label in CONTENT_VIEWS %}
+									<option value="{{ service }}"{% if service === VIEW %} selected="selected"{% endif %} data-toggle-setting="#content-view-{{ service|replace({'.': '\\.'}) }}">{{ lang(label) }}</option>
+								{% endfor %}
+								</select>
+								<div class="content-view-settings">
+									<p>&nbsp;</p>
+									<div id="content-view-blitze.content.view.tiles">
+										<dl>
+											<dt><label for="tiles-items_per_col">{{ lang('ITEMS_PER_COLUMN') ~ lang('COLON') }}</label></dt>
+											<dd>
+												<input id="tiles-items_per_col" name="view_settings[blitze.content.view.tiles][items_per_col]" type="number" size="2" min="2" max="5" step="1" value="{{ CONTENT_VIEW_SETTINGS.items_per_col|default(4) }}" />
+											</dd>
+										</dl>
+									</div>
+									{% EVENT blitze_content_view_settings %}
+								</div>
+							</dd>
+						</dl>
+					</fieldset>
+				<span class="corners-bottom"><span></span></span>
+			</div>
+			<div id="cfields" class="permissions-panel" style="display: none;">
+				<span class="corners-top"><span></span></span>
+					<fieldset class="permissions">
+						<p style="text-align: right">
+							<button id="add-field">{{ lang('ADD_FIELD') }}</button>
+						</p>
+	
+						<div id="fields-container">
+							{% include('content_fields.html') %}
 						</div>
-
-						<div class="tpl-boxes ui-helper-reset ui-helper-clearfix ui-corner-all">
-							<div class="summary-tpl toggle-panel" id="custom-summary-tpl">
-								<fieldset>
-									<p id="preview-summary" class="content"></p>
-								</fieldset>
-								<textarea id="tpl-custom-summary" class="custom-template" name="summary_tpl">{{ SUMMARY_TPL }}</textarea>
-								<p class="small">{{ lang('SUMMARY_TEMPLATE_EXPLAIN') }}</p>
-							</div>
-
-							<div class="detail-tpl toggle-panel hide" id="custom-detail-tpl">
-								<fieldset>
-									<p id="preview-detail" class="content"></p>
-								</fieldset>
-								<textarea id="tpl-custom-detail" class="editor custom-template" name="detail_tpl">{{ DETAIL_TPL }}</textarea>
-								<p class="small">{{ lang('DETAIL_TEMPLATE_EXPLAIN') }}</p>
-							</div>
-						</div>
-					</div>
-					<div class="tpl-fields-container">
-						<div id="available-fields">
-						{% for field in CONTENT_FIELDS %}
-							<a class="button" href="#" title="{{ field.FIELD_LABEL }}" data-ftype="{{ field.FIELD_TYPE }}">{{ field.FIELD_NAME }}</a>
-						{% endfor %}
-						</div>
+	
 						<br />
-						<div id="post-info">
-							<a class="button" href="#" data-tag="TOPIC_TITLE">{{ lang('TOPIC_TITLE') }}</a>
-							<a class="button" href="#" data-tag="TOPIC_URL">{{ lang('TOPIC_URL') }}</a>
-							<a class="button" href="#" data-tag="TOPIC_AUTHOR">{{ lang('TOPIC_AUTHOR') }}</a>
-							<a class="button" href="#" data-tag="TOPIC_AUTHOR_FULL">{{ lang('TOPIC_AUTHOR_FULL') }}</a>
-							<a class="button" href="#" data-tag="TOPIC_AUTHOR_COLOUR">{{ lang('TOPIC_AUTHOR_COLOUR') }}</a>
-							<a class="button" href="#" data-tag="TOPIC_AUTHOR_AVATAR">{{ lang('TOPIC_AUTHOR_AVATAR') }}</a>
-							<a class="button" href="#" data-tag="TOPIC_AUTHOR_URL">{{ lang('TOPIC_AUTHOR_URL') }}</a>
-							<a class="button" href="#" data-tag="TOPIC_DATE">{{ lang('TOPIC_DATE') }}</a>
-							<a class="button" href="#" data-tag="TOPIC_COMMENTS">{{ lang('TOPIC_COMMENTS') }}</a>
-							<a class="button" href="#" data-tag="TOPIC_VIEWS">{{ lang('TOPIC_VIEWS') }}</a>
+						<div id="add-field-info" class="ui-corner-all">{{ lang('ADD_LABEL_PROMPT') }}</div>
+					</fieldset>
+				<span class="corners-bottom"><span></span></span>
+			</div>
+			<div id="ctemplates" class="permissions-panel" style="display: none;">
+				<span class="corners-top"><span></span></span>
+					<fieldset class="permissions">
+						<div class="permissions-category">
+							<ul class="rightside">
+								<li class="activetab"><a class="ctab" href="#summary-tpl"><span class="tabbg">{{ lang('SUMMARY_TEMPLATE') }}</span></a></li>
+								<li><a class="ctab" href="#detail-tpl"><span class="tabbg">{{ lang('DETAIL_TEMPLATE') }}</span></a></li>
+							</ul>
 						</div>
-					</div>
-				</fieldset>
-			<span class="corners-bottom"><span></span></span>
-		</div>
-		<div id="ccsettings" class="ctabcontent permissions-panel" style="display: none;">
-			<span class="corners-top"><span></span></span>
-				<fieldset>
-					<dl>
-						<dt><label for="req-approval">{{ lang('REQ_APPROVAL') ~ lang('COLON') }}</label></dt>
-						<dd>
-							<label><input type="radio" class="radio" id="req-approval" name="req_approval" value="1"{% if REQ_APPROVAL %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-							<label><input type="radio" class="radio" name="req_approval" value="0"{% if !REQ_APPROVAL %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
-						</dd>
-					</dl>
-					<dl>
-						<dt><label for="allow-comments">{{ lang('ALLOW_COMMENTS') ~ lang('COLON') }}</label></dt>
-						<dd>
-							<label><input type="radio" class="radio" id="allow-comments" name="allow_comments" value="1"{% if ALLOW_COMMENTS !== false %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-							<label><input type="radio" class="radio" name="allow_comments" value="0"{% if ALLOW_COMMENTS === false %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
-						</dd>
-					</dl>
-					<dl>
-						<dt><label for="allow-views">{{ lang('DISPLAY_VIEWS') ~ lang('COLON') }}</label><br /><span>{{ lang('DISPLAY_VIEWS_EXPLAIN') }}</span></dt>
-						<dd>
-							<label><input type="radio" class="radio" id="allow-views" name="allow_views" value="1"{% if ALLOW_VIEWS !== false %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-							<label><input type="radio" class="radio" name="allow_views" value="0"{% if ALLOW_VIEWS === false %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
-						</dd>
-					</dl>
-					<dl>
-						<dt><label for="show-pagination">{{ lang('SHOW_PAGINATION') ~ lang('COLON') }}</label></dt>
-						<dd>
-							<label><input type="radio" class="radio" id="show-pagination" name="show_pagination" value="1"{% if SHOW_PAGINATION !== false %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-							<label><input type="radio" class="radio" name="show_pagination" value="0"{% if SHOW_PAGINATION === false %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
-						</dd>
-					</dl>
-					<dl>
-						<dt><label for="show-info">{{ lang('SHOW_AUTHOR_INFO') ~ lang('COLON') }}</label></dt>
-						<dd>
-							<label><input type="radio" class="radio" id="show-info" name="show_info" value="1"{% if SHOW_POSTER_INFO !== false %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-							<label><input type="radio" class="radio" name="show_info" value="0"{% if SHOW_POSTER_INFO === false %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
-						</dd>
-					</dl>
-					<dl>
-						<dt><label for="show-contents">{{ lang('SHOW_AUTHOR_CONTENTS') ~ lang('COLON') }}</label><br /><span>{{ lang('AUTHOR_CONTENTS_EXPLAIN') }}</span></dt>
-						<dd>
-							<label><input type="radio" class="radio" id="show-contents" name="show_contents" value="1"{% if SHOW_POSTER_CONTENTS !== false %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-							<label><input type="radio" class="radio" name="show_contents" value="0"{% if SHOW_POSTER_CONTENTS === false %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
-						</dd>
-					</dl>
-					<dl>
-						<dt><label for="items-per-page">{{ lang('ITEMS_PER_PAGE') ~ lang('COLON') }}</label></dt>
-						<dd><input type="number" id="items-per-page" class="small" size="5" name="items_per_page" value="{{ ITEMS_PER_PAGE }}" /></dd>
-					</dl>
-				</fieldset>
-			<span class="corners-bottom"><span></span></span>
+						<div id="fields-template" class="full-width">
+							<div id="summary-tpl" class="permissions-panel">
+								<span class="corners-top"><span></span></span>
+									<fieldset class="permissions">
+										<p id="preview-summary" class="content"></p>
+										<textarea id="tpl-custom-summary" class="custom-template" name="summary_tpl">{{ SUMMARY_TPL }}</textarea>
+										<p class="small">{{ lang('SUMMARY_TEMPLATE_EXPLAIN') }}</p>
+									</fieldset>
+								<span class="corners-bottom"><span></span></span>
+							</div>
+							<div id="detail-tpl" class="permissions-panel" style="display: none;">
+								<span class="corners-top"><span></span></span>
+									<fieldset class="permissions">
+										<p id="preview-detail" class="content"></p>
+										<textarea id="tpl-custom-detail" class="editor custom-template" name="detail_tpl">{{ DETAIL_TPL }}</textarea>
+										<p class="small">{{ lang('DETAIL_TEMPLATE_EXPLAIN') }}</p>
+									</fieldset>
+								<span class="corners-bottom"><span></span></span>
+							</div>
+						</div>
+						<div class="tpl-fields-container">
+							<div id="available-fields">
+							{% for field in CONTENT_FIELDS %}
+								<a class="button" href="#" data-tag="{{ field.FIELD_NAME }}" data-ftype="{{ field.FIELD_TYPE }}">{{ field.FIELD_LABEL }}</a>
+							{% endfor %}
+							</div>
+							<div id="post-info">
+								<a class="button" href="#" data-tag="TOPIC_TITLE">{{ lang('TOPIC_TITLE') }}</a>
+								<a class="button" href="#" data-tag="TOPIC_URL">{{ lang('TOPIC_URL') }}</a>
+								<a class="button" href="#" data-tag="TOPIC_AUTHOR">{{ lang('TOPIC_AUTHOR') }}</a>
+								<a class="button" href="#" data-tag="TOPIC_AUTHOR_FULL">{{ lang('TOPIC_AUTHOR_FULL') }}</a>
+								<a class="button" href="#" data-tag="TOPIC_AUTHOR_COLOUR">{{ lang('TOPIC_AUTHOR_COLOUR') }}</a>
+								<a class="button" href="#" data-tag="TOPIC_AUTHOR_AVATAR">{{ lang('TOPIC_AUTHOR_AVATAR') }}</a>
+								<a class="button" href="#" data-tag="TOPIC_AUTHOR_URL">{{ lang('TOPIC_AUTHOR_URL') }}</a>
+								<a class="button" href="#" data-tag="TOPIC_DATE">{{ lang('TOPIC_DATE') }}</a>
+								<a class="button" href="#" data-tag="TOPIC_COMMENTS">{{ lang('TOPIC_COMMENTS') }}</a>
+								<a class="button" href="#" data-tag="TOPIC_VIEWS">{{ lang('TOPIC_VIEWS') }}</a>
+							</div>
+						</div>
+					</fieldset>
+				<span class="corners-bottom"><span></span></span>
+			</div>
+			<div id="csettings" class="permissions-panel" style="display: none;">
+				<span class="corners-top"><span></span></span>
+					<fieldset>
+						<dl>
+							<dt><label for="req-approval">{{ lang('REQ_APPROVAL') ~ lang('COLON') }}</label></dt>
+							<dd>
+								<label><input type="radio" class="radio" id="req-approval" name="req_approval" value="1"{% if REQ_APPROVAL %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+								<label><input type="radio" class="radio" name="req_approval" value="0"{% if !REQ_APPROVAL %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
+							</dd>
+						</dl>
+						<dl>
+							<dt><label for="allow-comments">{{ lang('ALLOW_COMMENTS') ~ lang('COLON') }}</label></dt>
+							<dd>
+								<label><input type="radio" class="radio" id="allow-comments" name="allow_comments" value="1"{% if ALLOW_COMMENTS !== false %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+								<label><input type="radio" class="radio" name="allow_comments" value="0"{% if ALLOW_COMMENTS === false %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
+							</dd>
+						</dl>
+						<dl>
+							<dt><label for="allow-views">{{ lang('DISPLAY_VIEWS') ~ lang('COLON') }}</label><br /><span>{{ lang('DISPLAY_VIEWS_EXPLAIN') }}</span></dt>
+							<dd>
+								<label><input type="radio" class="radio" id="allow-views" name="allow_views" value="1"{% if ALLOW_VIEWS !== false %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+								<label><input type="radio" class="radio" name="allow_views" value="0"{% if ALLOW_VIEWS === false %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
+							</dd>
+						</dl>
+						<dl>
+							<dt><label for="show-pagination">{{ lang('SHOW_PAGINATION') ~ lang('COLON') }}</label></dt>
+							<dd>
+								<label><input type="radio" class="radio" id="show-pagination" name="show_pagination" value="1"{% if SHOW_PAGINATION !== false %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+								<label><input type="radio" class="radio" name="show_pagination" value="0"{% if SHOW_PAGINATION === false %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
+							</dd>
+						</dl>
+						<dl>
+							<dt><label for="show-info">{{ lang('SHOW_AUTHOR_INFO') ~ lang('COLON') }}</label></dt>
+							<dd>
+								<label><input type="radio" class="radio" id="show-info" name="show_info" value="1"{% if SHOW_POSTER_INFO !== false %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+								<label><input type="radio" class="radio" name="show_info" value="0"{% if SHOW_POSTER_INFO === false %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
+							</dd>
+						</dl>
+						<dl>
+							<dt><label for="show-contents">{{ lang('SHOW_AUTHOR_CONTENTS') ~ lang('COLON') }}</label><br /><span>{{ lang('AUTHOR_CONTENTS_EXPLAIN') }}</span></dt>
+							<dd>
+								<label><input type="radio" class="radio" id="show-contents" name="show_contents" value="1"{% if SHOW_POSTER_CONTENTS !== false %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+								<label><input type="radio" class="radio" name="show_contents" value="0"{% if SHOW_POSTER_CONTENTS === false %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
+							</dd>
+						</dl>
+						<dl>
+							<dt><label for="items-per-page">{{ lang('ITEMS_PER_PAGE') ~ lang('COLON') }}</label></dt>
+							<dd><input type="number" id="items-per-page" class="small" size="5" name="items_per_page" value="{{ ITEMS_PER_PAGE }}" /></dd>
+						</dl>
+					</fieldset>
+				<span class="corners-bottom"><span></span></span>
+			</div>
 		</div>
 	</fieldset>
 

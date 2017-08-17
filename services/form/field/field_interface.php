@@ -63,11 +63,12 @@ interface field_interface
 	/**
 	 * Save content field
 	 *
-	 * @param string $field_name
+	 * @param int $topic_id
 	 * @param mixed $field_value
+	 * @param array $field_data
 	 * @return void
 	 */
-	public function save_field($field_name, $field_value);
+	public function save_field($topic_id, $field_value, array $field_data);
 
 	/**
 	 * Validate content field

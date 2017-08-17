@@ -1,119 +1,94 @@
 services:
 
-    blitze.content.form.field.checkbox:
-        class: blitze\content\services\form\field\checkbox
+    blitze.content.form.field.base:
+        class: blitze\content\services\form\field\base
         arguments:
             - '@language'
             - '@request'
             - '@blitze.sitemaker.template'
+
+    blitze.content.form.field.checkbox:
+        class: blitze\content\services\form\field\checkbox
+        parent: blitze.content.form.field.base
         tags:
             - { name: sitemaker.content.form.field }
 
     blitze.content.form.field.color:
         class: blitze\content\services\form\field\color
+        parent: blitze.content.form.field.base
         arguments:
-            - '@language'
-            - '@request'
-            - '@blitze.sitemaker.template'
             - '@blitze.sitemaker.util'
         tags:
             - { name: sitemaker.content.form.field }
 
     blitze.content.form.field.datetime:
         class: blitze\content\services\form\field\datetime
+        parent: blitze.content.form.field.base
         arguments:
-            - '@language'
-            - '@request'
             - '@user'
-            - '@blitze.sitemaker.template'
             - '@blitze.sitemaker.util'
         tags:
             - { name: sitemaker.content.form.field }
 
     blitze.content.form.field.hidden:
         class: blitze\content\services\form\field\hidden
-        arguments:
-            - '@language'
-            - '@request'
-            - '@blitze.sitemaker.template'
+        parent: blitze.content.form.field.base
         tags:
             - { name: sitemaker.content.form.field }
 
     blitze.content.form.field.image:
         class: blitze\content\services\form\field\image
-        arguments:
-            - '@language'
-            - '@request'
-            - '@blitze.sitemaker.template'
+        parent: blitze.content.form.field.base
         tags:
             - { name: sitemaker.content.form.field }
 
     blitze.content.form.field.number:
         class: blitze\content\services\form\field\number
-        arguments:
-            - '@language'
-            - '@request'
-            - '@blitze.sitemaker.template'
+        parent: blitze.content.form.field.base
         tags:
             - { name: sitemaker.content.form.field }
 
     blitze.content.form.field.radio:
         class: blitze\content\services\form\field\radio
-        arguments:
-            - '@language'
-            - '@request'
-            - '@blitze.sitemaker.template'
+        parent: blitze.content.form.field.base
         tags:
             - { name: sitemaker.content.form.field }
 
     blitze.content.form.field.range:
         class: blitze\content\services\form\field\range
+        parent: blitze.content.form.field.base
         arguments:
-            - '@language'
-            - '@request'
-            - '@blitze.sitemaker.template'
             - '@blitze.sitemaker.util'
         tags:
             - { name: sitemaker.content.form.field }
 
     blitze.content.form.field.select:
         class: blitze\content\services\form\field\select
-        arguments:
-            - '@language'
-            - '@request'
-            - '@blitze.sitemaker.template'
+        parent: blitze.content.form.field.base
         tags:
             - { name: sitemaker.content.form.field }
 
     blitze.content.form.field.telephone:
         class: blitze\content\services\form\field\telephone
-        arguments:
-            - '@language'
-            - '@request'
-            - '@blitze.sitemaker.template'
+        parent: blitze.content.form.field.base
         tags:
             - { name: sitemaker.content.form.field }
 
     blitze.content.form.field.text:
         class: blitze\content\services\form\field\text
-        arguments:
-            - '@language'
-            - '@request'
-            - '@blitze.sitemaker.template'
+        parent: blitze.content.form.field.base
         tags:
             - { name: sitemaker.content.form.field }
 
     blitze.content.form.field.textarea:
         class: blitze\content\services\form\field\textarea
+        parent: blitze.content.form.field.base
         arguments:
             - '@auth'
             - '@config'
-            - '@language'
             - '@pagination'
-            - '@request'
             - '@template'
             - '@template_context'
-            - '@blitze.sitemaker.template'
             - '@blitze.sitemaker.util'
             - '%core.root_path%'
             - '%core.php_ext%'
@@ -122,9 +97,6 @@ services:
 
     blitze.content.form.field.url:
         class: blitze\content\services\form\field\url
-        arguments:
-            - '@language'
-            - '@request'
-            - '@blitze.sitemaker.template'
+        parent: blitze.content.form.field.base
         tags:
             - { name: sitemaker.content.form.field }

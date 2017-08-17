@@ -28,42 +28,6 @@
 		</div>
 	</div>
 
-	<!-- IF MODE == 'mcp' and (S_POST_UNAPPROVED || S_POST_DELETED || S_POST_REPORTED) -->
-	<div class="panel post">
-		<div class="inner">
-			<h3>{L_TOOLS}</h3>
-
-				<!-- IF S_POST_UNAPPROVED -->
-				<form method="post" class="mcp_approve" action="{U_MCP_APPROVE}">
-					<p class="post-notice unapproved">
-						<strong>{L_POST_UNAPPROVED_ACTION}</strong>
-						<input class="button2" type="submit" value="{L_DISAPPROVE}" name="action[disapprove]" />
-						<input class="button1" type="submit" value="{L_APPROVE}" name="action[approve]" />
-						<input type="hidden" name="topic_id_list[]" value="{TOPIC_ID}" />
-						<input type="hidden" name="redirect" value="{U_REDIRECT}" />
-					</p>
-				</form>
-				<!-- ELSEIF S_POST_DELETED -->
-				<form method="post" class="mcp_approve" action="{U_MCP_RESTORE}">
-					<p class="post-notice deleted">
-						<strong>{L_POST_DELETED_ACTION}</strong>
-						<input class="button2" type="submit" value="{L_DELETE}" name="action[disapprove]" />
-						<input class="button1" type="submit" value="{L_RESTORE}" name="action[restore]" />
-						<input type="hidden" name="topic_id_list[]" value="{TOPIC_ID}" />
-						<input type="hidden" name="redirect" value="{U_REDIRECT}" />
-					</p>
-				</form>
-				<!-- ENDIF -->
-
-				<!-- IF S_POST_REPORTED -->
-				<p class="post-notice reported">
-					<a href="{U_MCP_REPORT}"><strong>{L_POST_REPORTED}</strong></a>
-				</p>
-				<!-- ENDIF -->
-		</div>
-	</div>
-	<!-- ENDIF -->
-
 <!-- ELSE -->
 	<!-- IF MODE == 'mcp' --><form method="post" id="mcp" action="{U_MCP_ACTION}"><!-- ENDIF -->
 	<div class="panel">
@@ -167,11 +131,6 @@
 									</a>
 									<a href="{topicrow.U_REVIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a>
 								<!-- IF MODE == 'mcp' -->
-									<!-- IF topicrow.S_TOPIC_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED -->
-									<a href="{topicrow.U_MCP_QUEUE}" title="{L_TOPIC_UNAPPROVED}">
-										<i class="icon fa-question fa-fw icon-blue" aria-hidden="true"></i><span class="sr-only">{L_TOPIC_UNAPPROVED}</span>
-									</a>
-									<!-- ENDIF -->
 									<!-- IF topicrow.S_TOPIC_DELETED or topicrow.S_POSTS_DELETED -->
 									<a href="{topicrow.U_MCP_QUEUE}" title="{L_TOPIC_DELETED}">
 										<i class="icon fa-recycle fa-fw icon-green" aria-hidden="true"></i><span class="sr-only">{L_TOPIC_DELETED}</span>
@@ -182,7 +141,6 @@
 										<i class="icon fa-exclamation fa-fw icon-red" aria-hidden="true"></i><span class="sr-only">{L_TOPIC_REPORTED}</span>
 									</a>
 									<!-- ENDIF -->
-									<!-- IF topicrow.S_MOVED_TOPIC and S_CAN_DELETE -->&nbsp;<a href="{topicrow.U_DELETE_TOPIC}" class="topictitle">[ {L_DELETE_SHADOW_TOPIC} ]</a><!-- ENDIF -->
 								<!-- ENDIF -->
 									<br />
 
@@ -237,7 +195,6 @@
 	<fieldset class="display-actions">
 		<select name="action">
 			<option value="" selected="selected">{L_SELECT_ACTION}</option>
-			<!-- IF S_CAN_APPROVE --><option value="approve">{L_APPROVE}</option><option value="disapprove">{L_DISAPPROVE}</option><!-- ENDIF -->
 			<!-- IF S_CAN_DELETE --><option value="delete_topic">{L_DELETE}</option><!-- ENDIF -->
 			<!-- IF S_CAN_RESTORE --><option value="restore_topic">{L_RESTORE}</option><!-- ENDIF -->
 			<!-- IF S_CAN_LOCK --><option value="lock">{L_LOCK}</option><option value="unlock">{L_UNLOCK}</option><!-- ENDIF -->

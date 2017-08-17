@@ -39,7 +39,7 @@ class textarea_test extends base_form_field
 	 */
 	protected function get_form_field($field, array $variable_map = array(), $previewing = false)
 	{
-		global $db, $phpbb_dispatcher, $template, $phpbb_root_path, $phpEx;
+		global $db, $phpbb_dispatcher, $phpbb_path_helper, $template, $phpbb_root_path, $phpEx;
 
 		$auth = $this->getMock('\phpbb\auth\auth');
 		$config = new \phpbb\config\config(array());
@@ -84,6 +84,11 @@ class textarea_test extends base_form_field
 		$pagination = $this->getMockBuilder('\phpbb\pagination')
 			->disableOriginalConstructor()
 			->getMock();
+		$pagination->expects($this->any())
+			->method('validate_start')
+			->will($this->returnCallback(function($start) {
+				return $start;
+			}));
 
 		$this->request->expects($this->any())
 			->method('variable')
@@ -95,11 +100,22 @@ class textarea_test extends base_form_field
 			->with('preview')
 			->willReturn($previewing);
 
+		$filesystem = new \phpbb\filesystem\filesystem();
+		$phpbb_path_helper = new \phpbb\path_helper(
+			new \phpbb\symfony_request(
+				new \phpbb_mock_request()
+			),
+			$filesystem,
+			$this->request,
+			$phpbb_root_path,
+			$phpExt
+		);
+
 		$this->util = $this->getMockBuilder('\blitze\sitemaker\services\util')
 			->disableOriginalConstructor()
 			->getMock();
 
-		return new textarea($auth, $config, $this->language, $pagination, $this->request, $template, $template_context, $this->ptemplate, $this->util, $phpbb_root_path, $phpEx);
+		return new textarea($this->language, $this->request, $this->ptemplate, $auth, $config, $pagination, $template, $template_context, $this->util, $phpbb_root_path, $phpEx);
 	}
 
 	public function test_name()
@@ -130,13 +146,13 @@ class textarea_test extends base_form_field
 	 */
 	public function display_field_test_data()
 	{
-		$pages_string = 'Page 1 content<!-- pagebreak -->' .
-			'Page 2 content<!-- pagebreak -->' .
-			'Page 3 content<!-- pagebreak -->'; // invalid xtra page break
+		$pages_string = 'Page 1 content<p><!-- pagebreak --></p>' .
+			'Page 2 content<p><!-- pagebreak --></p>' .
+			'Page 3 content<p><!-- pagebreak --></p>'; // invalid xtra page break
 
-		$pages_toc_string = 'Page 1 content<!-- pagebreak -->' .
-			'<h4>Title 2</h4>Page 2 content<!-- pagebreak -->' .
-			'Page 3 content<!-- pagebreak -->'; // invalid xtra page break
+		$pages_toc_string = 'Page 1 content<p><!-- pagebreak --></p>' .
+			'<h4>Title 2</h4>Page 2 content<p><!-- pagebreak --></p>' .
+			'Page 3 content<p><!-- pagebreak --></p>'; // invalid xtra page break
 
 		return array(
 
@@ -218,7 +234,9 @@ class textarea_test extends base_form_field
 					'field_value'	=> $pages_string,
 				),
 				3,
-				'Page 3 content',
+				array(
+					'foo' => 'Page 3 content',
+				),
 			),
 			array(
 				'detail',
@@ -226,7 +244,9 @@ class textarea_test extends base_form_field
 					'field_value'	=> $pages_toc_string,
 				),
 				2,
-				'<h4>Title 2</h4>Page 2 content',
+				array(
+					'foo' => '<h4>Title 2</h4>Page 2 content',
+				),
 			),
 
 		// if requested page does not exist, display first page
@@ -239,14 +259,16 @@ class textarea_test extends base_form_field
 				'Page 1 content',
 			),
 
-		// if requested page does not exist, display first page
+		// Form submitted and we are previewing
 			array(
 				'detail',
 				array(
 					'field_value'	=> $pages_toc_string,
 				),
 				0,
-				'Page 1 content',
+				'Page 1 content<p><hr class="dashed"></p>' .
+				'<h4>Title 2</h4>Page 2 content<p><hr class="dashed"></p>' .
+				'Page 3 content',
 				true,
 			),
 		);
@@ -263,6 +285,8 @@ class textarea_test extends base_form_field
 	public function test_display_textarea_field($view, array $data, $page, $expected_content, $previewing = false)
 	{
 		$variable_map = array(array('page', 0, false, request_interface::REQUEST, $page - 1));
+		$data['field_name'] = 'foo';
+
 		$field = $this->get_form_field('textarea', $variable_map, $previewing);
 
 		// mocking template returns is not working for some reason

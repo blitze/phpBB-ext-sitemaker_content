@@ -29,10 +29,10 @@ class checkbox_test extends base_form_field
 	{
 		$field = $this->get_form_field('checkbox');
 		$this->assertEquals(array(
-			'per_col'		=> 1,
 			'options'		=> array(),
 			'defaults'		=> array(),
 			'multi_select'	=> true,
+			'vertical'		=> true,
 		), $field->get_default_props());
 	}
 
@@ -75,7 +75,7 @@ class checkbox_test extends base_form_field
 					'field_props'	=> array(
 						'options'		=> array('option1', 'option2', 'option3'),
 						'defaults'		=> array(),
-						'per_col'		=> 1,
+						'vertical'		=> false,
 					),
 				),
 				array(
@@ -92,7 +92,7 @@ class checkbox_test extends base_form_field
 					'field_props'	=> array(
 						'options'		=> array('option1', 'option2', 'option3'),
 						'defaults'		=> array(),
-						'per_col'		=> 1,
+						'vertical'		=> false,
 					),
 				),
 				array(
@@ -109,7 +109,6 @@ class checkbox_test extends base_form_field
 					'field_props'	=> array(
 						'options'		=> array('option1', 'option2', 'option3'),
 						'defaults'		=> array('option1', 'option3'),
-						'per_col'		=> 3,
 					),
 				),
 				array(
@@ -126,9 +125,9 @@ class checkbox_test extends base_form_field
 				array(
 					'field_value'	=> array('option1'),
 					'field_props'	=> array(
-						'options'		=> array('option1', 'option2', 'option3'),
+						'options'		=> array('option1', 'option2', 'option3', 'option4', 'option5', 'option6'),
 						'defaults'		=> array('option1', 'option3'),
-						'per_col'		=> 2,
+						'vertical'		=> true,
 					),
 				),
 				array(
@@ -137,9 +136,12 @@ class checkbox_test extends base_form_field
 				'<div class="left-box" style="margin-right: 1em">' .
 					'<label for="smc-bar-0"><input type="checkbox" id="smc-bar-0" name="bar[]" value="option1" /> option1</label><br />' .
 					'<label for="smc-bar-1"><input type="checkbox" id="smc-bar-1" name="bar[]" value="option2" checked="checked" /> option2</label><br />' .
+					'<label for="smc-bar-2"><input type="checkbox" id="smc-bar-2" name="bar[]" value="option3" /> option3</label><br />' .
+					'<label for="smc-bar-3"><input type="checkbox" id="smc-bar-3" name="bar[]" value="option4" /> option4</label><br />' .
+					'<label for="smc-bar-4"><input type="checkbox" id="smc-bar-4" name="bar[]" value="option5" /> option5</label><br />' .
 				'</div>' .
 				'<div class="left-box" style="margin-right: 1em">' .
-					'<label for="smc-bar-2"><input type="checkbox" id="smc-bar-2" name="bar[]" value="option3" /> option3</label><br />' .
+					'<label for="smc-bar-5"><input type="checkbox" id="smc-bar-5" name="bar[]" value="option6" /> option6</label><br />' .
 				'</div>',
 			),
 		);

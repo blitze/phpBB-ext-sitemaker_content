@@ -18,4 +18,15 @@ class radio extends choice
 	{
 		return 'radio';
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function get_default_props()
+	{
+		return array_merge(parent::get_default_props(), array(
+			'multi_select'	=> false,
+			'vertical'		=> false,
+		));
+	}
 }

@@ -69,13 +69,13 @@ abstract class base implements field_interface
 		$this->ptemplate->assign_vars($data);
 
 		$field = $this->get_name();
-		return $this->ptemplate->render_view('blitze/content', "fields/$field.twig", $field . '_field');
+		return $this->ptemplate->render_view('blitze/content', "fields/$field.html", $field . '_field');
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function save_field($field, $value)
+	public function save_field($topic_id, $field_value, array $field_data)
 	{
 		return false;
 	}

@@ -1,5 +1,5 @@
 <script id="content-field-option" class="tpl" type="text/x-jquery-tmpl">
-	{{ source('fields/options.twig') }}
+	{{ source('fields/options.html') }}
 </script>
 
 <div id="dialog-confirm-delete" title="{{ lang('CONFIRM_DELETE') }}" style="display: none;">
@@ -42,27 +42,27 @@
 
 <script type="text/javascript">
 // <![CDATA[
-	var ajaxUrl = '{UA_AJAX_URL}';
+	var ajaxUrl = '{{ UA_AJAX_URL }}';
 	var trans = {
-		add: '{LA_ADD}',
-		edit: '{LA_EDIT}',
-		cancel: '{LA_CANCEL}',
-		delete: '{LA_DELETE}',
-		taken: '{LA_FIELD_TAKEN}',
-		label: '{LA_LABEL}',
-		settings: '{LA_SETTINGS}',
-		fieldName: '{LA_MISSING_FIELD}',
-		fieldLabel: '{LA_MISSING_LABEL}'
+		add: '{{ lang('ADD')|escape('js') }}',
+		edit: '{{ lang('EDIT')|escape('js') }}',
+		cancel: '{{ lang('CANCEL')|escape('js') }}',
+		delete: '{{ lang('DELETE')|escape('js') }}',
+		taken: '{{ lang('FIELD_TAKEN')|escape('js') }}',
+		label: '{{ lang('LABEL')|escape('js') }}',
+		settings: '{{ lang('SETTINGS')|escape('js') }}',
+		fieldName: '{{ lang('MISSING_FIELD')|escape('js') }}',
+		fieldLabel: '{{ lang('MISSING_LABEL')|escape('js') }}'
 	};
 	var postData	= {
-		TOPIC_TITLE: '{LA_SAMPLE_POST}',
+		TOPIC_TITLE: '{{ lang('SAMPLE_POST')|escape('js') }}',
 		TOPIC_URL: '#',
-		TOPIC_AUTHOR: '{POST_AUTHOR}',
-		TOPIC_AUTHOR_FULL: '{TOPIC_AUTHOR_FULL}',
-		TOPIC_AUTHOR_COLOUR: '{TOPIC_AUTHOR_COLOUR}',
-		TOPIC_AUTHOR_AVATAR: '{TOPIC_AUTHOR_AVATAR}',
+		TOPIC_AUTHOR: '{{ POST_AUTHOR }}',
+		TOPIC_AUTHOR_FULL: '{{ TOPIC_AUTHOR_FULL }}',
+		TOPIC_AUTHOR_COLOUR: '{{ TOPIC_AUTHOR_COLOUR }}',
+		TOPIC_AUTHOR_AVATAR: '{{ TOPIC_AUTHOR_AVATAR }}',
 		TOPIC_AUTHOR_URL: '#',
-		TOPIC_DATE: '{POST_DATE}',
+		TOPIC_DATE: '{{ POST_DATE }}',
 		COMMENTS: 9,
 		TOPIC_VIEWS: 26
 	};

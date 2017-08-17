@@ -11,11 +11,8 @@ namespace blitze\content\services;
 
 class topic
 {
-	/** @var \phpbb\config\db */
+	/** @var \phpbb\config\config */
 	protected $config;
-
-	/** @var \phpbb\content_visibility */
-	protected $content_visibility;
 
 	/** @var \phpbb\controller\helper */
 	protected $controller_helper;
@@ -26,6 +23,9 @@ class topic
 	/** @var \phpbb\language\language */
 	protected $language;
 
+	/** @var \phpbb\template\template */
+	protected $template;
+
 	/** @var \phpbb\user */
 	protected $user;
 
@@ -35,21 +35,21 @@ class topic
 	/**
 	 * Construct
 	 *
-	 * @param \phpbb\config\db						$config					Config object
-	 * @param \phpbb\content_visibility				$content_visibility		Phpbb Content visibility object
+	 * @param \phpbb\config\config					$config					Config object
 	 * @param \phpbb\controller\helper				$controller_helper		Controller Helper object
 	 * @param \phpbb\event\dispatcher_interface		$phpbb_dispatcher		Event dispatcher object
 	 * @param \phpbb\language\language				$language				Language object
+	 * @param \phpbb\template\template				$template				Template object
 	 * @param \phpbb\user							$user					User object
 	 * @param \blitze\content\services\helper		$helper					Content helper object
 	 */
-	public function __construct(\phpbb\config\db $config, \phpbb\content_visibility $content_visibility, \phpbb\controller\helper $controller_helper, \phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\language\language $language, \phpbb\user $user, \blitze\content\services\helper $helper)
+	public function __construct(\phpbb\config\config $config, \phpbb\controller\helper $controller_helper, \phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\language\language $language, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\helper $helper)
 	{
 		$this->config = $config;
-		$this->content_visibility = $content_visibility;
 		$this->controller_helper = $controller_helper;
 		$this->phpbb_dispatcher = $phpbb_dispatcher;
 		$this->language = $language;
+		$this->template = $template;
 		$this->user = $user;
 		$this->helper = $helper;
 	}
@@ -60,27 +60,21 @@ class topic
 	 * @param array $topic_tracking_info
 	 * @return array
 	 */
-	public function get_min_topic_info($type, array $topic_data, array $topic_tracking_info)
+	public function get_min_topic_info($type, array &$topic_data, array $topic_tracking_info)
 	{
 		$topic_id = $topic_data['topic_id'];
 		$post_unread = (isset($topic_tracking_info[$topic_id]) && $topic_data['topic_last_post_time'] > $topic_tracking_info[$topic_id]) ? true : false;
-
-		$route_params = array(
-			'type'		=> $type,
-			'topic_id'	=> $topic_id,
-			'slug'		=> $topic_data['topic_slug']
-		);
+		$topic_data['topic_url'] = $this->get_topic_url($type, $topic_data);
 
 		return array(
 			'TOPIC_ID'			=> $topic_data['topic_id'],
 			'TOPIC_VIEWS'		=> $topic_data['topic_views'],
 			'TOPIC_TITLE'		=> censor_text($topic_data['topic_title']),
 			'TOPIC_DATE'		=> $this->user->format_date($topic_data['topic_time']),
-			'TOPIC_COMMENTS'	=> $this->content_visibility->get_count('topic_posts', $topic_data, $topic_data['forum_id']) - 1,
-			'TOPIC_URL'			=> $this->controller_helper->route('blitze_content_show', $route_params),
+			'TOPIC_URL'			=> $topic_data['topic_url'],
 			'MINI_POST'			=> ($post_unread) ? $this->user->img('icon_post_target_unread', 'UNREAD_POST') : $this->user->img('icon_post_target', 'POST'),
-			'S_UNREAD_POST'		=> $post_unread,
 			'S_REQ_MOD_INPUT'	=> $topic_data['req_mod_input'],
+			'S_UNREAD_POST'		=> $post_unread,
 		);
 	}
 
@@ -94,21 +88,21 @@ class topic
 	 * @param array $update_count
 	 * @return array
 	 */
-	public function get_summary_template_data($type, array $topic_data, array $post_data, array $users_cache, array $attachments, array $topic_tracking_info, &$update_count)
+	public function get_summary_template_data($type, array &$topic_data, array $post_data, array $users_cache, array &$attachments, array $topic_tracking_info, array &$update_count)
 	{
 		$tpl_data = array_merge(
-			array_change_key_case($users_cache[$post_data['poster_id']], CASE_UPPER),
-			$this->get_min_topic_info($type, $topic_data, $topic_tracking_info),
+			(empty($topic_data['topic_url'])) ? $this->get_min_topic_info($type, $topic_data, $topic_tracking_info) : array(),
 			array(
 				'POST_ID'				=> $post_data['post_id'],
 				'POSTER_ID'				=> $post_data['poster_id'],
 				'MESSAGE'				=> $this->get_parsed_text($post_data, $attachments, $update_count),
 
 				'S_TOPIC_TYPE'			=> $topic_data['topic_type'],
-				'S_TOPIC_UNAPPROVED'	=> $this->is_pending_approval($topic_data['topic_visibility']),
-				'S_TOPIC_REPORTED'		=> $this->helper->topic_is_reported($topic_data['forum_id'], $topic_data['topic_moved_id'], $topic_data['topic_reported']),
-				'S_TOPIC_DELETED'		=> $topic_data['topic_visibility'] === ITEM_DELETED,
-			)
+				'S_HAS_ATTACHMENTS'		=> $topic_data['topic_attachment'],
+				'S_HAS_POLL'			=> (bool) $post_data['poll_start'],
+			),
+			$this->get_topic_status_data($type, $topic_data, $post_data),
+			array_change_key_case($users_cache[$post_data['poster_id']], CASE_UPPER)
 		);
 
 		/**
@@ -134,31 +128,63 @@ class topic
 	 * @param string $mode
 	 * @return array
 	 */
-	public function get_detail_template_data($type, array $topic_data, array $post_data, array $users_cache, array $attachments, array $topic_tracking_info, array &$update_count, $mode = '')
+	public function get_detail_template_data($type, array &$topic_data, array $post_data, array $users_cache, array &$attachments, array $topic_tracking_info, array &$update_count, $mode = '')
 	{
-		$viewtopic_url = '';
 		return array_merge(
 			$this->get_summary_template_data($type, $topic_data, $post_data, $users_cache, $attachments, $topic_tracking_info, $update_count),
-			$this->get_attachments($post_data['post_id'], $attachments),
 			$this->show_delete_reason($post_data, $users_cache),
 			$this->show_edit_reason($post_data, $users_cache),
 			array(
-				'S_POST_DELETED'		=> ($post_data['post_visibility'] == ITEM_DELETED) ? true : false,
-				'S_DISPLAY_NOTICE'		=> $this->helper->display_attachments_notice($topic_data['forum_id'], $post_data['post_attachment']),
-				'U_EDIT'				=> $this->helper->edit_post($topic_data, $post_data, $mode),
-				'U_INFO'				=> $this->helper->mcp_info($type, $topic_data['forum_id'], $topic_data['topic_id']),
-				'U_DELETE'				=> $this->helper->delete_post($topic_data, $post_data),
-				'U_APPROVE_ACTION'		=> $this->helper->mcp_approve_action($topic_data['forum_id'], $post_data['post_id'], $viewtopic_url),
-				'U_REPORT'				=> $this->helper->report_topic($topic_data['forum_id'], $post_data['post_id']),
-				'U_MCP_REPORT'			=> $this->helper->mcp_report($topic_data['forum_id'], $post_data['post_id']),
-				'U_MCP_APPROVE'			=> $this->helper->mcp_approve($topic_data['forum_id'], $post_data['post_id']),
-				'U_MCP_RESTORE'			=> $this->helper->mcp_restore($topic_data['forum_id'], $post_data['post_id'], $topic_data['topic_visibility']),
-				'U_MINI_POST'			=> $this->helper->mini_post($post_data['post_id']),
-				'U_NOTES'				=> $this->helper->mcp_notes($post_data['post_id']),
-				'U_WARN'				=> $this->helper->mcp_warn($topic_data['forum_id'], $post_data['post_id'], $post_data['poster_id']),
+				'S_DISPLAY_NOTICE'		=> $this->helper->display_attachments_notice($post_data),
+				'S_DELETE_PERMANENT'	=> $this->helper->permanent_delete_allowed($post_data),
+				'S_IS_LOCKED'			=> $this->helper->topic_is_locked($topic_data),
+
+				'U_EDIT'			=> $this->helper->get_edit_url($post_data, $topic_data, $mode),
+				'U_QUOTE'			=> $this->helper->get_quote_url($post_data, $topic_data),
+				'U_INFO'			=> $this->helper->get_info_url($post_data),
+				'U_DELETE'			=> $this->helper->get_delete_url($post_data, $topic_data, $mode),
+				'U_REPORT'			=> $this->helper->can_report_post($post_data['forum_id']) ? $this->controller_helper->route('phpbb_report_post_controller', array('id' => $post_data['post_id'])) : '',
+				'U_APPROVE_ACTION'	=> $this->helper->get_approve_url($post_data, $topic_data['topic_url']),
+				'U_MCP_EDIT'		=> $this->helper->get_mcp_edit_url($post_data, $topic_data),
+				'U_MCP_RESTORE'		=> $this->helper->get_mcp_restore_url($post_data, $topic_data),
+				'U_NOTES'			=> $this->helper->get_notes_url($post_data),
+				'U_WARN'			=> $this->helper->get_warning_url($post_data),
 			)
 		);
 	}
+
+	/**
+	 * @param string $type
+	 * @param array $topic_data
+	 * @return string
+	 */
+	public function get_topic_url($type, array $topic_data)
+	{
+		return $this->controller_helper->route('blitze_content_show', array(
+			'type'		=> $type,
+			'topic_id'	=> $topic_data['topic_id'],
+			'slug'		=> $topic_data['topic_slug']
+		));
+	}
+
+	/**
+	 * @param array $attachments
+	 * @param int $post_id
+	 * @param string $handle
+	 * @return void
+	 */
+	 public function show_attachments(array $attachments, $post_id, $handle = 'attachment')
+	 {
+		if (!empty($attachments[$post_id]))
+		{
+			foreach ($attachments[$post_id] as $attachment)
+			{
+				$this->template->assign_block_vars($handle, array(
+					'DISPLAY_ATTACHMENT' => $attachment)
+				);
+			}
+		}
+	 }
 
 	/**
 	 * @param array $post_data
@@ -168,38 +194,52 @@ class topic
 	 */
 	protected function get_parsed_text(array $post_data, array &$attachments, array &$update_count)
 	{
-		$post_id = $post_data['post_id'];
 		$parse_flags = ($post_data['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
-		$post_data['post_text'] = generate_text_for_display($post_data['post_text'], $post_data['bbcode_uid'], $post_data['bbcode_bitfield'], $parse_flags, true);
+		$message = generate_text_for_display($post_data['post_text'], $post_data['bbcode_uid'], $post_data['bbcode_bitfield'], $parse_flags, true);
 
-		if (!empty($attachments[$post_id]))
+		if (!empty($attachments[$post_data['post_id']]))
 		{
-			parse_attachments($post_data['forum_id'], $post_data['post_text'], $attachments[$post_id], $update_count);
+			parse_attachments($post_data['forum_id'], $message, $attachments[$post_data['post_id']], $update_count);
 		}
 
-		return $post_data['post_text'];
+		return $message;
 	}
 
 	/**
-	 * @param int $topic_visibility
-	 * @return bool
-	 */
-	protected function is_pending_approval($topic_visibility)
-	{
-		return ($topic_visibility == ITEM_UNAPPROVED || $topic_visibility == ITEM_REAPPROVE) ? true : false;
-	}
-
-	/**
-	 * @param int $post_id
-	 * @param array $attachments
+	 * @param string $type
+	 * @param array $topic_data
+	 * @param array $post_data
 	 * @return array
 	 */
-	protected function get_attachments($post_id, array $attachments)
-	{
-		return array(
-			'ATTACHMENTS'	=> isset($attachments[$post_id]) ? $attachments[$post_id] : '',
-		);
-	}
+	 protected function get_topic_status_data($type, array $topic_data, array $post_data)
+	 {
+	 	return array(
+			'S_POST_UNAPPROVED'		=> $this->helper->post_is_unapproved($post_data),
+			'S_POSTS_UNAPPROVED'	=> $this->helper->topic_has_unapproved_posts($topic_data),
+			'S_TOPIC_REPORTED'		=> $this->helper->topic_is_reported($topic_data),
+			'S_TOPIC_DELETED'		=> $topic_data['topic_visibility'] == ITEM_DELETED,
+
+			'U_MINI_POST'			=> $this->get_mini_post_url($topic_data, $post_data),
+			'U_MCP_REPORT'			=> $this->helper->get_mcp_report_url($post_data),
+			'U_MCP_REVIEW'			=> $this->helper->get_mcp_review_url($type, $topic_data['topic_id']),
+			'U_MCP_QUEUE'			=> $this->helper->get_mcp_queue_url($topic_data['topic_id']),
+	 	);
+	 }
+
+	/**
+	 * @param array $topic_data
+	 * @param array $post_data
+	 * @return array
+	 */
+	 protected function get_mini_post_url(array $topic_data, array $post_data)
+	 {
+		if ($topic_data['topic_first_post_id'] === $post_data['post_id'])
+		{
+			return append_sid($topic_data['topic_url'], 'view=unread') . '#unread';
+		}
+
+ 		return append_sid($topic_data['topic_url'], 'p=' . $post_data['post_id']) . '#p' . $post_data['post_id'];
+	 }
 
 	/**
 	 * @param array $row
@@ -230,20 +270,14 @@ class topic
 	protected function show_delete_reason(array $row, array $users_cache)
 	{
 		$l_deleted_by = $delete_reason = $l_deleted_message = '';
-		if ($row['post_visibility'] === ITEM_DELETED && $row['post_delete_user'])
+		$s_post_deleted = ($row['post_visibility'] == ITEM_DELETED) ? true : false;
+
+		if ($s_post_deleted && $row['post_delete_user'])
 		{
 			$display_postername	= $users_cache[$row['poster_id']]['username_full'];
 			$display_username	= $users_cache[$row['post_delete_user']]['username_full'];
 
-			if ($row['post_delete_reason'])
-			{
-				$l_deleted_message = $this->language->lang('POST_DELETED_BY_REASON', $display_postername, $display_username, $this->user->format_date($row['post_delete_time'], false, true), $row['post_delete_reason']);
-			}
-			else
-			{
-				$l_deleted_message = $this->language->lang('POST_DELETED_BY', $display_postername, $display_username, $this->user->format_date($row['post_delete_time'], false, true));
-			}
-
+			$l_deleted_message = $this->get_deleted_message();
 			$l_deleted_by = $this->language->lang('DELETED_INFORMATION', $display_username, $this->user->format_date($row['post_delete_time'], false, true));
 			$delete_reason = $row['post_delete_reason'];
 		}
@@ -251,7 +285,26 @@ class topic
 		return array(
 			'DELETED_MESSAGE'			=> $l_deleted_by,
 			'DELETE_REASON'				=> $delete_reason,
-			'L_POST_DELETED_MESSAGE'	=> $l_deleted_message
+			'L_POST_DELETED_MESSAGE'	=> $l_deleted_message,
+			'S_POST_DELETED'			=> $s_post_deleted,
 		);
+	}
+
+	/**
+	 * @param array $row
+	 * @param string $display_postername
+	 * @param string $display_username
+	 * @return string
+	 */
+	protected function get_delete_message(array $row, $display_postername, $display_username)
+	{
+		if ($row['post_delete_reason'])
+		{
+			return $this->language->lang('POST_DELETED_BY_REASON', $display_postername, $display_username, $this->user->format_date($row['post_delete_time'], false, true), $row['post_delete_reason']);
+		}
+		else
+		{
+			return $this->language->lang('POST_DELETED_BY', $display_postername, $display_username, $this->user->format_date($row['post_delete_time'], false, true));
+		}
 	}
 }

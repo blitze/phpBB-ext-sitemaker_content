@@ -20,7 +20,6 @@ abstract class choice extends base
 			'defaults'		=> array(),
 			'options'		=> array(),
 			'multi_select'	=> false,
-			'per_col'		=> 1,
 		);
 	}
 
@@ -54,21 +53,16 @@ abstract class choice extends base
 	 */
 	public function show_form_field($name, array &$data)
 	{
-		$field = $this->get_name();
 		$selected = $this->get_selected_options($name, $data);
 
 		$data['field_name'] = $name;
 		$data['field_value'] = join("\n", $selected);
 
-		if (isset($data['field_props']['per_col']) && $data['field_props']['per_col'] < 1)
-		{
-			$data['field_props']['per_col'] = 1;
-		}
-
 		$this->set_field_options($name, $data, $selected);
 		$this->ptemplate->assign_vars($data);
 
-		return $this->ptemplate->render_view('blitze/content', "fields/$field.twig", $field . '_field');
+		$tpl_name = ($data['field_type'] === 'select') ? 'select' : 'pickem';
+		return $this->ptemplate->render_view('blitze/content', "fields/$tpl_name.html", $data['field_type'] . '_field');
 	}
 
 	/**
@@ -87,18 +81,28 @@ abstract class choice extends base
 		$options = array();
 		if (is_array($data['field_props']['options']))
 		{
-			foreach ($data['field_props']['options'] as $option)
+			$choices = $this->get_options($data['field_props']['options']);
+			foreach ($choices as $value => $option)
 			{
 				$options[] = array(
 					'id'		=> 'smc-'. $name . '-' . $count,
 					'label'		=> $this->language->lang($option),
-					'selected'	=> (in_array($option, $selected, true)) ? true : false,
-					'value'		=> $option,
+					'selected'	=> (int) (in_array($value, $selected)),
+					'value'		=> $value,
 				);
 				$count++;
 			}
 		}
 		$data['field_props']['options'] = $options;
+	}
+
+	/**
+	 * @param array $options
+	 * @return array
+	 */
+	protected function get_options(array $options)
+	{
+		return array_combine($options, $options);
 	}
 
 	/**

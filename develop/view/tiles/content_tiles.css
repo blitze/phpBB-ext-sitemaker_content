@@ -1,0 +1,9 @@
+.tile-grid .tile {
+	margin-left: 10px;
+}
+
+.load_more {
+	font-weight: bold;
+	clear: both;
+	padding: 10px;
+}

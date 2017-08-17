@@ -1,31 +1,29 @@
-<!-- IF .topic_row -->
+<!-- IF .topicrow -->
 <ul class="sm-list">
-<!-- BEGIN topic_row -->
+<!-- BEGIN topicrow -->
 	<li>
-		<div class="postbody sm-postbody">
-			<!-- IF not topic_row.CUSTOM_DISPLAY -->
-			<h4 class="topic-title"><a href="{topic_row.TOPIC_URL}">{topic_row.TOPIC_TITLE}</a></h4>
+		<div class="postbody sm-postbody sm-inner">
+		<!-- IF not topicrow.CUSTOM_DISPLAY -->
+			<!-- INCLUDE parts/moderator_info.html -->
+			<h3 class="topic-title"><a href="{topicrow.TOPIC_URL}">{topicrow.TOPIC_TITLE}</a></h3>
 			<p class="author">
-				<!-- IF S_IS_BOT -->
-					<span><i class="icon fa-file fa-fw <!-- IF topic_row.S_UNREAD_POST -->icon-red<!-- ELSE -->icon-lightgray<!-- ENDIF --> icon-md" aria-hidden="true"></i><span class="sr-only">{topic_row.MINI_POST}</span></span>
-				<!-- ELSE -->
-					<a class="unread" href="{topic_row.U_MINI_POST}" title="">
-						<i class="icon fa-file fa-fw <!-- IF topic_row.S_UNREAD_POST -->icon-red<!-- ELSE -->icon-lightgray<!-- ENDIF --> icon-md" aria-hidden="true"></i><span class="sr-only">{topic_row.MINI_POST}</span>
-					</a>
-				<!-- ENDIF -->
-				<span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{topic_row.USERNAME_FULL}</strong> &raquo; </span>{topic_row.TOPIC_DATE|date("m/d/Y")}
+			<!-- IF not S_IS_BOT -->
+				<a class="unread" href="{topicrow.U_MINI_POST}">
+					<i class="icon fa-file fa-fw <!-- IF postrow.S_UNREAD_POST -->icon-red<!-- ELSE -->icon-lightgray<!-- ENDIF --> icon-md" aria-hidden="true"></i><span class="sr-only">{postrow.MINI_POST}</span>
+				</a>
+			<!-- ENDIF -->
+				<span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{topicrow.USERNAME_FULL}</strong> &raquo; </span>{topicrow.TOPIC_DATE|date("m/d/Y")}
 			</p>
-			<!-- ENDIF -->
-			<!-- IF topic_row.CUSTOM_DISPLAY || topic_row.SEQ_DISPLAY -->
+		<!-- ENDIF -->
+		<!-- IF topicrow.CUSTOM_DISPLAY || topicrow.SEQ_DISPLAY -->
 			<div class="content">
-				{topic_row.CUSTOM_DISPLAY}
-				{topic_row.SEQ_DISPLAY}
+				{topicrow.CUSTOM_DISPLAY}
+				{topicrow.SEQ_DISPLAY}
 			</div>
-			<!-- ENDIF -->
+		<!-- ENDIF -->
 		</div>
-		<div class="clear"></div><br />
 	</li>
-<!-- END topic_row -->
+<!-- END topicrow -->
 </ul>
 <!-- ELSE -->
 	<p>{L_CONTENT_NO_TOPICS}</p>

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "86b9cb0ac79885a0f22507a1bf62a0fa",
-    "content-hash": "9e3507dcb3939d291187a6fcd7a0177c",
+    "hash": "3dd92069c24146a2fa392a243f89274c",
+    "content-hash": "7c35a0386551d3d6f5a5e42058a70312",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -159,52 +159,6 @@
                 "zikula"
             ],
             "time": "2014-11-29 01:29:17"
-        },
-        {
-            "name": "solution10/calendar",
-            "version": "v1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Solution10/calendar.git",
-                "reference": "abd71418eb79c46925f0cb1b540445af62855ce9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Solution10/calendar/zipball/abd71418eb79c46925f0cb1b540445af62855ce9",
-                "reference": "abd71418eb79c46925f0cb1b540445af62855ce9",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">= 5.3"
-            },
-            "require-dev": {
-                "apigen/apigen": "dev-master",
-                "phpunit/phpunit": "4.1.*",
-                "satooshi/php-coveralls": "dev-master",
-                "squizlabs/php_codesniffer": "1.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Solution10\\Calendar\\": "src",
-                    "Solution10\\Calendar\\Tests\\": "tests"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Alex Gisby",
-                    "email": "alex@solution10.com"
-                }
-            ],
-            "description": "Straightforward calendars, with events, for any templating system",
-            "keywords": [
-                "calendar"
-            ],
-            "time": "2014-10-29 22:49:15"
         },
         {
             "name": "urodoz/truncate-html",
@@ -541,6 +495,52 @@
             ],
             "description": "A library to convert a text with ANSI codes to HTML",
             "time": "2014-08-01 14:02:39"
+        },
+        {
+            "name": "solution10/calendar",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Solution10/calendar.git",
+                "reference": "abd71418eb79c46925f0cb1b540445af62855ce9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Solution10/calendar/zipball/abd71418eb79c46925f0cb1b540445af62855ce9",
+                "reference": "abd71418eb79c46925f0cb1b540445af62855ce9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">= 5.3"
+            },
+            "require-dev": {
+                "apigen/apigen": "dev-master",
+                "phpunit/phpunit": "4.1.*",
+                "satooshi/php-coveralls": "dev-master",
+                "squizlabs/php_codesniffer": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Solution10\\Calendar\\": "src",
+                    "Solution10\\Calendar\\Tests\\": "tests"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alex Gisby",
+                    "email": "alex@solution10.com"
+                }
+            ],
+            "description": "Straightforward calendars, with events, for any templating system",
+            "keywords": [
+                "calendar"
+            ],
+            "time": "2014-10-29 22:49:15"
         },
         {
             "name": "symfony/console",

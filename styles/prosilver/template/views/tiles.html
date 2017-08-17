@@ -1,0 +1,57 @@
+<!-- IF not S_HIDE_HEADERS --><!-- INCLUDE overall_header.html --><!-- ENDIF -->
+<!-- INCLUDE parts/content_type.html -->
+
+<!-- INCLUDECSS @blitze_content/assets/view/tiles/content_tiles.min.css -->
+<!-- INCLUDEJS @blitze_content/vendor/imagesloaded/imagesloaded.pkgd.min.js -->
+<!-- INCLUDEJS @blitze_content/vendor/masonry/dist/masonry.pkgd.min.js -->
+<!-- INCLUDEJS @blitze_content/assets/view/tiles/content_tiles.min.js -->
+
+<!-- IF .topicrow -->
+	<div class="grid">
+		<div id="sitemaker-content-grid" class="tile-grid">
+			{%- set columnWidth = (topicrow|length < 5) ? topicrow|length : content_view_settings.items_per_col -%}
+			<!-- BEGIN topicrow -->
+			<div class="grid__col--1-of-{{ columnWidth }} grid__col--m-1-of-{{ columnWidth - 1 }} item">
+				<div class="panel post tile sm-block-spacing">
+					<div class="inner">
+						<div class="postbody sm-postbody">
+						<!-- IF not topicrow.CUSTOM_DISPLAY -->
+							<!-- INCLUDE parts/summary_title.html -->
+						<!-- ENDIF -->
+							<div class="content">
+								<!-- IF topicrow.CUSTOM_DISPLAY -->
+								{topicrow.CUSTOM_DISPLAY}
+								<!-- ELSE -->
+								{topicrow.SEQ_DISPLAY}
+								<p>&nbsp;</p>
+
+								<div class="buttons right-box">
+									<a href="{topicrow.TOPIC_URL}" class="button icon-button">{L_READ_MORE}</a>
+								</div>
+								<!-- ENDIF -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- END topicrow -->
+		</div>
+	</div>
+	<!-- IF .pagination -->
+	<div class="panel bg2 load_more align-center">
+	<!-- BEGIN pagination -->
+		<!-- IF pagination.S_IS_NEXT -->
+		<a id="tile-load-more" href="{pagination.PAGE_URL}" rel="next">{L_LOAD_MORE}</a>
+		<!-- ENDIF -->
+	<!-- END pagination -->
+	</div>
+	<!-- ENDIF -->
+<!-- ELSE -->
+<div class="panel post cms-block-spacing">
+	<div class="inner">
+		{L_CONTENT_NO_TOPICS}
+	</div>
+</div>
+<!-- ENDIF -->
+
+<!-- IF not S_HIDE_HEADERS --><!-- INCLUDE overall_footer.html --><!-- ENDIF -->

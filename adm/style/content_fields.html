@@ -1,4 +1,4 @@
-{% import './fields/_macros.twig' as forms %}
+{% import './fields/_macros.html' as forms %}
 {% set DB_FIELD = FROM_DB ? ' db-field' : '' %}
 {% for field in CONTENT_FIELDS %}
 	<div id="{{ 'cfield-' ~ field.FIELD_NAME }}" class="field">
@@ -45,14 +45,14 @@
 					<div class="column1">
 						<h5>{{ lang('CONTENT_INDEX') }}</h5>
 						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-summary_ldisp-0' }}" name="field_data[{{ field.FIELD_NAME }}][field_summary_ldisp]" value="0"{% if !field.FIELD_SUMMARY_LDISP %} checked="checked"{% endif %} /> {{ lang('NO') }}</label><br />
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-summary_ldisp-1' }}" name="field_data[{{ field.FIELD_NAME }}][field_summary_ldisp]" value="1"{% if field.FIELD_SUMMARY_LDISP === 1 %} checked="checked"{% endif %} /> {{ lang('LABEL_INLINE') }}</label><br />
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-summary_ldisp-2' }}" name="field_data[{{ field.FIELD_NAME }}][field_summary_ldisp]" value="2"{% if field.FIELD_SUMMARY_LDISP === 2 %} checked="checked"{% endif %} /> {{ lang('LABEL_NEWLINE') }}</label>
+						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-summary_ldisp-1' }}" name="field_data[{{ field.FIELD_NAME }}][field_summary_ldisp]" value="1"{% if field.FIELD_SUMMARY_LDISP == 1 %} checked="checked"{% endif %} /> {{ lang('LABEL_INLINE') }}</label><br />
+						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-summary_ldisp-2' }}" name="field_data[{{ field.FIELD_NAME }}][field_summary_ldisp]" value="2"{% if field.FIELD_SUMMARY_LDISP == 2 %} checked="checked"{% endif %} /> {{ lang('LABEL_NEWLINE') }}</label>
 					</div>
 					<div class="column2">
 						<h5>{{ lang('CONTENT_DETAIL') }}</h5>
 						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-detail_ldisp-0' }}" name="field_data[{{ field.FIELD_NAME }}][field_detail_ldisp]" value="0"{% if !field.FIELD_DETAIL_LDISP %} checked="checked"{% endif %} /> {{ lang('NO') }}</label><br />
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-detail_ldisp-1' }}" name="field_data[{{ field.FIELD_NAME }}][field_detail_ldisp]" value="1"{% if field.FIELD_DETAIL_LDISP === 1 %} checked="checked"{% endif %} /> {{ lang('LABEL_INLINE') }}</label><br />
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-detail_ldisp-2' }}" name="field_data[{{ field.FIELD_NAME }}][field_detail_ldisp]" value="2"{% if field.FIELD_DETAIL_LDISP === 2 %} checked="checked"{% endif %} /> {{ lang('LABEL_NEWLINE') }}</label>
+						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-detail_ldisp-1' }}" name="field_data[{{ field.FIELD_NAME }}][field_detail_ldisp]" value="1"{% if field.FIELD_DETAIL_LDISP == 1 %} checked="checked"{% endif %} /> {{ lang('LABEL_INLINE') }}</label><br />
+						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-detail_ldisp-2' }}" name="field_data[{{ field.FIELD_NAME }}][field_detail_ldisp]" value="2"{% if field.FIELD_DETAIL_LDISP == 2 %} checked="checked"{% endif %} /> {{ lang('LABEL_NEWLINE') }}</label>
 					</div>
 				</dd>
 			</dl>
@@ -61,6 +61,7 @@
 				{{ attribute(forms, field.FIELD_TYPE, [field]) }}
 			</div>
 			{% endif %}
+			{% EVENT blitze_content_form_field_settings %}
 		</div>
 		<div class="field-actions">
 			<a href="#" class="remove-field{{ DB_FIELD }} field-icon ui-dialog-titlebar-close ui-corner-all" title="{{ lang('DELETE') }}" data-field="{{ field.FIELD_NAME }}"><span class="ui-icon ui-icon-closethick">{{ lang('DELETE') }}</span></a>

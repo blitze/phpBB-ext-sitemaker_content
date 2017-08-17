@@ -138,7 +138,7 @@ class save extends action_utils implements action_interface
 	{
 		$content_desc = $this->request->variable('content_desc', '', true);
 		$content_view = $this->request->variable('content_view', '');
-		$view_settings = $this->request->variable(array('view_settings', $content_view), array('' => ''), true);
+		$view_settings = $this->request->variable(array('view_settings', $content_view), array('' => ''));
 
 		$entity = $mapper->create_entity(array(
 			'content_name'			=> $this->request->variable('content_name', ''),
@@ -301,13 +301,16 @@ class save extends action_utils implements action_interface
 	 */
 	protected function get_field_props($field)
 	{
-		$field_props = $this->request->variable(array('field_props', $field), array('' => ''), true);
+		$field_props = $this->request->variable(array('field_props', $field), array('' => ''));
 		$field_options = $this->request->variable(array('field_options', $field), array(0 => ''), true);
 		$fields_defaults = $this->request->variable(array('field_defaults', $field), array(0 => ''), true);
 
-		$field_props['options'] = $field_options;
-		$field_props['defaults'] = $fields_defaults;
+		$field_props = (array) array_filter($field_props, 'strlen');
+		$field_props += array_filter(array(
+			'options'	=> array_filter($field_options, 'strlen'),
+			'defaults'	=> array_filter($fields_defaults, 'strlen'),
+		));
 
-		return array_filter($field_props);
+		return $field_props;
 	}
 }

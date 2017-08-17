@@ -1,44 +1,40 @@
 services:
 
-    blitze.content.view.blog:
-        class: blitze\content\services\views\blog
+    blitze.content.base_view:
+        class: blitze\content\services\views\driver\base_view
+        abstract: true
         arguments:
+            - '@dispatcher'
             - '@language'
             - '@pagination'
             - '@template'
             - '@blitze.content.fields'
             - '@blitze.sitemaker.forum.data'
             - '@blitze.content.helper'
+            - '@blitze.content.quickmod'
             - '%core.root_path%'
             - '%core.php_ext%'
+
+
+    blitze.content.view.blog:
+        class: blitze\content\services\views\driver\blog
+        parent: blitze.content.base_view
         tags:
             - { name: sitemaker.content.view }
 
     blitze.content.view.portal:
-        class: blitze\content\services\views\portal
+        class: blitze\content\services\views\driver\portal
+        parent: blitze.content.base_view
         arguments:
-            - '@language'
-            - '@pagination'
-            - '@template'
-            - '@blitze.content.fields'
-            - '@blitze.sitemaker.forum.data'
-            - '@blitze.content.helper'
-            - '%core.root_path%'
-            - '%core.php_ext%'
+            - '@config'
+            - '@blitze.content.types'
         tags:
             - { name: sitemaker.content.view }
 
     blitze.content.view.tiles:
-        class: blitze\content\services\views\tiles
+        class: blitze\content\services\views\driver\tiles
+        parent: blitze.content.base_view
         arguments:
-            - '@language'
-            - '@pagination'
             - '@request'
-            - '@template'
-            - '@blitze.content.fields'
-            - '@blitze.sitemaker.forum.data'
-            - '@blitze.content.helper'
-            - '%core.root_path%'
-            - '%core.php_ext%'
         tags:
             - { name: sitemaker.content.view }

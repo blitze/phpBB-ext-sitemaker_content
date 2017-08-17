@@ -17,5 +17,5 @@ class select extends choice
 	public function get_name()
 	{
 		return 'select';
-	} 
+	}
 }

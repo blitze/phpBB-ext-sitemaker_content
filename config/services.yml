@@ -18,13 +18,14 @@ services:
         arguments:
             - '@service_container'
 
-    blitze.content.builder:
-        class: blitze\content\services\builder
+    blitze.content.form.builder:
+        class: blitze\content\services\form\builder
         arguments:
             - '@auth'
+            - '@dispatcher'
             - '@language'
             - '@request'
-            - '@service_container'
+            - '@template_context'
             - '@user'
             - '@blitze.content.fields'
             - '@blitze.content.types'
@@ -33,19 +34,20 @@ services:
             - '%core.php_ext%'
 
     blitze.content.comments:
-        class: blitze\content\services\comments
+        class: blitze\content\services\comments\comments
         arguments:
             - '@auth'
             - '@config'
             - '@content.visibility'
             - '@dbal.conn'
-            - '@controller.helper'
+            - '@language'
             - '@pagination'
             - '@request'
             - '@template'
+            - '@template_context'
             - '@user'
-            - '@blitze.content.form'
             - '@blitze.sitemaker.forum.data'
+            - '@blitze.content.topic'
             - '%core.root_path%'
             - '%core.php_ext%'
 
@@ -53,12 +55,12 @@ services:
         class: blitze\content\services\fields
         arguments:
             - '@config'
-            - '@content.visibility'
             - '@controller.helper'
             - '@dispatcher'
             - '@language'
             - '@blitze.content.template'
             - '@user'
+            - '@blitze.content.comments'
             - '@blitze.content.form.fields.factory'
             - '@blitze.content.helper'
 
@@ -68,6 +70,7 @@ services:
             - '@request'
             - '@template_context'
             - '@language'
+            - '@blitze.sitemaker.auto_lang'
             - '@blitze.content.form.fields.factory'
             - '@blitze.sitemaker.template'
 
@@ -93,6 +96,15 @@ services:
             - '%core.root_path%'
             - '%core.php_ext%'
 
+    blitze.content.quickmod:
+        class: blitze\content\services\quickmod
+        arguments:
+            - '@auth'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
     blitze.content.mapper.factory:
         class: blitze\content\model\mapper_factory
         arguments:
@@ -101,14 +113,20 @@ services:
                 types: '%tables.blitze.content_types%'
                 fields: '%tables.blitze.content_fields%'
 
+    blitze.content.poll:
+        class: blitze\content\services\poll
+        arguments:
+            - '@blitze.sitemaker.poll'
+            - '@blitze.sitemaker.template'
+
     blitze.content.topic:
         class: blitze\content\services\topic
         arguments:
             - '@config'
-            - '@content.visibility'
             - '@controller.helper'
             - '@dispatcher'
             - '@language'
+            - '@template'
             - '@user'
             - '@blitze.content.helper'
 
@@ -130,3 +148,13 @@ services:
         arguments:
             - '@language'
             - '@blitze.content.views_collection'
+
+    blitze.content.notification.type.topic_in_queue.decorator:
+        class: blitze\content\services\notification\topic_in_queue
+        decorates: 'notification.type.topic_in_queue'
+        shared: false
+        parent: notification.type.topic
+        arguments:
+            - '@blitze.content.types'
+        tags:
+            - { name: notification.type }

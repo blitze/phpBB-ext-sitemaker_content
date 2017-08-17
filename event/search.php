@@ -44,11 +44,14 @@ class search implements EventSubscriberInterface
 		return array(
 			'core.search_get_posts_data'	=> 'modify_posts_data',
 			'core.search_get_topic_data'	=> 'modify_topic_data',
-			'core.search_modify_tpl_ary'	=> 'content_search',
+			'core.search_modify_tpl_ary'	=> 'modify_tpl_data',
 		);
 	}
 
 	/**
+	 * Since this extension allows for scheduling articles,
+	 * We want to make sure that we do not display future articles in search results
+	 *
 	 * @param \phpbb\event\data $event
 	 * @return void
 	 */
@@ -70,6 +73,9 @@ class search implements EventSubscriberInterface
 	}
 
 	/**
+	 * Since this extension allows for scheduling articles,
+	 * We want to make sure that we do not display future articles in search results
+	 *
 	 * @param \phpbb\event\data $event
 	 * @return void
 	 */
@@ -91,15 +97,13 @@ class search implements EventSubscriberInterface
 	 * @param \phpbb\event\data $event
 	 * @return void
 	 */
-	public function content_search(\phpbb\event\data $event)
+	public function modify_tpl_data(\phpbb\event\data $event)
 	{
 		$row = $event['row'];
-		$tpl_ary = $event['tpl_ary'];
-
-		$forum_id = $row['forum_id'];
-
-		if ($type = $this->content_types->get_forum_type($forum_id))
+		if ($type = $this->content_types->get_forum_type($row['forum_id']))
 		{
+			$tpl_ary = $event['tpl_ary'];
+
 			$params = array(
 				'type'		=> $type,
 				'topic_id'	=> $row['topic_id'],
@@ -116,14 +120,30 @@ class search implements EventSubscriberInterface
 
 			$topic_url = $this->helper->route('blitze_content_show', $params);
 			$forum_url = $this->helper->route('blitze_content_index', array(
-				'type'		=> $type
+				'type' => $type
 			));
 
+			$tpl_ary['MESSAGE'] = $this->modify_message($row, $tpl_ary['MESSAGE']);
 			$tpl_ary['U_VIEW_TOPIC'] = $tpl_ary['U_VIEW_POST'] = $topic_url;
 			$tpl_ary['U_VIEW_FORUM'] = $forum_url;
 
 			$event['tpl_ary'] = $tpl_ary;
-			unset($type, $tpl_ary);
+			unset($tpl_ary);
 		}
+	}
+
+	/**
+	 * @param array $row
+	 * @param string $message
+	 * @return string
+	 */
+	public function modify_message(array $row, $message)
+	{
+		$patterns = array(
+			'#(&\#91;)pagebreak\s?(title=(.*?))(&\#93;)#s',
+			'#<!-- begin field --><h4>(.*?)</h4><br>#s',
+		);
+
+		return ($row['post_id'] === $row['topic_first_post_id']) ? preg_replace($patterns, ' ', $message) : $message;
 	}
 }

@@ -22,17 +22,18 @@ class edit extends add
 	 *
 	 * @param \phpbb\auth\auth									$auth					Auth object
 	 * @param \phpbb\language\language							$language				Language Object
+	 * @param \phpbb\event\dispatcher_interface					$phpbb_dispatcher		Event dispatcher object
 	 * @param \phpbb\template\template							$template				Template object
 	 * @param \phpbb\user										$user					User object
 	 * @param \blitze\sitemaker\services\auto_lang				$auto_lang				Auto add lang file
-	 * @param \blitze\content\services\types					$content_types			Content types object
 	 * @param \blitze\content\services\form\fields_factory		$fields_factory			Fields factory  object
-	 * @param \blitze\content\model\mapper_factory				$mapper_factory			Mapper factory object
 	 * @param \blitze\content\services\views\views_factory		$views_factory			Views factory object
+	 * @param \blitze\content\services\types					$content_types			Content types object
+	 * @param \blitze\content\model\mapper_factory				$mapper_factory			Mapper factory object
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\controller\helper $controller_helper, \phpbb\language\language $language, \phpbb\template\template $template, \phpbb\user $user, \blitze\sitemaker\services\auto_lang $auto_lang, \blitze\content\services\types $content_types, \blitze\content\services\form\fields_factory $fields_factory, \blitze\content\model\mapper_factory $mapper_factory, \blitze\content\services\views\views_factory $views_factory)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\controller\helper $controller_helper, \phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\language\language $language, \phpbb\template\template $template, \phpbb\user $user, \blitze\sitemaker\services\auto_lang $auto_lang, \blitze\content\services\form\fields_factory $fields_factory, \blitze\content\services\views\views_factory $views_factory, \blitze\content\services\types $content_types, \blitze\content\model\mapper_factory $mapper_factory)
 	{
-		parent::__construct($auth, $controller_helper, $language, $template, $user, $auto_lang, $fields_factory, $views_factory);
+		parent::__construct($auth, $controller_helper, $phpbb_dispatcher, $language, $template, $user, $auto_lang, $fields_factory, $views_factory);
 
 		$this->content_types = $content_types;
 		$this->mapper_factory = $mapper_factory;
@@ -68,13 +69,24 @@ class edit extends add
 		$content_fields = array();
 		foreach ($collection as $entity)
 		{
-			/** @var /blitze/content/services/form/field/field_interface $object */
-			$object = $this->available_fields[$entity->get_field_type()];
+			/** @var /blitze/content/services/form/field/field_interface $field_instance */
+			$field_instance = $this->available_fields[$entity->get_field_type()];
 			$field_data = $entity->to_array();
-			$field_data['field_props'] = array_replace_recursive($object->get_default_props(), $field_data['field_props']);
+			$field_data['field_props'] = array_replace_recursive($field_instance->get_default_props(), $field_data['field_props']);
+
+			/**
+			 * Event to modify field data
+			 *
+			 * @event blitze.content.acp_modify_field_data
+			 * @var	int														content_id		Content type id
+			 * @var	array													field_data		Array containing field data
+			 * @var	/blitze/content/services/form/field/field_interface		field_instance	Field instance
+			 */
+			$vars = array('content_id', 'field_data', 'field_instance');
+			extract($this->phpbb_dispatcher->trigger_event('blitze.content.acp_modify_field_data', compact($vars)));
 
 			$content_fields[] = array_change_key_case(array_merge($field_data, array(
-				'type_label'	=> $object->get_langname(),
+				'type_label'	=> $field_instance->get_langname(),
 				'field_explain'	=> $entity->get_field_explain('edit'),
 			)), CASE_UPPER);
 		}

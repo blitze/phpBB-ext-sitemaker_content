@@ -29,9 +29,8 @@ class image_test extends base_form_field
 	{
 		$field = $this->get_form_field('image');
 		$this->assertEquals(array(
-			'min'	=> 0,
-			'max'	=> 200,
-			'size'	=> 45,
+			'size'	=> '',
+			'align'	=> '',
 		), $field->get_default_props());
 	}
 
@@ -42,7 +41,7 @@ class image_test extends base_form_field
 	{
 		return array(
 			array('', ''),
-			array('foo', '<div class="img-ui">foo</div>'),
+			array('foo', '<div class=""><figure class="img-ui">foo</figure></div>'),
 		);
 	}
 
@@ -77,10 +76,8 @@ class image_test extends base_form_field
 				array(
 					array('foo', '', false, request_interface::REQUEST, ''),
 				),
-				'<div style="width: 45%">' .
-					'<input type="text" class="inputbox image-field" id="smc-foo" name="foo" maxlength="200" value="" />' .
-					'<div id="preview-foo" class="large-img"></div>' .
-				'</div>',
+				'<input type="text" class="inputbox autowidth image-field" id="smc-foo" name="foo" value="" size="45" />' .
+				'<div class="medium-img"><div id="preview-foo" class="img-ui"></div></div>',
 			),
 			array(
 				'foo',
@@ -93,10 +90,8 @@ class image_test extends base_form_field
 				array(
 					array('foo', '', false, request_interface::REQUEST, 'bar'),
 				),
-				'<div style="width: 65%">' .
-					'<input type="text" class="inputbox image-field" id="smc-foo" name="foo" maxlength="200" value="bar" />' .
-					'<div id="preview-foo" class="large-img"><img class="img-ui" src="bar" alt="" /></div>' .
-				'</div>',
+				'<input type="text" class="inputbox autowidth image-field" id="smc-foo" name="foo" value="bar" size="45" />' .
+				'<div class="medium-img"><div id="preview-foo" class="img-ui"><img src="bar" alt="" /></div></div>',
 			),
 			array(
 				'foo2',
@@ -106,10 +101,8 @@ class image_test extends base_form_field
 				array(
 					array('foo2', 'bar', false, request_interface::REQUEST, 'foo_bar'),
 				),
-				'<div style="width: 45%">' .
-					'<input type="text" class="inputbox image-field" id="smc-foo2" name="foo2" maxlength="200" value="foo_bar" />' .
-					'<div id="preview-foo2" class="large-img"><img class="img-ui" src="foo_bar" alt="" /></div>' .
-				'</div>',
+				'<input type="text" class="inputbox autowidth image-field" id="smc-foo2" name="foo2" value="foo_bar" size="45" />' .
+				'<div class="medium-img"><div id="preview-foo2" class="img-ui"><img src="foo_bar" alt="" /></div></div>',
 			),
 		);
 	}

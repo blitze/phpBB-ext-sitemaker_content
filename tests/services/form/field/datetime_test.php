@@ -33,7 +33,7 @@ class datetime_test extends base_form_field
 			->disableOriginalConstructor()
 			->getMock();
 
-		return new datetime($this->language, $this->request, $this->user, $this->ptemplate, $this->util);
+		return new datetime($this->language, $this->request, $this->ptemplate, $this->user, $this->util);
 	}
 
 	public function test_name()

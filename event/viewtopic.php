@@ -64,11 +64,19 @@ class viewtopic implements EventSubscriberInterface
 	{
 		if ($type = $this->content_types->get_forum_type($event['forum_id']))
 		{
-			redirect($this->helper->route('blitze_content_show', array(
+			$topic_url = $this->helper->route('blitze_content_show', array(
 				'type'		=> $type,
 				'topic_id'	=> $event['topic_id'],
 				'slug'		=> $event['topic_data']['topic_slug']
-			)));
+			));
+
+			$post_id = $event['post_id'];
+			if ($event['topic_data']['topic_first_post_id'] != $event['post_id'])
+			{
+				$topic_url .= "?p=$post_id#p$post_id";
+			}
+
+			redirect($topic_url);
 		}
 	}
 }

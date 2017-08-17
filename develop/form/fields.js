@@ -51,12 +51,12 @@
 				maxDate: (options.maxDate) ? new Date(options.maxDate) : '',
 				language: window.dpLang || {},
 				onSelect: function (fd, d, picker) {
-					var $input = $(picker.el);
-					$input.parent().width($input.val().length * 0.8 + '%');
+					resizeInput($(picker.el));
 				}
 			});
 
 			var dp = $(this).datepicker(options).data('datepicker');
+			resizeInput($(this));
 
 			if (current) {
 				var selected = [];
@@ -74,7 +74,7 @@
 		$('.image-field').change(function(e) {
 			var imgSrc = $(this).val();
 
-			$(this).next().val(imgSrc.length ? '<img class=img-ui src=' + imgSrc + ' />' : '');
+			$(this).next().children('.img-ui').html(imgSrc.length ? '<img src=' + imgSrc + ' />' : '');
 		})
 	});
 })(jQuery, window, document);

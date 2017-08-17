@@ -26,6 +26,7 @@ class checkbox extends choice
 	{
 		return array_merge(parent::get_default_props(), array(
 			'multi_select'	=> true,
+			'vertical'		=> true,
 		));
 	}
 }

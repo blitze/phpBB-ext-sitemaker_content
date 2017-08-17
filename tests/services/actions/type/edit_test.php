@@ -30,10 +30,11 @@ class edit_test extends add_edit_base
 		);
 
 		$cache = new \phpbb_mock_cache();
+		$phpbb_dispatcher = new \phpbb_mock_event_dispatcher();
 		$mapper_factory = new \blitze\content\model\mapper_factory($this->db, $tables);
 		$types = new \blitze\content\services\types($cache, $mapper_factory);
 
-		return new edit($this->auth, $this->controller_helper, $this->language, $this->template, $this->user, $this->auto_lang, $types, $this->fields_factory, $mapper_factory, $this->views_factory);
+		return new edit($this->auth, $this->controller_helper, $phpbb_dispatcher, $this->language, $this->template, $this->user, $this->auto_lang, $this->fields_factory, $this->views_factory, $types, $mapper_factory);
 	}
 
 	/**
@@ -94,7 +95,7 @@ class edit_test extends add_edit_base
             			'Yellow'	=> 'Yellow',
             		),
             		'multi_select'	=> true,
-            		'per_col'		=> 1,
+            		'vertical'		=> true,
             	),
             	'FIELD_ORDER'		=> 1,
             ),

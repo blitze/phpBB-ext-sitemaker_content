@@ -1,5 +1,5 @@
-<!-- IF S_CAN_POST_CONTENT -->
+{% if S_CAN_POST_CONTENT %}
 	<li class="no-bulletin" data-last-responsive="true">
-		<a href="{U_POST_NEW}" title="{L_POST_NEW}" role="menuitem"><i class="fa fa-plus fa-lg"></i>{L_POST_NEW}</a>
+		<a href="{{ U_POST_NEW }}" title="{{ lang('POST_NEW') }}" role="menuitem"><i class="fa fa-plus fa-lg"></i>{{ lang('POST_NEW') }}</a>
 	</li>
-<!-- ENDIF -->
+{% endif %}

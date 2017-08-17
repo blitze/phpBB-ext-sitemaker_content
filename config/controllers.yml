@@ -23,6 +23,7 @@ services:
             - '@template'
             - '@user'
             - '@blitze.content.comments'
+            - '@blitze.content.poll'
             - '@blitze.content.types'
             - '@blitze.content.views.factory'
 

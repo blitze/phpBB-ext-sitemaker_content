@@ -31,8 +31,8 @@ class c2_update_data extends \phpbb\db\migration\migration
 	static public function depends_on()
 	{
 		return array(
-			'\blitze\content\migrations\v20x\m1_initial_schema',
-			'\blitze\content\migrations\v20x\m2_initial_data',
+			'\blitze\content\migrations\v30x\m1_initial_schema',
+			'\blitze\content\migrations\v30x\m2_initial_data',
 		);
 	}
 

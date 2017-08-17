@@ -79,6 +79,7 @@ class types
 	public function get_type($type, $trigger_error = true)
 	{
 		$content_data = $this->get_all_types();
+
 		if (!isset($content_data[$type]))
 		{
 			if ($trigger_error)

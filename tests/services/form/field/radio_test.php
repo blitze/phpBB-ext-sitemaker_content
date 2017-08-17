@@ -29,10 +29,10 @@ class radio_test extends base_form_field
 	{
 		$field = $this->get_form_field('radio');
 		$this->assertEquals(array(
-			'per_col'		=> 1,
 			'options'		=> array(),
 			'defaults'		=> array(),
 			'multi_select'	=> false,
+			'vertical'		=> false,
 		), $field->get_default_props());
 	}
 
@@ -80,9 +80,9 @@ class radio_test extends base_form_field
 				array(
 					array('foo', '', true, request_interface::REQUEST, ''),
 				),
-				'<label for="smc-foo-0"><input type="radio" name="foo[]" id="smc-foo-0" value="option1" /> option1</label>' .
-				'<label for="smc-foo-1"><input type="radio" name="foo[]" id="smc-foo-1" value="option2" /> option2</label>' .
-				'<label for="smc-foo-2"><input type="radio" name="foo[]" id="smc-foo-2" value="option3" /> option3</label>',
+				'<label for="smc-foo-0"><input type="radio" id="smc-foo-0" name="foo[]" value="option1" /> option1</label>' .
+				'<label for="smc-foo-1"><input type="radio" id="smc-foo-1" name="foo[]" value="option2" /> option2</label>' .
+				'<label for="smc-foo-2"><input type="radio" id="smc-foo-2" name="foo[]" value="option3" /> option3</label>',
 			),
 			array(
 				'foo',
@@ -96,9 +96,9 @@ class radio_test extends base_form_field
 				array(
 					array('foo', '', true, request_interface::REQUEST, ''),
 				),
-				'<label for="smc-foo-0"><input type="radio" name="foo[]" id="smc-foo-0" value="option1" /> option1</label>' .
-				'<label for="smc-foo-1"><input type="radio" name="foo[]" id="smc-foo-1" value="option2" checked="checked" /> option2</label>' .
-				'<label for="smc-foo-2"><input type="radio" name="foo[]" id="smc-foo-2" value="option3" /> option3</label>',
+				'<label for="smc-foo-0"><input type="radio" id="smc-foo-0" name="foo[]" value="option1" /> option1</label>' .
+				'<label for="smc-foo-1"><input type="radio" id="smc-foo-1" name="foo[]" value="option2" checked="checked" /> option2</label>' .
+				'<label for="smc-foo-2"><input type="radio" id="smc-foo-2" name="foo[]" value="option3" /> option3</label>',
 			),
 			array(
 				'bar',
@@ -112,9 +112,33 @@ class radio_test extends base_form_field
 				array(
 					array('bar', array('option2'), true, request_interface::REQUEST, array('option3')),
 				),
-				'<label for="smc-bar-0"><input type="radio" name="bar[]" id="smc-bar-0" value="option1" /> option1</label>' .
-				'<label for="smc-bar-1"><input type="radio" name="bar[]" id="smc-bar-1" value="option2" /> option2</label>' .
-				'<label for="smc-bar-2"><input type="radio" name="bar[]" id="smc-bar-2" value="option3" checked="checked" /> option3</label>',
+				'<label for="smc-bar-0"><input type="radio" id="smc-bar-0" name="bar[]" value="option1" /> option1</label>' .
+				'<label for="smc-bar-1"><input type="radio" id="smc-bar-1" name="bar[]" value="option2" /> option2</label>' .
+				'<label for="smc-bar-2"><input type="radio" id="smc-bar-2" name="bar[]" value="option3" checked="checked" /> option3</label>',
+			),
+			array(
+				'bar',
+				array(
+					'field_value'	=> array('option2'),
+					'field_props'	=> array(
+						'options'		=> array('option1', 'option2', 'option3', 'option4', 'option5', 'option6'),
+						'defaults'		=> array('option2'),
+						'vertical'		=> true,
+					),
+				),
+				array(
+					array('bar', array('option2'), true, request_interface::REQUEST, array('option3', 'option6')),
+				),
+				'<div class="left-box" style="margin-right: 1em">' .
+					'<label for="smc-bar-0"><input type="radio" id="smc-bar-0" name="bar[]" value="option1" /> option1</label><br />' .
+					'<label for="smc-bar-1"><input type="radio" id="smc-bar-1" name="bar[]" value="option2" /> option2</label><br />' .
+					'<label for="smc-bar-2"><input type="radio" id="smc-bar-2" name="bar[]" value="option3" checked="checked" /> option3</label><br />' .
+					'<label for="smc-bar-3"><input type="radio" id="smc-bar-3" name="bar[]" value="option4" /> option4</label><br />' .
+					'<label for="smc-bar-4"><input type="radio" id="smc-bar-4" name="bar[]" value="option5" /> option5</label><br />' .
+				'</div>' .
+				'<div class="left-box" style="margin-right: 1em">' .
+					'<label for="smc-bar-5"><input type="radio" id="smc-bar-5" name="bar[]" value="option6" checked="checked" /> option6</label><br />' .
+				'</div>',
 			),
 		);
 	}

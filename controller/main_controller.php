@@ -26,8 +26,11 @@ class main_controller
 	/** @var \phpbb\user */
 	protected $user;
 
-	/* @var \blitze\content\services\comments */
+	/* @var \blitze\content\services\comments\comments_inteface */
 	protected $comments;
+
+	/** @var \blitze\content\services\poll */
+	protected $poll;
 
 	/** @var \blitze\content\services\types */
 	protected $content_types;
@@ -38,16 +41,17 @@ class main_controller
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\db\driver\driver_interface				$db					Database object
-	 * @param \phpbb\controller\helper						$helper				Helper object
-	 * @param \phpbb\request\request_interface				$request			Request object
-	 * @param \phpbb\template\template						$template			Template object
-	 * @param \phpbb\user									$user				User object
-	 * @param \blitze\content\services\comments				$comments			Comments object
-	 * @param \blitze\content\services\types				$content_types		Content types object
-	 * @param \blitze\content\services\views\views_factory	$views_factory		Views handlers
+	 * @param \phpbb\db\driver\driver_interface						$db					Database object
+	 * @param \phpbb\controller\helper								$helper				Helper object
+	 * @param \phpbb\request\request_interface						$request			Request object
+	 * @param \phpbb\template\template								$template			Template object
+	 * @param \phpbb\user											$user				User object
+	 * @param \blitze\content\services\comments\comments_interface	$comments			Comments object
+	 * @param \blitze\content\services\poll							$poll				Poll object
+	 * @param \blitze\content\services\types						$content_types		Content types object
+	 * @param \blitze\content\services\views\views_factory			$views_factory		Views handlers
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\comments $comments, \blitze\content\services\types $content_types, \blitze\content\services\views\views_factory $views_factory)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\comments\comments_interface $comments, \blitze\content\services\poll $poll, \blitze\content\services\types $content_types, \blitze\content\services\views\views_factory $views_factory)
 	{
 		$this->db = $db;
 		$this->helper = $helper;
@@ -55,6 +59,7 @@ class main_controller
 		$this->template = $template;
 		$this->user = $user;
 		$this->comments = $comments;
+		$this->poll = $poll;
 		$this->content_types = $content_types;
 		$this->views_factory = $views_factory;
 	}
@@ -68,23 +73,32 @@ class main_controller
 	 * @param string $filter_value
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function index($type, $page = 1, $filter_type = '', $filter_value = '')
+	public function index($type, $page = 1, $filter_type, $filter_value)
 	{
 		$entity = $this->get_type_entity($type);
-		$content_langname = $entity->get_content_langname();
 
-		if ($entity->get_index_show_desc())
-		{
-			$this->template->assign_vars(array(
-				'CONTENT_TYPE'		=> $content_langname,
-				'CONTENT_DESC'		=> $entity->get_content_desc(),
-			));
-		}
+		$this->template->assign_vars($entity->to_array());
 
 		$view_handler = $this->views_factory->get($entity->get_content_view());
 		$view_handler->render_index($entity, $page, $filter_type, $filter_value);
 
-		return $this->helper->render($view_handler->get_index_template(), $content_langname);
+		return $this->helper->render($view_handler->get_index_template(), $entity->get_content_langname());
+	}
+
+	/**
+	 * Filter topics by a filter type
+	 *
+	 * @param string $filter_type
+	 * @param string $filter_value
+	 * @param int $page
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	public function filter($filter_type, $filter_value, $page)
+	{
+		$view_handler = $this->views_factory->get('blitze.content.view.portal');
+		$view_handler->render_filter($filter_type, $filter_value, $page);
+
+		return $this->helper->render($view_handler->get_index_template());
 	}
 
 	/**
@@ -105,12 +119,16 @@ class main_controller
 		$topic_data = $view_handler->render_detail($entity, $topic_id, $update_count);
 
 		$this->add_navlink($topic_data['topic_title'], $topic_data['topic_url']);
-		$this->update_views($topic_id, $update_count);
+		$this->template->assign_var('TOPIC_POLL', $this->poll->display($topic_data));
+		$this->template->assign_vars($entity->to_array());
 
 		if ($entity->get_allow_comments())
 		{
-			$this->comments->show($topic_id, $topic_data['total_comments'], $topic_data['topic_url'], $topic_data);
+			$this->comments->show_comments($type, $topic_data, $update_count);
+			$this->comments->show_form($topic_data);
 		}
+
+		$this->update_views($topic_id, $update_count);
 
 		return $this->helper->render($view_handler->get_detail_template(), $topic_data['topic_title']);
 	}
@@ -128,6 +146,7 @@ class main_controller
 		$this->template->assign_vars(array(
 			'S_COMMENTS'	=> $entity->get_allow_comments(),
 			'S_VIEWS'		=> $entity->get_allow_views(),
+			'S_TOOLS'		=> true,
 		));
 
 		return $entity;

@@ -34,7 +34,7 @@ class image extends base
 		$data['field_value'] = $this->get_image_src($bbcode_value);
 
 		$this->ptemplate->assign_vars($data);
-		$field = $this->ptemplate->render_view('blitze/content', "fields/$field.twig", $field . '_field');
+		$field = $this->ptemplate->render_view('blitze/content', "fields/image.html", $field . '_field');
 
 		$data['field_value'] = $bbcode_value;
 
@@ -44,9 +44,18 @@ class image extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field(array $data)
+	public function display_field(array $data, $mode = '')
 	{
-		return ($data['field_value']) ? '<div class="img-ui">' . $data['field_value'] . '</div>' : '';
+		$image = '';
+		if ($data['field_value'])
+		{
+			$image = '<figure class="img-ui">' . $data['field_value'] . '</figure>';
+			if ($mode !== 'block')
+			{
+				$image = '<div class="' . join(' ', array_filter($data['field_props'])) . '">' . $image . '</div>';
+			}
+		}
+		return $image;
 	}
 
 	/**
@@ -55,9 +64,8 @@ class image extends base
 	public function get_default_props()
 	{
 		return array(
-			'min'	=> 0,
-			'max'	=> 200,
-			'size'	=> 45,
+			'size'	=> '',
+			'align'	=> '',
 		);
 	}
 

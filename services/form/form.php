@@ -20,11 +20,17 @@ class form
 	/** @var \phpbb\language\language */
 	protected $language;
 
+	/** @var \blitze\sitemaker\services\auto_lang */
+	protected $auto_lang;
+
 	/** @var \blitze\content\services\form\fields_factory */
 	protected $fields_factory;
 
 	/** @var \blitze\sitemaker\services\template */
 	protected $ptemplate;
+
+	/** @var array */
+	protected $db_fields = array();
 
 	/** @var array */
 	protected $data = array();
@@ -41,14 +47,16 @@ class form
 	 * @param \phpbb\request\request_interface					$request				Request object
 	 * @param \phpbb\template\context							$template_context		Template context object
 	 * @param \phpbb\language\language							$language				Language object
+	 * @param \blitze\sitemaker\services\auto_lang				$auto_lang				Auto add lang file
 	 * @param \blitze\content\services\form\fields_factory		$fields_factory			Form fields factory
 	 * @param \blitze\sitemaker\services\template				$ptemplate				Sitemaker template object
 	 */
-	public function __construct(\phpbb\request\request_interface $request, \phpbb\template\context $template_context, \phpbb\language\language $language, \blitze\content\services\form\fields_factory $fields_factory, \blitze\sitemaker\services\template $ptemplate)
+	public function __construct(\phpbb\request\request_interface $request, \phpbb\template\context $template_context, \phpbb\language\language $language, \blitze\sitemaker\services\auto_lang $auto_lang, \blitze\content\services\form\fields_factory $fields_factory, \blitze\sitemaker\services\template $ptemplate)
 	{
 		$this->request = $request;
 		$this->template_context = $template_context;
 		$this->language = $language;
+		$this->auto_lang = $auto_lang;
 		$this->fields_factory = $fields_factory;
 		$this->ptemplate = $ptemplate;
 	}
@@ -63,8 +71,8 @@ class form
 	 */
 	public function create($form_name, $form_key, $action = '', $legend = '', $method = 'post')
 	{
+		$this->auto_lang->add('form_fields');
 		$this->language->add_lang('posting');
-		$this->language->add_lang('form_fields', 'blitze/content');
 
 		add_form_key($form_key);
 
@@ -178,18 +186,41 @@ class form
 	 */
 	public function get_submitted_data(array $content_fields, &$req_mod_input, $cp_class = 'ucp')
 	{
+		$previewing = $this->request->is_set('preview');
+
 		$fields_data = array();
 		foreach ($content_fields as $field => $row)
 		{
 			$row += $this->get_default_field_data();
+			$value = $this->get_submitted_field_data($row, $req_mod_input, $cp_class);
 
-			if (empty($row['field_props']['exclude_from_message']))
+			if ($previewing || empty($row['field_props']['is_db_field']))
 			{
-				$fields_data[$field] = $this->get_submitted_field_data($row, $req_mod_input, $cp_class);
+				$fields_data[$field] = $value;
+			}
+			else
+			{
+				$this->db_fields[$field] = $value;
 			}
 		}
 
 		return array_filter($fields_data);
+	}
+
+	/**
+	 * @param int $topic_id
+	 * @param array $content_fields
+	 * @return void
+	 */
+	public function save_db_fields($topic_id, array $content_fields)
+	{
+		foreach ($this->db_fields as $field => $value)
+		{
+			$field_data = $content_fields[$field];
+			$obj = $this->fields_factory->get($field_data['field_type']);
+			$field_data['field_props'] += $obj->get_default_props();
+			$obj->save_field($topic_id, $value, $field_data);
+		}
 	}
 
 	/**
@@ -198,9 +229,10 @@ class form
 	 * @param string $cp_class
 	 * @return mixed
 	 */
-	protected function get_submitted_field_data(array $row, &$req_mod_input, $cp_class)
+	protected function get_submitted_field_data(array &$row, &$req_mod_input, $cp_class)
 	{
 		$obj = $this->fields_factory->get($row['field_type']);
+		$row['field_props'] += $obj->get_default_props();
 		$field_value = $obj->get_field_value($row['field_name'], $row['field_value']);
 
 		if (!empty($field_value))

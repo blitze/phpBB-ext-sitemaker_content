@@ -111,7 +111,7 @@ class index extends filter implements action_interface
 			->fetch_forum(array_keys($this->content_forums))
 			->set_sorting('t.topic_time')
 			->fetch_custom(array('WHERE' => $sql_where_array))
-			->build(false, false, false);
+			->build(true, false, false);
 
 		$start = $this->generate_pagination($this->base_url);
 		$this->show_topics($mode, $u_action, $start);
@@ -149,7 +149,7 @@ class index extends filter implements action_interface
 			$this->template->assign_block_vars('topicrow', array_merge($tpl_data,
 				$this->get_content_type_info($content_type, $base_url, $row),
 				$this->get_topic_type_info($tpl_data['S_UNREAD_POST'], $tpl_data['TOPIC_COMMENTS'], $row),
-				$this->get_topic_status_info($tpl_data['S_TOPIC_UNAPPROVED'], $tpl_data['S_TOPIC_DELETED'], $base_url, $row),
+				$this->get_topic_status_info($tpl_data['S_POST_UNAPPROVED'], $tpl_data['S_TOPIC_DELETED'], $base_url, $row),
 				$this->get_topic_info($mode, $content_type, $u_action, $tpl_data['S_UNREAD_POST'], $row, $post_row),
 				$this->get_moderator_info($mode, $base_url, $row['topic_id'], $tpl_data['S_TOPIC_UNAPPROVED'], false, $tpl_data['S_TOPIC_DELETED'])
 			));
@@ -344,7 +344,7 @@ class index extends filter implements action_interface
 	 */
 	protected function get_delete_url($mode, $u_action, array $row, array $post_row)
 	{
-		if ($u_delete = $this->helper->delete_post($row, $post_row))
+		if ($u_delete = $this->helper->get_delete_url($row, $post_row, $mode))
 		{
 			if ($mode === 'mcp')
 			{

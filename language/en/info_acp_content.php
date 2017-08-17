@@ -104,6 +104,7 @@ $lang = array_merge($lang, array(
 
 	'INVALID_CONTENT_FIELD'		=> '%1$s is invalid (%2$s)',
 	'INVALID_CONTENT_TYPE'		=> 'Oops! Invalid content type',
+	'ITEMS_PER_COLUMN'			=> 'Number of items per column',
 	'ITEMS_PER_PAGE'			=> 'Number of items per page',
 
 	'LABEL'						=> 'Label',
@@ -120,7 +121,6 @@ $lang = array_merge($lang, array(
 
 	'PENDING_TOPICS'			=> 'Pending Topics',
 	'PROCEED'					=> 'Proceed',
-	'PT_REQUIRED_FIELDS'		=> '* Required',
 
 	'REQ_APPROVAL'				=> 'Requires Approval?',
 

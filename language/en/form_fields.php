@@ -63,7 +63,7 @@ $lang = array_merge($lang, array(
 
 	// checkbox/radio/select settings
 	'ADD_OPTION'				=> 'Add Option',
-	'ITEMS_PER_COLUMN'			=> 'Items per column',
+	'ALIGN_VERTICALLY'			=> 'Align vertically',
 	'MULTI_SELECT'				=> 'Allow multiple selections',
 
 	// color settings
@@ -91,10 +91,36 @@ $lang = array_merge($lang, array(
 	'DATETIME_MIN_DATE'			=> 'Minimum date',
 	'DATETIME_MIN_EXPLAIN'		=> 'Minimum possible date to select. It can be a specific date or a statement like ’now’, ’today’, ’yesterday’, ’-2 days’, ’-3 weeks’, ’last monday’, etc. See <a href="https://www.w3schools.com/php/func_date_strtotime.asp" target="_blank">more</a>',
 
+	// image settings
+	'IMAGE_ALIGN'				=> 'Align',
+	'IMAGE_ALIGN_LEFT'			=> 'Left',
+	'IMAGE_ALIGN_RIGHT'			=> 'Right',
+	'IMAGE_SIZE'				=> 'Size',
+	'IMAGE_SIZE_SMALL'			=> 'Small',
+	'IMAGE_SIZE_MEDIUM'			=> 'Medium',
+	'IMAGE_SIZE_LARGE'			=> 'Large',
+	'IMAGE_SIZE_FULLWIDTH'		=> 'Full Width',
+
 	// number settings
 	'NUMBER_MAX_VALUE'			=> 'Maximum value',
 	'NUMBER_MIN_VALUE'			=> 'Minimum value',
 	'NUMBER_STEP'				=> 'Increase/decrease by',
+
+	// range settings
+	'RANGE_TYPE'				=> 'Range Type',
+	'RANGE_TYPE_SINGLE'			=> 'Single',
+	'RANGE_TYPE_DOUBLE'			=> 'Double',
+	'RANGE_THEME'				=> 'Theme',
+	'RANGE_VALUES'				=> 'Possible range values (optional)',
+	'RANGE_VALUES_EXPLAIN'		=> 'Comma-separated (<strong>,</strong>) list of possible slider values (numbers or strings)',
+	'RANGE_PREFIX'				=> 'Prefix',
+	'RANGE_PREFIX_EXPLAIN'		=> 'Set prefix for values. Will be set up right before the value e.g $10',
+	'RANGE_POSTFIX'				=> 'Postfix',
+	'RANGE_POSTFIX_EXPLAIN'		=> 'Set postfix for values. Will be set up right after the value e.g 100k',
+	'RANGE_MIN_VALUE'			=> 'Minimum number',
+	'RANGE_MAX_VALUE'			=> 'Maximum number',
+	'RANGE_STEP'				=> 'Step',
+	'RANGE_ENABLE_GRID'			=> 'Enable grid?',
 
 	// text settings
 	'TEXT_MAX_VALUE'			=> 'Maximum value',
@@ -106,4 +132,5 @@ $lang = array_merge($lang, array(
 	'TEXTAREA_MAXLENGTH'		=> 'Maximum input characters',
 	'TEXTAREA_SIZE'				=> 'Size',
 	'TEXTAREA_SMALL'			=> 'Small',
+	'TEXTAREA_TIPS'				=> '<strong>TIP</strong>: You can insert a page break using [pagebreak] or [pagebreak title=Page Title]', 
 ));

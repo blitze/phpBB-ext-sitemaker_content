@@ -55,6 +55,7 @@ services:
         arguments:
             - '@auth'
             - '@controller.helper'
+            - '@dispatcher'
             - '@language'
             - '@template'
             - '@user'
@@ -64,17 +65,10 @@ services:
 
     blitze.content.actions.type.edit:
         class: blitze\content\services\actions\type\edit
+        parent: blitze.content.actions.type.add
         arguments:
-            - '@auth'
-            - '@controller.helper'
-            - '@language'
-            - '@template'
-            - '@user'
-            - '@blitze.sitemaker.auto_lang'
             - '@blitze.content.types'
-            - '@blitze.content.form.fields.factory'
             - '@blitze.content.mapper.factory'
-            - '@blitze.content.views.factory'
 
     blitze.content.actions.type.pre_delete:
         class: blitze\content\services\actions\type\pre_delete

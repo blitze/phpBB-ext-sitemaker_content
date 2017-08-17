@@ -2,14 +2,19 @@
 /**
  *
  * @package sitemaker
- * @copyright (c) 2016 Daniel A. (blitze)
+ * @copyright (c) 2013 Daniel A. (blitze)
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
 namespace blitze\content\services\template;
 
-class loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface, \Twig_SourceContextLoaderInterface
+/**
+ * Class template_loader
+ *
+ * @package blitze\content\services
+ */
+class loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface
 {
 	/* @var array */
 	protected $blocks_data = array();
@@ -48,6 +53,11 @@ class loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface, \Twi
 		}
 	}
 
+	public function setPaths()
+	{
+		// do nothing
+	}
+
 	/**
 	 * @param string $name
 	 * @return mixed
@@ -68,7 +78,7 @@ class loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface, \Twi
 	 * @param string $name
 	 * @return mixed
 	 * @throws \Twig_Error_Loader
-	 */
+	 *
 	public function getSourceContext($name)
 	{
 		if (false === $source = $this->getValue('source', $name))
@@ -78,6 +88,7 @@ class loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface, \Twi
 
 		return new \Twig_Source($source, $name);
 	}
+	*/
 
 	/**
 	 * Twig_ExistsLoaderInterface as of Twig 1.11

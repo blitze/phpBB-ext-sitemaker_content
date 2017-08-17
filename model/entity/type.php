@@ -327,6 +327,7 @@ final class type extends base_entity
 		foreach ($content_fields as $field => $data)
 		{
 			$field_types[$field] = $data['field_type'];
+
 			if ($data['field_summary_show'])
 			{
 				$summary_tags[] = $field;

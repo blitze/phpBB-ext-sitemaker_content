@@ -19,23 +19,14 @@ class textarea extends base
 	/** @var \phpbb\config\config */
 	protected $config;
 
-	/** @var \phpbb\language\language */
-	protected $language;
-
 	/** @var \phpbb\pagination */
 	protected $pagination;
-
-	/** @var \phpbb\request\request_interface */
-	protected $request;
 
 	/** @var \phpbb\template\template */
 	protected $template;
 
 	/** @var \phpbb\template\context */
 	protected $template_context;
-
-	/** @var \blitze\sitemaker\services\template */
-	protected $ptemplate;
 
 	/** @var \blitze\sitemaker\services\util */
 	protected $util;
@@ -49,19 +40,19 @@ class textarea extends base
 	/**
 	 * Constructor
 	 *
+	 * @param \phpbb\language\language					$language			Language object
+	 * @param \phpbb\request\request_interface			$request			Request object
+	 * @param \blitze\sitemaker\services\template		$ptemplate			Sitemaker template object
 	 * @param \phpbb\auth\auth							$auth				Auth object
 	 * @param \phpbb\config\config						$config				Config object
-	 * @param \phpbb\language\language					$language			Language object
 	 * @param \phpbb\pagination							$pagination			Pagination object
-	 * @param \phpbb\request\request_interface			$request			Request object
 	 * @param \phpbb\template\template					$template			Template object
 	 * @param \phpbb\template\context					$template_context	Template context object
-	 * @param \blitze\sitemaker\services\template		$ptemplate			Sitemaker template object
 	 * @param \blitze\sitemaker\services\util			$util				Sitemaker utility object
 	 * @param string									$phpbb_root_path	Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	 */
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\language\language $language, \phpbb\pagination $pagination, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\template\context $template_context, \blitze\sitemaker\services\template $ptemplate, \blitze\sitemaker\services\util $util, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\sitemaker\services\template $ptemplate, \phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\pagination $pagination, \phpbb\template\template $template, \phpbb\template\context $template_context, \blitze\sitemaker\services\util $util, $phpbb_root_path, $php_ext)
 	{
 		parent::__construct($language, $request, $ptemplate);
 
@@ -107,12 +98,12 @@ class textarea extends base
 	public function display_field(array $data = array(), $view_mode = 'summary', array $topic_data = array())
 	{
 		$toc_pattern = '(<h4>(.*?)</h4>)?';
-		$pages_pattern = '<!-- pagebreak -->';
-		$split_pattern = $pages_pattern . (($view_mode === 'summary') ? $toc_pattern : '');
+		$pages_pattern = '<p><!-- pagebreak --></p>';
+		$split_pattern = $pages_pattern . (($view_mode !== 'detail') ? $toc_pattern : '');
 
 		$pages = array_filter(preg_split('#' . $split_pattern . '#s', $data['field_value']));
 
-		if ($view_mode === 'summary')
+		if ($view_mode !== 'detail')
 		{
 			return $this->get_summary_value(trim($pages[0]), $data['field_props']['max_chars']);
 		}
@@ -120,7 +111,7 @@ class textarea extends base
 		// get page titles to generate TOC
 		preg_match_all('#' . $pages_pattern . $toc_pattern . '#s', $data['field_value'], $matches);
 
-		return $this->get_detail_value($pages, $matches[2], $data, $topic_data['TOPIC_URL']);
+		return $this->get_detail_value($pages, $matches[2], $data);
 	}
 
 	/**
@@ -192,30 +183,25 @@ class textarea extends base
 	 * @param array $pages
 	 * @param array $titles
 	 * @param array $data
-	 * @param string $topic_url
 	 * @return mixed
 	 */
-	protected function get_detail_value(array $pages, array $titles, array $data, $topic_url)
+	protected function get_detail_value(array $pages, array $titles, array $data)
 	{
+		if ($this->request->is_set('preview'))
+		{
+			return join('<p><hr class="dashed"></p>', $pages);
+		}
+
 		$page = $this->request->variable('page', 0);
 
 		$start = isset($pages[$page]) ? $page : 0;
-		$value = trim($pages[$start]);
 		$total_pages = sizeof($pages);
+		$topic_url = build_url(array('page'));
 
 		$this->generate_page_nav($topic_url, $total_pages, $start);
 		$this->generate_toc($start, $topic_url, array_slice($titles, 0, $total_pages - 1));
-		$this->handle_preview($pages);
 
-		// Hide all other fields if we're looking at page 2+
-		if ($start)
-		{
-			return array(
-				$data['field_name'] => $value,
-			);
-		}
-
-		return $value;
+		return $this->get_page_content($start, $data['field_name'], $pages);
 	}
 
 	/**
@@ -262,19 +248,20 @@ class textarea extends base
 	 * When Previewing topic, we show all pages
 	 *
 	 * @param array $pages
-	 * @return void
+	 * @return mixed
 	 */
-	protected function handle_preview(array $pages)
+	protected function get_page_content($start, $field_name, array $pages)
 	{
-		if ($this->request->is_set('preview'))
+		$value = trim($pages[$start]);
+
+		// Hide all other fields if we're looking at page 2+
+		if ($start)
 		{
-			for ($i = 1, $size = sizeof($pages); $i < $size; $i++)
-			{
-				$this->template->assign_block_vars('pages', array(
-					'CONTENT'	=> $pages[$i],
-					'PAGE'		=> $i + 1,
-				));
-			}
+			$value = array(
+				$field_name => $value,
+			);
 		}
+
+		return $value;
 	}
 }
