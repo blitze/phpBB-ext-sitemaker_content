@@ -118,16 +118,16 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 		}
 
 		$forum_id = $entity->get_forum_id();
-		$topics_data = $this->get_topic_data($forum_id);
+		$this->build_query($forum_id);
 
-		return $this->show_topics($edit_mode, $bdata['bid'], $forum_id, $type, $topics_data, $entity);
+		return $this->show_topics($edit_mode, $bdata['bid'], $forum_id, $type, $entity);
 	}
 
 	/**
 	 * @param int $forum_id
-	 * @return array
+	 * @return void
 	 */
-	protected function get_topic_data($forum_id)
+	protected function build_query($forum_id)
 	{
 		$sort_keys = array(
 			self::SORT_TOPIC_TIME	=> 't.topic_time',
@@ -143,8 +143,6 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 			->fetch_date_range($range_info['start'], $range_info['stop'])
 			->set_sorting($sort_keys[$this->settings['sort_key']])
 			->build(true, true, false);
-
-		return $this->forum->get_topic_data($this->settings['max_topics'], $this->settings['offset_start']);
 	}
 
 	/**
@@ -152,16 +150,17 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 	 * @param int $block_id
 	 * @param int $forum_id
 	 * @param string $type
-	 * @param array $topics_data
 	 * @param \blitze\content\model\entity\type $entity
 	 * @return array
 	 */
-	protected function show_topics($edit_mode, $block_id, $forum_id, $type, array $topics_data, \blitze\content\model\entity\type $entity)
+	protected function show_topics($edit_mode, $block_id, $forum_id, $type, \blitze\content\model\entity\type $entity)
 	{
+		$topics_data = $this->forum->get_topic_data($this->settings['max_topics'], $this->settings['offset_start']);
+		$posts_data = $this->forum->get_post_data('first');
+
 		$title = $content = '';
-		if (sizeof($topics_data) || $edit_mode !== false)
+		if (sizeof($posts_data) || $edit_mode !== false)
 		{
-			$posts_data = $this->forum->get_post_data('first');
 			$users_cache = $this->forum->get_posters_info();
 			$attachments = $this->forum->get_attachments($forum_id);
 			$topic_tracking_info = $this->forum->get_topic_tracking_info($forum_id);
