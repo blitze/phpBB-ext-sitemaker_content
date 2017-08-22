@@ -50,11 +50,11 @@ use blitze\sitemaker\model\base_entity;
  * @method integer get_last_modified()
  * @method array get_content_fields()
  * @method object set_field_types($field_types)
- * @method string get_field_types()
+ * @method array get_field_types()
  * @method object set_summary_tags($summary_tags)
- * @method string get_summary_tags()
+ * @method array get_summary_tags()
  * @method object set_detail_tags($detail_tag)
- * @method string get_detail_tags()
+ * @method array get_detail_tags()
  *
  */
 final class type extends base_entity

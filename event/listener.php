@@ -39,7 +39,7 @@ class listener implements EventSubscriberInterface
 	/**
 	 * @return array
 	 */
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents()
 	{
 		return array(
 			'core.user_setup'						=> 'load_block_language',

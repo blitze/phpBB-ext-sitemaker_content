@@ -26,7 +26,7 @@ class main_controller
 	/** @var \phpbb\user */
 	protected $user;
 
-	/* @var \blitze\content\services\comments\comments_inteface */
+	/* @var \blitze\content\services\comments\comments_interface */
 	protected $comments;
 
 	/** @var \blitze\content\services\poll */
@@ -105,12 +105,11 @@ class main_controller
 	 * Display a single topic
 	 *
 	 * @param string $type
-	 * @param string $slug
 	 * @param int $topic_id
 	 * @param int $page
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function show($type, $slug, $topic_id)
+	public function show($type, $topic_id)
 	{
 		$entity = $this->get_type_entity($type);
 

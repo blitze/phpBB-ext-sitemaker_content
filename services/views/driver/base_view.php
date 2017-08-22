@@ -82,25 +82,13 @@ abstract class base_view implements views_interface
 	 */
 	public function build_index_query($filter_type, $filter_value, $forum_id = '')
 	{
-		$sql_array = array();
-
-		/**
-		 * Event to filter topics by field value e.g category/food
-		 *
-		 * @event blitze.content.view.filter
-		 * @var mixed								forum_id		Forum id, if available
-		 * @var string								filter_type		Filter type e.g category|tag
-		 * @var string								filter_value	The filter value e.g food
-		 * @var array								sql_array		Array to modify sql query to get topics
-		 */
-		$vars = array('forum_id', 'filter_type', 'filter_value', 'sql_array');
-		extract($this->phpbb_dispatcher->trigger_event('blitze.content.view.filter', compact($vars)));
+		$sql_array = $this->get_filter_sql($filter_type, $filter_value, $forum_id);
 
 		$this->forum->query()
 			->fetch_forum($forum_id)
 			->fetch_custom($sql_array)
-			->set_sorting('t.forum_id, t.topic_time')
-			->build(true, true, false);
+			->set_sorting('t.topic_time')
+			->build(true, false, false);
 	}
 
 	/**
@@ -186,6 +174,7 @@ abstract class base_view implements views_interface
 	{
 		$forum_id = $entity->get_forum_id();
 		$content_type = $entity->get_content_name();
+		$content_langname = $entity->get_content_name();
 
 		$topics_data = $this->forum->get_topic_data();
 		$post_data = $this->forum->get_post_data('first');
@@ -259,6 +248,28 @@ abstract class base_view implements views_interface
 	}
 
 	/**
+	 * {@inheritdoc}
+	 */
+	protected function get_filter_sql($filter_type, $filter_value, $forum_id)
+	{
+		$sql_array = array();
+
+		/**
+		 * Event to filter topics by field value e.g category/food
+		 *
+		 * @event blitze.content.view.filter
+		 * @var mixed								forum_id		Forum id, if available
+		 * @var string								filter_type		Filter type e.g category|tag
+		 * @var string								filter_value	The filter value e.g food
+		 * @var array								sql_array		Array to modify sql query to get topics
+		 */
+		$vars = array('forum_id', 'filter_type', 'filter_value', 'sql_array');
+		extract($this->phpbb_dispatcher->trigger_event('blitze.content.view.filter', compact($vars)));
+
+		return $sql_array;
+	}
+
+	/**
 	 * @param int $forum_id
 	 * @param int $poster_id
 	 * @param string $content_langname
@@ -314,5 +325,37 @@ abstract class base_view implements views_interface
 				$this->template->assign_block_vars('content', $this->fields->get_min_topic_info($content_type, $row, $topic_tracking_info));
 			}
 		}
+	}
+
+	protected function set_watch_status(array $topic_data)
+	{
+		$s_watching_topic = array(
+			'link'			=> '',
+			'link_toggle'	=> '',
+			'title'			=> '',
+			'title_toggle'	=> '',
+			'is_watching'	=> false,
+		);
+
+		if ($config['allow_topic_notify'])
+		{
+			$notify_status = (isset($topic_data['notify_status'])) ? $topic_data['notify_status'] : null;
+			watch_topic_forum('topic', $s_watching_topic, $user->data['user_id'], $forum_id, $topic_id, $notify_status, $start, $topic_data['topic_title']);
+
+			// Reset forum notification if forum notify is set
+			if ($config['allow_forum_notify'] && $auth->acl_get('f_subscribe', $forum_id))
+			{
+				$s_watching_forum = $s_watching_topic;
+				watch_topic_forum('forum', $s_watching_forum, $user->data['user_id'], $forum_id, 0);
+			}
+		}
+
+		$this->template->assign_vars(array(
+			'U_WATCH_TOPIC'			=> $s_watching_topic['link'],
+			'U_WATCH_TOPIC_TOGGLE'	=> $s_watching_topic['link_toggle'],
+			'S_WATCH_TOPIC_TITLE'	=> $s_watching_topic['title'],
+			'S_WATCH_TOPIC_TOGGLE'	=> $s_watching_topic['title_toggle'],
+			'S_WATCHING_TOPIC'		=> $s_watching_topic['is_watching'],
+		));
 	}
 }

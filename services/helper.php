@@ -244,13 +244,13 @@ class helper
 	 */
 	public function post_is_unapproved(array $post_data)
 	{
-		return (($post_data['post_visibility'] == ITEM_UNAPPROVED || $post_data['post_visibility'] == ITEM_REAPPROVE) && $this->auth->acl_get('m_approve', $topic_data['forum_id'])) ? true : false;
+		return (($post_data['post_visibility'] == ITEM_UNAPPROVED || $post_data['post_visibility'] == ITEM_REAPPROVE) && $this->auth->acl_get('m_approve', $post_data['forum_id'])) ? true : false;
 	}
 
 	/**
 	 * @param array $post_data
 	 * @param array $topic_data
-	 * @param string $cp_class
+	 * @param string $cp_mode
 	 * @return string
 	 */
 	protected function get_cp_param(array $post_data, array $topic_data, $cp_mode)

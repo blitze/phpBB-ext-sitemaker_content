@@ -147,11 +147,11 @@ class index extends filter implements action_interface
 			$tpl_data = $this->topic->get_detail_template_data($content_type, $row, $post_row, $users_cache, $attachments, $topic_tracking_info, $update_count, $mode);
 
 			$this->template->assign_block_vars('topicrow', array_merge($tpl_data,
-				$this->get_content_type_info($content_type, $base_url, $row),
+				$this->get_content_type_info($content_type, $base_url),
 				$this->get_topic_type_info($tpl_data['S_UNREAD_POST'], $tpl_data['TOPIC_COMMENTS'], $row),
 				$this->get_topic_status_info($tpl_data['S_POST_UNAPPROVED'], $tpl_data['S_TOPIC_DELETED'], $base_url, $row),
-				$this->get_topic_info($mode, $content_type, $u_action, $tpl_data['S_UNREAD_POST'], $row, $post_row),
-				$this->get_moderator_info($mode, $base_url, $row['topic_id'], $tpl_data['S_TOPIC_UNAPPROVED'], false, $tpl_data['S_TOPIC_DELETED'])
+				$this->get_topic_info($mode, $content_type, $u_action, $row, $post_row),
+				$this->get_moderator_info($mode, $row['topic_id'], $tpl_data['S_TOPIC_UNAPPROVED'], false, $tpl_data['S_TOPIC_DELETED'])
 			));
 			unset($topics_data[$i]);
 		}
@@ -161,12 +161,11 @@ class index extends filter implements action_interface
 	 * @param string $mode
 	 * @param string $content_type
 	 * @param string $u_action
-	 * @param bool $unread_topic
 	 * @param array $row
 	 * @param array $post_row
 	 * @return array
 	 */
-	protected function get_topic_info($mode, $content_type, $u_action, $unread_topic, array $row, array $post_row)
+	protected function get_topic_info($mode, $content_type, $u_action, array $row, array $post_row)
 	{
 		return array(
 			'ATTACH_ICON_IMG'	=> $this->get_attachment_icon($row),
@@ -226,10 +225,9 @@ class index extends filter implements action_interface
 	/**
 	 * @param string $type
 	 * @param string $base_url
-	 * @param array $row
 	 * @return array
 	 */
-	protected function get_content_type_info($type, $base_url, array $row)
+	protected function get_content_type_info($type, $base_url)
 	{
 		$entity = $this->content_types->get_type($type);
 
@@ -303,14 +301,13 @@ class index extends filter implements action_interface
 
 	/**
 	 * @param string $mode
-	 * @param string $base_url
 	 * @param int $topic_id
 	 * @param bool $topic_unapproved
 	 * @param bool $posts_unapproved
 	 * @param bool $topic_deleted
 	 * @return array
 	 */
-	protected function get_moderator_info($mode, $base_url, $topic_id, $topic_unapproved, $posts_unapproved, $topic_deleted)
+	protected function get_moderator_info($mode, $topic_id, $topic_unapproved, $posts_unapproved, $topic_deleted)
 	{
 		$u_mcp_queue = '';
 		if ($mode === 'mcp')

@@ -36,15 +36,6 @@ interface views_interface
 	public function get_detail_template();
 
 	/**
-	 * Build query to find topics to display on index
-	 *
-	 * @param string $filter_type
-	 * @param string $filter_value
-	 * @param mixed $forum_id
-	 */
-	public function build_index_query($filter_type, $filter_value, $forum_id = '');
-
-	/**
 	 * Display topics on content index
 	 *
 	 * @param \blitze\content\model\entity\type $entity

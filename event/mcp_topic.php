@@ -49,7 +49,7 @@ class mcp_topic implements EventSubscriberInterface
 	/**
 	 * @return array
 	 */
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents()
 	{
 		return array(
 			'core.mcp_topic_modify_post_data'	=> 'modify_post_data',
@@ -67,8 +67,6 @@ class mcp_topic implements EventSubscriberInterface
 	 */
 	public function modify_post_data(\phpbb\event\data $event)
 	{
-		// We use $event['rowset'][0]['forum_id'] instead of $event['forum_id'] because forum_id is not guaranteed
-		// as it is only retrieved from url parameters on topic view but links from pagination does not include forumid
 		$this->type = $this->content_types->get_forum_type($event['rowset'][0]['forum_id']);
 	}
 
@@ -81,7 +79,7 @@ class mcp_topic implements EventSubscriberInterface
 		if ($event['row']['post_id'] === $event['topic_info']['topic_first_post_id'] && $this->type)
 		{
 			$entity = $this->content_types->get_type($this->type);
-			$this->fields->prepare_to_show($this->type, 'summary', $entity->get_summary_tags(), $entity->get_content_fields(), $entity->get_summary_tpl());
+			$this->fields->prepare_to_show($entity, array($event['topic_info']['topic_id']), $entity->get_summary_tags(), $entity->get_summary_tpl(), 'summary');
 
 			$post_row = $event['post_row'];
 			$content = $this->fields->build_content($post_row);

@@ -69,7 +69,7 @@ class edit extends add
 		$content_fields = array();
 		foreach ($collection as $entity)
 		{
-			/** @var /blitze/content/services/form/field/field_interface $field_instance */
+			/** @var \blitze\content\services\form\field\field_interface $field_instance */
 			$field_instance = $this->available_fields[$entity->get_field_type()];
 			$field_data = $entity->to_array();
 			$field_data['field_props'] = array_replace_recursive($field_instance->get_default_props(), $field_data['field_props']);
@@ -80,7 +80,7 @@ class edit extends add
 			 * @event blitze.content.acp_modify_field_data
 			 * @var	int														content_id		Content type id
 			 * @var	array													field_data		Array containing field data
-			 * @var	/blitze/content/services/form/field/field_interface		field_instance	Field instance
+			 * @var	\blitze\content\services\form\field\field_interface		field_instance	Field instance
 			 */
 			$vars = array('content_id', 'field_data', 'field_instance');
 			extract($this->phpbb_dispatcher->trigger_event('blitze.content.acp_modify_field_data', compact($vars)));

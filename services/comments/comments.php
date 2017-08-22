@@ -147,7 +147,7 @@ class comments extends form implements comments_interface
 				'POSTER_WARNINGS'			=> $this->auth->acl_get('m_warn') ? $users_cache[$poster_id]['warnings'] : '',
 				'S_HAS_ATTACHMENTS'			=> (!empty($attachments[$row['post_id']])) ? true : false,
 				'S_MULTIPLE_ATTACHMENTS'	=> !empty($attachments[$row['post_id']]) && sizeof($attachments[$row['post_id']]) > 1,
-				'S_POST_REPORTED'			=> ($row['post_reported'] && $this->auth->acl_get('m_report', $forum_id)) ? true : false,
+				'S_POST_REPORTED'			=> ($row['post_reported'] && $this->auth->acl_get('m_report', $row['forum_id'])) ? true : false,
 				'S_TOPIC_POSTER'			=> ($topic_data['topic_poster'] == $poster_id) ? true : false,
 				'S_POST_HIDDEN'				=> $row['hide_post'],
 				'L_POST_DISPLAY'			=> ($row['hide_post']) ? $this->language->lang('POST_DISPLAY', '<a class="display_post" data-post-id="' . $row['post_id'] . '" href="' . $viewtopic_url . "&amp;p={$row['post_id']}&amp;view=show#p{$row['post_id']}" . '">', '</a>') : '',

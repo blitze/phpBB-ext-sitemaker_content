@@ -87,7 +87,7 @@ class quickmod
 			'restore_topic'		=> array('RESTORE_TOPIC', $this->allow_topic_restore($topic_data)),
 		);
 
-		if ($this->auth->acl_get('m_', $forum_id) || $this->user_is_topic_poster($poster_id))
+		if ($this->auth->acl_get('m_', $topic_data['forum_id']) || $this->user_is_topic_poster($topic_data['topic_poster']))
 		{
 			$s_quickmod_array += array(
 				'make_normal'		=> array('MAKE_NORMAL', $this->allow_make_normal($topic_data['forum_id'], $topic_data['topic_type'])),

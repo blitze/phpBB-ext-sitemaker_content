@@ -124,7 +124,7 @@ class moderate implements action_interface
 	 * @param array $topic_ids
 	 * @return void
 	 */
-	protected function restore_topic(array $topic_ids, array $forum_ids)
+	protected function restore_topic(array $topic_ids)
 	{
 		mcp_restore_topic($topic_ids);
 	}

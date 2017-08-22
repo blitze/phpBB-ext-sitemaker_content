@@ -277,7 +277,7 @@ class topic
 			$display_postername	= $users_cache[$row['poster_id']]['username_full'];
 			$display_username	= $users_cache[$row['post_delete_user']]['username_full'];
 
-			$l_deleted_message = $this->get_deleted_message();
+			$l_deleted_message = $this->get_delete_message($row, $display_poster, $display_username);
 			$l_deleted_by = $this->language->lang('DELETED_INFORMATION', $display_username, $this->user->format_date($row['post_delete_time'], false, true));
 			$delete_reason = $row['post_delete_reason'];
 		}

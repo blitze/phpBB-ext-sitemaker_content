@@ -189,14 +189,18 @@ class builder
 	 */
 	public function get_content_view($content_type, array $post_data, $view)
 	{
-		$entity = $this->types->get_type($content_type);
-		$get_tags = 'get_' . $view . '_tags';
-		$get_template = 'get_' . $view . '_tpl';
-
-		$this->fields->prepare_to_show($entity, array($post_data['topic_id']), $entity->$get_tags(), $entity->$get_template(), $view);
-		$content = $this->fields->build_content(array_change_key_case($post_data, CASE_UPPER));
-
-		return isset($content['SEQ_DISPLAY']) ? $content['SEQ_DISPLAY'] : $content['CUSTOM_DISPLAY'];
+		$text = '';
+		if ($entity = $this->types->get_type($content_type))
+		{
+			$get_tags = 'get_' . $view . '_tags';
+			$get_template = 'get_' . $view . '_tpl';
+	
+			$this->fields->prepare_to_show($entity, array($post_data['topic_id']), $entity->$get_tags(), $entity->$get_template(), $view);
+			$content = $this->fields->build_content(array_change_key_case($post_data, CASE_UPPER));
+	
+			$text =  $content['SEQ_DISPLAY'] ?: $content['CUSTOM_DISPLAY'];
+		}
+		return $text;
 	}
 
 	/**
@@ -244,7 +248,7 @@ class builder
 	 */
 	public function generate_form($topic_id, array &$post_data, array $page_data = array())
 	{
-		$this->set_field_values($topic_id, $post_data['post_text']);
+		$this->set_field_values($post_data['post_text']);
 
 		$this->form->create('postform', 'posting')
 			->add('cp', 'hidden', array('field_value' => $this->mode));
@@ -344,11 +348,10 @@ class builder
 	}
 
 	/**
-	 * @param int $topic_id
 	 * @param string $post_text
 	 * @return void
 	 */
-	protected function set_field_values($topic_id, $post_text)
+	protected function set_field_values($post_text)
 	{
 		$fields_data = $this->get_fields_data_from_post($post_text, array_keys($this->content_fields));
 

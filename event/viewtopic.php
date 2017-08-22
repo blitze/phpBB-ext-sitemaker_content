@@ -34,7 +34,7 @@ class viewtopic implements EventSubscriberInterface
 	/**
 	 * @return array
 	 */
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents()
 	{
 		return array(
 			'core.viewforum_get_topic_data'					=> 'viewforum_redirect',

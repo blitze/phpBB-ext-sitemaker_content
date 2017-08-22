@@ -16,8 +16,8 @@ class posting implements EventSubscriberInterface
 	/** @var \blitze\content\services\form\builder */
 	protected $builder;
 
-	/** @var string */
-	protected $content_type = '';
+	/** @var string|bool */
+	protected $content_type = false;
 
 	/** @var bool */
 	protected $build_content = false;
@@ -38,7 +38,7 @@ class posting implements EventSubscriberInterface
 	/**
 	 * @return array
 	 */
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents()
 	{
 		return array(
 			'core.modify_posting_auth'					=> 'init_builder',

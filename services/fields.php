@@ -26,9 +26,6 @@ class fields extends topic
 	/** @var array */
 	protected $content_fields;
 
-	/** @var array */
-	protected $tags = array();
-
 	/** @var string */
 	protected $tpl_name = '';
 
@@ -37,6 +34,12 @@ class fields extends topic
 
 	/** @var string */
 	protected $view_mode = '';
+
+	/** @var array */
+	protected $tags = array();
+
+	/** @var array */
+	protected $db_fields = array();
 
 	/** @var array */
 	protected $label = array('label-hidden', 'label-inline', 'label-newline');

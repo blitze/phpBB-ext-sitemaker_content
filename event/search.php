@@ -39,7 +39,7 @@ class search implements EventSubscriberInterface
 	/**
 	 * @return array
 	 */
-	static public function getSubscribedEvents()
+	public static function getSubscribedEvents()
 	{
 		return array(
 			'core.search_get_posts_data'	=> 'modify_posts_data',

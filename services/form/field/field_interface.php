@@ -13,16 +13,19 @@ interface field_interface
 {
 	/**
 	 * Short name of content field
+	 * @return string
 	 */
 	public function get_name();
 
 	/**
 	 * Lang name of content field
+	 * @return string
 	 */
 	public function get_langname();
 
 	/**
 	 * Default content field properties
+	 * @return array
 	 */
 	public function get_default_props();
 

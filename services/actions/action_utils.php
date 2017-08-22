@@ -36,7 +36,7 @@ abstract class action_utils
 	 */
 	protected function meta_refresh($time, $u_action)
 	{
-		$this->auto_refresh ? meta_refresh(3, $u_action) : null;
+		$this->auto_refresh ? meta_refresh($time, $u_action) : null;
 	}
 
 	/**

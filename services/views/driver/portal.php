@@ -106,7 +106,11 @@ class portal extends base_view
 		$update_count = array();
 		foreach ($forums_data as $forum_id => $posts_data)
 		{
-			$content_type = $this->content_types->get_forum_type($forum_id);
+			if (!($content_type = $this->content_types->get_forum_type($forum_id)))
+			{
+				continue;
+			}
+
 			$entity = $this->content_types->get_type($content_type);
 			$this->template->assign_vars($entity->to_array());
 
