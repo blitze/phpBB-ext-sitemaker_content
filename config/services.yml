@@ -53,16 +53,10 @@ services:
 
     blitze.content.fields:
         class: blitze\content\services\fields
+        parent: blitze.content.topic
         arguments:
-            - '@config'
-            - '@controller.helper'
-            - '@dispatcher'
-            - '@language'
-            - '@blitze.content.template'
-            - '@user'
             - '@blitze.content.comments'
             - '@blitze.content.form.fields.factory'
-            - '@blitze.content.helper'
 
     blitze.content.form:
         class: blitze\content\services\form\form

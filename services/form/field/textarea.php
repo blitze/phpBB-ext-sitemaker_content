@@ -187,7 +187,7 @@ class textarea extends base
 	 */
 	protected function get_detail_value(array $pages, array $titles, array $data)
 	{
-		if ($this->request->is_set('preview'))
+		if ($this->request->is_set('preview') || $this->request->variable('view', '') === 'print')
 		{
 			return join('<p><hr class="dashed"></p>', $pages);
 		}

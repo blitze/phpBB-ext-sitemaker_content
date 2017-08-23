@@ -53,11 +53,11 @@ class fields extends topic
 	 * @param \phpbb\language\language								$language				Language object
 	 * @param \phpbb\template\template								$template				Template object
 	 * @param \phpbb\user											$user					User object
-	 * @param \blitze\content\services\form\fields_factory			$fields_factory			Form fields factory
-	 * @param \blitze\content\services\comments\comments_interface	$comments				Comments object
 	 * @param \blitze\content\services\helper						$helper					Content helper object
+	 * @param \blitze\content\services\comments\comments_interface	$comments				Comments object
+	 * @param \blitze\content\services\form\fields_factory			$fields_factory			Form fields factory
 	 */
-	public function __construct(\phpbb\config\db $config, \phpbb\controller\helper $controller_helper, \phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\language\language $language, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\comments\comments_interface $comments, \blitze\content\services\form\fields_factory $fields_factory, \blitze\content\services\helper $helper)
+	public function __construct(\phpbb\config\db $config, \phpbb\controller\helper $controller_helper, \phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\language\language $language, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\helper $helper, \blitze\content\services\comments\comments_interface $comments, \blitze\content\services\form\fields_factory $fields_factory)
 	{
 		parent::__construct($config, $controller_helper, $phpbb_dispatcher, $language, $template, $user, $helper);
 

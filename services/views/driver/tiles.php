@@ -25,13 +25,11 @@ class tiles extends base_view
 	 * @param \blitze\sitemaker\services\forum\data		$forum				Forum Data object
 	 * @param \blitze\content\services\helper			$helper				Content helper object
 	 * @param \blitze\content\services\quickmod			$quickmod			Quick moderator tools
-	 * @param string									$phpbb_root_path	Path to the phpbb includes directory.
-	 * @param string									$php_ext			php file extension
 	 * @param \phpbb\request\request_interface			$request			Request object
 	*/
-	public function __construct(\phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\language\language $language, \phpbb\pagination $pagination, \phpbb\template\template $template, \blitze\content\services\fields $fields, \blitze\sitemaker\services\forum\data $forum, \blitze\content\services\helper $helper, \blitze\content\services\quickmod $quickmod, $phpbb_root_path, $php_ext, \phpbb\request\request_interface $request)
+	public function __construct(\phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\language\language $language, \phpbb\pagination $pagination, \phpbb\template\template $template, \blitze\content\services\fields $fields, \blitze\sitemaker\services\forum\data $forum, \blitze\content\services\helper $helper, \blitze\content\services\quickmod $quickmod, \phpbb\request\request_interface $request)
 	{
-		parent::__construct($phpbb_dispatcher, $language, $pagination, $template, $fields, $forum, $helper, $quickmod, $phpbb_root_path, $php_ext);
+		parent::__construct($phpbb_dispatcher, $language, $pagination, $template, $fields, $forum, $helper, $quickmod);
 
 		$this->request = $request;
 	}

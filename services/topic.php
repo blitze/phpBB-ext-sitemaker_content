@@ -154,6 +154,21 @@ class topic
 	}
 
 	/**
+	 * @param array $topic_data
+	 * @return array
+	 */
+	public function get_topic_tools_data(array $topic_data)
+	{
+		return array_merge(array(
+				'U_PRINT_TOPIC'		=> $this->helper->get_print_topic_url($topic_data),
+				'U_EMAIL_TOPIC'		=> $this->helper->get_email_topic_url($topic_data),
+			),
+			$this->get_watch_status_data($topic_data),
+			$this->get_bookmark_status_data($topic_data)
+		);
+	}
+
+	/**
 	 * @param string $type
 	 * @param array $topic_data
 	 * @return string
@@ -306,5 +321,56 @@ class topic
 		{
 			return $this->language->lang('POST_DELETED_BY', $display_postername, $display_username, $this->user->format_date($row['post_delete_time'], false, true));
 		}
+	}
+
+	/**
+	 * @param array $row
+	 * @return array
+	 */
+	protected function get_watch_status_data(array $topic_data)
+	{
+		$s_watching_topic = array(
+			'link'			=> '',
+			'link_toggle'	=> '',
+			'title'			=> '',
+			'title_toggle'	=> '',
+			'is_watching'	=> false,
+		);
+
+		if ($this->config['allow_topic_notify'])
+		{
+			$notify_status = (isset($topic_data['notify_status'])) ? $topic_data['notify_status'] : null;
+			watch_topic_forum('topic', $s_watching_topic, $this->user->data['user_id'], $topic_data['forum_id'], $topic_data['topic_id'], $notify_status, 0, $topic_data['topic_title']);
+		}
+
+		return array(
+			'U_WATCH_TOPIC'			=> $s_watching_topic['link'],
+			'U_WATCH_TOPIC_TOGGLE'	=> $s_watching_topic['link_toggle'],
+			'S_WATCH_TOPIC_TITLE'	=> $s_watching_topic['title'],
+			'S_WATCH_TOPIC_TOGGLE'	=> $s_watching_topic['title_toggle'],
+			'S_WATCHING_TOPIC'		=> $s_watching_topic['is_watching'],
+		);
+	}
+
+	/**
+	 * @param array $topic_data
+	 * @return array
+	 */
+	protected function get_bookmark_status_data(array $topic_data)
+	{
+		$bookmarked = (bool) $topic_data['bookmarked'];
+		$state_key = (int) $bookmarked;
+		$lang_keys = array(
+			'toggle'	=> array('BOOKMARK_TOPIC_REMOVE', 'BOOKMARK_TOPIC'),
+			'bookmark'	=> array('BOOKMARK_TOPIC', 'BOOKMARK_TOPIC_REMOVE'),
+		);
+
+		return array(
+			'U_BOOKMARK_TOPIC'		=> ($this->user->data['is_registered'] && $this->config['allow_bookmarks']) ? $this->helper->get_viewtopic_url($topic_data) . '&amp;bookmark=1&amp;hash=' . generate_link_hash("topic_{$topic_data['topic_id']}") : '',
+			'S_BOOKMARK_TOPIC'		=> $this->language->lang($lang_keys['bookmark'][$state_key]),
+			'S_BOOKMARK_TOGGLE'		=> $this->language->lang($lang_keys['toggle'][$state_key]),
+			'S_BOOKMARKED_TOPIC'	=> $bookmarked,
+		);
+
 	}
 }

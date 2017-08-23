@@ -79,6 +79,43 @@ class helper
 	}
 
 	/**
+	 * @param array $topic_data
+	 * @return string
+	 */
+	public function get_viewtopic_url(array $topic_data)
+	{
+		return append_sid("{$this->phpbb_root_path}viewtopic.$this->php_ext", "f={$topic_data['forum_id']}&amp;t={$topic_data['topic_id']}");
+	}
+
+	/**
+	 * @param array $topic_data
+	 * @return string
+	 */
+	public function get_print_topic_url(array $topic_data)
+	{
+		return ($this->auth->acl_get('f_print', $topic_data['forum_id'])) ? $topic_data['topic_url'] . '?view=print' : '';
+	}
+
+	/**
+	 * @param array $topic_data
+	 * @return string
+	 */
+	public function get_email_topic_url(array $topic_data)
+	{
+		return ($this->auth->acl_get('f_email', $topic_data['forum_id']) && $this->config['email_enable']) ? append_sid("{$this->phpbb_root_path}memberlist.{$this->php_ext}", 'mode=email&amp;t=' . $topic_data['topic_id']) : '';
+	}
+
+	/**
+	 * @param int $forum_id
+	 * @param string $username
+	 * @return string
+	 */
+	public function get_search_users_posts_url($forum_id, $username)
+	{
+		return append_sid("{$this->phpbb_root_path}search.{$this->php_ext}", "author={$username}&amp;" . urlencode('fid[]') . "=$forum_id&amp;sc=0&amp;sf=titleonly&amp;sr=topics");
+	}
+
+	/**
 	 * @param array $post_data
 	 * @return string
 	 */

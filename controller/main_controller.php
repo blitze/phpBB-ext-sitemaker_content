@@ -111,6 +111,7 @@ class main_controller
 	 */
 	public function show($type, $topic_id)
 	{
+		$view = $this->request->variable('view', '');
 		$entity = $this->get_type_entity($type);
 
 		$update_count = array();
@@ -127,9 +128,18 @@ class main_controller
 			$this->comments->show_form($topic_data);
 		}
 
-		$this->update_views($topic_id, $update_count);
+		if ($view !== 'print')
+		{
+			$this->update_views($topic_id, $update_count);
+			$template_file = $view_handler->get_detail_template();
+		}
+		else
+		{
+			$template_file = 'views/print.html';
+			$this->template->assign_var('TOPIC_URL', generate_board_url(true) . $topic_data['topic_url']);
+		}
 
-		return $this->helper->render($view_handler->get_detail_template(), $topic_data['topic_title']);
+		return $this->helper->render($template_file, $topic_data['topic_title']);
 	}
 
 	/**

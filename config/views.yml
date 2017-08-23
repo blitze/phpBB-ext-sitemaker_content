@@ -12,9 +12,6 @@ services:
             - '@blitze.sitemaker.forum.data'
             - '@blitze.content.helper'
             - '@blitze.content.quickmod'
-            - '%core.root_path%'
-            - '%core.php_ext%'
-
 
     blitze.content.view.blog:
         class: blitze\content\services\views\driver\blog

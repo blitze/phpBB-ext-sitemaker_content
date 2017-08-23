@@ -61,6 +61,7 @@
 				<!-- ENDIF -->
 
 				<!-- IF not CUSTOM_DISPLAY --><!-- INCLUDE parts/detail_title.html --><!-- ENDIF -->
+				<!-- INCLUDE parts/topic_tools.html -->
 
 				<!-- IF S_POST_UNAPPROVED -->
 				<form method="post" class="mcp_approve" action="{U_APPROVE_ACTION}">
@@ -73,7 +74,7 @@
 					<!-- ELSE -->
 						<a class="button1" href="{U_MCP_EDIT}" style="margin-bottom: -4px">{L_APPROVE}</a>
 					<!-- ENDIF -->
-						<input type="hidden" name="post_id_list[]" value="{postrow.POST_ID}" />
+						<input type="hidden" name="post_id_list[]" value="{POST_ID}" />
 						{S_FORM_TOKEN}
 					</p>
 				</form>
@@ -81,11 +82,11 @@
 				<form method="post" class="mcp_approve" action="{U_APPROVE_ACTION}">
 					<p class="post-notice deleted">
 						<strong>{L_POST_DELETED_ACTION}</strong>
-						<!-- IF postrow.S_DELETE_PERMANENT -->
+						<!-- IF S_DELETE_PERMANENT -->
 							<input class="button2" type="submit" value="{L_DELETE}" name="action[delete]" />
 						<!-- ENDIF -->
 						<input class="button1" type="submit" value="{L_RESTORE}" name="action[restore]" />
-						<input type="hidden" name="post_id_list[]" value="{postrow.POST_ID}" />
+						<input type="hidden" name="post_id_list[]" value="{POST_ID}" />
 						{S_FORM_TOKEN}
 					</p>
 				</form>

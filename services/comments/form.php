@@ -72,7 +72,7 @@ class form
 
 			$this->set_smilies($topic_data['forum_id'], $qr_hidden_fields);
 			$this->set_bbcode($topic_data['forum_id'], $qr_hidden_fields);
-			$this->set_notification($s_watching_topic['is_watching'], $qr_hidden_fields);
+			$this->set_notification($topic_data['notify_status'], $qr_hidden_fields);
 			$this->set_topic_lock($topic_data['topic_status'], $qr_hidden_fields);
 			$this->set_magic_urls($qr_hidden_fields);
 

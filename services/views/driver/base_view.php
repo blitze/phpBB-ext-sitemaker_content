@@ -35,12 +35,6 @@ abstract class base_view implements views_interface
 	/* @var \blitze\content\services\quickmod */
 	protected $quickmod;
 
-	/** @var string */
-	protected $phpbb_root_path;
-
-	/** @var string */
-	protected $php_ext;
-
 	/**
 	 * Constructor
 	 *
@@ -52,10 +46,8 @@ abstract class base_view implements views_interface
 	 * @param \blitze\sitemaker\services\forum\data		$forum				Forum Data object
 	 * @param \blitze\content\services\helper			$helper				Content helper object
 	 * @param \blitze\content\services\quickmod			$quickmod			Quick moderator tools
-	 * @param string									$phpbb_root_path	Path to the phpbb includes directory.
-	 * @param string									$php_ext			php file extension
 	*/
-	public function __construct(\phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\language\language $language, \phpbb\pagination $pagination, \phpbb\template\template $template, \blitze\content\services\fields $fields, \blitze\sitemaker\services\forum\data $forum, \blitze\content\services\helper $helper, \blitze\content\services\quickmod $quickmod, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\language\language $language, \phpbb\pagination $pagination, \phpbb\template\template $template, \blitze\content\services\fields $fields, \blitze\sitemaker\services\forum\data $forum, \blitze\content\services\helper $helper, \blitze\content\services\quickmod $quickmod)
 	{
 		$this->phpbb_dispatcher = $phpbb_dispatcher;
 		$this->language = $language;
@@ -65,8 +57,6 @@ abstract class base_view implements views_interface
 		$this->forum = $forum;
 		$this->helper = $helper;
 		$this->quickmod = $quickmod;
-		$this->phpbb_root_path = $phpbb_root_path;
-		$this->php_ext = $php_ext;
 	}
 
 	/**
@@ -157,6 +147,8 @@ abstract class base_view implements views_interface
 
 		$this->forum->query()
 			->fetch_topic($topic_id)
+			->fetch_watch_status()
+			->fetch_bookmark_status()
 			->build(true, true, false);
 
 		return $this->display_topic($mode, $topic_id, $entity, $update_count, $topic_data_overwrite);
@@ -191,7 +183,10 @@ abstract class base_view implements views_interface
 
 		$topic_data = array_shift($topics_data);
 		$post_data = array_shift($post_data[$topic_id]);
-		$tpl_data = array_merge($topic_data, $this->fields->show($content_type, $topic_data, $post_data, $users_cache, $attachments, $update_count, $topic_tracking_info, $topic_data_overwrite));
+		$tpl_data = array_merge($topic_data,
+			$this->fields->show($content_type, $topic_data, $post_data, $users_cache, $attachments, $update_count, $topic_tracking_info, $topic_data_overwrite),
+			$this->fields->get_topic_tools_data($topic_data)
+		);
 
 		$this->template->assign_vars(array_change_key_case($tpl_data, CASE_UPPER));
 		$this->fields->show_attachments($attachments, $post_data['post_id']);
@@ -292,7 +287,7 @@ abstract class base_view implements views_interface
 				'L_USER_ABOUT'			=> $this->language->lang('AUTHOR_INFO_EXPLAIN', $user_cache['username_full'], $user_cache['joined'], $user_content_topics, $content_langname, $user_cache['posts']),
 				'L_USER_VIEW_ALL'		=> $this->language->lang('VIEW_AUTHOR_CONTENTS', $content_langname, $user_cache['username']),
 				'L_SEARCH_USER_POSTS'	=> $this->language->lang('SEARCH_USER_POSTS', $user_cache['username']),
-				'U_SEARCH_CONTENTS'		=> append_sid("{$this->phpbb_root_path}search.{$this->php_ext}", "author={$user_cache['username']}&amp;" . urlencode('fid[]') . "=$forum_id&amp;sc=0&amp;sf=titleonly&amp;sr=topics")
+				'U_SEARCH_CONTENTS'		=> $this->helper->get_search_users_posts_url($forum_id, $user_cache['username']),
 			)));
 		}
 	}
