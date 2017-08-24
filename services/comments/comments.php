@@ -83,7 +83,7 @@ class comments extends form implements comments_interface
 	/**
 	 * @inheritdoc
 	 */
-	public function show_comments($content_type, array $topic_data, array &$update_count = array())
+	public function show_comments($content_type, array $topic_data, array &$update_count)
 	{
 		if ($topic_data['total_comments'])
 		{

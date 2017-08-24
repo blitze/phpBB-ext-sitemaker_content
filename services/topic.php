@@ -211,7 +211,7 @@ class topic
 	{
 		$parse_flags = ($post_data['bbcode_bitfield'] ? OPTION_FLAG_BBCODE : 0) | OPTION_FLAG_SMILIES;
 		$message = generate_text_for_display($post_data['post_text'], $post_data['bbcode_uid'], $post_data['bbcode_bitfield'], $parse_flags, true);
-	
+
 		if (!empty($attachments[$post_data['post_id']]))
 		{
 			parse_attachments($post_data['forum_id'], $message, $attachments[$post_data['post_id']], $update_count);
@@ -292,7 +292,7 @@ class topic
 			$display_postername	= $users_cache[$row['poster_id']]['username_full'];
 			$display_username	= $users_cache[$row['post_delete_user']]['username_full'];
 
-			$l_deleted_message = $this->get_delete_message($row, $display_poster, $display_username);
+			$l_deleted_message = $this->get_delete_message($row, $display_postername, $display_username);
 			$l_deleted_by = $this->language->lang('DELETED_INFORMATION', $display_username, $this->user->format_date($row['post_delete_time'], false, true));
 			$delete_reason = $row['post_delete_reason'];
 		}
@@ -324,7 +324,7 @@ class topic
 	}
 
 	/**
-	 * @param array $row
+	 * @param array $topic_data
 	 * @return array
 	 */
 	protected function get_watch_status_data(array $topic_data)

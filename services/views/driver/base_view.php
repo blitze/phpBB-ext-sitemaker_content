@@ -321,36 +321,4 @@ abstract class base_view implements views_interface
 			}
 		}
 	}
-
-	protected function set_watch_status(array $topic_data)
-	{
-		$s_watching_topic = array(
-			'link'			=> '',
-			'link_toggle'	=> '',
-			'title'			=> '',
-			'title_toggle'	=> '',
-			'is_watching'	=> false,
-		);
-
-		if ($config['allow_topic_notify'])
-		{
-			$notify_status = (isset($topic_data['notify_status'])) ? $topic_data['notify_status'] : null;
-			watch_topic_forum('topic', $s_watching_topic, $user->data['user_id'], $forum_id, $topic_id, $notify_status, $start, $topic_data['topic_title']);
-
-			// Reset forum notification if forum notify is set
-			if ($config['allow_forum_notify'] && $auth->acl_get('f_subscribe', $forum_id))
-			{
-				$s_watching_forum = $s_watching_topic;
-				watch_topic_forum('forum', $s_watching_forum, $user->data['user_id'], $forum_id, 0);
-			}
-		}
-
-		$this->template->assign_vars(array(
-			'U_WATCH_TOPIC'			=> $s_watching_topic['link'],
-			'U_WATCH_TOPIC_TOGGLE'	=> $s_watching_topic['link_toggle'],
-			'S_WATCH_TOPIC_TITLE'	=> $s_watching_topic['title'],
-			'S_WATCH_TOPIC_TOGGLE'	=> $s_watching_topic['title_toggle'],
-			'S_WATCHING_TOPIC'		=> $s_watching_topic['is_watching'],
-		));
-	}
 }

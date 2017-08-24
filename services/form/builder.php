@@ -194,10 +194,10 @@ class builder
 		{
 			$get_tags = 'get_' . $view . '_tags';
 			$get_template = 'get_' . $view . '_tpl';
-	
+
 			$this->fields->prepare_to_show($entity, array($post_data['topic_id']), $entity->$get_tags(), $entity->$get_template(), $view);
 			$content = $this->fields->build_content(array_change_key_case($post_data, CASE_UPPER));
-	
+
 			$text =  $content['SEQ_DISPLAY'] ?: $content['CUSTOM_DISPLAY'];
 		}
 		return $text;

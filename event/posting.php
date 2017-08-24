@@ -202,7 +202,7 @@ class posting implements EventSubscriberInterface
 			$post_data['TOPIC_URL'] = './';
 			$page_data['SITEMAKER_FORM'] = $this->builder->generate_form($event['topic_id'], $post_data, $page_data);
 
-			if ($event['preview'])
+			if ($event['preview'] && $this->content_type)
 			{
 				$page_data['PREVIEW_MESSAGE'] = $this->builder->generate_preview($this->content_type, $post_data);
 			}
