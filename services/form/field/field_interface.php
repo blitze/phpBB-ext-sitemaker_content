@@ -30,12 +30,6 @@ interface field_interface
 	public function get_default_props();
 
 	/**
-	 * Possible display locations above|inline|body|footer
-	 * @return array
-	 */
-	public function get_display_locations();
-
-	/**
 	 * Returns the value of the field.
 	 *
 	 * @param string $field_name
