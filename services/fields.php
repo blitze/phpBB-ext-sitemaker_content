@@ -139,14 +139,15 @@ class fields extends topic
 
 		if ($this->tpl_name)
 		{
-			$this->template->assign_vars(array_change_key_case(array_merge($tpl_data, $fields_data), CASE_UPPER));
+			$this->template->assign_vars(array_change_key_case(array_merge($tpl_data, $fields_data['all']), CASE_UPPER));
 			$this->template->set_filenames(array('content' => $this->tpl_name));
 			$tpl_data['CUSTOM_DISPLAY'] = $this->template->assign_display('content');
 		}
 		else
 		{
-			$tpl_data['SEQ_DISPLAY'] = join("\n", $fields_data);
+			$tpl_data['FIELDS'] = $fields_data;
 		}
+		unset($fields_data);
 
 		return $tpl_data;
 	}
@@ -177,7 +178,7 @@ class fields extends topic
 		$field_values = array_merge($this->db_fields[$tpl_data['TOPIC_ID']], $this->get_fields_data_from_post($tpl_data['MESSAGE']));
 		unset($tpl_data['MESSAGE']);
 
-		$display_data = array();
+		$display_data = array_fill_keys(array('all', 'above', 'body', 'inline', 'footer'), array());
 		foreach ($this->content_fields as $field_name => $field_data)
 		{
 			$field_type = $field_data['field_type'];
@@ -189,13 +190,16 @@ class fields extends topic
 			// this essentially hides other fields if the field returns an array
 			if (is_array($field_contents))
 			{
-				$display_data = $field_contents;
+				$display_data['all'] = $field_contents;
+				$display_data[$field_data['field_' . $this->view_mode . '_show']] = $field_contents;
 				break;
 			}
 
 			if (!empty($field_contents))
 			{
-				$display_data[$field_name] = '<div class="field-label ' . $this->label[$field_data['field_' . $this->view_mode . '_ldisp']] . '">' . $field_data['field_label'] . $this->language->lang('COLON') . ' </div>' . $field_contents;
+				$field = '<div class="field-label ' . $this->label[$field_data['field_' . $this->view_mode . '_ldisp']] . '">' . $field_data['field_label'] . $this->language->lang('COLON') . ' </div>' . $field_contents;
+				$display_data['all'][$field_name] = $field;
+				$display_data[$field_data['field_' . $this->view_mode . '_show']][$field_name] = $field;
 			}
 		}
 

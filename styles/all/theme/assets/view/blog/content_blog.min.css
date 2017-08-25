@@ -73,11 +73,6 @@
 	right: 9px;
 }
 
-.content-header {
-	margin-left: 6em;
-}
-.content-header .first,
-.content-header .author {
-	float: none;
-	clear: none;
+.sm-blog-post {
+	overflow: hidden;
 }

@@ -1,4 +1,5 @@
 {% include 'parts/moderator_info.html' %}
+{{ topicrow.FIELDS.above|join }}
 <h3 class="first">
 	{% if topicrow.TOPIC_ICON_IMG %}<img src="{T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}" width="{topicrow.TOPIC_ICON_IMG_WIDTH}" height="{topicrow.TOPIC_ICON_IMG_HEIGHT}" alt="{{ topicrow.TOPIC_ICON_IMG_ALT }}" title="{{ topicrow.TOPIC_ICON_IMG_ALT }}" /> {% endif %}
 	<a href="{{ topicrow.TOPIC_URL }}">{{ topicrow.TOPIC_TITLE }}</a>
@@ -14,4 +15,5 @@
 	<span class="responsive-hide">{{ lang('POST_BY_AUTHOR') }} </span><strong>{{ topicrow.USERNAME_FULL }}</strong> | <i class="fa fa-calendar"></i>{{ topicrow.TOPIC_DATE|date("m/d/Y") }}
 	{% if allow_views %} | <i class="fa fa-eye"></i><span class="responsive-hide">{{ lang('VIEWS') ~ lang('COLON') }} </span>{{ topicrow.TOPIC_VIEWS }}{% endif %}
 	{% if allow_comments %} | <i class="fa fa-comments-o fa-lg"></i><a href="{{ topicrow.TOPIC_URL }}#comments"><span class="responsive-hide">{{ lang('COMMENTS') ~ lang('COLON') }} </span>{{ topicrow.TOPIC_COMMENTS }}</a>{% endif %}
+	<span class="responsive-hide">{{ topicrow.FIELDS.inline|join('|') }}</span>
 </p>

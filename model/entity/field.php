@@ -25,9 +25,9 @@ use blitze\sitemaker\model\base_entity;
  * @method object set_field_required($required_field)
  * @method boolean get_field_required()
  * @method object set_field_summary_show($summary_show)
- * @method boolean get_field_summary_show()
+ * @method string get_field_summary_show()
  * @method object set_field_detail_show($detail_show)
- * @method boolean get_field_detail_show()
+ * @method string get_field_detail_show()
  * @method object set_field_summary_ldisp($summary_ldisp)
  * @method boolean get_field_summary_ldisp()
  * @method object set_field_detail_ldisp($detail_ldisp)
@@ -70,11 +70,11 @@ final class field extends base_entity
 	/** @var boolean */
 	protected $field_required = false;
 
-	/** @var boolean */
-	protected $field_summary_show = false;
+	/** @var string */
+	protected $field_summary_show = '';
 
-	/** @var boolean */
-	protected $field_detail_show = false;
+	/** @var string */
+	protected $field_detail_show = '';
 
 	/** @var boolean */
 	protected $field_summary_ldisp = false;

@@ -56,6 +56,8 @@
 		<column>field_exp_uid</column>
 		<column>field_exp_bitfield</column>
 		<column>field_order</column>
+		<column>field_summary_show</column>
+		<column>field_detail_show</column>
 		<row>
 			<value>50</value>
 			<value>2</value>
@@ -67,6 +69,8 @@
 			<value></value>
 			<value></value>
 			<value>0</value>
+			<value>body</value>
+			<value>body</value>
 		</row>
 		<row>
 			<value>55</value>
@@ -79,6 +83,8 @@
 			<value></value>
 			<value></value>
 			<value>0</value>
+			<value>above</value>
+			<value>body</value>
 		</row>
 		<row>
 			<value>56</value>
@@ -91,6 +97,8 @@
 			<value></value>
 			<value></value>
 			<value>1</value>
+			<value></value>
+			<value>body</value>
 		</row>
 		<row>
 			<value>57</value>
@@ -103,6 +111,8 @@
 			<value></value>
 			<value></value>
 			<value>2</value>
+			<value></value>
+			<value>body</value>
 		</row>
 		<row>
 			<value>58</value>
@@ -115,6 +125,8 @@
 			<value></value>
 			<value></value>
 			<value>3</value>
+			<value>below</value>
+			<value>below</value>
 		</row>
 	</table>
 </dataset>

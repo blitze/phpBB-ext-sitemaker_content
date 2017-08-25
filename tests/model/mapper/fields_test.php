@@ -80,6 +80,7 @@ class fields_test extends base_mapper
 			'field_label'	=> 'Field 2',
 			'field_type'	=> 'textarea',
 		));
+
 		$mapper->multi_insert(array(
 			'field1'	=> $entity1->to_db(),
 			'field2'	=> $entity2->to_db(),

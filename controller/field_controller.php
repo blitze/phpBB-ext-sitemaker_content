@@ -85,6 +85,8 @@ class field_controller
 		$data += array(
 			'field_detail_ldisp'	=> 1,
 			'field_summary_ldisp'	=> 1,
+			'field_detail_show'		=> 'body',
+			'field_summary_show'	=> 'body',
 		);
 
 		/** @var /blitze/content/services/form/field/field_interface $object */

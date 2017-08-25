@@ -38,21 +38,25 @@ $lang = array_merge($lang, array(
 	'CONTENT_DETAIL'			=> 'Content detail',
 	'CONTENT_INDEX'				=> 'Content summary',
 
+	'DEFAULT'					=> 'Default',
 	'DELETE'					=> 'Delete',
 
 	'EDIT'						=> 'Edit',
 
 	'FIELD_DESCRIPTION'			=> 'Field Description (optional)',
-	'FIELD_DETAIL_SHOW'			=> 'Show on content detail page',
 	'FIELD_DISPLAY'				=> 'Where should this field be displayed?',
 	'FIELD_DISPLAY_LABEL'		=> 'Display field label?',
+	'FIELD_DONOT_SHOW'			=> 'Do not show',
 	'FIELD_INPUT_MODERATOR'		=> 'Moderators only',
 	'FIELD_LABEL'				=> 'Field Label',
 	'FIELD_LOCATION'			=> 'Where should this field be displayed?',
 	'FIELD_NAME'				=> 'Field Name (internal)',
 	'FIELD_POSTER'				=> 'Who can input this field?',
 	'FIELD_REQUIRED'			=> 'Is this field required?',
-	'FIELD_SUMMARY_SHOW'		=> 'Show on content summary',
+	'FIELD_SHOW_ABOVE'			=> 'Above title',
+	'FIELD_SHOW_BODY'			=> 'Body',
+	'FIELD_SHOW_FOOTER'			=> 'Footer',
+	'FIELD_SHOW_INLINE'			=> 'Inline',
 
 	'INPUT_SIZE'				=> 'Input size',
 

@@ -114,7 +114,7 @@
 						{TOPIC_POLL}
 					</div>
 					<!-- ENDIF -->
-					<!-- IF CUSTOM_DISPLAY -->{CUSTOM_DISPLAY}<!-- ELSE -->{SEQ_DISPLAY}<!-- ENDIF -->
+					<!-- IF CUSTOM_DISPLAY -->{CUSTOM_DISPLAY}<!-- ELSE -->{{ FIELDS.body|join }}<!-- ENDIF -->
 				</div>
 
 			<!-- IF not S_NOT_LAST_PAGE -->
@@ -189,6 +189,8 @@
 			</div>
 		</div>
 	<!-- ENDIF -->
+
+		{{ topicrow.FIELDS.footer|join }}
 
 		<div class="back2top">
 			<a href="#top" class="top" title="{L_BACK_TO_TOP}">

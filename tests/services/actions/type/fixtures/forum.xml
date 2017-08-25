@@ -84,6 +84,8 @@
 		<column>field_type</column>
 		<column>field_props</column>
 		<column>field_order</column>
+		<column>field_summary_show</column>
+		<column>field_detail_show</column>
 		<row>
 			<value>1</value>
 			<value>1</value>
@@ -93,6 +95,8 @@
 			<value>text</value>
 			<value></value>
 			<value>0</value>
+			<value>body</value>
+			<value>body</value>
 		</row>
 		<row>
 			<value>2</value>
@@ -103,6 +107,8 @@
 			<value>checkbox</value>
 			<value>{"options":{"Red":"Red","Blue":"Blue","Green":"Green","Yellow":"Yellow"},"defaults":["Blue","Yellow"]}</value>
 			<value>1</value>
+			<value></value>
+			<value>body</value>
 		</row>
 	</table>
 </dataset>

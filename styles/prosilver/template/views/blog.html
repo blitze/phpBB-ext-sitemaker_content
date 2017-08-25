@@ -2,27 +2,29 @@
 <!-- INCLUDECSS @blitze_content/assets/view/blog/content_blog.min.css -->
 <!-- INCLUDE parts/content_type.html -->
 
-<div class="panel post cms-block-spacing">
+<div class="panel post sm-block-spacing">
 	<div class="inner">
 <!-- BEGIN topicrow -->
 		<div class="postbody sm-postbody">
 			<div class="calendar">{topicrow.TOPIC_DATE|date('d')} <em>{topicrow.TOPIC_DATE|date('M')}</em></div>
-			<!-- IF not topicrow.CUSTOM_DISPLAY -->
-			<div class="content-header">
-				<!-- INCLUDE parts/summary_title.html -->
-			</div>
-			<!-- ENDIF -->
-			<div class="content">
-			<!-- IF topicrow.CUSTOM_DISPLAY -->
-				{topicrow.CUSTOM_DISPLAY}
-			<!-- ELSE -->
-				{topicrow.SEQ_DISPLAY}
-				<p>&nbsp;</p>
-
-				<div class="buttons align-right">
-					<a href="{topicrow.TOPIC_URL}" class="button icon-button">{L_READ_MORE}</a>
+			<div class="sm-blog-post">
+				<!-- IF not topicrow.CUSTOM_DISPLAY -->
+					<!-- INCLUDE parts/summary_title.html -->
+				<!-- ENDIF -->
+				<div class="content">
+				<!-- IF topicrow.CUSTOM_DISPLAY -->
+					{topicrow.CUSTOM_DISPLAY}
+				<!-- ELSE -->
+					{{ topicrow.FIELDS.body|join }}
+					<p>&nbsp;</p>
+					<div class="align-right">
+						<a href="{topicrow.TOPIC_URL}" class="button">{L_READ_MORE}</a>
+					</div>
+				<!-- ENDIF -->
 				</div>
-			<!-- ENDIF -->
+				<!-- IF not topicrow.FIELDS.CUSTOM_DISPLAY -->
+				{{ topicrow.FIELDS.footer|join }}
+				<!-- ENDIF -->
 			</div>
 		</div>
 		<!-- IF not topicrow.S_LAST_ROW -->

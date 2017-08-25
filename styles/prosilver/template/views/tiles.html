@@ -19,17 +19,19 @@
 							<!-- INCLUDE parts/summary_title.html -->
 						<!-- ENDIF -->
 							<div class="content">
-								<!-- IF topicrow.CUSTOM_DISPLAY -->
+							<!-- IF topicrow.CUSTOM_DISPLAY -->
 								{topicrow.CUSTOM_DISPLAY}
-								<!-- ELSE -->
-								{topicrow.SEQ_DISPLAY}
+							<!-- ELSE -->
+								{{ topicrow.FIELDS.body|join }}
 								<p>&nbsp;</p>
-
-								<div class="buttons right-box">
-									<a href="{topicrow.TOPIC_URL}" class="button icon-button">{L_READ_MORE}</a>
+								<div class="align-right">
+									<a href="{topicrow.TOPIC_URL}" class="button">{L_READ_MORE}</a>
 								</div>
-								<!-- ENDIF -->
+							<!-- ENDIF -->
 							</div>
+							<!-- IF not topicrow.FIELDS.CUSTOM_DISPLAY -->
+							{{ topicrow.FIELDS.footer|join }}
+							<!-- ENDIF -->
 						</div>
 					</div>
 				</div>

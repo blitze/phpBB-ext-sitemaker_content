@@ -22,11 +22,6 @@
 				</dd>
 			</dl>
 			<dl>
-				<dt><label for="{{ field.FIELD_NAME ~ '-display' }}">{{ lang('FIELD_DISPLAY') ~ lang('COLON') }}</label></dt>
-				<dd><label><input type="checkbox" class="checkbox" id="{{ field.FIELD_NAME ~ '-field_summary_show' }}" name="field_data[{{ field.FIELD_NAME }}][field_summary_show]" value="1"{% if field.FIELD_SUMMARY_SHOW !== false %} checked="checked"{% endif %} /> {{ lang('FIELD_SUMMARY_SHOW') }}</label></dd>
-				<dd><label><input type="checkbox" class="checkbox" id="{{ field.FIELD_NAME ~ '-field_detail_show' }}" name="field_data[{{ field.FIELD_NAME }}][field_detail_show]" value="1"{% if field.FIELD_DETAIL_SHOW !== false %} checked="checked"{% endif %} /> {{ lang('FIELD_DETAIL_SHOW') }}</label></dd>
-			</dl>
-			<dl>
 				<dt><label for="{{ field.FIELD_NAME ~ '-poster' }}">{{ lang('FIELD_POSTER') ~ lang('COLON') }}</label></dt>
 				<dd>
 					<label><input type="checkbox" id="{{ field.FIELD_NAME ~ '-poster' }}" class="checkbox" name="field_data[{{ field.FIELD_NAME }}][field_mod_only]" value="1"{% if field.FIELD_MOD_ONLY %} checked="checked"{% endif %} /> {{ lang('FIELD_INPUT_MODERATOR') }}</label>
@@ -37,6 +32,27 @@
 				<dd>
 					<label><input type="radio" id="{{ field.FIELD_NAME ~ '-required-0' }}" class="radio" name="field_data[{{ field.FIELD_NAME }}][field_required]" value="1"{% if field.FIELD_REQUIRED %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
 					<label><input type="radio" id="{{ field.FIELD_NAME ~ '-required-1' }}" class="radio" name="field_data[{{ field.FIELD_NAME }}][field_required]" value="0"{% if !field.FIELD_REQUIRED %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
+				</dd>
+			</dl>
+			<dl>
+				<dt><label for="{{ field.FIELD_NAME ~ '-display' }}">{{ lang('FIELD_DISPLAY') ~ lang('COLON') }}</label></dt>
+				<dd>
+					<div class="column1">
+						<h5>{{ lang('CONTENT_INDEX') }}</h5>
+						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_summary_show-0' }}" name="field_data[{{ field.FIELD_NAME }}][field_summary_show]" value="above"{% if field.FIELD_SUMMARY_SHOW == 'above' %} checked="checked"{% endif %} /> {{ lang('FIELD_SHOW_ABOVE') }}</label><br />
+						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_summary_show-1' }}" name="field_data[{{ field.FIELD_NAME }}][field_summary_show]" value="inline"{% if field.FIELD_SUMMARY_SHOW == 'inline' %} checked="checked"{% endif %} /> {{ lang('FIELD_SHOW_INLINE') }}</label><br />
+						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_summary_show-2' }}" name="field_data[{{ field.FIELD_NAME }}][field_summary_show]" value="body"{% if field.FIELD_SUMMARY_SHOW == 'body' %} checked="checked"{% endif %} /> {{ lang('FIELD_SHOW_BODY') }}</label><br />
+						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_summary_show-3' }}" name="field_data[{{ field.FIELD_NAME }}][field_summary_show]" value="footer"{% if field.FIELD_SUMMARY_SHOW == 'footer' %} checked="checked"{% endif %} /> {{ lang('FIELD_SHOW_FOOTER') }}</label><br />
+						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_summary_show-4' }}" name="field_data[{{ field.FIELD_NAME }}][field_summary_show]" value=""{% if !field.FIELD_SUMMARY_SHOW %} checked="checked"{% endif %} /> {{ lang('FIELD_DONOT_SHOW') }}</label>
+					</div>
+					<div class="column2">
+						<h5>{{ lang('CONTENT_DETAIL') }}</h5>
+						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_detail_show-0' }}" name="field_data[{{ field.FIELD_NAME }}][field_detail_show]" value="above"{% if field.FIELD_DETAIL_SHOW == 'above' %} checked="checked"{% endif %} /> {{ lang('FIELD_SHOW_ABOVE') }}</label><br />
+						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_detail_show-1' }}" name="field_data[{{ field.FIELD_NAME }}][field_detail_show]" value="inline"{% if field.FIELD_DETAIL_SHOW == 'inline' %} checked="checked"{% endif %} /> {{ lang('FIELD_SHOW_INLINE') }}</label><br />
+						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_detail_show-2' }}" name="field_data[{{ field.FIELD_NAME }}][field_detail_show]" value="body"{% if field.FIELD_DETAIL_SHOW == 'body' %} checked="checked"{% endif %} /> {{ lang('FIELD_SHOW_BODY') }}</label><br />
+						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_detail_show-3' }}" name="field_data[{{ field.FIELD_NAME }}][field_detail_show]" value="footer"{% if field.FIELD_DETAIL_SHOW == 'footer' %} checked="checked"{% endif %} /> {{ lang('FIELD_SHOW_FOOTER') }}</label><br />
+						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_detail_show-4' }}" name="field_data[{{ field.FIELD_NAME }}][field_detail_show]" value=""{% if !field.FIELD_DETAIL_SHOW %} checked="checked"{% endif %} /> {{ lang('FIELD_DONOT_SHOW') }}</label>
+					</div>
 				</dd>
 			</dl>
 			<dl>

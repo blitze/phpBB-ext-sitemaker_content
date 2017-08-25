@@ -2,8 +2,9 @@
 <!-- BEGIN topicrow -->
 	<li>
 		<div class="postbody sm-postbody sm-inner">
+		<!-- INCLUDE parts/moderator_info.html -->
 		<!-- IF not topicrow.CUSTOM_DISPLAY -->
-			<!-- INCLUDE parts/moderator_info.html -->
+			{{ topicrow.FIELDS.above|join }}
 			<h3 class="topic-title"><a href="{topicrow.TOPIC_URL}">{topicrow.TOPIC_TITLE}</a></h3>
 			<p class="author">
 			<!-- IF not S_IS_BOT -->
@@ -11,14 +12,18 @@
 					<i class="icon fa-file fa-fw <!-- IF postrow.S_UNREAD_POST -->icon-red<!-- ELSE -->icon-lightgray<!-- ENDIF --> icon-md" aria-hidden="true"></i><span class="sr-only">{postrow.MINI_POST}</span>
 				</a>
 			<!-- ENDIF -->
-				<span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{topicrow.USERNAME_FULL}</strong> &raquo; </span>{topicrow.TOPIC_DATE|date("m/d/Y")}
+				<span class="responsive-hide">{L_POST_BY_AUTHOR} <strong>{topicrow.USERNAME_FULL}</strong> &raquo; {topicrow.TOPIC_DATE|date("m/d/Y")}</span>
+				<span class="responsive-hide">{{ topicrow.FIELDS.inline|join('|') }}</span>
 			</p>
 		<!-- ENDIF -->
-		<!-- IF topicrow.CUSTOM_DISPLAY || topicrow.SEQ_DISPLAY -->
+		<!-- IF topicrow.CUSTOM_DISPLAY || topicrow.FIELDS.body -->
 			<div class="content">
 				{topicrow.CUSTOM_DISPLAY}
-				{topicrow.SEQ_DISPLAY}
+				{{ topicrow.FIELDS.body|join }}
 			</div>
+		<!-- ENDIF -->
+		<!-- IF not topicrow.FIELDS.CUSTOM_DISPLAY -->
+			{{ topicrow.FIELDS.footer|join }}
 		<!-- ENDIF -->
 		</div>
 	</li>

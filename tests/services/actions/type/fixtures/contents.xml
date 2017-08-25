@@ -41,6 +41,8 @@
 		<column>field_type</column>
 		<column>field_props</column>
 		<column>field_order</column>
+		<column>field_summary_show</column>
+		<column>field_detail_show</column>
 		<row>
 			<value>1</value>
 			<value>1</value>
@@ -49,6 +51,8 @@
 			<value>textarea</value>
 			<value>{"size":"large","editor":"1","max_chars":"200"}</value>
 			<value>0</value>
+			<value>body</value>
+			<value>body</value>
 		</row>
 		<row>
 			<value>2</value>
@@ -58,6 +62,8 @@
 			<value>textarea</value>
 			<value>{"size":"large","editor":"1","max_chars":"200"}</value>
 			<value>0</value>
+			<value>body</value>
+			<value>body</value>
 		</row>
 	</table>
 	<table name="phpbb_sm_block_routes">

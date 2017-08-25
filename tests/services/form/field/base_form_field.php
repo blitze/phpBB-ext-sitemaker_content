@@ -42,8 +42,8 @@ abstract class base_form_field extends \phpbb_test_case
 			->getMock();
 		$this->language->expects($this->any())
 			->method('lang')
-			->willReturnCallback(function() {
-				return implode(' ', func_get_args());
+			->willReturnCallback(function($var) {
+				return ($var == 'COMMA_SEPARATOR') ? ', ' : implode(' ', func_get_args());
 			});
 
 		$this->request = $this->getMock('\phpbb\request\request_interface');

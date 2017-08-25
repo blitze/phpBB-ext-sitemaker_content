@@ -1,3 +1,4 @@
+{{ FIELDS.above|join }}
 <h3 class="first"><a href="{TOPIC_URL}">{TOPIC_TITLE}</a></h3>
 <p class="author">
 	<!-- IF S_IS_BOT -->
@@ -10,4 +11,5 @@
 	<span class="responsive-hide">{L_POST_BY_AUTHOR} </span><strong>{USERNAME_FULL}</strong> | <i class="fa fa-calendar"></i>{TOPIC_DATE|date("m/d/Y")}
 	<!-- IF S_VIEWS --> | <i class="fa fa-eye"></i><span class="responsive-hide">{L_VIEWS}{L_COLON} </span>{TOPIC_VIEWS}<!-- ENDIF -->
 	<!-- IF S_COMMENTS --> | <i class="fa fa-comments-o fa-lg"></i><a href="{TOPIC_URL}#comments"><span class="responsive-hide">{L_COMMENTS}{L_COLON} </span>{TOPIC_COMMENTS}</a><!-- ENDIF -->
+	<span class="responsive-hide">{{ topicrow.FIELDS.inline|join('|') }}</span>
 </p><br />
