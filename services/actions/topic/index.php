@@ -94,31 +94,34 @@ class index extends filter implements action_interface
 
 		$this->language->add_lang('viewforum');
 		$this->language->add_lang('manager', 'blitze/content');
+		$this->template->assign_var('MODE', $mode);
 
 		$content_types = $this->content_types->get_all_types();
 		$this->content_forums = $this->content_types->get_forum_types();
 
-		$sql_where_array = array();
-		$this->apply_keyword_filter($sql_where_array);
-		$filter_topic_status = $this->apply_status_filter($sql_where_array);
-		$filter_content_type = $this->apply_content_type_filter();
+		if (sizeof($content_types))
+		{
+			$sql_where_array = array();
+			$this->apply_keyword_filter($sql_where_array);
+			$filter_topic_status = $this->apply_status_filter($sql_where_array);
+			$filter_content_type = $this->apply_content_type_filter();
 
-		$callable = 'init_' . $mode . '_mode';
-		$this->base_url = $u_action . (sizeof($this->params) ? '&amp;' : '');
-		$this->$callable($content_types, $sql_where_array);
+			$callable = 'init_' . $mode . '_mode';
+			$this->base_url = $u_action . (sizeof($this->params) ? '&amp;' : '');
+			$this->$callable($content_types, $sql_where_array);
 
-		$this->forum->query()
-			->fetch_forum(array_keys($this->content_forums))
-			->set_sorting('t.topic_time')
-			->fetch_custom(array('WHERE' => $sql_where_array))
-			->build(true, false, false);
+			$this->forum->query()
+				->fetch_forum(array_keys($this->content_forums))
+				->set_sorting('t.topic_time')
+				->fetch_custom(array('WHERE' => $sql_where_array))
+				->build(true, false, false);
 
-		$start = $this->generate_pagination($this->base_url);
-		$this->show_topics($mode, $u_action, $start);
+			$start = $this->generate_pagination($this->base_url);
+			$this->show_topics($mode, $u_action, $start);
 
-		$this->generate_content_type_filter($filter_content_type, $content_types, $this->base_url);
-		$this->generate_topic_status_filter($filter_topic_status, $this->base_url);
-		$this->template->assign_var('MODE', $mode);
+			$this->generate_content_type_filter($filter_content_type, $content_types, $this->base_url);
+			$this->generate_topic_status_filter($filter_topic_status, $this->base_url);
+		}
 	}
 
 	/**
@@ -133,7 +136,7 @@ class index extends filter implements action_interface
 		$posts_data = $this->forum->get_post_data('first');
 		$users_cache = $this->forum->get_posters_info();
 		$topic_tracking_info = $this->forum->get_topic_tracking_info();
-
+print_data($topics_data);
 		$topics_data = array_values($topics_data);
 		$base_url = $u_action . http_build_query($this->params);
 
