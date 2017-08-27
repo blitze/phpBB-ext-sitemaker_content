@@ -84,7 +84,7 @@ class mcp_topic implements EventSubscriberInterface
 
 				$post_row = $event['post_row'];
 				$content = $this->fields->build_content($post_row);
-				$post_row['MESSAGE'] = isset($content['SEQ_DISPLAY']) ? $content['SEQ_DISPLAY'] : $content['CUSTOM_DISPLAY'];
+				$post_row['MESSAGE'] = $content['CUSTOM_DISPLAY'] ?: join('', $content['FIELDS']['all']);
 
 				$event['post_row'] = $post_row;
 			}
