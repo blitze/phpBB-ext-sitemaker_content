@@ -17,7 +17,7 @@ class content_info
 			'filename'	=> '\blitze\content\acp\content_module',
 			'title'		=> 'ACP_SITEMAKER',
 			'modes'		=> array(
-				'content'		=> array('title' => 'CONTENT_TYPES', 'auth' => 'ext_blitze/content', 'cat' => array('ACP_SITEMAKER')),
+				'content'		=> array('title' => 'CONTENT_TYPES', 'auth' => 'ext_blitze/content', 'before' => 'ACP_MENU', 'cat' => array('ACP_SITEMAKER')),
 			),
 		);
 	}
