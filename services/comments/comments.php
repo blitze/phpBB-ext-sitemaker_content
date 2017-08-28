@@ -129,29 +129,27 @@ class comments extends form implements comments_interface
 	 */
 	protected function show_posts(array $topic_data, array $posts_data, array $topic_tracking_info, array $users_cache, array &$update_count, $type, $start)
 	{
-		$viewtopic_url = '';
 		$attachments = $this->forum->get_attachments($topic_data['forum_id']);
-
-		$this->template->assign_vars(array(
-			'S_TOPIC_ACTION' => append_sid($topic_data['topic_url'], (($start == 0) ? '' : "?start=$start")) . '#comments',
-		));
+		$this->set_form_action($topic_data['topic_url'], $start == 0);
 
 		for ($i = 0, $size = sizeof($posts_data); $i < $size; $i++)
 		{
 			$row = $posts_data[$i];
 			$poster_id = $row['poster_id'];
 
-			$this->template->assign_block_vars('postrow', array_merge($this->topic->get_detail_template_data($type, $topic_data, $row, $users_cache, $attachments, $topic_tracking_info, $update_count), array(
-				'POST_SUBJECT'				=> $row['post_subject'],
-				'POST_DATE'					=> $this->user->format_date($row['post_time'], false, false),
-				'POSTER_WARNINGS'			=> $this->auth->acl_get('m_warn') ? $users_cache[$poster_id]['warnings'] : '',
-				'S_HAS_ATTACHMENTS'			=> (!empty($attachments[$row['post_id']])) ? true : false,
-				'S_MULTIPLE_ATTACHMENTS'	=> !empty($attachments[$row['post_id']]) && sizeof($attachments[$row['post_id']]) > 1,
-				'S_POST_REPORTED'			=> ($row['post_reported'] && $this->auth->acl_get('m_report', $row['forum_id'])) ? true : false,
-				'S_TOPIC_POSTER'			=> ($topic_data['topic_poster'] == $poster_id) ? true : false,
-				'S_POST_HIDDEN'				=> $row['hide_post'],
-				'L_POST_DISPLAY'			=> ($row['hide_post']) ? $this->language->lang('POST_DISPLAY', '<a class="display_post" data-post-id="' . $row['post_id'] . '" href="' . $viewtopic_url . "&amp;p={$row['post_id']}&amp;view=show#p{$row['post_id']}" . '">', '</a>') : '',
-			)));
+			$this->template->assign_block_vars('postrow', array_merge(
+				$this->topic->get_detail_template_data($type, $topic_data, $row, $users_cache, $attachments, $topic_tracking_info, $update_count),
+				$this->get_attachments_tpl_data($row['post_id'], $attachments),
+				array(
+					'POST_SUBJECT'				=> $row['post_subject'],
+					'POST_DATE'					=> $this->user->format_date($row['post_time'], false, false),
+					'POSTER_WARNINGS'			=> $this->get_poster_warnings($users_cache[$poster_id]),
+					'S_POST_REPORTED'			=> $this->get_report_status($row),
+					'S_TOPIC_POSTER'			=> ($topic_data['topic_poster'] == $poster_id) ? true : false,
+					'S_POST_HIDDEN'				=> $row['hide_post'],
+					'L_POST_DISPLAY'			=> $this->get_post_display_lang($row, $topic_data['topic_url']),
+				)
+			));
 
 			$this->topic->show_attachments($attachments, $row['post_id'], 'postrow.attachment');
 		}
@@ -331,5 +329,63 @@ class comments extends form implements comments_interface
 			'S_SELECT_SORT_KEY' 	=> $s_sort_key,
 			'S_SELECT_SORT_DAYS' 	=> $s_limit_days,
 		));
+	}
+
+	/**
+	 * @param int post_id
+	 * @param array $attachments
+	 * @return array
+	 */
+	protected function get_attachments_tpl_data($post_id, array $attachments)
+	{
+		$has_attachments = $multi_attachments = false;
+		if (!empty($attachments[$row['post_id']]))
+		{
+			$has_attachments = true;
+			$multi_attachments = sizeof($attachments[$post_id]) > 1;
+		}
+
+		return array(
+			'S_HAS_ATTACHMENTS'			=> $has_attachments,
+			'S_MULTIPLE_ATTACHMENTS'	=> $multi_attachments,
+		);
+	}
+
+	/**
+	 * @param array $poster_info
+	 * @return string
+	 */
+	protected function get_poster_warnings(array $poster_info)
+	{
+		return $this->auth->acl_get('m_warn') ? $poster_info['warnings'] : '';
+	}
+
+	/**
+	 * @param array $row
+	 * @return bool
+	 */
+	protected function get_report_status(array $row)
+	{
+		return ($row['post_reported'] && $this->auth->acl_get('m_report', $row['forum_id'])) ? true : false;
+	}
+
+	/**
+	 * @param array $row
+	 * @param string $topic_url
+	 * @return string
+	 */
+	protected function get_post_display_lang(array $row, $topic_url)
+	{
+		return ($row['hide_post']) ? $this->language->lang('POST_DISPLAY', '<a class="display_post" data-post-id="' . $row['post_id'] . '" href="' . append_sid($topic_url, "p={$row['post_id']}&amp;view=show") . "#p{$row['post_id']}" . '">', '</a>') : '';
+	}
+
+	/**
+	 * @param string $topic_url
+	 * @param int $start
+	 * @return void
+	 */
+	protected function set_form_action($topic_url, $start)
+	{
+		$this->template->assign_var('S_TOPIC_ACTION', append_sid($topic_url, (($start == 0) ? '' : "start=$start")) . '#comments');
 	}
 }

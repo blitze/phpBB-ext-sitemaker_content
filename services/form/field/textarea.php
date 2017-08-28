@@ -141,24 +141,18 @@ class textarea extends base
 	 */
 	protected function get_editor($forum_id)
 	{
-		// Assigning custom bbcodes
-		if (!function_exists('display_custom_bbcodes'))
+		if (!$this->allow_bbcode($forum_id))
 		{
-			include($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
+			return array();
 		}
 
-		display_custom_bbcodes();
+		$this->set_custom_bbcodes();
 
-		$bbcode_status	= ($this->config['allow_bbcode'] && $this->auth->acl_get('f_bbcode', $forum_id)) ? true : false;
-
-		$dataref = $this->template_context->get_data_ref();
-		$this->ptemplate->assign_block_vars_array('custom_tags', (isset($dataref['custom_tags'])) ? $dataref['custom_tags'] : array());
-
-		// HTML, BBCode, Smilies, Images and Flash statusf
+		// HTML, BBCode, Smilies, Images and Flash status
 		return array(
-			'S_BBCODE_IMG'			=> ($bbcode_status && $this->auth->acl_get('f_img', $forum_id)) ? true : false,
-			'S_LINKS_ALLOWED'		=> ($this->config['allow_post_links']) ? true : false,
-			'S_BBCODE_FLASH'		=> ($bbcode_status && $this->auth->acl_get('f_flash', $forum_id) && $this->config['allow_post_flash']) ? true : false,
+			'S_BBCODE_IMG'			=> $this->auth->acl_get('f_img', $forum_id),
+			'S_LINKS_ALLOWED'		=> (bool) $this->config['allow_post_links'],
+			'S_BBCODE_FLASH'		=> $this->allow_flash_bbcode($forum_id),
 			'S_BBCODE_QUOTE'		=> false,
 			'S_SMILIES_ALLOWED'		=> false,
 		);
@@ -263,5 +257,37 @@ class textarea extends base
 		}
 
 		return $value;
+	}
+
+	/**
+	 * @param int $forum_id
+	 * @return bool
+	 */
+	protected function allow_bbcode($forum_id)
+	{
+		return ($this->config['allow_bbcode'] && $this->auth->acl_get('f_bbcode', $forum_id)) ? true : false;
+	}
+
+	/**
+	 * @param int $forum_id
+	 * @return bool
+	 */
+	protected function allow_flash_bbcode($forum_id)
+	{
+		return ($this->auth->acl_get('f_flash', $forum_id) && $this->config['allow_post_flash']) ? true : false;
+	}
+
+	protected function set_custom_bbcodes()
+	{
+		// Assigning custom bbcodes
+		if (!function_exists('display_custom_bbcodes'))
+		{
+			include($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
+		}
+
+		display_custom_bbcodes();
+
+		$dataref = $this->template_context->get_data_ref();
+		$this->ptemplate->assign_block_vars_array('custom_tags', $dataref['custom_tags'] ?: array());
 	}
 }
