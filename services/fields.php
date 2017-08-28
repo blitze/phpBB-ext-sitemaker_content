@@ -213,7 +213,7 @@ class fields extends topic
 	{
 		$message = $tpl_data['MESSAGE'];
 		unset($tpl_data['MESSAGE']);
-	
+
 		return array_merge(
 			$this->db_fields[$tpl_data['TOPIC_ID']] ?: array(),
 			$this->get_fields_data_from_post($message)

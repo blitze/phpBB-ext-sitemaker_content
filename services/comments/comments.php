@@ -130,7 +130,7 @@ class comments extends form implements comments_interface
 	protected function show_posts(array $topic_data, array $posts_data, array $topic_tracking_info, array $users_cache, array &$update_count, $type, $start)
 	{
 		$attachments = $this->forum->get_attachments($topic_data['forum_id']);
-		$this->set_form_action($topic_data['topic_url'], $start == 0);
+		$this->set_form_action($topic_data['topic_url'], $start);
 
 		for ($i = 0, $size = sizeof($posts_data); $i < $size; $i++)
 		{
@@ -339,7 +339,7 @@ class comments extends form implements comments_interface
 	protected function get_attachments_tpl_data($post_id, array $attachments)
 	{
 		$has_attachments = $multi_attachments = false;
-		if (!empty($attachments[$row['post_id']]))
+		if (!empty($attachments[$post_id]))
 		{
 			$has_attachments = true;
 			$multi_attachments = sizeof($attachments[$post_id]) > 1;

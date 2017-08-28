@@ -147,6 +147,7 @@ class main_controller
 	 */
 	protected function get_type_entity($type)
 	{
+		/** @var \blitze\content\services\types $entity */
 		$entity = $this->content_types->get_type($type, true);
 
 		$this->add_navlink($entity->get_content_langname(), $this->helper->route('blitze_content_index', array('type' => $type)));

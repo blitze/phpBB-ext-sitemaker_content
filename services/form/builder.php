@@ -104,6 +104,7 @@ class builder
 		{
 			$this->language->add_lang('manager', 'blitze/content');
 
+			/** @var \blitze\content\services\types $entity */
 			$entity = $this->types->get_type($type, true);
 			$fields_data = $entity->get_content_fields();
 
