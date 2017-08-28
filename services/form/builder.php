@@ -318,23 +318,26 @@ class builder
 	}
 
 	/**
-	 * @param array $data
+	 * param string $post_mode
+	 * @param array $sql_data
 	 * @return void
 	 */
-	public function force_visibility(array &$data)
+	public function force_visibility($post_mode, array &$sql_data)
 	{
 		if ($this->mode === 'mcp')
 		{
 			if ('' !== $force_status = $this->request->variable('force_status', ''))
 			{
-				$data['force_approved_state'] = $force_status;
+				$sql_data['topic_visibility'] = $force_status;
 			}
 		}
 		else
 		{
 			if ($this->force_state())
 			{
-				$data['force_approved_state'] = (empty($data['topic_id'])) ? ITEM_UNAPPROVED : ITEM_REAPPROVE;
+				$visibility = ($post_mode == 'edit_first_post') ? ITEM_REAPPROVE : ITEM_UNAPPROVED;
+				$sql_data[TOPICS_TABLE]['sql']['topic_visibility'] = $visibility;
+				$sql_data[POSTS_TABLE]['sql']['post_visibility'] = $visibility;
 			}
 		}
 	}

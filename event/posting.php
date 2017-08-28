@@ -44,7 +44,6 @@ class posting implements EventSubscriberInterface
 			'core.modify_posting_auth'					=> 'init_builder',
 			'core.posting_modify_message_text'			=> 'build_message',
 			'core.posting_modify_submission_errors'		=> 'show_errors',
-			'core.posting_modify_submit_post_before'	=> 'modify_post_data',
 			'core.submit_post_modify_sql_data'			=> 'modify_sql_data',
 			'core.posting_modify_submit_post_after'		=> array('save_fields', 'set_redirect_url'),
 			'core.topic_review_modify_post_list'		=> 'set_content_post_id',
@@ -98,26 +97,13 @@ class posting implements EventSubscriberInterface
 	 * @param \phpbb\event\data $event
 	 * @return void
 	 */
-	public function modify_post_data(\phpbb\event\data $event)
-	{
-		if ($this->build_content)
-		{
-			$data = $event['data'];
-			$this->builder->force_visibility($data);
-			$event['data'] = $data;
-		}
-	}
-
-	/**
-	 * @param \phpbb\event\data $event
-	 * @return void
-	 */
 	public function modify_sql_data(\phpbb\event\data $event)
 	{
 		if ($this->build_content)
 		{
 			$sql_data = $event['sql_data'];
 			$this->builder->modify_posting_data($sql_data[TOPICS_TABLE]['sql']);
+			$this->builder->force_visibility($event['post_mode'], $sql_data);
 			$event['sql_data'] = $sql_data;
 		}
 	}
@@ -140,7 +126,7 @@ class posting implements EventSubscriberInterface
 	 */
 	public function modify_topic_review(\phpbb\event\data $event)
 	{
-		if ($this->content_type && $event['row']['post_id'] === $this->content_post_id)
+		if ($this->content_type && $event['row']['post_id'] == $this->content_post_id)
 		{
 			$post_row = $event['post_row'];
 			$post_row['MESSAGE'] = $this->builder->get_content_view($this->content_type, $post_row, 'summary');
