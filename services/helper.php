@@ -65,7 +65,7 @@ class helper
 	public function get_delete_url(array $post_data, array $topic_data, $cp_mode = '')
 	{
 		$cp_param = $this->get_cp_param($post_data, $topic_data, $cp_mode);
-		return ($this->delete_allowed($post_data, $topic_data)) ? append_sid("{$this->phpbb_root_path}posting.$this->php_ext", 'mode=' . (($this->softdelete_allowed($topic_data, $post_data)) ? 'soft_delete' : 'delete') . "&amp;f={$post_data['forum_id']}&amp;p={$post_data['post_id']}" . $cp_param) : '';
+		return ($this->delete_allowed($post_data, $topic_data)) ? append_sid("{$this->phpbb_root_path}posting.$this->php_ext", 'mode=' . (($this->softdelete_allowed($post_data)) ? 'soft_delete' : 'delete') . "&amp;f={$post_data['forum_id']}&amp;p={$post_data['post_id']}" . $cp_param) : '';
 	}
 
 	/**

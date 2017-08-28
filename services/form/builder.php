@@ -46,6 +46,9 @@ class builder
 	/** @var string */
 	protected $php_ext;
 
+	/** @var string */
+	protected $mode = '';
+
 	/** @var bool */
 	protected $req_approval = false;
 
@@ -101,7 +104,7 @@ class builder
 		{
 			$this->language->add_lang('manager', 'blitze/content');
 
-			$entity = $this->types->get_type($type);
+			$entity = $this->types->get_type($type, true);
 			$fields_data = $entity->get_content_fields();
 
 			/**

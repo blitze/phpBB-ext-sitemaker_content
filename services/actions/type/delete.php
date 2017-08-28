@@ -82,7 +82,7 @@ class delete extends action_utils implements action_interface
 		$this->cache->destroy('_content_types');
 
 		$this->meta_refresh(3, $u_action);
-		$this->trigger_error($this->language->lang('CONTENT_TYPE_DELETED'), $u_action, true);
+		$this->trigger_error($this->language->lang('CONTENT_TYPE_DELETED'), $u_action);
 
 	}
 

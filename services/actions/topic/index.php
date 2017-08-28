@@ -136,7 +136,7 @@ class index extends filter implements action_interface
 		$posts_data = $this->forum->get_post_data('first');
 		$users_cache = $this->forum->get_posters_info();
 		$topic_tracking_info = $this->forum->get_topic_tracking_info();
-print_data($topics_data);
+
 		$topics_data = array_values($topics_data);
 		$base_url = $u_action . http_build_query($this->params);
 

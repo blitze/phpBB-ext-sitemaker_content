@@ -93,7 +93,7 @@ class range extends base
 	}
 
 	/**
-	 * @param string $values
+	 * @param string $value
 	 * @return array
 	 */
 	protected function get_range($value)

@@ -89,7 +89,7 @@ class field_controller
 			'field_summary_show'	=> 'body',
 		);
 
-		/** @var /blitze/content/services/form/field/field_interface $object */
+		/** @var \blitze\content\services\form\field\field_interface $object */
 		$field = $this->fields_factory->get($field_type);
 		$default_props = $field->get_default_props();
 

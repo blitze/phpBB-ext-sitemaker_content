@@ -175,10 +175,9 @@ class fields extends topic
 	 */
 	protected function get_fields_data_for_display(array &$tpl_data)
 	{
-		$field_values = array_merge($this->db_fields[$tpl_data['TOPIC_ID']], $this->get_fields_data_from_post($tpl_data['MESSAGE']));
-		unset($tpl_data['MESSAGE']);
-
+		$field_values = $this->get_field_values($tpl_data);
 		$display_data = array_fill_keys(array('all', 'above', 'body', 'inline', 'footer'), array());
+
 		foreach ($this->content_fields as $field_name => $field_data)
 		{
 			$field_type = $field_data['field_type'];
@@ -204,6 +203,21 @@ class fields extends topic
 		}
 
 		return $display_data;
+	}
+
+	/**
+	 * @param array $tpl_data
+	 * @return array
+	 */
+	protected function get_field_values(array &$tpl_data)
+	{
+		$message = $tpl_data['MESSAGE'];
+		unset($tpl_data['MESSAGE']);
+	
+		return array_merge(
+			$this->db_fields[$tpl_data['TOPIC_ID']] ?: array(),
+			$this->get_fields_data_from_post($message)
+		);
 	}
 
 	/**

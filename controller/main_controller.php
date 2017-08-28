@@ -106,7 +106,6 @@ class main_controller
 	 *
 	 * @param string $type
 	 * @param int $topic_id
-	 * @param int $page
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
 	public function show($type, $topic_id)
@@ -148,7 +147,7 @@ class main_controller
 	 */
 	protected function get_type_entity($type)
 	{
-		$entity = $this->content_types->get_type($type);
+		$entity = $this->content_types->get_type($type, true);
 
 		$this->add_navlink($entity->get_content_langname(), $this->helper->route('blitze_content_index', array('type' => $type)));
 

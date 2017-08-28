@@ -116,7 +116,7 @@ final class type extends base_entity
 	/** @var boolean */
 	protected $index_show_desc = false;
 
-	/** @var boolean */
+	/** @var integer */
 	protected $items_per_page = 10;
 
 	/** @var string */
@@ -270,7 +270,7 @@ final class type extends base_entity
 
 	/**
 	 * Set Items per page. Must be greater than zero
-	 * @param string $items_per_page
+	 * @param int $items_per_page
 	 * @return $this
 	 */
 	public function set_items_per_page($items_per_page)

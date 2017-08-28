@@ -77,7 +77,7 @@ interface field_interface
 	 * Validate content field
 	 *
 	 * @param array $field_data
-	 * @return bool
+	 * @return string
 	 */
 	public function validate_field(array $field_data);
 }

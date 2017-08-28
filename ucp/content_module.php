@@ -12,13 +12,13 @@ namespace blitze\content\ucp;
 class content_module
 {
 	/** @var string */
-	var $tpl_name;
+	public $tpl_name;
 
 	/** @var string */
-	var $page_title;
+	public $page_title;
 
 	/** @var string */
-	var $u_action;
+	public $u_action;
 
 	public function main()
 	{

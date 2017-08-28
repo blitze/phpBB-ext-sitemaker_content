@@ -140,7 +140,7 @@ abstract class base_view implements views_interface
 	/**
 	 * {@inheritdoc}
 	 */
-	public function render_detail(\blitze\content\model\entity\type $entity, $topic_id, array &$update_count, $mode = '', array $topic_data_overwrite = array())
+	public function render_detail(\blitze\content\model\entity\type $entity, $topic_id, array &$update_count, array $topic_data_overwrite = array())
 	{
 		$this->language->add_lang('viewtopic');
 		$this->language->add_lang('content', 'blitze/content');
@@ -151,18 +151,17 @@ abstract class base_view implements views_interface
 			->fetch_bookmark_status()
 			->build(true, true, false);
 
-		return $this->display_topic($mode, $topic_id, $entity, $update_count, $topic_data_overwrite);
+		return $this->display_topic($topic_id, $entity, $update_count, $topic_data_overwrite);
 	}
 
 	/**
-	 * @param string $mode
 	 * @param int $topic_id
 	 * @param array $update_count
 	 * @param array $topic_data_overwrite
 	 * @return array
 	 * @throws \Exception
 	 */
-	protected function display_topic($mode, $topic_id, \blitze\content\model\entity\type $entity, array &$update_count, array $topic_data_overwrite)
+	protected function display_topic($topic_id, \blitze\content\model\entity\type $entity, array &$update_count, array $topic_data_overwrite)
 	{
 		$forum_id = $entity->get_forum_id();
 		$content_type = $entity->get_content_name();

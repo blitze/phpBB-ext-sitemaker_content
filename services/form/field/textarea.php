@@ -132,7 +132,7 @@ class textarea extends base
 			$data += $this->get_editor($forum_id);
 		}
 
-		return parent::show_form_field($name, $data, $forum_id);
+		return parent::show_form_field($name, $data);
 	}
 
 	/**

@@ -104,19 +104,18 @@ class portal extends base_view
 		$update_count = array();
 		foreach ($forums_data as $forum_id => $posts_data)
 		{
-			if (!($content_type = $this->content_types->get_forum_type($forum_id)))
+			$content_type = $this->content_types->get_forum_type($forum_id);
+			if (!$content_type || !($entity = $this->content_types->get_type($content_type)))
 			{
 				continue;
 			}
-
-			$entity = $this->content_types->get_type($content_type);
-			$this->template->assign_vars($entity->to_array());
 
 			$this->fields->prepare_to_show($entity, array_keys($posts_data), $entity->get_summary_tags(), $entity->get_summary_tpl(), 'summary');
 
 			$topic_tracking_info = $this->forum->get_topic_tracking_info($forum_id);
 			$attachments = $this->forum->get_attachments($forum_id);
 
+			$this->template->assign_vars($entity->to_array());
 			foreach ($posts_data as $topic_id => $post_data)
 			{
 				$topic_data	= $topics_data[$topic_id];
