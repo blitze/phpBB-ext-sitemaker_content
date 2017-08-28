@@ -88,9 +88,11 @@ abstract class base_view implements views_interface
 	{
 		$content_type = $entity->get_content_name();
 		$items_per_page = $entity->get_items_per_page();
+		$forum_id = $entity->get_forum_id();
 		$start = ($page - 1) * $items_per_page;
 
-		$this->build_index_query($filter_type, $filter_value, $entity->get_forum_id());
+		$this->build_index_query($filter_type, $filter_value, $forum_id);
+		$this->set_mcp_url($forum_id);
 
 		if ($entity->get_show_pagination())
 		{
@@ -144,6 +146,7 @@ abstract class base_view implements views_interface
 	{
 		$this->language->add_lang('viewtopic');
 		$this->language->add_lang('content', 'blitze/content');
+		$this->set_mcp_url($entity->get_forum_id(), $topic_id);
 
 		$this->forum->query()
 			->fetch_topic($topic_id)
@@ -319,5 +322,15 @@ abstract class base_view implements views_interface
 				$this->template->assign_block_vars('content', $this->fields->get_min_topic_info($content_type, $row, $topic_tracking_info));
 			}
 		}
+	}
+
+	/**
+	 * @param int $forum_id
+	 * @param int $topic_id
+	 * @return void
+	 */
+	protected function set_mcp_url($forum_id, $topic_id = 0)
+	{
+		$this->template->assign_var('U_MCP', $this->helper->get_mcp_url($forum_id, $topic_id));
 	}
 }

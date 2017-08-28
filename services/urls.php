@@ -212,6 +212,26 @@ abstract class urls
 	}
 
 	/**
+	 * @return string
+	 */
+	public function get_mcp_url($forum_id, $topic_id)
+	{
+		$u_mcp = '';
+		if ($this->auth->acl_get('m_', $forum_id))
+		{
+			if ($topic_id)
+			{
+				$u_mcp = append_sid("{$this->phpbb_root_path}mcp.{$this->php_ext}", "i=mcp_main&amp;mode=topic_view&amp;f=$forum_id&amp;t=$topic_id", true, $this->user->session_id);
+			}
+			else
+			{
+				$u_mcp = append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=-blitze-content-mcp-content_module&amp;mode=content', true, $this->user->session_id);
+			}
+		}
+		return $u_mcp;
+	}
+
+	/**
 	 * @param array $post_data
 	 * @param array $topic_data
 	 * @param string $cp_mode
