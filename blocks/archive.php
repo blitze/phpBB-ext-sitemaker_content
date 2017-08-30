@@ -11,119 +11,144 @@ namespace blitze\content\blocks;
 
 class archive extends \blitze\sitemaker\services\blocks\driver\block
 {
-	/** @var \phpbb\auth\auth */
-	protected $auth;
-
-	/** @var \phpbb\content_visibility */
-	protected $content_visibility;
-
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
 	/* @var \phpbb\controller\helper */
 	protected $helper;
 
-	/* @var \phpbb\user */
-	protected $user;
-
 	/* @var \blitze\content\services\types */
 	protected $content_types;
 
-	/** @var string */
-	protected $phpbb_root_path;
+	/** @var \blitze\sitemaker\services\forum\data */
+	protected $forum;
 
-	/* @var string */
-	protected $php_ext;
+	/** @var integer */
+	protected $cache_time;
 
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\auth\auth						$auth					Auth object
-	 * @param \phpbb\content_visibility				$content_visibility		Content visibility
-	 * @param \phpbb\db\driver\driver_interface		$db						Database object
-	 * @param \phpbb\controller\helper				$helper					Helper object
-	 * @param \phpbb\user							$user					User object
-	 * @param \blitze\content\services\types		$content_types			Content types object
-	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\content_visibility $content_visibility, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\user $user, \blitze\content\services\types $content_types, $phpbb_root_path, $php_ext)
+	 * @param \phpbb\db\driver\driver_interface			$db					Database object
+	 * @param \phpbb\controller\helper					$helper				Helper object
+	 * @param \blitze\content\services\types			$content_types		Content types object
+	 * @param \blitze\sitemaker\services\forum\data		$forum				Forum Data object
+	 * @param integer									$cache_time			Cache results for 3 hours by default
+	 */
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \blitze\content\services\types $content_types, \blitze\sitemaker\services\forum\data $forum, $cache_time)
 	{
-		$this->auth = $auth;
-		$this->content_visibility = $content_visibility;
 		$this->db = $db;
 		$this->helper = $helper;
-		$this->user = $user;
 		$this->content_types = $content_types;
-		$this->root_path = $phpbb_root_path;
-		$this->php_ext = $php_ext;
+		$this->forum = $forum;
+		$this->cache_time = $cache_time;
 	}
 
 	/**
-	 * Block config
+	 * {@inheritdoc}
 	 */
 	public function get_config(array $settings)
 	{
+		$content_type_options = $this->get_content_type_options();
+		$month_dsp_options = array('short' => 'MONTH_FORMAT_SHORT', 'long' => 'MONTH_FORMAT_LONG');
+
+		return array(
+			'legend1'		=> 'SETTINGS',
+			'forum_id'		=> array('lang' => 'CONTENT_TYPE', 'validate' => 'string', 'type' => 'select', 'options' => $content_type_options, 'default' => 0, 'explain' => false),
+			'show_count'	=> array('lang' => 'SHOW_TOPICS_COUNT', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => false, 'default' => 0),
+			'all_months'	=> array('lang' => 'SHOW_ALL_MONTHS', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => false, 'default' => 1),
+			'month_dsp'		=> array('lang' => 'MONTH_FORMAT', 'validate' => 'bool', 'type' => 'radio', 'options' => $month_dsp_options, 'explain' => false, 'default' => 'long'),
+		);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function display(array $bdata, $edit_mode = false)
+	{
+		extract($this->get_query_params($bdata['settings']));
+
+		$sql = $this->db->sql_build_query('SELECT', $this->get_sql_array($forum_ids));
+		$result = $this->db->sql_query($sql, $this->cache_time);
+
+		$archive = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$archive[$row['year']]['name'] = $row['year'];
+			$archive[$row['year']]['months'][$row['month'] - 1] = array(
+				'count'	=> $row['total'],
+				'url'	=> $this->helper->route($route_name, $route_params + array(
+					'filter_type'	=> 'archive',
+					'filter_value'	=> $row['year'] . '-' . $row['month'],
+				)),
+			);
+		}
+		$this->db->sql_freeresult($result);
+
+		$this->ptemplate->assign_vars(array_merge($bdata['settings'], array('archive' => $archive)));
+
+		return array(
+			'title'		=> 'ARCHIVES',
+			'content'	=> $this->ptemplate->render_view('blitze/content', 'blocks/archive.html', 'archive_block'),
+		);
+	}
+
+	/**
+	 * @param array $settings
+	 * @return array
+	 */
+	protected function get_query_params(array $settings)
+	{
+		if ($settings['forum_id'])
+		{
+			return array(
+				'forum_ids'		=> (array) $settings['forum_id'],
+				'route_name'	=> 'blitze_content_index',
+				'route_params'	=> array('type' => $this->content_types->get_forum_type($settings['forum_id'])),
+			);
+		}
+		else
+		{
+			return array(
+				'forum_ids'		=> array_keys($this->content_types->get_forum_types()),
+				'route_name'	=> 'blitze_content_index_filter',
+				'route_params'	=> array(),
+			);
+		}
+	}
+
+	/**
+	 * @param array $forum_ids
+	 * @return array
+	 */
+	protected function get_sql_array(array $forum_ids)
+	{
+		$sql_array = array(
+			'SELECT'	=> array('YEAR(FROM_UNIXTIME(t.topic_time)) AS year, MONTH(FROM_UNIXTIME(t.topic_time)) AS month, COUNT(t.topic_id) AS total'),
+			'WHERE'		=> array($this->db->sql_in_set('t.forum_id', $forum_ids)),
+			'GROUP_BY'	=> 'year, month',
+			'ORDER_BY'	=> 'year DESC',
+		);
+
+		return $this->forum->query(false, false)
+			->fetch_custom($sql_array, array('SELECT'))
+			->build(true, false, false)
+			->get_sql_array();
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function get_content_type_options()
+	{
 		$content_types = $this->content_types->get_all_types();
 
-		$forum_id = key($content_types);
-		$content_type_options = array();
+		$content_type_options = array('' => 'CONTENT_TYPE_ANY');
 		foreach ($content_types as $type => $entity)
 		{
 			$content_type_options[$entity->get_forum_id()] = $entity->get_content_langname();
 		}
 
-		return array(
-			'legend1'		=> $this->user->lang['SETTINGS'],
-			'forum_id'		=> array('lang' => 'CONTENT_TYPE', 'validate' => 'string', 'type' => 'select', 'options' => $content_type_options, 'default' => $forum_id, 'explain' => false),
-		);
-	}
-
-	public function display(array $bdata, $edit_mode = false)
-	{
-		$settings = $bdata['settings'];
-
-		if (empty($settings['forum_id']))
-		{
-			return array(
-				'title'		=> '',
-				'content'	=> ($edit_mode) ? $this->user->lang['NO_CONTENT_TYPE'] : '',
-			);
-		}
-
-		$sql_array = array(
-			'SELECT'	=> 'YEAR(FROM_UNIXTIME(t.topic_time)) AS year, MONTH(FROM_UNIXTIME(t.topic_time)) AS month, COUNT(t.topic_id) AS total',
-			'FROM'		=> array(
-				TOPICS_TABLE => 't',
-			),
-			'WHERE'		=> 't.forum_id = ' . (int) $settings['forum_id'] . '
-				AND t.topic_time <= ' . time() . '
-				AND ' . $this->content_visibility->get_global_visibility_sql('topic', array_keys($this->auth->acl_getf('!f_read', true)), 't.'),
-			'GROUP_BY'	=> 'year, month',
-			'ORDER_BY'	=> 'year DESC',
-		);
-
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
-		$result = $this->db->sql_query($sql);
-
-		$year = '';
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			if ($year != $row['year'])
-			{
-				$year = $row['year'];
-				$this->ptemplate->assign_block_vars('year', array('YEAR' => $year));
-			}
-
-			$this->ptemplate->assign_block_vars('year.month', array(
-				'ARCHIVE_MONTH'	=> $row['month'],
-				'NUM_TOPICS'	=> $row['total'],
-				'U_ARCHIVE'		=> '',
-			));
-		}
-		$this->db->sql_freeresult($result);
-
-		return array(
-			'title'		=> 'ARCHIVE',
-			'content'	=> 'Test',
-		);
+		return $content_type_options;
 	}
 }

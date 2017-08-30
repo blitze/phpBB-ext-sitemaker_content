@@ -3,14 +3,11 @@ services:
     blitze.content.block.archive:
         class: blitze\content\blocks\archive
         arguments:
-            - '@auth'
-            - '@content.visibility'
             - '@dbal.conn'
             - '@controller.helper'
-            - '@user'
             - '@blitze.content.types'
-            - '%core.root_path%'
-            - '%core.php_ext%'
+            - '@blitze.sitemaker.forum.data'
+            - '%sitemaker.cache_time%'
         calls:
             - [set_name, [blitze.content.block.archive]]
         tags:

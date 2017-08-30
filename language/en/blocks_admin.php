@@ -22,14 +22,16 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'CONTENT_TYPE'						=> 'Content Type',
+	'CONTENT_TYPE_ANY'					=> 'Any',
 
 	'FIELD_MAX_CHARS'					=> 'Max Characters to display',
 
 	'LIMIT_POST_TIME'					=> 'Limit by post time',
 
 	'MAX_TOPICS'						=> 'Max Topics',
-
-	'NO_CONTENT_TYPE'					=> 'No content types have been created',
+	'MONTH_FORMAT'						=> 'Month display format',
+	'MONTH_FORMAT_LONG'					=> 'Long',
+	'MONTH_FORMAT_SHORT'				=> 'Short',
 
 	'OFFSET_START'						=> 'Offset start',
 	'ORDER_BY'							=> 'Order By',
@@ -40,6 +42,8 @@ $lang = array_merge($lang, array(
 
 	'SELECT_FIELDS'						=> 'Select Fields',
 	'SELECT_FIELDS_EXPLAIN'				=> 'Only display the selected fields',
+	'SHOW_ALL_MONTHS'					=> 'Show all months?',
+	'SHOW_TOPICS_COUNT'					=> 'Show topics count?',
 
 	'TOPIC_TIME'						=> 'Topic Time',
 	'TOPIC_TYPE'						=> 'Topic Type',

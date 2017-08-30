@@ -71,9 +71,7 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 	}
 
 	/**
-	 * Block config
-	 * @param array $settings
-	 * @return array
+	 * {@inheritdoc}
 	 */
 	public function get_config(array $settings)
 	{
@@ -100,9 +98,7 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 	}
 
 	/**
-	 * @param array $bdata
-	 * @param bool $edit_mode
-	 * @return array
+	 * {@inheritdoc}
 	 */
 	public function display(array $bdata, $edit_mode = false)
 	{
