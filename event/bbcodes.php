@@ -19,10 +19,7 @@ class bbcodes implements EventSubscriberInterface
 	public static function getSubscribedEvents()
 	{
 		return array(
-			'core.text_formatter_s9e_configure_after' => array(
-				array('create_page_bbcode'),
-				array('create_tag_bbcode'),
-			),
+			'core.text_formatter_s9e_configure_after' => array('create_page_bbcode', 'create_tag_bbcode'),
 		);
 	}
 
@@ -30,7 +27,7 @@ class bbcodes implements EventSubscriberInterface
 	 * @param \phpbb\event\data $event
 	 * @return void
 	 */
-	public function create_page_bbcode($event)
+	public function create_page_bbcode(\phpbb\event\data $event)
 	{
 		// Get the BBCode configurator
 		$configurator = $event['configurator'];
@@ -51,7 +48,7 @@ class bbcodes implements EventSubscriberInterface
 	 * @param \phpbb\event\data $event
 	 * @return void
 	 */
-	public function create_tag_bbcode($event)
+	public function create_tag_bbcode(\phpbb\event\data $event)
 	{
 		// Get the BBCode configurator
 		$configurator = $event['configurator'];
