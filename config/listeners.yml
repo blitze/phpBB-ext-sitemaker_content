@@ -5,6 +5,13 @@ services:
         tags:
             - { name: event.listener }
 
+    blitze.content.event.filters:
+        class: blitze\content\event\filters
+        arguments:
+            - '@blitze.sitemaker.date_range'
+        tags:
+            - { name: event.listener }
+
     blitze.content.event.listener:
         class: blitze\content\event\listener
         arguments:
