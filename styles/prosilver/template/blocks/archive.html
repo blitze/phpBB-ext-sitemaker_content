@@ -22,5 +22,11 @@
 		{%- endfor -%}
 		{%- endif -%}
 		</ul>
+		{% if loop.first && loop.length > 1 %}
+		{%- set closeTag = '</div>' -%}
+		<p><br /><a href="#" onclick="phpbb.toggleDisplay('archive-full-list', 0); return false;">{{ lang('ARCHIVE_TOGGLE_DISPLAY') }}</a></p>
+	<div id="archive-full-list" style="display: none">
+		{% endif %}
 	{%- endfor -%}
+	{{ closeTag }}
 {%- endif -%}

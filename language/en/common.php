@@ -38,6 +38,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'ARCHIVES'						=> 'Archives',
+	'ARCHIVE_TOGGLE_DISPLAY'		=> 'Show more/less',
 	'COMMENTS'						=> 'Comments',
 	'CONTENT_ANNOUNCEMENTS'			=> 'Recommended %s',
 	'CONTENT_GLOBAL_ANNOUNCEMENTS'	=> 'Must Read %s',
