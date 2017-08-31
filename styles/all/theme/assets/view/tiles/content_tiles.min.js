@@ -3,20 +3,19 @@
 
 	$(document).ready(function() {
 		var phpbb = window.phpbb || {};
+		var Grid;
 
-		var $container = $('#sitemaker-content-grid');
+		var $container = $('#sitemaker-content-tiles');
 		var $loadAnchor = $('#tile-load-more');
 
-		// init Masonry
-		$container.masonry({
-			isAnimated: true,
-			percentPosition: true,
-			itemSelector: '.item'
-		});
-
-		// layout Masonry after each image loads
+		// layout grid after each image loads
 		$container.imagesLoaded().progress(function() {
-			$container.masonry('layout');
+			/* global AwesomeGrid */
+			Grid = new AwesomeGrid('#sitemaker-content-tiles')
+				.grid(1) 
+				.mobile($container.data('mobile-columns'))
+				.tablet($container.data('tablet-columns'))
+				.desktop($container.data('desktop-columns'));
 		});
 
 		phpbb.ajaxify({
@@ -27,12 +26,12 @@
 
 		phpbb.addAjaxCallback('blitze.content.load_more', function(response) {
 			var respObj = $(response);
-			var items = respObj.find('#sitemaker-content-grid .item');
+			var items = respObj.find('#sitemaker-content-grid .grid-item');
 			var nextUrl = respObj.find('#tile-load-more').attr('href');
 
 			$container.append(items);
 			items.imagesLoaded(function() {
-				$container.masonry('appended', items);
+				Grid.apply();
 			});
 
 			if (nextUrl !== undefined) {
@@ -40,10 +39,6 @@
 			} else {
 				$loadAnchor.parent().hide();
 			}
-		});
-
-		$('body').on('layoutChanged', function() {
-			$container.masonry();
 		});
 	});
 })(jQuery, window, document);

@@ -3,41 +3,40 @@
 
 <!-- INCLUDECSS @blitze_content/assets/view/tiles/content_tiles.min.css -->
 <!-- INCLUDEJS @blitze_content/vendor/imagesloaded/imagesloaded.pkgd.min.js -->
-<!-- INCLUDEJS @blitze_content/vendor/masonry/dist/masonry.pkgd.min.js -->
+<!-- INCLUDEJS @blitze_content/vendor/awesome-grid/awesome-grid.min.js -->
 <!-- INCLUDEJS @blitze_content/assets/view/tiles/content_tiles.min.js -->
 
 <!-- IF .topicrow -->
-	<div class="grid">
-		<div id="sitemaker-content-grid" class="tile-grid">
-			{%- set columnWidth = (topicrow|length < 5) ? topicrow|length : content_view_settings.items_per_col -%}
-			<!-- BEGIN topicrow -->
-			<div class="grid__col--1-of-{{ columnWidth }} grid__col--m-1-of-{{ columnWidth - 1 }} item">
-				<div class="panel post tile sm-block-spacing">
-					<div class="inner">
-						<div class="postbody sm-postbody">
-						<!-- IF not topicrow.CUSTOM_DISPLAY -->
-							<!-- INCLUDE parts/summary_title.html -->
-						<!-- ENDIF -->
-							<div class="content">
-							<!-- IF topicrow.CUSTOM_DISPLAY -->
-								{topicrow.CUSTOM_DISPLAY}
-							<!-- ELSE -->
-								{{ topicrow.FIELDS.body|join }}
-								<p>&nbsp;</p>
-								<div class="align-right">
-									<a href="{topicrow.TOPIC_URL}" class="button">{L_READ_MORE}</a>
-								</div>
-							<!-- ENDIF -->
+	{%- set desktopCols = content_view_settings.desktop_cols|default(3) -%}
+	{%- set desktopCols = (topicrow|length < desktopCols) ? topicrow|length : desktopCols -%}
+	<div id="sitemaker-content-tiles" class="grid" data-desktop-columns="{{ desktopCols }}" data-tablet-columns="{{ content_view_settings.tablet_cols|default(2) }}" data-mobile-columns="{{ content_view_settings.mobile_cols|default(1) }}">
+		<!-- BEGIN topicrow -->
+		<div class="grid__col--1-of-3 grid-item">
+			<div class="panel post tile sm-block-spacing">
+				<div class="inner">
+					<div class="postbody sm-postbody">
+					<!-- IF not topicrow.CUSTOM_DISPLAY -->
+						<!-- INCLUDE parts/summary_title.html -->
+					<!-- ENDIF -->
+						<div class="content">
+						<!-- IF topicrow.CUSTOM_DISPLAY -->
+							{topicrow.CUSTOM_DISPLAY}
+						<!-- ELSE -->
+							{{ topicrow.FIELDS.body|join }}
+							<p>&nbsp;</p>
+							<div class="align-right">
+								<a href="{topicrow.TOPIC_URL}" class="button">{L_READ_MORE}</a>
 							</div>
-							<!-- IF not topicrow.FIELDS.CUSTOM_DISPLAY -->
-							{{ topicrow.FIELDS.footer|join }}
-							<!-- ENDIF -->
+						<!-- ENDIF -->
 						</div>
+						<!-- IF not topicrow.FIELDS.CUSTOM_DISPLAY -->
+						{{ topicrow.FIELDS.footer|join }}
+						<!-- ENDIF -->
 					</div>
 				</div>
 			</div>
-			<!-- END topicrow -->
 		</div>
+		<!-- END topicrow -->
 	</div>
 	<!-- IF .pagination -->
 	<div class="panel bg2 load_more align-center">

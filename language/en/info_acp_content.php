@@ -104,7 +104,6 @@ $lang = array_merge($lang, array(
 
 	'INVALID_CONTENT_FIELD'		=> '%1$s is invalid (%2$s)',
 	'INVALID_CONTENT_TYPE'		=> 'Oops! Invalid content type',
-	'ITEMS_PER_COLUMN'			=> 'Number of items per column',
 	'ITEMS_PER_PAGE'			=> 'Number of items per page',
 
 	'LABEL'						=> 'Label',
@@ -137,6 +136,10 @@ $lang = array_merge($lang, array(
 	'SUMMARY_TEMPLATE'			=> 'Summary Template',
 	'SUMMARY_TEMPLATE_EXPLAIN'	=> 'This template will be used to display content fields when viewing the topic exerpt. If a template is not provided, all fields will be displayed',
 
+	'TILES_PER_ROW'				=> 'Tiles per row',
+	'TILES_PER_ROW_DESKTOP'		=> 'Desktop',
+	'TILES_PER_ROW_MOBILE'		=> 'Mobile',
+	'TILES_PER_ROW_TABLET'		=> 'Tablet',
 	'TITLE'						=> 'Title',
 	'TOO_LARGE'					=> 'Too large',
 	'TOO_LONG'					=> 'Too long',
