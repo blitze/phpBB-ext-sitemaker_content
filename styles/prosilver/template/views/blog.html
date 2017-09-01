@@ -1,55 +1,55 @@
-<!-- IF not S_HIDE_HEADERS --><!-- INCLUDE overall_header.html --><!-- ENDIF -->
-<!-- INCLUDECSS @blitze_content/assets/view/blog/content_blog.min.css -->
-<!-- INCLUDE parts/content_type.html -->
+{% if not S_HIDE_HEADERS %}{% INCLUDE 'overall_header.html' %}{% endif %}
+{% INCLUDECSS '@blitze_content/assets/view/blog/content_blog.min.css' %}
+{% INCLUDE 'parts/content_type.html' %}
 
 <div class="panel post sm-block-spacing">
 	<div class="inner">
-<!-- BEGIN topicrow -->
+{% for topicrow in loops.topicrow %}
 		<div class="postbody sm-postbody">
-			<div class="calendar">{topicrow.TOPIC_DATE|date('d')} <em>{topicrow.TOPIC_DATE|date('M')}</em></div>
+			<div class="calendar">{{ topicrow.TOPIC_DATE|date('d') }} <em>{{ topicrow.TOPIC_DATE|date('M') }}</em></div>
 			<div class="sm-blog-post">
-				<!-- IF not topicrow.CUSTOM_DISPLAY -->
-					<!-- INCLUDE parts/summary_title.html -->
-				<!-- ENDIF -->
+				{% if not topicrow.CUSTOM_DISPLAY %}
+					{% INCLUDE 'parts/summary_title.html' %}
+				{% endif %}
 				<div class="content">
-				<!-- IF topicrow.CUSTOM_DISPLAY -->
-					{topicrow.CUSTOM_DISPLAY}
-				<!-- ELSE -->
+				{% if topicrow.CUSTOM_DISPLAY %}
+					{{ topicrow.CUSTOM_DISPLAY }}
+				{% else %}
 					{{ topicrow.FIELDS.body|join }}
 					<p>&nbsp;</p>
 					<div class="align-right">
-						<a href="{topicrow.TOPIC_URL}" class="button">{L_READ_MORE}</a>
+						<a href="{{ topicrow.TOPIC_URL }}" class="button">{{ lang('READ_MORE') }}</a>
 					</div>
-				<!-- ENDIF -->
+				{% endif %}
 				</div>
-				<!-- IF not topicrow.FIELDS.CUSTOM_DISPLAY -->
+				{% if not topicrow.FIELDS.CUSTOM_DISPLAY %}
 				{{ topicrow.FIELDS.footer|join }}
-				<!-- ENDIF -->
+				{% endif %}
 			</div>
 		</div>
-		<!-- IF not topicrow.S_LAST_ROW -->
+		{% if not topicrow.S_LAST_ROW %}
 		<p>&nbsp;</p>
 		<hr class="dashed" />
 		<p>&nbsp;</p>
-		<!-- ENDIF -->
-<!-- BEGINELSE -->
-		{L_CONTENT_NO_TOPICS}
-<!-- END topicrow -->
+		{% endif %}
+{% else %}
+		{{ lang('CONTENT_NO_TOPICS') }}
+{% endfor %}
 	</div>
 </div>
 
-<!-- IF .pagination or TOTAL_POSTS -->
+{% if loops.pagination|length or TOTAL_POSTS %}
 <div class="action-bar bottom">
 	<div class="pagination">
-		{TOTAL_POSTS} 
-		<!-- IF .pagination -->
-		<!-- INCLUDE pagination.html -->
-		<!-- ELSE -->
-		&bull; {PAGE_NUMBER}
-		<!-- ENDIF -->
+		{{ TOTAL_POSTS }} 
+		{% if loops.pagination|length %}
+		{% INCLUDE 'pagination.html' %}
+		{% else %}
+		&bull; {{ PAGE_NUMBER }}
+		{% endif %}
 	</div>
 	<div class="clear"></div>
 </div>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF not S_HIDE_HEADERS --><!-- INCLUDE overall_footer.html --><!-- ENDIF -->
+{% if not S_HIDE_HEADERS %}{% INCLUDE 'overall_footer.html' %}{% endif %}

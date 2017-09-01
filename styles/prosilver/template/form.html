@@ -1,39 +1,39 @@
-<!-- IF S_WRAP_FORM -->
-<form id="{FORM_NAME}" method="{FORM_METHOD}" action="{FORM_ACTION}">
+{% if S_WRAP_FORM %}
+<form id="{{ FORM_NAME }}" method="{{ FORM_METHOD }}" action="{{ FORM_ACTION }}">
 	<fieldset class="fields1">
-<!-- ENDIF -->
+{% endif %}
 	<script type="text/javascript">
 		// <![CDATA[
-	<!-- IF S_EDITOR -->
-		var form_name = '{FORM_NAME}';
+	{% if S_EDITOR %}
+		var form_name = '{{ FORM_NAME }}';
 		var text_name = '';
 		var load_draft = false;
 		var upload = false;
 
 		// Define the bbCode tags
 		var bbcode = new Array();
-		var bbtags = new Array('[b]','[/b]','[i]','[/i]','[u]','[/u]','[quote]','[/quote]','[code]','[/code]','[list]','[/list]','[list=]','[/list]','[img]','[/img]','[url]','[/url]','[flash=]', '[/flash]','[size=]','[/size]'<!-- BEGIN custom_tags -->, {custom_tags.BBCODE_NAME}<!-- END custom_tags -->);
+		var bbtags = new Array('[b]','[/b]','[i]','[/i]','[u]','[/u]','[quote]','[/quote]','[code]','[/code]','[list]','[/list]','[list=]','[/list]','[img]','[/img]','[url]','[/url]','[flash=]', '[/flash]','[size=]','[/size]'{% for custom_tags in loops.custom_tags %}, {{ custom_tags.BBCODE_NAME }}{% endfor %});
 		var imageTag = false;
 
 		// Helpline messages
 		var help_line = {
-			b: '{LA_BBCODE_B_HELP}',
-			i: '{LA_BBCODE_I_HELP}',
-			u: '{LA_BBCODE_U_HELP}',
-			q: '{LA_BBCODE_Q_HELP}',
-			c: '{LA_BBCODE_C_HELP}',
-			l: '{LA_BBCODE_L_HELP}',
-			o: '{LA_BBCODE_O_HELP}',
-			p: '{LA_BBCODE_P_HELP}',
-			w: '{LA_BBCODE_W_HELP}',
-			a: '{LA_BBCODE_A_HELP}',
-			s: '{LA_BBCODE_S_HELP}',
-			f: '{LA_BBCODE_F_HELP}',
-			y: '{LA_BBCODE_Y_HELP}',
-			d: '{LA_BBCODE_D_HELP}'
-			<!-- BEGIN custom_tags -->
-			,cb_{custom_tags.BBCODE_ID}: '{custom_tags.A_BBCODE_HELPLINE}'
-			<!-- END custom_tags -->
+			b: '{{ lang('BBCODE_B_HELP')|escape('js') }}',
+			i: '{{ lang('BBCODE_I_HELP')|escape('js') }}',
+			u: '{{ lang('BBCODE_U_HELP')|escape('js') }}',
+			q: '{{ lang('BBCODE_Q_HELP')|escape('js') }}',
+			c: '{{ lang('BBCODE_C_HELP')|escape('js') }}',
+			l: '{{ lang('BBCODE_L_HELP')|escape('js') }}',
+			o: '{{ lang('BBCODE_O_HELP')|escape('js') }}',
+			p: '{{ lang('BBCODE_P_HELP')|escape('js') }}',
+			w: '{{ lang('BBCODE_W_HELP')|escape('js') }}',
+			a: '{{ lang('BBCODE_A_HELP')|escape('js') }}',
+			s: '{{ lang('BBCODE_S_HELP')|escape('js') }}',
+			f: '{{ lang('BBCODE_F_HELP')|escape('js') }}',
+			y: '{{ lang('BBCODE_Y_HELP')|escape('js') }}',
+			d: '{{ lang('BBCODE_D_HELP')|escape('js') }}'
+			{% for custom_tags in loops.custom_tags %}
+			,cb_{{ custom_tags.BBCODE_ID }}: '{{ custom_tags.A_BBCODE_HELPLINE }}'
+			{% endfor %}
 		}
 
 		function change_palette(field)
@@ -44,14 +44,14 @@
 
 			if (e.style.display == 'block')
 			{
-				document.getElementById(field + '_bbpalette').value = '{LA_FONT_COLOR_HIDE}';
+				document.getElementById(field + '_bbpalette').value = '{{ lang('FONT_COLOR_HIDE')|escape('js') }}';
 			}
 			else
 			{
-				document.getElementById(field + '_bbpalette').value = '{LA_FONT_COLOR}';
+				document.getElementById(field + '_bbpalette').value = '{{ lang('FONT_COLOR')|escape('js') }}';
 			}
 		}
-	<!-- ENDIF -->
+	{% endif %}
 
 		// Translations for datetime picker
 		var dpLang = {
@@ -113,28 +113,28 @@
 		};
 		// ]]>
 	</script>
-	<!-- BEGIN element -->
+	{% for element in loops.element %}
 		<dl>
-			<dt><!-- IF element.FIELD_LABEL --><label for="{element.FIELD_ID}">{element.FIELD_LABEL}<!-- IF element.FIELD_REQUIRED --><abbr class="req" title="required">*</abbr><!-- ENDIF -->{L_COLON}</label><br /><!-- ENDIF --><span>{element.FIELD_EXPLAIN}</span></dt>
-		<!-- IF not element.FULL_WIDTH -->
-			<dd>{element.FIELD_VIEW}</dd>
-		<!-- ELSE -->
+			<dt>{% if element.FIELD_LABEL %}<label for="{{ element.FIELD_ID }}">{{ element.FIELD_LABEL }}{% if element.FIELD_REQUIRED %}<abbr class="req" title="required">*</abbr>{% endif %}{{ lang('COLON') }}</label><br />{% endif %}<span>{{ element.FIELD_EXPLAIN }}</span></dt>
+		{% if not element.FULL_WIDTH %}
+			<dd>{{ element.FIELD_VIEW }}</dd>
+		{% else %}
 			<dd></dd>
-			{element.FIELD_VIEW}
-		<!-- ENDIF -->
+			{{ element.FIELD_VIEW }}
+		{% endif %}
 		</dl>
-	<!-- END element -->
-	<!-- BEGIN hidden -->
-		{hidden.FIELD_VIEW}
-	<!-- END hidden -->
-<!-- IF S_WRAP_FORM -->
+	{% endfor %}
+	{% for hidden in loops.hidden %}
+		{{ hidden.FIELD_VIEW }}
+	{% endfor %}
+{% if S_WRAP_FORM %}
 	</fieldset>
 
 	<fieldset class="submit-buttons">
-		{FORM_KEY}
-	<!-- BEGIN button -->
-		{button.FIELD_VIEW}
-	<!-- END button -->
+		{{ FORM_KEY }}
+	{% for button in loops.button %}
+		{{ button.FIELD_VIEW }}
+	{% endfor %}
 	</fieldset>
 </form>
-<!-- ENDIF -->
+{% endif %}

@@ -1,15 +1,15 @@
-<!-- IF .content -->
+{% if loops.content|length %}
 <div class="panel post cms-block-container cms-block-spacing">
 	<div class="inner">
 		<div class="postbody sm-postbody">
-			<h2>{AUTHOR_CONTENT}</h2>
-			<!-- BEGIN content -->
+			<h2>{{ AUTHOR_CONTENT }}</h2>
+			{% for content in loops.content %}
 			<p>
-				<span><i class="icon fa-file fa-fw <!-- IF content.S_UNREAD_POST -->icon-red<!-- ELSE -->icon-lightgray<!-- ENDIF --> icon-md" aria-hidden="true"></i><span class="sr-only">{content.MINI_POST}</span></span>
-				<a href="{content.TOPIC_URL}">{content.TOPIC_TITLE}</a>
+				<span><i class="icon fa-file fa-fw {% if content.S_UNREAD_POST %}icon-red{% else %}icon-lightgray{% endif %} icon-md" aria-hidden="true"></i><span class="sr-only">{{ content.MINI_POST }}</span></span>
+				<a href="{{ content.TOPIC_URL }}">{{ content.TOPIC_TITLE }}</a>
 			</p>
-			<!-- END content -->
+			{% endfor %}
 		</div>
 	</div>
 </div>
-<!-- ENDIF -->
+{% endif %}

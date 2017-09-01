@@ -1,58 +1,58 @@
-<!-- IF not S_HIDE_HEADERS --><!-- INCLUDE overall_header.html --><!-- ENDIF -->
-<!-- INCLUDE parts/content_type.html -->
+{% if not S_HIDE_HEADERS %}{% INCLUDE 'overall_header.html' %}{% endif %}
+{% INCLUDE 'parts/content_type.html' %}
 
-<!-- INCLUDECSS @blitze_content/assets/view/tiles/content_tiles.min.css -->
-<!-- INCLUDEJS @blitze_content/vendor/imagesloaded/imagesloaded.pkgd.min.js -->
-<!-- INCLUDEJS @blitze_content/vendor/awesome-grid/awesome-grid.min.js -->
-<!-- INCLUDEJS @blitze_content/assets/view/tiles/content_tiles.min.js -->
+{% INCLUDECSS '@blitze_content/assets/view/tiles/content_tiles.min.css' %}
+{% INCLUDEJS '@blitze_content/vendor/imagesloaded/imagesloaded.pkgd.min.js' %}
+{% INCLUDEJS '@blitze_content/vendor/awesome-grid/awesome-grid.min.js' %}
+{% INCLUDEJS '@blitze_content/assets/view/tiles/content_tiles.min.js' %}
 
-<!-- IF .topicrow -->
+{% if loops.topicrow|length %}
 	{%- set desktopCols = content_view_settings.desktop_cols|default(3) -%}
 	{%- set desktopCols = (topicrow|length < desktopCols) ? topicrow|length : desktopCols -%}
 	<div id="sitemaker-content-tiles" class="grid" data-desktop-columns="{{ desktopCols }}" data-tablet-columns="{{ content_view_settings.tablet_cols|default(2) }}" data-mobile-columns="{{ content_view_settings.mobile_cols|default(1) }}">
-		<!-- BEGIN topicrow -->
+		{% for topicrow in loops.topicrow %}
 		<div class="grid__col--1-of-3 grid-item">
 			<div class="panel post tile sm-block-spacing">
 				<div class="inner">
 					<div class="postbody sm-postbody">
-					<!-- IF not topicrow.CUSTOM_DISPLAY -->
-						<!-- INCLUDE parts/summary_title.html -->
-					<!-- ENDIF -->
+					{% if not topicrow.CUSTOM_DISPLAY %}
+						{% INCLUDE 'parts/summary_title.html' %}
+					{% endif %}
 						<div class="content">
-						<!-- IF topicrow.CUSTOM_DISPLAY -->
-							{topicrow.CUSTOM_DISPLAY}
-						<!-- ELSE -->
+						{% if topicrow.CUSTOM_DISPLAY %}
+							{{ topicrow.CUSTOM_DISPLAY }}
+						{% else %}
 							{{ topicrow.FIELDS.body|join }}
 							<p>&nbsp;</p>
 							<div class="align-right">
-								<a href="{topicrow.TOPIC_URL}" class="button">{L_READ_MORE}</a>
+								<a href="{{ topicrow.TOPIC_URL }}" class="button">{{ lang('READ_MORE') }}</a>
 							</div>
-						<!-- ENDIF -->
+						{% endif %}
 						</div>
-						<!-- IF not topicrow.FIELDS.CUSTOM_DISPLAY -->
+						{% if not topicrow.FIELDS.CUSTOM_DISPLAY %}
 						{{ topicrow.FIELDS.footer|join }}
-						<!-- ENDIF -->
+						{% endif %}
 					</div>
 				</div>
 			</div>
 		</div>
-		<!-- END topicrow -->
+		{% endfor %}
 	</div>
-	<!-- IF .pagination -->
+	{% if loops.pagination|length %}
 	<div class="panel bg2 load_more align-center">
-	<!-- BEGIN pagination -->
-		<!-- IF pagination.S_IS_NEXT -->
-		<a id="tile-load-more" href="{pagination.PAGE_URL}" rel="next">{L_LOAD_MORE}</a>
-		<!-- ENDIF -->
-	<!-- END pagination -->
+	{% for pagination in loops.pagination %}
+		{% if pagination.S_IS_NEXT %}
+		<a id="tile-load-more" href="{{ pagination.PAGE_URL }}" rel="next">{{ lang('LOAD_MORE') }}</a>
+		{% endif %}
+	{% endfor %}
 	</div>
-	<!-- ENDIF -->
-<!-- ELSE -->
+	{% endif %}
+{% else %}
 <div class="panel post cms-block-spacing">
 	<div class="inner">
-		{L_CONTENT_NO_TOPICS}
+		{{ lang('CONTENT_NO_TOPICS') }}
 	</div>
 </div>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF not S_HIDE_HEADERS --><!-- INCLUDE overall_footer.html --><!-- ENDIF -->
+{% if not S_HIDE_HEADERS %}{% INCLUDE 'overall_footer.html' %}{% endif %}
