@@ -104,7 +104,7 @@ class builder
 		{
 			$this->language->add_lang('manager', 'blitze/content');
 
-			/** @var \blitze\content\services\types $entity */
+			/** @var \blitze\content\model\entity\type $entity */
 			$entity = $this->types->get_type($type, true);
 			$fields_data = $entity->get_content_fields();
 
@@ -322,7 +322,7 @@ class builder
 	}
 
 	/**
-	 * param string $post_mode
+	 * @param string $post_mode
 	 * @param array $sql_data
 	 * @return void
 	 */

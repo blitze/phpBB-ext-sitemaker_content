@@ -58,14 +58,15 @@ class types extends base_mapper
 	/**
 	 * {@inheritdoc}
 	 */
-	public function delete($condition)
+	public function delete($entity)
 	{
-		parent::delete($condition);
+        /** @var \blitze\content\model\entity\type $entity */
+        parent::delete($entity);
 
-		if ($condition instanceof $this->entity_class)
+		if ($entity instanceof $this->entity_class)
 		{
-			$items_mapper = $this->mapper_factory->create('fields');
-			$items_mapper->delete(array('content_id', '=', $condition->get_content_id()));
+			$fields_mapper = $this->mapper_factory->create('fields');
+			$fields_mapper->delete(array('content_id', '=', $entity->get_content_id()));
 		}
 	}
 

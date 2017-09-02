@@ -28,7 +28,10 @@ class mcp_topic implements EventSubscriberInterface
 	/** @var string */
 	protected $php_ext;
 
-	/**
+	/** @var string */
+    private $type;
+
+    /**
 	 * Constructor
 	 *
 	 * @param \phpbb\db\driver\driver_interface		$db					Database object

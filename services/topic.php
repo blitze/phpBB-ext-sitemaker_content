@@ -244,7 +244,7 @@ class topic
 	/**
 	 * @param array $topic_data
 	 * @param array $post_data
-	 * @return array
+	 * @return string
 	 */
 	protected function get_mini_post_url(array $topic_data, array $post_data)
 	{

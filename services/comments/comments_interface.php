@@ -11,9 +11,11 @@ namespace blitze\content\services\comments;
 
 interface comments_interface
 {
-	/**
-	 * Get comments count for topic
-	 */
+    /**
+     * Get comments count for topic
+     * @param array $topic_data
+     * @return
+     */
 	public function count(array $topic_data);
 
 	/**

@@ -40,6 +40,9 @@ class action_handler
 			throw new \blitze\sitemaker\exception\out_of_bounds(array($action, 'INVALID_REQUEST'));
 		}
 
-		return $this->phpbb_container->get($service_name);
+        $service = $this->phpbb_container->get($service_name);
+
+        /** @var \blitze\content\services\actions\action_interface $service */
+        return $service;
 	}
 }

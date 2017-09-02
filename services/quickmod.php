@@ -76,7 +76,7 @@ class quickmod
 
 	/**
 	 * @param array $topic_data
-	 * @return void
+	 * @return array
 	 */
 	protected function get_options(array $topic_data)
 	{

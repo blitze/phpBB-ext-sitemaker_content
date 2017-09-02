@@ -136,7 +136,7 @@
 			$('<div class="error">' + error2 + '</div>').insertAfter(fLabelObj);
 		}
 
-		return (error1 || error2) ? true : false;
+		return !!(error1 || error2);
 	};
 
 	var getEditor = function(view) {
