@@ -1,14 +1,14 @@
 {% include 'parts/moderator_info.html' %}
 {{ topicrow.FIELDS.above|join }}
 <h3 class="first">
-	{% if topicrow.TOPIC_ICON_IMG %}<img src="{T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}" width="{topicrow.TOPIC_ICON_IMG_WIDTH}" height="{topicrow.TOPIC_ICON_IMG_HEIGHT}" alt="{{ topicrow.TOPIC_ICON_IMG_ALT }}" title="{{ topicrow.TOPIC_ICON_IMG_ALT }}" /> {% endif %}
+	{% if topicrow.TOPIC_ICON_IMG %}<img src="{{ T_ICONS_PATH }}{{ topicrow.TOPIC_ICON_IMG }}" width="{{ topicrow.TOPIC_ICON_IMG_WIDTH }}" height="{{ topicrow.TOPIC_ICON_IMG_HEIGHT }}" alt="{{ topicrow.TOPIC_ICON_IMG_ALT }}" title="{{ topicrow.TOPIC_ICON_IMG_ALT }}" /> {% endif %}
 	<a href="{{ topicrow.TOPIC_URL }}">{{ topicrow.TOPIC_TITLE }}</a>
 </h3>
 <p class="author">
 	{% if S_IS_BOT %}
 	<span><i class="icon fa-file fa-fw {% if topicrow.S_UNREAD_POST %}icon-red{% else %}icon-lightgray{% endif %} icon-md" aria-hidden="true"></i><span class="sr-only">{{ topicrow.MINI_POST }}</span></span>
 	{% else %}
-	<a class="unread" href="{topicrow.TOPIC_URL}" title="">
+	<a class="unread" href="{{ topicrow.TOPIC_URL }}" title="">
 		<i class="icon fa-file fa-fw {% if topicrow.S_UNREAD_POST %}icon-red{% else %}icon-lightgray{% endif %} icon-md" aria-hidden="true"></i><span class="sr-only">{{ topicrow.MINI_POST }}</span>
 	</a>
 	{% endif %}

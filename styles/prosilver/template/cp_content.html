@@ -1,216 +1,216 @@
-<!-- INCLUDE {MODE}_header.html -->
+{% INCLUDE ''~ MODE ~'_header.html' %}
 
-	<!-- IF S_ACTION -->
+	{% if S_ACTION %}
 	<div class="pull-right responsive-center">
-		<form method="post" action="{S_ACTION}">
+		<form method="post" action="{{ S_ACTION }}">
 			<fieldset>
-				<input type="search" placeholder="{L_TOPIC_TITLE}" class="panel inputbox tiny" name="keyword" size="20" maxlength="128" value="" />
-				<input type="submit" class="panel bg3" value="{L_SEARCH}" />
+				<input type="search" placeholder="{{ lang('TOPIC_TITLE') }}" class="panel inputbox tiny" name="keyword" size="20" maxlength="128" value="" />
+				<input type="submit" class="panel bg3" value="{{ lang('SEARCH') }}" />
 			</fieldset>
 		</form>
 	</div>
-	<!-- ENDIF -->
-<h2>{L_MANAGE_CONTENT}</h2>
+	{% endif %}
+<h2>{{ lang('MANAGE_CONTENT') }}</h2>
 
-<!-- IF S_VIEWING -->
+{% if S_VIEWING %}
 
 	<div class="panel post">
 		<div class="inner">
-			<h4>{L_TOPIC_REVIEW}</h4>
+			<h4>{{ lang('TOPIC_REVIEW') }}</h4>
 			<h3 id="review">
-				<span class="right-box"><a href="#review" onclick="viewableArea(getElementById('topicreview'), true); var rev_text = getElementById('review').getElementsByTagName('a').item(0).firstChild; if (rev_text.data == '{LA_EXPAND_VIEW}'){rev_text.data = '{LA_COLLAPSE_VIEW}'; } else if (rev_text.data == '{LA_COLLAPSE_VIEW}'){rev_text.data = '{LA_EXPAND_VIEW}'};">{L_EXPAND_VIEW}</a></span>
+				<span class="right-box"><a href="#review" onclick="viewableArea(getElementById('topicreview'), true); var rev_text = getElementById('review').getElementsByTagName('a').item(0).firstChild; if (rev_text.data == '{{ lang('EXPAND_VIEW')|escape('js') }}'){rev_text.data = '{{ lang('COLLAPSE_VIEW')|escape('js') }}'; } else if (rev_text.data == '{{ lang('COLLAPSE_VIEW')|escape('js') }}'){rev_text.data = '{{ lang('EXPAND_VIEW')|escape('js') }}'};">{{ lang('EXPAND_VIEW') }}</a></span>
 				<span>&nbsp;</span>
 			</h3>
 
 			<div id="topicreview">
-				<!-- INCLUDE {S_VIEWING} -->
+				{% INCLUDE ''~ S_VIEWING ~'' %}
 			</div>
 		</div>
 	</div>
 
-<!-- ELSE -->
-	<!-- IF MODE == 'mcp' --><form method="post" id="mcp" action="{U_MCP_ACTION}"><!-- ENDIF -->
+{% else %}
+	{% if MODE == 'mcp' %}<form method="post" id="mcp" action="{{ U_MCP_ACTION }}">{% endif %}
 	<div class="panel">
 		<div class="inner">
-			<!-- IF MODE == 'mcp' && NUM_PENDING --><span class="error">{L_PENDING_TOPICS}{L_COLON} <a href="{U_PENDING}"><strong>[{NUM_PENDING}]</strong></a></span><!-- ENDIF -->
+			{% if MODE == 'mcp' && NUM_PENDING %}<span class="error">{{ lang('PENDING_TOPICS') }}{{ lang('COLON') }} <a href="{{ U_PENDING }}"><strong>[{{ NUM_PENDING }}]</strong></a></span>{% endif %}
 
-			<!-- IF .postable -->
+			{% if loops.postable|length %}
 			<div class="pull-left">
 				<div class="action-bar top responsive-center">
 					<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
-						<span title="{L_CONTENT_NEW}" class="button dropdown-trigger dropdown-select"><i class="fa fa-plus fa-green"></i> {L_CONTENT_NEW}</span>
+						<span title="{{ lang('CONTENT_NEW') }}" class="button dropdown-trigger dropdown-select"><i class="fa fa-plus fa-green"></i> {{ lang('CONTENT_NEW') }}</span>
 						<div class="dropdown hidden">
 							<div class="pointer"><div class="pointer-inner"></div></div>
 							<ul class="dropdown-contents dropdown-nonscroll">
-								<!-- BEGIN postable -->
-								<li><a href="{postable.U_POST}"><i class="fa fa-square" style="color: #{postable.COLOUR}"></i>{postable.TYPE}</a></li>
-								<!-- END postable -->
+								{% for postable in loops.postable %}
+								<li><a href="{{ postable.U_POST }}"><i class="fa fa-square" style="color: #{{ postable.COLOUR }}"></i>{{ postable.TYPE }}</a></li>
+								{% endfor %}
 							</ul>
 						</div>
 					</div>
 				</div>
 			</div>
-			<!-- ENDIF -->
+			{% endif %}
 
-			<!-- IF .status -->
+			{% if loops.status|length %}
 			<div class="pull-right responsive-center">
 				<div class="action-bar top pull-right responsive-center">
 					<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
-						<span title="{L_TOPIC_STATUS}" class="button dropdown-trigger dropdown-select"><i class="fa <!-- IF S_STATUS_FILTER -->fa-filter fa-green<!-- ELSE -->fa-square-o<!-- ENDIF -->"></i> {L_TOPIC_STATUS}</span>
+						<span title="{{ lang('TOPIC_STATUS') }}" class="button dropdown-trigger dropdown-select"><i class="fa {% if S_STATUS_FILTER %}fa-filter fa-green{% else %}fa-square-o{% endif %}"></i> {{ lang('TOPIC_STATUS') }}</span>
 						<div class="dropdown hidden">
 							<div class="pointer"><div class="pointer-inner"></div></div>
 							<ul class="dropdown-contents dropdown-nonscroll">
-							<!-- BEGIN status -->
-								<!-- IF status.S_SELECTED -->
-								<li><i class="fa fa-caret-right"></i><strong>{status.TITLE}</strong></li>
-								<!-- ELSE -->
-								<li><a href="{status.U_VIEW}"><i class="fa fa-angle-right"></i>{status.TITLE}</a></li>
-								<!-- ENDIF -->
-							<!-- END status -->
+							{% for status in loops.status %}
+								{% if status.S_SELECTED %}
+								<li><i class="fa fa-caret-right"></i><strong>{{ status.TITLE }}</strong></li>
+								{% else %}
+								<li><a href="{{ status.U_VIEW }}"><i class="fa fa-angle-right"></i>{{ status.TITLE }}</a></li>
+								{% endif %}
+							{% endfor %}
 							</ul>
 						</div>
 					</div>
 				</div>
-				<!-- ENDIF -->
+				{% endif %}
 
-				<!-- IF .content > 1 -->
+				{% if loops.content|length > 1 %}
 				<div class="action-bar top right-box responsive-center">
 					<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
-						<span title="{L_CONTENT_TYPE}" class="button dropdown-trigger dropdown-select"><i class="fa <!-- IF S_CONTENT_FILTER -->fa-filter fa-green<!-- ELSE -->fa-square-o<!-- ENDIF -->"></i> {L_CONTENT_TYPE}</span>
+						<span title="{{ lang('CONTENT_TYPE') }}" class="button dropdown-trigger dropdown-select"><i class="fa {% if S_CONTENT_FILTER %}fa-filter fa-green{% else %}fa-square-o{% endif %}"></i> {{ lang('CONTENT_TYPE') }}</span>
 						<div class="dropdown hidden">
 							<div class="pointer"><div class="pointer-inner"></div></div>
 							<ul class="dropdown-contents dropdown-nonscroll">
-							<!-- BEGIN content -->
-								<!-- IF content.S_SELECTED -->
-								<li><i class="fa fa-square" style="color: #{content.COLOUR}"></i><strong>{content.TITLE}</strong></li>
-								<!-- ELSE -->
-								<li><a href="{content.U_VIEW}"><i class="fa fa-square" style="color: #{content.COLOUR}"></i>{content.TITLE}</a></li>
-								<!-- ENDIF -->
-							<!-- END content -->
+							{% for content in loops.content %}
+								{% if content.S_SELECTED %}
+								<li><i class="fa fa-square" style="color: #{{ content.COLOUR }}"></i><strong>{{ content.TITLE }}</strong></li>
+								{% else %}
+								<li><a href="{{ content.U_VIEW }}"><i class="fa fa-square" style="color: #{{ content.COLOUR }}"></i>{{ content.TITLE }}</a></li>
+								{% endif %}
+							{% endfor %}
 							</ul>
 						</div>
 					</div>
 				</div>
-				<!-- ENDIF -->
+				{% endif %}
 			</div>
 			<div class="clear"></div><br />
 
-			<!-- IF .topicrow -->
+			{% if loops.topicrow|length %}
 
-				<!-- IF PAGINATION or TOTAL_TOPICS -->
+				{% if PAGINATION or TOTAL_TOPICS %}
 				<div class="action-bar top">
 					<div class="pagination">
-						{TOTAL_TOPICS}
-						<!-- IF .pagination -->
-						<!-- INCLUDE pagination.html -->
-						<!-- ELSE -->
-						&bull; {PAGE_NUMBER}
-						<!-- ENDIF -->
+						{{ TOTAL_TOPICS }}
+						{% if loops.pagination|length %}
+						{% INCLUDE 'pagination.html' %}
+						{% else %}
+						&bull; {{ PAGE_NUMBER }}
+						{% endif %}
 					</div>
 				</div>
-				<!-- ENDIF -->
+				{% endif %}
 
 				<ul class="topiclist">
 					<li class="header">
 						<dl class="row-item">
-							<dt><div class="list-inner align-center">{L_TITLE}</div></dt>
-							<dd class="posts">{L_STATUS}</dd>
-							<dd class="lastpost align-center"><span>{L_TYPE}</span></dd>
-							<dd class="mark">{L_ACTION}</dd>
+							<dt><div class="list-inner align-center">{{ lang('TITLE') }}</div></dt>
+							<dd class="posts">{{ lang('STATUS') }}</dd>
+							<dd class="lastpost align-center"><span>{{ lang('TYPE') }}</span></dd>
+							<dd class="mark">{{ lang('ACTION') }}</dd>
 						</dl>
 					</li>
 				</ul>
 				<ul class="topiclist cplist">
-					<!-- BEGIN topicrow -->
-					<li class="row<!-- IF topicrow.S_ROW_COUNT is odd --> bg1<!-- ELSE --> bg2<!-- ENDIF --><!-- IF topicrow.S_TOPIC_REPORTED --> reported<!-- ENDIF -->">
-						<dl class="row-item {topicrow.TOPIC_IMG_STYLE}">
-							<dt <!-- IF topicrow.TOPIC_ICON_IMG -->style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG}); background-repeat: no-repeat;"<!-- ENDIF -->>
+					{% for topicrow in loops.topicrow %}
+					<li class="row{% if topicrow.S_ROW_COUNT is odd %} bg1{% else %} bg2{% endif %}{% if topicrow.S_TOPIC_REPORTED %} reported{% endif %}">
+						<dl class="row-item {{ topicrow.TOPIC_IMG_STYLE }}">
+							<dt {% if topicrow.TOPIC_ICON_IMG %}style="background-image: url({{ T_ICONS_PATH }}{{ topicrow.TOPIC_ICON_IMG }}); background-repeat: no-repeat;"{% endif %}>
 								<div class="list-inner">
-									<a class="unread" href="{topicrow.U_MINI_POST}" title="{L_GOTO_TOPIC}">
-										<i class="icon fa-file fa-fw <!-- IF topicrow.S_UNREAD_POST -->icon-red<!-- ELSE -->icon-lightgray<!-- ENDIF --> icon-md" aria-hidden="true"></i>
+									<a class="unread" href="{{ topicrow.U_MINI_POST }}" title="{{ lang('GOTO_TOPIC') }}">
+										<i class="icon fa-file fa-fw {% if topicrow.S_UNREAD_POST %}icon-red{% else %}icon-lightgray{% endif %} icon-md" aria-hidden="true"></i>
 									</a>
-									<a href="{topicrow.U_REVIEW_TOPIC}" class="topictitle">{topicrow.TOPIC_TITLE}</a>
-								<!-- IF MODE == 'mcp' -->
-									<!-- IF topicrow.S_TOPIC_DELETED or topicrow.S_POSTS_DELETED -->
-									<a href="{topicrow.U_MCP_QUEUE}" title="{L_TOPIC_DELETED}">
-										<i class="icon fa-recycle fa-fw icon-green" aria-hidden="true"></i><span class="sr-only">{L_TOPIC_DELETED}</span>
+									<a href="{{ topicrow.U_REVIEW_TOPIC }}" class="topictitle">{{ topicrow.TOPIC_TITLE }}</a>
+								{% if MODE == 'mcp' %}
+									{% if topicrow.S_TOPIC_DELETED or topicrow.S_POSTS_DELETED %}
+									<a href="{{ topicrow.U_MCP_QUEUE }}" title="{{ lang('TOPIC_DELETED') }}">
+										<i class="icon fa-recycle fa-fw icon-green" aria-hidden="true"></i><span class="sr-only">{{ lang('TOPIC_DELETED') }}</span>
 									</a>
-									<!-- ENDIF -->
-									<!-- IF topicrow.S_TOPIC_REPORTED -->
-									<a href="{topicrow.U_MCP_REPORT}" title="{L_TOPIC_REPORTED}">
-										<i class="icon fa-exclamation fa-fw icon-red" aria-hidden="true"></i><span class="sr-only">{L_TOPIC_REPORTED}</span>
+									{% endif %}
+									{% if topicrow.S_TOPIC_REPORTED %}
+									<a href="{{ topicrow.U_MCP_REPORT }}" title="{{ lang('TOPIC_REPORTED') }}">
+										<i class="icon fa-exclamation fa-fw icon-red" aria-hidden="true"></i><span class="sr-only">{{ lang('TOPIC_REPORTED') }}</span>
 									</a>
-									<!-- ENDIF -->
-								<!-- ENDIF -->
+									{% endif %}
+								{% endif %}
 									<br />
 
 									<div class="responsive-show" style="display: none;">
-										<!-- IF topicrow.S_HAS_POLL --><i class="icon fa-bar-chart fa-fw" aria-hidden="true"></i><!-- ENDIF -->
-										<!-- IF topicrow.ATTACH_ICON_IMG --><i class="icon fa-paperclip fa-fw" aria-hidden="true"></i><!-- ENDIF -->
-										<!-- IF MODE == 'mcp' --><strong>{topicrow.USERNAME_FULL}</strong> | <!-- ENDIF -->
-										<i class="fa fa-calendar"></i> <strong>{topicrow.TOPIC_TIME|date("m/d/Y")}</strong> |
-										<i class="fa fa-eye"></i> <strong>{topicrow.TOPIC_VIEWS}</strong>
-										<!-- IF topicrow.S_COMMENTS --> | <i class="fa fa-comments"></i> <a href="{topicrow.U_VIEW_TOPIC}#comments"><strong>{topicrow.TOPIC_COMMENTS}</strong></a><!-- ENDIF -->
+										{% if topicrow.S_HAS_POLL %}<i class="icon fa-bar-chart fa-fw" aria-hidden="true"></i>{% endif %}
+										{% if topicrow.ATTACH_ICON_IMG %}<i class="icon fa-paperclip fa-fw" aria-hidden="true"></i>{% endif %}
+										{% if MODE == 'mcp' %}<strong>{{ topicrow.USERNAME_FULL }}</strong> | {% endif %}
+										<i class="fa fa-calendar"></i> <strong>{{ topicrow.TOPIC_TIME|date("m/d/Y") }}</strong> |
+										<i class="fa fa-eye"></i> <strong>{{ topicrow.TOPIC_VIEWS }}</strong>
+										{% if topicrow.S_COMMENTS %} | <i class="fa fa-comments"></i> <a href="{{ topicrow.U_VIEW_TOPIC }}#comments"><strong>{{ topicrow.TOPIC_COMMENTS }}</strong></a>{% endif %}
 									</div>
-									<span class="responsive-show left-box" style="display: none;">{L_TYPE}{L_COLON} <strong>{topicrow.CONTENT_TYPE}</strong></span>
+									<span class="responsive-show left-box" style="display: none;">{{ lang('TYPE') }}{{ lang('COLON') }} <strong>{{ topicrow.CONTENT_TYPE }}</strong></span>
 
 									<div class="responsive-hide">
-										<!-- IF topicrow.S_HAS_POLL --><i class="icon fa-bar-chart fa-fw" aria-hidden="true"></i><!-- ENDIF -->
-										<!-- IF topicrow.ATTACH_ICON_IMG --><i class="icon fa-paperclip fa-fw" aria-hidden="true"></i><!-- ENDIF -->
-										<!-- IF MODE == 'mcp' -->{L_POST_BY_AUTHOR} <strong>{topicrow.USERNAME_FULL}</strong> | <!-- ENDIF -->
-										<i class="fa fa-calendar"></i> {L_POSTED}{L_COLON} <strong>{topicrow.TOPIC_TIME|date("m/d/Y")}</strong> |
-										<i class="fa fa-eye"></i> {L_VIEWS}{L_COLON} <strong>{topicrow.TOPIC_VIEWS}</strong>
-										<!-- IF topicrow.S_COMMENTS --> | <i class="fa fa-comments"></i> {L_COMMENTS}{L_COLON} <a href="{topicrow.U_VIEW_TOPIC}#comments"><strong>{topicrow.TOPIC_COMMENTS}</strong></a><!-- ENDIF -->
+										{% if topicrow.S_HAS_POLL %}<i class="icon fa-bar-chart fa-fw" aria-hidden="true"></i>{% endif %}
+										{% if topicrow.ATTACH_ICON_IMG %}<i class="icon fa-paperclip fa-fw" aria-hidden="true"></i>{% endif %}
+										{% if MODE == 'mcp' %}{{ lang('POST_BY_AUTHOR') }} <strong>{{ topicrow.USERNAME_FULL }}</strong> | {% endif %}
+										<i class="fa fa-calendar"></i> {{ lang('POSTED') }}{{ lang('COLON') }} <strong>{{ topicrow.TOPIC_TIME|date("m/d/Y") }}</strong> |
+										<i class="fa fa-eye"></i> {{ lang('VIEWS') }}{{ lang('COLON') }} <strong>{{ topicrow.TOPIC_VIEWS }}</strong>
+										{% if topicrow.S_COMMENTS %} | <i class="fa fa-comments"></i> {{ lang('COMMENTS') }}{{ lang('COLON') }} <a href="{{ topicrow.U_VIEW_TOPIC }}#comments"><strong>{{ topicrow.TOPIC_COMMENTS }}</strong></a>{% endif %}
 									</div>
 								</div>
 							</dt>
-							<dd class="posts"><a href="{topicrow.U_TOPIC_STATUS}" title="{topicrow.FIRST_POST_TIME}">{topicrow.TOPIC_STATUS}</a> <dfn>{L_STATUS}</dfn></dd>
-							<dd class="lastpost align-center"><a href="{topicrow.U_CONTENT_TYPE}"><span class="badge" style="background-color: #{topicrow.CONTENT_TYPE_COLOR}; color: #fff">{topicrow.CONTENT_TYPE}</span></a><dfn>{L_LAST_POST}</dfn></dd>
+							<dd class="posts"><a href="{{ topicrow.U_TOPIC_STATUS }}" title="{{ topicrow.FIRST_POST_TIME }}">{{ topicrow.TOPIC_STATUS }}</a> <dfn>{{ lang('STATUS') }}</dfn></dd>
+							<dd class="lastpost align-center"><a href="{{ topicrow.U_CONTENT_TYPE }}"><span class="badge" style="background-color: #{{ topicrow.CONTENT_TYPE_COLOR }}; color: #fff">{{ topicrow.CONTENT_TYPE }}</span></a><dfn>{{ lang('LAST_POST') }}</dfn></dd>
 							<dd class="mark align-right">
-								<!-- IF topicrow.U_EDIT --><a href="{topicrow.U_EDIT}" title="{L_EDIT}"><i class="fa fa-pencil fa-fw fa-lg fa-green" aria-hidden="true"></i></a><!-- ELSE --><i class="fa fa-pencil fa-fw fa-lg" aria-hidden="true"></i><!-- ENDIF -->
-								<!-- IF topicrow.U_DELETE --><a href="{topicrow.U_DELETE}" title="{L_DELETE}"><i class="fa fa-trash-o fa-fw fa-lg fa-red" aria-hidden="true"></i></a><!-- ENDIF -->
-								<!-- IF MODE == 'mcp' --><input type="checkbox" name="topic_id_list[]" value="{topicrow.TOPIC_ID}"<!-- IF topicrow.S_REQ_MOD_INPUT --> disabled="disabled" title="{L_REQ_MOD_INPUT}"<!-- ENDIF -->><!-- ENDIF -->
+								{% if topicrow.U_EDIT %}<a href="{{ topicrow.U_EDIT }}" title="{{ lang('EDIT') }}"><i class="fa fa-pencil fa-fw fa-lg fa-green" aria-hidden="true"></i></a>{% else %}<i class="fa fa-pencil fa-fw fa-lg" aria-hidden="true"></i>{% endif %}
+								{% if topicrow.U_DELETE %}<a href="{{ topicrow.U_DELETE }}" title="{{ lang('DELETE') }}"><i class="fa fa-trash-o fa-fw fa-lg fa-red" aria-hidden="true"></i></a>{% endif %}
+								{% if MODE == 'mcp' %}<input type="checkbox" name="topic_id_list[]" value="{{ topicrow.TOPIC_ID }}"{% if topicrow.S_REQ_MOD_INPUT %} disabled="disabled" title="{{ lang('REQ_MOD_INPUT') }}"{% endif %}>{% endif %}
 							</dd>
 						</dl>
 					</li>
-					<!-- END topicrow -->
+					{% endfor %}
 				</ul>
 
-				<!-- IF .pagination or TOTAL_TOPICS -->
+				{% if loops.pagination|length or TOTAL_TOPICS %}
 				<div class="pagination">
-					<!-- IF TOTAL_TOPICS --> {TOTAL_TOPICS}<!-- ENDIF -->
-					<!-- IF .pagination -->
-						<!-- INCLUDE pagination.html -->
-					<!-- ELSE -->
-						&bull; {PAGE_NUMBER}
-					<!-- ENDIF -->
+					{% if TOTAL_TOPICS %} {{ TOTAL_TOPICS }}{% endif %}
+					{% if loops.pagination|length %}
+						{% INCLUDE 'pagination.html' %}
+					{% else %}
+						&bull; {{ PAGE_NUMBER }}
+					{% endif %}
 				</div>
-				<!-- ENDIF -->
-			<!-- ELSE -->
-				<p style="text-align: center">{L_NO_CONTENT_TOPICS}</p>
-			<!-- ENDIF -->
+				{% endif %}
+			{% else %}
+				<p style="text-align: center">{{ lang('NO_CONTENT_TOPICS') }}</p>
+			{% endif %}
 		</div>
 	</div>
-	<!-- IF MODE == 'mcp' -->
+	{% if MODE == 'mcp' %}
 	<fieldset class="display-actions">
 		<select name="action">
-			<option value="" selected="selected">{L_SELECT_ACTION}</option>
-			<!-- IF S_CAN_DELETE --><option value="delete_topic">{L_DELETE}</option><!-- ENDIF -->
-			<!-- IF S_CAN_RESTORE --><option value="restore_topic">{L_RESTORE}</option><!-- ENDIF -->
-			<!-- IF S_CAN_LOCK --><option value="lock">{L_LOCK}</option><option value="unlock">{L_UNLOCK}</option><!-- ENDIF -->
-			<!-- IF S_CAN_SYNC --><option value="resync">{L_RESYNC}</option><!-- ENDIF -->
-			<!-- IF S_CAN_MAKE_NORMAL --><option value="make_normal">{L_MCP_MAKE_NORMAL}</option><!-- ENDIF -->
-			<!-- IF S_CAN_MAKE_STICKY --><option value="make_sticky">{L_MCP_MAKE_STICKY}</option><!-- ENDIF -->
-			<!-- IF S_CAN_MAKE_ANNOUNCE -->
-			<option value="make_announce">{L_MCP_MAKE_ANNOUNCEMENT}</option>
-			<option value="make_global">{L_MCP_MAKE_GLOBAL}</option>
-			<!-- ENDIF -->
+			<option value="" selected="selected">{{ lang('SELECT_ACTION') }}</option>
+			{% if S_CAN_DELETE %}<option value="delete_topic">{{ lang('DELETE') }}</option>{% endif %}
+			{% if S_CAN_RESTORE %}<option value="restore_topic">{{ lang('RESTORE') }}</option>{% endif %}
+			{% if S_CAN_LOCK %}<option value="lock">{{ lang('LOCK') }}</option><option value="unlock">{{ lang('UNLOCK') }}</option>{% endif %}
+			{% if S_CAN_SYNC %}<option value="resync">{{ lang('RESYNC') }}</option>{% endif %}
+			{% if S_CAN_MAKE_NORMAL %}<option value="make_normal">{{ lang('MCP_MAKE_NORMAL') }}</option>{% endif %}
+			{% if S_CAN_MAKE_STICKY %}<option value="make_sticky">{{ lang('MCP_MAKE_STICKY') }}</option>{% endif %}
+			{% if S_CAN_MAKE_ANNOUNCE %}
+			<option value="make_announce">{{ lang('MCP_MAKE_ANNOUNCEMENT') }}</option>
+			<option value="make_global">{{ lang('MCP_MAKE_GLOBAL') }}</option>
+			{% endif %}
 		</select>
-		<input class="button2" type="submit" value="{L_SUBMIT}" />
-		<div><a href="#" onclick="marklist('mcp', 'topic_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'topic_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
+		<input class="button2" type="submit" value="{{ lang('SUBMIT') }}" />
+		<div><a href="#" onclick="marklist('mcp', 'topic_id_list', true); return false;">{{ lang('MARK_ALL') }}</a> :: <a href="#" onclick="marklist('mcp', 'topic_id_list', false); return false;">{{ lang('UNMARK_ALL') }}</a></div>
 	</fieldset>
 	</form>
-	<!-- ENDIF -->
-<!-- ENDIF -->
+	{% endif %}
+{% endif %}
 
-<!-- INCLUDE {MODE}_footer.html -->
+{% INCLUDE ''~ MODE ~'_footer.html' %}

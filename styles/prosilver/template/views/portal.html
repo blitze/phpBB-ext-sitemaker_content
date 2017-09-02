@@ -1,50 +1,50 @@
-<!-- IF not S_HIDE_HEADERS --><!-- INCLUDE overall_header.html --><!-- ENDIF -->
-<!-- INCLUDE parts/content_type.html -->
+{% if not S_HIDE_HEADERS %}{% INCLUDE 'overall_header.html' %}{% endif %}
+{% INCLUDE 'parts/content_type.html' %}
 
-<!-- BEGIN topicrow -->
+{% for topicrow in loops.topicrow %}
 <div class="panel post sm-block-spacing">
 	<div class="inner">
 		<div class="postbody sm-postbody">
-			<!-- IF not topicrow.CUSTOM_DISPLAY -->
-			<!-- INCLUDE parts/summary_title.html -->
-			<!-- ENDIF -->
+			{% if not topicrow.CUSTOM_DISPLAY %}
+			{% INCLUDE 'parts/summary_title.html' %}
+			{% endif %}
 			<div class="content">
-			<!-- IF topicrow.CUSTOM_DISPLAY -->
-				{topicrow.CUSTOM_DISPLAY}
-			<!-- ELSE -->
+			{% if topicrow.CUSTOM_DISPLAY %}
+				{{ topicrow.CUSTOM_DISPLAY }}
+			{% else %}
 				{{ topicrow.FIELDS.body|join }}
 				<p>&nbsp;</p>
 				<div class="align-right">
-					<a href="{topicrow.TOPIC_URL}" class="button">{L_READ_MORE}</a>
+					<a href="{{ topicrow.TOPIC_URL }}" class="button">{{ lang('READ_MORE') }}</a>
 				</div>
-			<!-- ENDIF -->
+			{% endif %}
 			</div>
-			<!-- IF not topicrow.FIELDS.CUSTOM_DISPLAY -->
+			{% if not topicrow.FIELDS.CUSTOM_DISPLAY %}
 			{{ topicrow.FIELDS.footer|join }}
-			<!-- ENDIF -->
+			{% endif %}
 		</div>
 	</div>
 </div>
-<!-- BEGINELSE -->
+{% else %}
 <div class="panel post sm-block-spacing">
 	<div class="inner">
-		{L_CONTENT_NO_TOPICS}
+		{{ lang('CONTENT_NO_TOPICS') }}
 	</div>
 </div>
-<!-- END topicrow -->
+{% endfor %}
 
-<!-- IF .pagination or TOTAL_POSTS -->
+{% if loops.pagination|length or TOTAL_POSTS %}
 <div class="action-bar bottom">
 	<div class="pagination">
-		{TOTAL_POSTS} 
-		<!-- IF .pagination -->
-		<!-- INCLUDE pagination.html -->
-		<!-- ELSE -->
-		&bull; {PAGE_NUMBER}
-		<!-- ENDIF -->
+		{{ TOTAL_POSTS }} 
+		{% if loops.pagination|length %}
+		{% INCLUDE 'pagination.html' %}
+		{% else %}
+		&bull; {{ PAGE_NUMBER }}
+		{% endif %}
 	</div>
 	<div class="clear"></div>
 </div>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF not S_HIDE_HEADERS --><!-- INCLUDE overall_footer.html --><!-- ENDIF -->
+{% if not S_HIDE_HEADERS %}{% INCLUDE 'overall_footer.html' %}{% endif %}
