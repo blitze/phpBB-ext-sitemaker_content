@@ -95,12 +95,12 @@ class portal extends base_view
 		}
 	}
 
-    /**
-     * @param array $forums_data
-     * @param array $topics_data
-     * @param array $users_cache
-     * @return void
-     */
+	/**
+	 * @param array $forums_data
+	 * @param array $topics_data
+	 * @param array $users_cache
+	 * @return void
+	 */
 	protected function display_filtered_topics(array $forums_data, array $topics_data, array $users_cache)
 	{
 		$update_count = array();

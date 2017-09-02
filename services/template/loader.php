@@ -33,8 +33,8 @@ class loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface
 		$types = $content->get_all_types();
 		foreach ($types as $type => $entity)
 		{
-            /** @var \blitze\content\model\entity\type $entity */
-            $this->content_types[$type] = array(
+			/** @var \blitze\content\model\entity\type $entity */
+			$this->content_types[$type] = array(
 				'summary_tpl'	=> $entity->get_summary_tpl(),
 				'detail_tpl'	=> $entity->get_detail_tpl(),
 				'last_modified'	=> $entity->get_last_modified(),
@@ -46,8 +46,8 @@ class loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface
 
 		foreach ($collection as $entity)
 		{
-            /** @var \blitze\sitemaker\model\entity\block $entity */
-            $settings = $entity->get_settings();
+			/** @var \blitze\sitemaker\model\entity\block $entity */
+			$settings = $entity->get_settings();
 			$this->blocks_data[$entity->get_bid()] = array(
 				'block_tpl'		=> htmlspecialchars_decode($settings['block_tpl']),
 				'last_modified'	=> $settings['last_modified'],

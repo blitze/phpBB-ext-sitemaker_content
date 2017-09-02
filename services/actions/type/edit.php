@@ -21,7 +21,7 @@ class edit extends add
 	 * Constructor
 	 *
 	 * @param \phpbb\auth\auth									$auth					Auth object
-     * @param \phpbb\controller\helper                          $controller_helper      Controller Helper object
+	 * @param \phpbb\controller\helper                          $controller_helper      Controller Helper object
 	 * @param \phpbb\language\language							$language				Language Object
 	 * @param \phpbb\event\dispatcher_interface					$phpbb_dispatcher		Event dispatcher object
 	 * @param \phpbb\template\template							$template				Template object

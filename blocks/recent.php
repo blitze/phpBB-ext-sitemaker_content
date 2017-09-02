@@ -141,14 +141,14 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 			->build(true, true, false);
 	}
 
-    /**
-     * @param bool $edit_mode
-     * @param int $forum_id
-     * @param string $type
-     * @param \blitze\content\model\entity\type $entity
-     * @return array
-     * @internal param int $block_id
-     */
+	/**
+	 * @param bool $edit_mode
+	 * @param int $forum_id
+	 * @param string $type
+	 * @param \blitze\content\model\entity\type $entity
+	 * @return array
+	 * @internal param int $block_id
+	 */
 	protected function show_topics($edit_mode, $forum_id, $type, \blitze\content\model\entity\type $entity)
 	{
 		$topics_data = $this->forum->get_topic_data($this->settings['max_topics'], $this->settings['offset_start']);

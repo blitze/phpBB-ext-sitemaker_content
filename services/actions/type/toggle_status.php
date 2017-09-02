@@ -23,10 +23,10 @@ class toggle_status extends action_utils implements action_interface
 	/** @var \blitze\content\model\mapper_factory */
 	protected $mapper_factory;
 
-    /** @var bool */
-    private $redirect;
+	/** @var bool */
+	private $redirect;
 
-    /**
+	/**
 	 * Constructor
 	 *
 	 * @param \phpbb\cache\driver\driver_interface		$cache					Cache object

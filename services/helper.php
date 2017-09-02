@@ -191,11 +191,11 @@ class helper extends permissions
 		return append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", "i=-blitze-content-mcp-content_module&amp;mode=content&amp;do=view&amp;type=$content_type&amp;t=$topic_id");
 	}
 
-    /**
-     * @param int $forum_id
-     * @param int $topic_id
-     * @return string
-     */
+	/**
+	 * @param int $forum_id
+	 * @param int $topic_id
+	 * @return string
+	 */
 	public function get_mcp_url($forum_id, $topic_id)
 	{
 		$u_mcp = '';

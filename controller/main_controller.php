@@ -95,8 +95,8 @@ class main_controller
 	 */
 	public function filter($filter_type, $filter_value, $page)
 	{
-        /** @var \blitze\content\services\views\driver\portal $view_handler */
-        $view_handler = $this->views_factory->get('blitze.content.view.portal');
+		/** @var \blitze\content\services\views\driver\portal $view_handler */
+		$view_handler = $this->views_factory->get('blitze.content.view.portal');
 		$view_handler->render_filter($filter_type, $filter_value, $page);
 
 		return $this->helper->render($view_handler->get_index_template());

@@ -146,7 +146,7 @@ class archive extends \blitze\sitemaker\services\blocks\driver\block
 		$content_type_options = array('' => 'CONTENT_TYPE_ANY');
 		foreach ($content_types as $type => $entity)
 		{
-		    /** @var \blitze\content\model\entity\type $entity */
+			/** @var \blitze\content\model\entity\type $entity */
 			$content_type_options[$entity->get_forum_id()] = $entity->get_content_langname();
 		}
 

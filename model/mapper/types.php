@@ -60,8 +60,8 @@ class types extends base_mapper
 	 */
 	public function delete($entity)
 	{
-        /** @var \blitze\content\model\entity\type $entity */
-        parent::delete($entity);
+		/** @var \blitze\content\model\entity\type $entity */
+		parent::delete($entity);
 
 		if ($entity instanceof $this->entity_class)
 		{

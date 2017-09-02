@@ -76,8 +76,8 @@ class view implements action_interface
 		}
 
 		$update_count = array();
-        /** @var \blitze\content\services\views\driver\views_interface $view_handler */
-        $view_handler = $this->views->get($entity->get_content_view());
+		/** @var \blitze\content\services\views\driver\views_interface $view_handler */
+		$view_handler = $this->views->get($entity->get_content_view());
 		$view_handler->render_detail($entity, $topic_id, $update_count, $overwrite);
 
 		$this->template->assign_vars(array(

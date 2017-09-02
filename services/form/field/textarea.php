@@ -238,14 +238,14 @@ class textarea extends base
 		}
 	}
 
-    /**
-     * When Previewing topic, we show all pages
-     *
-     * @param int $start
-     * @param string $field_name
-     * @param array $pages
-     * @return mixed
-     */
+	/**
+	 * When Previewing topic, we show all pages
+	 *
+	 * @param int $start
+	 * @param string $field_name
+	 * @param array $pages
+	 * @return mixed
+	 */
 	protected function get_page_content($start, $field_name, array $pages)
 	{
 		$value = trim($pages[$start]);

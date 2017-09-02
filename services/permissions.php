@@ -11,28 +11,28 @@ namespace blitze\content\services;
 
 class permissions
 {
-    /** @var \phpbb\auth\auth */
-    protected $auth;
+	/** @var \phpbb\auth\auth */
+	protected $auth;
 
-    /** @var \phpbb\config\db */
-    protected $config;
+	/** @var \phpbb\config\db */
+	protected $config;
 
-    /** @var \phpbb\user */
-    protected $user;
+	/** @var \phpbb\user */
+	protected $user;
 
-    /**
-     * Constructor
-     *
-     * @param \phpbb\auth\auth		$auth		Auth object
-     * @param \phpbb\config\db		$config		Config object
-     * @param \phpbb\user			$user		User object
-     */
-    public function __construct(\phpbb\auth\auth $auth, \phpbb\config\db $config, \phpbb\user $user)
-    {
-        $this->auth = $auth;
-        $this->config = $config;
-        $this->user = $user;
-    }
+	/**
+	 * Constructor
+	 *
+	 * @param \phpbb\auth\auth		$auth		Auth object
+	 * @param \phpbb\config\db		$config		Config object
+	 * @param \phpbb\user			$user		User object
+	 */
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\db $config, \phpbb\user $user)
+	{
+		$this->auth = $auth;
+		$this->config = $config;
+		$this->user = $user;
+	}
 
 	/**
 	 * @param array $post_data
