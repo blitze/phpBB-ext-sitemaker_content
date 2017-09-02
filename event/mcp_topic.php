@@ -79,7 +79,7 @@ class mcp_topic implements EventSubscriberInterface
 	 */
 	public function modify_review_row(\phpbb\event\data $event)
 	{
-		if ($event['row']['post_id'] === $event['topic_info']['topic_first_post_id'] && $this->type)
+		if ($event['row']['post_id'] === $event['topic_info']['topic_first_post_id'] && $this->type !== false)
 		{
 			if (($entity = $this->content_types->get_type($this->type)) !== false)
 			{

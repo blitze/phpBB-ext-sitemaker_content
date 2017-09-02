@@ -39,7 +39,7 @@ class delete extends action_utils implements action_interface
 	protected $auto_refresh;
 
 	/** @var bool */
-	private $trigger_error;
+	protected $trigger_error;
 
 	/**
 	 * Constructor

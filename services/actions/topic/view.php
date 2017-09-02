@@ -60,7 +60,7 @@ class view implements action_interface
 		$type = $this->request->variable('type', '');
 
 		$view_tpl = '';
-		if ($entity = $this->content_types->get_type($type)
+		if (($entity = $this->content_types->get_type($type)) !== false)
 		{
 			$entity->set_show_poster_info(false);
 			$entity->set_show_poster_contents(false);
