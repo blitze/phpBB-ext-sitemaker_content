@@ -83,12 +83,17 @@ services:
 
     blitze.content.helper:
         class: blitze\content\services\helper
+        parent: blitze.content.permissions
+        arguments:
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    blitze.content.permissions:
+        class: blitze\content\services\permissions
         arguments:
             - '@auth'
             - '@config'
             - '@user'
-            - '%core.root_path%'
-            - '%core.php_ext%'
 
     blitze.content.quickmod:
         class: blitze\content\services\quickmod

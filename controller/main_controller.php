@@ -95,7 +95,8 @@ class main_controller
 	 */
 	public function filter($filter_type, $filter_value, $page)
 	{
-		$view_handler = $this->views_factory->get('blitze.content.view.portal');
+        /** @var \blitze\content\services\views\driver\portal $view_handler */
+        $view_handler = $this->views_factory->get('blitze.content.view.portal');
 		$view_handler->render_filter($filter_type, $filter_value, $page);
 
 		return $this->helper->render($view_handler->get_index_template());
@@ -147,7 +148,7 @@ class main_controller
 	 */
 	protected function get_type_entity($type)
 	{
-		/** @var \blitze\content\services\types $entity */
+		/** @var \blitze\content\model\entity\type $entity */
 		$entity = $this->content_types->get_type($type, true);
 
 		$this->add_navlink($entity->get_content_langname(), $this->helper->route('blitze_content_index', array('type' => $type)));

@@ -116,7 +116,7 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 		$forum_id = $entity->get_forum_id();
 		$this->build_query($forum_id);
 
-		return $this->show_topics($edit_mode, $bdata['bid'], $forum_id, $type, $entity);
+		return $this->show_topics($edit_mode, $forum_id, $type, $entity);
 	}
 
 	/**
@@ -141,15 +141,15 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 			->build(true, true, false);
 	}
 
-	/**
-	 * @param bool $edit_mode
-	 * @param int $block_id
-	 * @param int $forum_id
-	 * @param string $type
-	 * @param \blitze\content\model\entity\type $entity
-	 * @return array
-	 */
-	protected function show_topics($edit_mode, $block_id, $forum_id, $type, \blitze\content\model\entity\type $entity)
+    /**
+     * @param bool $edit_mode
+     * @param int $forum_id
+     * @param string $type
+     * @param \blitze\content\model\entity\type $entity
+     * @return array
+     * @internal param int $block_id
+     */
+	protected function show_topics($edit_mode, $forum_id, $type, \blitze\content\model\entity\type $entity)
 	{
 		$topics_data = $this->forum->get_topic_data($this->settings['max_topics'], $this->settings['offset_start']);
 		$posts_data = $this->forum->get_post_data('first');

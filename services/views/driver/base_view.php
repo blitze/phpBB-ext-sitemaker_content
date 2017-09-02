@@ -157,13 +157,14 @@ abstract class base_view implements views_interface
 		return $this->display_topic($topic_id, $entity, $update_count, $topic_data_overwrite);
 	}
 
-	/**
-	 * @param int $topic_id
-	 * @param array $update_count
-	 * @param array $topic_data_overwrite
-	 * @return array
-	 * @throws \Exception
-	 */
+    /**
+     * @param int $topic_id
+     * @param \blitze\content\model\entity\type $entity
+     * @param array $update_count
+     * @param array $topic_data_overwrite
+     * @return array
+     * @throws \Exception
+     */
 	protected function display_topic($topic_id, \blitze\content\model\entity\type $entity, array &$update_count, array $topic_data_overwrite)
 	{
 		$forum_id = $entity->get_forum_id();

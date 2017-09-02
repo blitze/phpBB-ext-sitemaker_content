@@ -47,7 +47,10 @@ class save extends action_utils implements action_interface
 	/** @var string */
 	protected $php_ext;
 
-	/**
+    /** @var bool */
+    private $auto_refresh;
+
+    /**
 	 * Constructor
 	 *
 	 * @param \phpbb\auth\auth							$auth					Auth object

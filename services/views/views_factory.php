@@ -47,7 +47,7 @@ class views_factory
 	 *
 	 * @param string $service_name
 	 * @param string $fallback
-	 * @return \blitze\content\services\views\views_interface
+	 * @return \blitze\content\services\views\driver\views_interface
 	 */
 	public function get($service_name, $fallback = 'blitze.content.view.portal')
 	{

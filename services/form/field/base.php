@@ -53,7 +53,7 @@ abstract class base implements field_interface
 	/**
 	 * @inheritdoc
 	 */
-	public function get_field_value($name, $value, $display = 'form')
+	public function get_field_value($name, $value)
 	{
 		return $this->request->variable($name, $value, true);
 	}

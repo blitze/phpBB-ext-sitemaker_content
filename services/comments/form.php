@@ -111,7 +111,7 @@ class form
 	/**
 	 * @param int $forum_id
 	 * @param array $qr_hidden_fields
-	 * @return bool
+	 * @return void
 	 */
 	protected function set_smilies($forum_id, array &$qr_hidden_fields)
 	{
@@ -124,7 +124,7 @@ class form
 	/**
 	 * @param int $forum_id
 	 * @param array $qr_hidden_fields
-	 * @return bool
+	 * @return void
 	 */
 	protected function set_bbcode($forum_id, array &$qr_hidden_fields)
 	{
@@ -137,7 +137,7 @@ class form
 	/**
 	 * @param bool $is_watching
 	 * @param array $qr_hidden_fields
-	 * @return bool
+	 * @return void
 	 */
 	protected function set_notification($is_watching, array &$qr_hidden_fields)
 	{
@@ -150,7 +150,7 @@ class form
 	/**
 	 * @param int $topic_status
 	 * @param array $qr_hidden_fields
-	 * @return bool
+	 * @return void
 	 */
 	protected function set_topic_lock($topic_status, array &$qr_hidden_fields)
 	{
@@ -162,7 +162,7 @@ class form
 
 	/**
 	 * @param array $qr_hidden_fields
-	 * @return bool
+	 * @return void
 	 */
 	protected function set_magic_urls(array &$qr_hidden_fields)
 	{
