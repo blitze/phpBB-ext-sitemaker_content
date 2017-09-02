@@ -36,7 +36,7 @@ class delete extends action_utils implements action_interface
 	protected $sitemaker_mapper_factory;
 
 	/** @var bool */
-	private $auto_refresh;
+	protected $auto_refresh;
 
 	/** @var bool */
 	private $trigger_error;

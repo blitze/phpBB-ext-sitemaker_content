@@ -48,7 +48,7 @@ class save extends action_utils implements action_interface
 	protected $php_ext;
 
 	/** @var bool */
-	private $auto_refresh;
+	protected $auto_refresh;
 
 	/**
 	 * Constructor
