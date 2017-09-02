@@ -65,6 +65,9 @@ class portal extends base_view
 
 	/**
 	 * {@inheritdoc}
+	 * @param string $filter_type
+	 * @param string $filter_value
+	 * @param integer $page
 	 */
 	public function render_filter($filter_type, $filter_value, $page)
 	{

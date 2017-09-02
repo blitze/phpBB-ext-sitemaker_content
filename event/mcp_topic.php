@@ -28,7 +28,7 @@ class mcp_topic implements EventSubscriberInterface
 	/** @var string */
 	protected $php_ext;
 
-	/** @var string */
+	/** @var string|bool */
 	private $type;
 
 	/**

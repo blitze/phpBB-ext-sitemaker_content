@@ -83,6 +83,7 @@ abstract class base_view implements views_interface
 
 	/**
 	 * {@inheritdoc}
+	 * @param array $topic_data_overwrite
 	 */
 	public function render_index(\blitze\content\model\entity\type $entity, $page, $filter_type, $filter_value, array $topic_data_overwrite = array())
 	{
@@ -141,6 +142,7 @@ abstract class base_view implements views_interface
 
 	/**
 	 * {@inheritdoc}
+	 * @param array $topic_data_overwrite
 	 */
 	public function render_detail(\blitze\content\model\entity\type $entity, $topic_id, array &$update_count, array $topic_data_overwrite = array())
 	{

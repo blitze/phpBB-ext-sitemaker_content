@@ -59,11 +59,40 @@ class view implements action_interface
 		$topic_id = $this->request->variable('t', 0);
 		$type = $this->request->variable('type', '');
 
-		$entity = $this->content_types->get_type($type);
-		$entity->set_show_poster_info(false);
-		$entity->set_show_poster_contents(false);
-		$entity->set_allow_comments(false);
+		$view_tpl = '';
+		if ($entity = $this->content_types->get_type($type)
+		{
+			$entity->set_show_poster_info(false);
+			$entity->set_show_poster_contents(false);
+			$entity->set_allow_comments(false);
 
+			$update_count = array();
+			$overwrite = $this->get_data_overwrite($mode, $u_action, $type, $topic_id);
+
+			/** @var \blitze\content\services\views\driver\views_interface $view_handler */
+			$view_handler = $this->views->get($entity->get_content_view());
+			$view_handler->render_detail($entity, $topic_id, $update_count, $overwrite);
+			$view_tpl = $view_handler->get_detail_template();
+		}
+
+		$this->template->assign_vars(array(
+			'MODE'				=> $mode,
+			'S_HIDE_HEADERS'	=> true,
+			'S_VIEWING'			=> $view_tpl,
+		));
+	}
+
+	/**
+	 * Overwrite template data
+	 *
+	 * @param string $mode
+	 * @param string $u_action
+	 * @param string $type
+	 * @param int $topic_id
+	 * @return string[]
+	 */
+	protected function get_data_overwrite($mode, $u_action, $type, $topic_id)
+	{
 		$overwrite = array(
 			'TOPIC_URL'	=> $u_action . '&amp;do=view&amp;type=' . $type . '&amp;t=' . $topic_id,
 			'U_INFO'	=> '',
@@ -75,15 +104,6 @@ class view implements action_interface
 			$overwrite['U_DELETE'] = append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'quickmod=1&amp;action=delete_topic&amp;t=' . $topic_id . '&amp;redirect=' . $redirect_url);
 		}
 
-		$update_count = array();
-		/** @var \blitze\content\services\views\driver\views_interface $view_handler */
-		$view_handler = $this->views->get($entity->get_content_view());
-		$view_handler->render_detail($entity, $topic_id, $update_count, $overwrite);
-
-		$this->template->assign_vars(array(
-			'MODE'				=> $mode,
-			'S_HIDE_HEADERS'	=> true,
-			'S_VIEWING'			=> $view_handler->get_detail_template(),
-		));
+		return $overwrite;
 	}
 }
