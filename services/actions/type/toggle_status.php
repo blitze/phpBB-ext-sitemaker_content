@@ -24,7 +24,7 @@ class toggle_status extends action_utils implements action_interface
 	protected $mapper_factory;
 
 	/** @var bool */
-	private $redirect;
+	protected $redirect;
 
 	/**
 	 * Constructor
