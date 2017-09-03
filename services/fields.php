@@ -73,9 +73,10 @@ class fields extends topic
 	 * @param array $view_mode_fields
 	 * @param string $custom_tpl
 	 * @param string $view_mode
+	 * @param string $tpl_name
 	 * @return void
 	 */
-	public function prepare_to_show(\blitze\content\model\entity\type $entity, array $topic_ids, array $view_mode_fields, $custom_tpl, $view_mode)
+	public function prepare_to_show(\blitze\content\model\entity\type $entity, array $topic_ids, array $view_mode_fields, $custom_tpl, $view_mode, $tpl_name = null)
 	{
 		$this->reset();
 		$db_fields = array_fill_keys($topic_ids, array());
@@ -96,7 +97,7 @@ class fields extends topic
 
 		$this->display_mode = $view_mode;
 		$this->content_type = $entity->get_content_name();
-		$this->tpl_name	= ($custom_tpl) ? $this->content_type . '_' . $view_mode : '';
+		$this->tpl_name	= ($custom_tpl) ? $tpl_name ?: $this->content_type . '_' . $view_mode : '';
 		$this->view_mode = (in_array($view_mode, array('summary', 'detail'))) ? $view_mode : 'summary';
 		$this->form_fields = array_intersect_key($this->fields_factory->get_all(), array_flip($view_mode_fields));
 		$this->db_fields = $db_fields;

@@ -125,7 +125,7 @@ services:
             - '@controller.helper'
             - '@dispatcher'
             - '@language'
-            - '@template'
+            - '@blitze.content.template'
             - '@user'
             - '@blitze.content.helper'
 

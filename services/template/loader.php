@@ -14,7 +14,7 @@ namespace blitze\content\services\template;
  *
  * @package blitze\content\services
  */
-class loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface
+class loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface, \Twig_SourceContextLoaderInterface
 {
 	/* @var array */
 	protected $blocks_data = array();
@@ -80,7 +80,7 @@ class loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface
 	 * @param string $name
 	 * @return mixed
 	 * @throws \Twig_Error_Loader
-	 *
+	 */
 	public function getSourceContext($name)
 	{
 		if (false === $source = $this->getValue('source', $name))
@@ -90,7 +90,6 @@ class loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface
 
 		return new \Twig_Source($source, $name);
 	}
-	*/
 
 	/**
 	 * Twig_ExistsLoaderInterface as of Twig 1.11
