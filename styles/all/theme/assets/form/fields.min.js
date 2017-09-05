@@ -68,7 +68,9 @@
 		});
 
 		// Range picker
-		$('.rangepicker').ionRangeSlider();
+		if (typeof $.fn.ionRangeSlider !== 'undefined') {
+			$('.rangepicker').ionRangeSlider();
+		}
 
 		// image field
 		$('.image-field').change(function(e) {
