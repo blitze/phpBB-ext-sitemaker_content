@@ -115,7 +115,7 @@ class portal extends base_view
 				continue;
 			}
 
-			$this->fields->prepare_to_show($entity, array_keys($posts_data), $entity->get_summary_tags(), $entity->get_summary_tpl(), 'summary');
+			$this->fields->prepare_to_show($entity, array_keys($posts_data), $entity->get_summary_fields(), $entity->get_summary_tpl(), 'summary');
 
 			$topic_tracking_info = $this->forum->get_topic_tracking_info($forum_id);
 			$attachments = $this->forum->get_attachments($forum_id);

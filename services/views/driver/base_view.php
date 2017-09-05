@@ -124,7 +124,7 @@ abstract class base_view implements views_interface
 		$users_cache = $this->forum->get_posters_info();
 		$attachments = $this->forum->get_attachments($entity->get_forum_id());
 
-		$this->fields->prepare_to_show($entity, array_keys($topics_data), $entity->get_summary_tags(), $entity->get_summary_tpl(), 'summary');
+		$this->fields->prepare_to_show($entity, array_keys($topics_data), $entity->get_summary_fields(), $entity->get_summary_tpl(), 'summary');
 
 		$update_count = array();
 		foreach ($posts_data as $topic_id => $posts)
@@ -184,7 +184,7 @@ abstract class base_view implements views_interface
 			throw new \Exception($this->language->lang('CONTENT_NO_EXIST'));
 		}
 
-		$this->fields->prepare_to_show($entity, array_keys($topics_data), $entity->get_detail_tags(), $entity->get_detail_tpl(), 'detail');
+		$this->fields->prepare_to_show($entity, array_keys($topics_data), $entity->get_detail_fields(), $entity->get_detail_tpl(), 'detail');
 
 		$topic_data = array_shift($topics_data);
 		$post_data = array_shift($post_data[$topic_id]);
@@ -259,7 +259,7 @@ abstract class base_view implements views_interface
 		 *
 		 * @event blitze.content.view.filter
 		 * @var mixed								forum_id		Forum id, if available
-		 * @var string								filter_type		Filter type e.g category|tag
+		 * @var string								filter_type		Filter type e.g category|field
 		 * @var string								filter_value	The filter value e.g food
 		 * @var array								sql_array		Array to modify sql query to get topics
 		 */

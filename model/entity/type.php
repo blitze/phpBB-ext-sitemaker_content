@@ -51,10 +51,10 @@ use blitze\sitemaker\model\base_entity;
  * @method array get_content_fields()
  * @method object set_field_types($field_types)
  * @method array get_field_types()
- * @method object set_summary_tags($summary_tags)
- * @method array get_summary_tags()
- * @method object set_detail_tags($detail_tag)
- * @method array get_detail_tags()
+ * @method object set_summary_fields($summary_fields)
+ * @method array get_summary_fields()
+ * @method object set_detail_fields($detail_fields)
+ * @method array get_detail_fields()
  *
  */
 final class type extends base_entity
@@ -135,10 +135,10 @@ final class type extends base_entity
 	protected $field_types = array();
 
 	/** @var array */
-	protected $summary_tags = array();
+	protected $summary_fields = array();
 
 	/** @var array */
-	protected $detail_tags = array();
+	protected $detail_fields = array();
 
 	/** @var array */
 	protected $required_fields = array('forum_id', 'content_name', 'content_langname', 'content_view');
@@ -302,14 +302,14 @@ final class type extends base_entity
 	{
 		$fields = strtoupper(join('|', array_keys($content_fields)));
 
-		$field_types = $summary_tags = $detail_tags = array();
-		$this->parse_content_fields($content_fields, $field_types, $summary_tags, $detail_tags);
+		$field_types = $summary_fields = $detail_fields = array();
+		$this->parse_content_fields($content_fields, $field_types, $summary_fields, $detail_fields);
 
-		$summary_tags = $this->get_template_tags($summary_tags, $this->summary_tpl, $fields);
-		$detail_tags = $this->get_template_tags($detail_tags, $this->detail_tpl, $fields);
+		$summary_fields = $this->get_template_fields($summary_fields, $this->summary_tpl, $fields);
+		$detail_fields = $this->get_template_fields($detail_fields, $this->detail_tpl, $fields);
 
-		$this->summary_tags	= array_intersect_key($field_types, array_flip($summary_tags));
-		$this->detail_tags	= array_intersect_key($field_types, array_flip($detail_tags));
+		$this->summary_fields	= array_intersect_key($field_types, array_flip($summary_fields));
+		$this->detail_fields	= array_intersect_key($field_types, array_flip($detail_fields));
 
 		$this->content_fields	= $content_fields;
 		$this->field_types		= $field_types;
@@ -318,11 +318,11 @@ final class type extends base_entity
 	/**
 	 * @param array $content_fields
 	 * @param array $field_types
-	 * @param array $summary_tags
-	 * @param array $detail_tags
+	 * @param array $summary_fields
+	 * @param array $detail_fields
 	 * @return void
 	 */
-	private function parse_content_fields(array $content_fields, array &$field_types, array &$summary_tags, array &$detail_tags)
+	private function parse_content_fields(array $content_fields, array &$field_types, array &$summary_fields, array &$detail_fields)
 	{
 		foreach ($content_fields as $field => $data)
 		{
@@ -330,30 +330,30 @@ final class type extends base_entity
 
 			if ($data['field_summary_show'])
 			{
-				$summary_tags[] = $field;
+				$summary_fields[] = $field;
 			}
 
 			if ($data['field_detail_show'])
 			{
-				$detail_tags[] = $field;
+				$detail_fields[] = $field;
 			}
 		}
 	}
 
 	/**
-	 * @param array $view_tags
+	 * @param array $view_fields
 	 * @param string $template
 	 * @param string $fields
 	 * @return array
 	 */
-	private function get_template_tags(array $view_tags, $template, $fields)
+	private function get_template_fields(array $view_fields, $template, $fields)
 	{
 		if ($template)
 		{
-			preg_match_all("/\{($fields)\}|\{\{\s($fields)\s\}\}/", $template, $view_tags);
-			$view_tags = array_map('strtolower', array_pop($view_tags));
+			preg_match_all("/\{($fields)\}|\{\{\s($fields)\s\}\}/", $template, $view_fields);
+			$view_fields = array_map('strtolower', array_pop($view_fields));
 		}
 
-		return $view_tags;
+		return $view_fields;
 	}
 }

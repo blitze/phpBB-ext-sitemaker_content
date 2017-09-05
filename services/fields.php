@@ -36,9 +36,6 @@ class fields extends topic
 	protected $view_mode = '';
 
 	/** @var array */
-	protected $tags = array();
-
-	/** @var array */
 	protected $db_fields = array();
 
 	/** @var array */
@@ -164,7 +161,6 @@ class fields extends topic
 		{
 			if (isset($this->form_fields[$field_type]))
 			{
-				$this->tags[$name] = $name;
 				$this->content_fields[$name] = $fields_data[$name];
 			}
 		}
@@ -228,13 +224,13 @@ class fields extends topic
 	protected function get_fields_data_from_post($post_text)
 	{
 		$fields_data = array();
-		$find_tags = join('|', $this->tags);
-		if (preg_match_all("#<div data-field=\"($find_tags)\">(.*?)</div><br><!-- end field -->#s", $post_text, $matches))
+		$find_fields = join('|', array_keys($this->content_fields));
+		if (preg_match_all("#<div data-field=\"($find_fields)\">(.*?)</div><br><!-- end field -->#s", $post_text, $matches))
 		{
 			$fields_data = array_combine($matches[1], $matches[2]);
 		}
 
-		return array_intersect_key($fields_data, $this->tags);
+		return array_intersect_key($fields_data, $this->content_fields);
 	}
 
 	/**
@@ -242,7 +238,6 @@ class fields extends topic
 	 */
 	protected function reset()
 	{
-		$this->tags = array();
 		$this->content_fields = array();
 		$this->form_fields = array();
 		$this->tpl_name = '';

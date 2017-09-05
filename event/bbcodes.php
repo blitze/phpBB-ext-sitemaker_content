@@ -19,7 +19,10 @@ class bbcodes implements EventSubscriberInterface
 	public static function getSubscribedEvents()
 	{
 		return array(
-			'core.text_formatter_s9e_configure_after' => array('create_page_bbcode', 'create_tag_bbcode'),
+			'core.text_formatter_s9e_configure_after' => array(
+				array('create_page_bbcode'),
+				array('create_tag_bbcode'),
+			),
 		);
 	}
 
@@ -54,12 +57,13 @@ class bbcodes implements EventSubscriberInterface
 		$configurator = $event['configurator'];
 
 		// Let's unset any existing BBCode that might already exist
-		unset($configurator->BBCodes['tag']);
-		unset($configurator->tags['tag']);
+		unset($configurator->BBCodes['smcf']);
+		unset($configurator->tags['smcf']);
 
 		// Let's create the new BBCode
+		// smcf = sitemaker content field (hopefully unique enough)
 		$configurator->BBCodes->addCustom(
-			'[tag={IDENTIFIER}]{TEXT}[/tag]',
+			'[smcf={IDENTIFIER}]{TEXT}[/smcf]',
 			"<!-- begin field -->\n" .
 			"<div data-field=\"{IDENTIFIER}\">{TEXT}</div><br />\n" .
 			"<!-- end field -->\n"

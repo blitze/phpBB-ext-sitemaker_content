@@ -83,7 +83,7 @@ class mcp_topic implements EventSubscriberInterface
 		{
 			if (($entity = $this->content_types->get_type($this->type)) !== false)
 			{
-				$this->fields->prepare_to_show($entity, array($event['topic_info']['topic_id']), $entity->get_summary_tags(), $entity->get_summary_tpl(), 'summary');
+				$this->fields->prepare_to_show($entity, array($event['topic_info']['topic_id']), $entity->get_summary_fields(), $entity->get_summary_tpl(), 'summary');
 
 				$post_row = $event['post_row'];
 				$content = $this->fields->build_content($post_row);

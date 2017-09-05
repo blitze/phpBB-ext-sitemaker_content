@@ -253,11 +253,11 @@ class type_test extends \phpbb_test_case
 				'exerpt'	=> 'textarea',
 				'content'	=> 'textarea',
 			),
-			'summary_tags'			=> array(
+			'summary_fields'		=> array(
 				'image'		=> 'image',
 				'exerpt'	=> 'textarea',
 			),
-			'detail_tags'			=> array(
+			'detail_fields'			=> array(
 				'image'		=> 'image',
 				'content'	=> 'textarea',
 			),

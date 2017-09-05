@@ -144,7 +144,7 @@ class builder
 		foreach ($fields_data as $field => $value)
 		{
 			$value = is_array($value) ? join("\n", $value) : $value;
-			$message .= '[tag=' . $field . ']' . $value . '[/tag]';
+			$message .= '[smcf=' . $field . ']' . $value . '[/smcf]';
 		}
 
 		return $message;
@@ -196,10 +196,10 @@ class builder
 		$text = '';
 		if ($entity = $this->types->get_type($content_type))
 		{
-			$get_tags = 'get_' . $view . '_tags';
-			$get_template = 'get_' . $view . '_tpl';
+			$fields_accessor = 'get_' . $view . '_fields';
+			$template_accessor = 'get_' . $view . '_tpl';
 
-			$this->fields->prepare_to_show($entity, array($post_data['topic_id']), $entity->$get_tags(), $entity->$get_template(), $view);
+			$this->fields->prepare_to_show($entity, array($post_data['topic_id']), $entity->$fields_accessor(), $entity->$template_accessor(), $view);
 			$content = $this->fields->build_content(array_change_key_case($post_data, CASE_UPPER));
 
 			$text =  $content['CUSTOM_DISPLAY'] ?: join('', $content['FIELDS']['all']);
@@ -381,9 +381,9 @@ class builder
 	protected function get_fields_data_from_post($post_text, array $fields)
 	{
 		$fields_data = array();
-		$find_tags = join('|', $fields);
+		$find_fields = join('|', $fields);
 
-		if (preg_match_all("/\[tag=($find_tags)\](.*?)\[\/tag]/s", $post_text, $matches))
+		if (preg_match_all("/\[smcf=($find_fields)\](.*?)\[\/smcf]/s", $post_text, $matches))
 		{
 			$fields_data = array_combine($matches[1], $matches[2]);
 		}
