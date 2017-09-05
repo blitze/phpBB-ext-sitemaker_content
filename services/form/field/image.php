@@ -11,6 +11,24 @@ namespace blitze\content\services\form\field;
 
 class image extends base
 {
+	/** @var \blitze\sitemaker\services\util */
+	protected $util;
+
+	/**
+	 * Constructor
+	 *
+	 * @param \phpbb\language\language                  $language       Language object
+	 * @param \phpbb\request\request_interface			$request		Request object
+	 * @param \blitze\sitemaker\services\template		$ptemplate		Sitemaker template object
+	 * @param \blitze\sitemaker\services\util			$util       	Sitemaker utility object
+	 */
+	public function __construct(\phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\sitemaker\services\template $ptemplate, \blitze\sitemaker\services\util $util)
+	{
+		parent::__construct($language, $request, $ptemplate);
+
+		$this->util = $util;
+	}
+
 	/**
 	 * @inheritdoc
 	 */
@@ -32,6 +50,12 @@ class image extends base
 		$field = $this->get_name();
 		$data['field_name'] = $name;
 		$data['field_value'] = $this->get_image_src($bbcode_value);
+
+		$this->util->add_assets(array(
+			'js'   => array(
+				'@blitze_content/assets/form/fields.min.js',
+			),
+		));
 
 		$this->ptemplate->assign_vars($data);
 		$field = $this->ptemplate->render_view('blitze/content', "fields/image.html", $field . '_field');

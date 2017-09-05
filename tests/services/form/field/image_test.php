@@ -10,9 +10,32 @@
 namespace blitze\content\tests\services\form\field;
 
 use phpbb\request\request_interface;
+use blitze\content\services\form\field\image;
 
 class image_test extends base_form_field
 {
+	protected $util;
+
+	/**
+	 * Create the form field service
+	 *
+	 * @param array $variable_map
+	 * @return \blitze\content\services\form\field\field_interface
+	 */
+	protected function get_form_field($field, array $variable_map = array())
+	{
+		$this->request->expects($this->any())
+			->method('variable')
+			->with($this->anything())
+			->will($this->returnValueMap($variable_map));
+
+		$this->util = $this->getMockBuilder('\blitze\sitemaker\services\util')
+			->disableOriginalConstructor()
+			->getMock();
+
+		return new image($this->language, $this->request, $this->ptemplate, $this->util);
+	}
+
 	public function test_name()
 	{
 		$field = $this->get_form_field('image');
