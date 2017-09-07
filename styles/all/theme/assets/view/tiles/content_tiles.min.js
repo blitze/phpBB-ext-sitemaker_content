@@ -6,16 +6,21 @@
 		var Grid;
 
 		var $container = $('#sitemaker-content-tiles');
-		var $loadAnchor = $('#tile-load-more');
+		var $loadAnchor = $('#tile-load-more').on('click', function() {
+			$loadAnchor.children('i').show();
+		});
 
 		// layout grid after each image loads
-		$container.imagesLoaded().progress(function() {
+		$container.imagesLoaded(function() {
 			/* global AwesomeGrid */
 			Grid = new AwesomeGrid('#sitemaker-content-tiles')
 				.grid(1) 
 				.mobile($container.data('mobile-columns'))
 				.tablet($container.data('tablet-columns'))
 				.desktop($container.data('desktop-columns'));
+		})
+		.always(function() {
+			$loadAnchor.children('i').hide();
 		});
 
 		phpbb.ajaxify({
@@ -25,13 +30,16 @@
 		});
 
 		phpbb.addAjaxCallback('blitze.content.load_more', function(response) {
-			var respObj = $(response);
-			var items = respObj.find('#sitemaker-content-grid .grid-item');
-			var nextUrl = respObj.find('#tile-load-more').attr('href');
+			var $respObj = $(response);
+			var $items = $respObj.find('.grid-item');
+			var nextUrl = $respObj.find('#tile-load-more').attr('href');
 
-			$container.append(items);
-			items.imagesLoaded(function() {
+			$items.imagesLoaded(function() {
+				$container.append($items);
 				Grid.apply();
+			})
+			.always(function() {
+				$loadAnchor.children('i').hide();
 			});
 
 			if (nextUrl !== undefined) {

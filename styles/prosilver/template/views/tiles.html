@@ -9,7 +9,7 @@
 {% if loops.topicrow|length %}
 	{%- set desktopCols = content_view_settings.desktop_cols|default(3) -%}
 	{%- set desktopCols = (topicrow|length < desktopCols) ? topicrow|length : desktopCols -%}
-	<div id="sitemaker-content-tiles" class="grid" data-desktop-columns="{{ desktopCols }}" data-tablet-columns="{{ content_view_settings.tablet_cols|default(2) }}" data-mobile-columns="{{ content_view_settings.mobile_cols|default(1) }}">
+	<div id="sitemaker-content-tiles" style="position: relative" class="grid" data-desktop-columns="{{ desktopCols }}" data-tablet-columns="{{ content_view_settings.tablet_cols|default(2) }}" data-mobile-columns="{{ content_view_settings.mobile_cols|default(1) }}">
 		{% for topicrow in loops.topicrow %}
 		<div class="grid__col--1-of-3 grid-item">
 			<div class="panel post tile sm-block-spacing">
@@ -39,10 +39,11 @@
 		{% endfor %}
 	</div>
 	{% if loops.pagination|length %}
+	<div class="clear"></div>
 	<div class="panel bg2 load_more align-center">
 	{% for pagination in loops.pagination %}
 		{% if pagination.S_IS_NEXT %}
-		<a id="tile-load-more" href="{{ pagination.PAGE_URL }}" rel="next">{{ lang('LOAD_MORE') }}</a>
+		<a id="tile-load-more" href="{{ pagination.PAGE_URL }}" rel="next"><i class="fa fa-refresh fa-spin fa-2x fa-fw"></i>{{ lang('LOAD_MORE') }}</a>
 		{% endif %}
 	{% endfor %}
 	</div>
