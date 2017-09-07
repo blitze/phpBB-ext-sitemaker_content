@@ -103,7 +103,7 @@ class archive extends \blitze\sitemaker\services\blocks\driver\block
 		{
 			return array(
 				'forum_ids'		=> (array) $settings['forum_id'],
-				'route_name'	=> 'blitze_content_index',
+				'route_name'	=> 'blitze_content_type_filter',
 				'route_params'	=> array('type' => $this->content_types->get_forum_type($settings['forum_id'])),
 			);
 		}
@@ -111,7 +111,7 @@ class archive extends \blitze\sitemaker\services\blocks\driver\block
 		{
 			return array(
 				'forum_ids'		=> array_keys($this->content_types->get_forum_types()),
-				'route_name'	=> 'blitze_content_index_filter',
+				'route_name'	=> 'blitze_content_filter',
 				'route_params'	=> array(),
 			);
 		}

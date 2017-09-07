@@ -9,7 +9,7 @@
 
 namespace blitze\content\controller;
 
-class main_controller
+class type_controller
 {
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
@@ -73,7 +73,7 @@ class main_controller
 	 * @param string $filter_value
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function index($type, $page, $filter_type, $filter_value)
+	public function index($type, $page = 1, $filter_type = '', $filter_value = '')
 	{
 		$entity = $this->get_type_entity($type);
 
@@ -86,7 +86,7 @@ class main_controller
 	}
 
 	/**
-	 * Filter topics by a filter type
+	 * Filter topics by a filter
 	 *
 	 * @param string $filter_type
 	 * @param string $filter_value
@@ -151,7 +151,7 @@ class main_controller
 		/** @var \blitze\content\model\entity\type $entity */
 		$entity = $this->content_types->get_type($type, true);
 
-		$this->add_navlink($entity->get_content_langname(), $this->helper->route('blitze_content_index', array('type' => $type)));
+		$this->add_navlink($entity->get_content_langname(), $this->helper->route('blitze_content_type', array('type' => $type)));
 
 		$this->template->assign_vars(array(
 			'S_COMMENTS'	=> $entity->get_allow_comments(),

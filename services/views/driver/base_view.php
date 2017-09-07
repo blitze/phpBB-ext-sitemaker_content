@@ -233,18 +233,37 @@ abstract class base_view implements views_interface
 	 */
 	protected function generate_pagination($view_mode, $total_topics, &$start, $items_per_page, array $params)
 	{
-		$route = ($view_mode === 'summary') ? 'index' : 'show';
+		$params = array_filter($params);
+		$route_type = $this->get_route_type($view_mode, $params);
 		$start = $this->pagination->validate_start($start, $items_per_page, $total_topics);
 		$this->pagination->generate_template_pagination(
 			array(
 				'routes' => array(
-					'blitze_content_' . $route,
-					'blitze_content_' . $route . '_page',
+					'blitze_content_' . $route_type,
+					'blitze_content_' . $route_type . '_page',
 				),
 				'params' => $params,
 			),
 			'pagination', 'page', $total_topics, $items_per_page, $start
 		);
+	}
+
+	/**
+	 * @param string $view_mode
+	 * @param array $params
+	 * @return string
+	 */
+	protected function get_route_type($view_mode, array $params)
+	{
+		$types = array(
+			'show'		=> 'show',
+			'summary'	=> join('_', array_filter(array(
+				(!empty($params['type'])) ? 'type' : '',
+				(!empty($params['filter_type'])) ? 'filter' : '',
+			))),
+		);
+
+		return $types[$view_mode];
 	}
 
 	/**

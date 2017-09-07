@@ -45,7 +45,7 @@ class posting implements EventSubscriberInterface
 			'core.posting_modify_message_text'			=> 'build_message',
 			'core.posting_modify_submission_errors'		=> 'show_errors',
 			'core.submit_post_modify_sql_data'			=> 'modify_sql_data',
-			'core.posting_modify_submit_post_after'		=> array('save_fields', 'set_redirect_url'),
+			'core.posting_modify_submit_post_after'		=> array(array('save_fields'), array('set_redirect_url')),
 			'core.topic_review_modify_post_list'		=> 'set_content_post_id',
 			'core.topic_review_modify_row'				=> 'modify_topic_review',
 			'core.posting_modify_template_vars'			=> 'build_form',

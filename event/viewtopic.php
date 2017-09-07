@@ -50,7 +50,7 @@ class viewtopic implements EventSubscriberInterface
 	{
 		if ($type = $this->content_types->get_forum_type($event['forum_data']['forum_id']))
 		{
-			redirect($this->helper->route('blitze_content_index', array(
+			redirect($this->helper->route('blitze_content_type', array(
 				'type' => $type,
 			)));
 		}

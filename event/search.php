@@ -119,7 +119,7 @@ class search implements EventSubscriberInterface
 			}
 
 			$topic_url = $this->helper->route('blitze_content_show', $params);
-			$forum_url = $this->helper->route('blitze_content_index', array(
+			$forum_url = $this->helper->route('blitze_content_type', array(
 				'type' => $type
 			));
 
