@@ -110,7 +110,7 @@ class index extends filter implements action_interface
 			$this->base_url = $u_action . (sizeof($this->params) ? '&amp;' : '');
 			$this->$callable($content_types, $sql_where_array);
 
-			$this->forum->query()
+			$this->forum->query(true, false)
 				->fetch_forum(array_keys($this->content_forums))
 				->set_sorting('t.topic_time')
 				->fetch_custom(array('WHERE' => $sql_where_array))
