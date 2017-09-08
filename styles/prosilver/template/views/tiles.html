@@ -43,13 +43,13 @@
 	<div class="panel bg2 load_more align-center">
 	{% for pagination in loops.pagination %}
 		{% if pagination.S_IS_NEXT %}
-		<a id="tile-load-more" href="{{ pagination.PAGE_URL }}" rel="next"><i class="fa fa-refresh fa-spin fa-2x fa-fw"></i>{{ lang('LOAD_MORE') }}</a>
+		<a id="tile-load-more" href="{{ pagination.PAGE_URL }}" data-ajax="blitze.content.load_more" rel="next"><i class="fa fa-refresh fa-spin fa-2x fa-fw"></i>{{ lang('LOAD_MORE') }}</a>
 		{% endif %}
 	{% endfor %}
 	</div>
 	{% endif %}
 {% else %}
-<div class="panel post cms-block-spacing">
+<div class="panel post sm-block-spacing">
 	<div class="inner">
 		{{ lang('CONTENT_NO_TOPICS') }}
 	</div>

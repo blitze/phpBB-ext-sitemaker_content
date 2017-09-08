@@ -23,12 +23,6 @@
 			$loadAnchor.children('i').hide();
 		});
 
-		phpbb.ajaxify({
-			selector: '#tile-load-more',
-			refresh: false,
-			callback: 'blitze.content.load_more'
-		});
-
 		phpbb.addAjaxCallback('blitze.content.load_more', function(response) {
 			var $respObj = $(response);
 			var $items = $respObj.find('.grid-item');
