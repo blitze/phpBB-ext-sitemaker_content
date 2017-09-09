@@ -9,7 +9,7 @@
 {% if loops.topicrow|length %}
 	{%- set desktopCols = content_view_settings.desktop_cols|default(3) -%}
 	{%- set desktopCols = (topicrow|length < desktopCols) ? topicrow|length : desktopCols -%}
-	<div id="sitemaker-content-tiles" class="grid" data-desktop-columns="{{ desktopCols }}" data-tablet-columns="{{ content_view_settings.tablet_cols|default(2) }}" data-mobile-columns="{{ content_view_settings.mobile_cols|default(1) }}">
+	<div id="sitemaker-content-tiles" class="grid" data-desktop-columns="{{ desktopCols }}" data-tablet-columns="{{ content_view_settings.tablet_cols|default(2) }}" data-mobile-columns="{{ content_view_settings.mobile_cols|default(1) }}" data-edit-mode="{{ S_EDIT_MODE }}">
 		{% for topicrow in loops.topicrow %}
 		<div class="grid__col--1-of-3 grid-item">
 			<div class="panel post tile sm-block-spacing">

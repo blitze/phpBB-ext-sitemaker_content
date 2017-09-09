@@ -13,7 +13,8 @@
 		// layout grid after each image loads
 		$container.imagesLoaded(function() {
 			/* global AwesomeGrid */
-			Grid = new AwesomeGrid('#sitemaker-content-tiles')
+			var options = ($container.data('editMode')) ? {context: 'self'} : {};
+			Grid = new AwesomeGrid('#sitemaker-content-tiles', options)
 				.grid(1) 
 				.mobile($container.data('mobile-columns'))
 				.tablet($container.data('tablet-columns'))
