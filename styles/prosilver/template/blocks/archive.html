@@ -9,8 +9,9 @@
 	{%- else -%}
 		{% set months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] %}
 	{%- endif -%}
+	<div>
 	{%- for year in archive -%}
-		<strong>{{ year.name }}</strong>
+		<p><strong>{{ year.name }}</strong></p>
 		<ul class="sm-list">
 		{%- if all_months -%}
 		{%- for i in 0..11 -%}
@@ -23,10 +24,10 @@
 		{%- endif -%}
 		</ul>
 		{% if loop.first && loop.length > 1 %}
-		{%- set closeTag = '</div>' -%}
 		<p><br /><a href="#" onclick="phpbb.toggleDisplay('archive-full-list', 0); return false;">{{ lang('ARCHIVE_TOGGLE_DISPLAY') }}</a></p>
+	</div>
 	<div id="archive-full-list" style="display: none">
 		{% endif %}
 	{%- endfor -%}
-	{{ closeTag }}
+	</div>
 {%- endif -%}

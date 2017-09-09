@@ -66,9 +66,9 @@ class archive extends \blitze\sitemaker\services\blocks\driver\block
 	 */
 	public function display(array $bdata, $edit_mode = false)
 	{
-		extract($this->get_query_params($bdata['settings']));
+		$info = $this->get_info($bdata['settings']);
 
-		$sql = $this->db->sql_build_query('SELECT', $this->get_sql_array($forum_ids));
+		$sql = $this->db->sql_build_query('SELECT', $this->get_sql_array($info['forum_ids']));
 		$result = $this->db->sql_query($sql, $this->cache_time);
 
 		$archive = array();
@@ -77,7 +77,7 @@ class archive extends \blitze\sitemaker\services\blocks\driver\block
 			$archive[$row['year']]['name'] = $row['year'];
 			$archive[$row['year']]['months'][$row['month'] - 1] = array(
 				'count'	=> $row['total'],
-				'url'	=> $this->helper->route($route_name, $route_params + array(
+				'url'	=> $this->helper->route($info['route_name'], $info['route_params'] + array(
 					'filter_type'	=> 'archive',
 					'filter_value'	=> $row['year'] . '-' . $row['month'],
 				)),
@@ -97,7 +97,7 @@ class archive extends \blitze\sitemaker\services\blocks\driver\block
 	 * @param array $settings
 	 * @return array
 	 */
-	protected function get_query_params(array $settings)
+	protected function get_info(array $settings)
 	{
 		if ($settings['forum_id'])
 		{
