@@ -65,22 +65,18 @@ class portal extends base_view
 
 	/**
 	 * {@inheritdoc}
-	 * @param string $filter_type
-	 * @param string $filter_value
+	 * @param array $filters
 	 * @param integer $page
 	 */
-	public function render_filter($filter_type, $filter_value, $page)
+	public function render_filter(array $filters, $page)
 	{
-		$this->build_index_query($filter_type, $filter_value);
+		$this->build_index_query($filters);
 
 		$total_topics = $this->forum->get_topics_count();
 		$items_per_page = $this->config['topics_per_page'];
 		$start = ($page - 1) * $items_per_page;
 		$topics_data = $this->forum->get_topic_data($items_per_page, $start);
-		$this->generate_pagination('summary', $total_topics, $start, $items_per_page, array(
-			'filter_type'	=> $filter_type,
-			'filter_value'	=> $filter_value,
-		));
+		$this->generate_pagination('summary', $total_topics, $start, $items_per_page, $this->get_filter_params($filters));
 
 		if (sizeof($topics_data))
 		{
@@ -128,6 +124,26 @@ class portal extends base_view
 
 				$this->template->assign_block_vars('topicrow', $topic);
 			}
+		}
+	}
+
+	/**
+	 * @param array $filters
+	 * @return array
+	 */
+	protected function get_filter_params(array $filters)
+	{
+		if (sizeof(array_keys($filters)) > 1)
+		{
+			return array('filters' => $filters);
+		}
+		else
+		{
+			$key = key($filters);
+			return array(
+				'filter_type'	=> $key,
+				'filter_value'	=> current($filters[$key]),
+			);
 		}
 	}
 }

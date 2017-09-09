@@ -9,7 +9,7 @@
 
 namespace blitze\content\controller;
 
-class type_controller
+class main_controller
 {
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
@@ -70,36 +70,20 @@ class type_controller
 	 * @param string $type
 	 * @param int $page
 	 * @param string $filter_type
-	 * @param string $filter_value
+	 * @param mixed $filter_value
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
 	public function index($type, $page = 1, $filter_type = '', $filter_value = '')
 	{
 		$entity = $this->get_type_entity($type);
+		$filter = $this->get_filter($filter_type, $filter_value);
 
 		$this->template->assign_vars($entity->to_array());
 
 		$view_handler = $this->views_factory->get($entity->get_content_view());
-		$view_handler->render_index($entity, $page, $filter_type, $filter_value);
+		$view_handler->render_index($entity, $page, $filter);
 
 		return $this->helper->render($view_handler->get_index_template(), $entity->get_content_langname());
-	}
-
-	/**
-	 * Filter topics by a filter
-	 *
-	 * @param string $filter_type
-	 * @param string $filter_value
-	 * @param int $page
-	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
-	 */
-	public function filter($filter_type, $filter_value, $page)
-	{
-		/** @var \blitze\content\services\views\driver\portal $view_handler */
-		$view_handler = $this->views_factory->get('blitze.content.view.portal');
-		$view_handler->render_filter($filter_type, $filter_value, $page);
-
-		return $this->helper->render($view_handler->get_index_template());
 	}
 
 	/**
@@ -140,6 +124,25 @@ class type_controller
 		}
 
 		return $this->helper->render($template_file, $topic_data['topic_title']);
+	}
+
+	/**
+	 * Filter topics by a filter
+	 *
+	 * @param string $filter_type
+	 * @param mixed $filter_value
+	 * @param int $page
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	public function filter($filter_type = '', $filter_value = '', $page = 1)
+	{
+		$filter = $this->get_filter($filter_type, $filter_value);
+
+		/** @var \blitze\content\services\views\driver\portal $view_handler */
+		$view_handler = $this->views_factory->get('blitze.content.view.portal');
+		$view_handler->render_filter($filter, $page);
+
+		return $this->helper->render($view_handler->get_index_template());
 	}
 
 	/**
@@ -199,5 +202,24 @@ class type_controller
 				$this->db->sql_query($sql);
 			}
 		}
+	}
+
+	/**
+	 * @param string $filter_type
+	 * @param mixed $filter_value
+	 * @return array
+	 */
+	protected function get_filter($filter_type, $filter_value)
+	{
+		if ($filter_type)
+		{
+			$filters = array($filter_type => (array) $filter_value);
+		}
+		else
+		{
+			$filters = $this->request->variable('filters', array('' => array('' => '')));
+		}
+
+		return array_filter($filters);
 	}
 }

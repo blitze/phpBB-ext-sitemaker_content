@@ -68,11 +68,13 @@ abstract class base_view implements views_interface
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @param array $filters
+	 * @param int $forum_id
+	 * @return void
 	 */
-	public function build_index_query($filter_type, $filter_value, $forum_id = '')
+	public function build_index_query(array $filters, $forum_id = 0)
 	{
-		$sql_array = $this->get_filter_sql($filter_type, $filter_value, $forum_id);
+		$sql_array = $this->get_filter_sql($filters, $forum_id);
 
 		$this->forum->query()
 			->fetch_forum($forum_id)
@@ -85,23 +87,26 @@ abstract class base_view implements views_interface
 	 * {@inheritdoc}
 	 * @param array $topic_data_overwrite
 	 */
-	public function render_index(\blitze\content\model\entity\type $entity, $page, $filter_type, $filter_value, array $topic_data_overwrite = array())
+	public function render_index(\blitze\content\model\entity\type $entity, $page, array $filters, array $topic_data_overwrite = array())
 	{
 		$content_type = $entity->get_content_name();
 		$items_per_page = $entity->get_items_per_page();
 		$forum_id = $entity->get_forum_id();
 		$start = ($page - 1) * $items_per_page;
 
-		$this->build_index_query($filter_type, $filter_value, $forum_id);
+		$this->build_index_query($filters, $forum_id);
 		$this->set_mcp_url($forum_id);
 
 		if ($entity->get_show_pagination())
 		{
+			list($filter_type, $filter_value) = each($filters);
+			$filter_value = (array) $filter_value;
+
 			$total_topics = $this->forum->get_topics_count();
 			$this->generate_pagination('summary', $total_topics, $start, $items_per_page, array(
 				'type'			=> $content_type,
 				'filter_type'	=> $filter_type,
-				'filter_value'	=> $filter_value,
+				'filter_value'	=> current($filter_value),
 			));
 		}
 
@@ -259,6 +264,7 @@ abstract class base_view implements views_interface
 			'show'		=> 'show',
 			'summary'	=> join('_', array_filter(array(
 				(!empty($params['type'])) ? 'type' : '',
+				(!empty($params['filters'])) ? 'multi' : '',
 				(!empty($params['filter_type'])) ? 'filter' : '',
 			))),
 		);
@@ -269,7 +275,7 @@ abstract class base_view implements views_interface
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function get_filter_sql($filter_type, $filter_value, $forum_id)
+	protected function get_filter_sql(array $filters, $forum_id)
 	{
 		$sql_array = array();
 
@@ -278,11 +284,10 @@ abstract class base_view implements views_interface
 		 *
 		 * @event blitze.content.view.filter
 		 * @var mixed								forum_id		Forum id, if available
-		 * @var string								filter_type		Filter type e.g category|field
-		 * @var string								filter_value	The filter value e.g food
+		 * @var array								filters			Filters
 		 * @var array								sql_array		Array to modify sql query to get topics
 		 */
-		$vars = array('forum_id', 'filter_type', 'filter_value', 'sql_array');
+		$vars = array('forum_id', 'filters', 'sql_array');
 		extract($this->phpbb_dispatcher->trigger_event('blitze.content.view.filter', compact($vars)));
 
 		return $sql_array;

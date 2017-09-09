@@ -61,9 +61,9 @@ class tiles extends base_view
 	/**
 	 * @inheritdoc
 	 */
-	public function render_index(\blitze\content\model\entity\type $entity, $page, $filter_type, $filter_value)
+	public function render_index(\blitze\content\model\entity\type $entity, $page, array $filters)
 	{
-		parent::render_index($entity, $page, $filter_type, $filter_value);
+		parent::render_index($entity, $page, $filters);
 
 		if ($this->request->is_ajax())
 		{

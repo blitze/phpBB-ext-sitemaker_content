@@ -42,12 +42,12 @@ class filters implements EventSubscriberInterface
 	 */
 	public function archive_filter(\phpbb\event\data $event)
 	{
-		if ($event['filter_type'] === 'archive')
+		if (isset($event['filters']['archive']))
 		{
-			$sql_array = $event['sql_array'];
-			$month = array_combine(array('year', 'mon'), explode('-', $event['filter_value']));
+			$month = array_combine(array('year', 'mon'), explode('-', current($event['filters']['archive'])));
 			$range = $this->date_range->get_month($month);
 
+			$sql_array = $event['sql_array'];
 			$sql_array['WHERE'][] = "t.topic_time BETWEEN {$range['start']} AND {$range['stop']}";
 
 			$event['sql_array'] = $sql_array;

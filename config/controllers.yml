@@ -14,8 +14,8 @@ services:
             - '@blitze.sitemaker.auto_lang'
             - '@blitze.content.form.fields.factory'
 
-    blitze.content.type.controller:
-        class: blitze\content\controller\type_controller
+    blitze.content.main.controller:
+        class: blitze\content\controller\main_controller
         arguments:
             - '@dbal.conn'
             - '@controller.helper'

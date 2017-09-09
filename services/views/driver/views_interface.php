@@ -39,12 +39,11 @@ interface views_interface
 	 * Display topics on content index
 	 *
 	 * @param \blitze\content\model\entity\type $entity
-	 * @param string $page
-	 * @param string $filter_type
-	 * @param string $filter_value
+	 * @param int $page
+	 * @param array $filters
 	 * @return void
 	 */
-	public function render_index(\blitze\content\model\entity\type $entity, $page, $filter_type, $filter_value);
+	public function render_index(\blitze\content\model\entity\type $entity, $page, array $filters);
 
 	/**
 	 * Show topic details
