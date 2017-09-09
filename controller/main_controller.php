@@ -129,6 +129,29 @@ class main_controller
 	/**
 	 * Filter topics by a filter
 	 *
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
+	 */
+	public function types()
+	{
+		$types = $this->content_types->get_all_types();
+
+		foreach ($types as &$type)
+		{
+			$type = array(
+				'name'	=> $type->get_content_langname(),
+				'desc'	=> $type->get_content_desc(),
+				'color'	=> $type->get_content_colour(),
+				'url'	=> $this->helper->route('blitze_content_type', array('type' => $type->get_content_name())),
+			);
+		}
+		$this->template->assign_var('types', $types);
+
+		return $this->helper->render('content_types.html', '');
+	}
+
+	/**
+	 * Filter topics by a filter
+	 *
 	 * @param string $filter_type
 	 * @param mixed $filter_value
 	 * @param int $page

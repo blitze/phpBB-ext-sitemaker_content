@@ -1,0 +1,17 @@
+{% INCLUDE 'overall_header.html' %}
+
+<div class="panel post list-block-2cols sm-list-hover sm-list-numbered sm-block-spacing">
+	<div class="inner">
+		<ul class="sm-list">
+		{% for type in types %}
+			<li>
+				<i class="fa fa-folder fa-4x fa-pull-left" aria-hidden="true" style="color: #{{ type.color }}"></i>
+				<h4><a href={{ type.url }}>{{ type.name }}</a></h4>
+				<p>{{ type.desc }}</p>
+			</li>
+		{% endfor %}
+		</ul>
+	</div>
+</div>
+
+{% INCLUDE 'overall_footer.html' %}
