@@ -52,8 +52,10 @@ class image_test extends base_form_field
 	{
 		$field = $this->get_form_field('image');
 		$this->assertEquals(array(
-			'size'	=> '',
-			'align'	=> '',
+			'detail_align'	=> '',
+			'detail_size'	=> '',
+			'summary_align'	=> '',
+			'summary_size'	=> '',
 		), $field->get_default_props());
 	}
 
@@ -63,26 +65,62 @@ class image_test extends base_form_field
 	public function display_field_test_data()
 	{
 		return array(
-			array('', ''),
-			array('foo', '<div class=""><figure class="img-ui">foo</figure></div>'),
+			array('', 'summary', array(), ''),
+			array('', 'detail', array(), ''),
+			array('', 'summary', array('summary_size' => 'medium-img'), ''),
+			array('', 'detail', array('detail_align' => 'img-align-left'), ''),
+			array(
+				'foo',
+				'summary',
+				array(),
+				'<div class=""><figure class="img-ui">foo</figure></div>',
+			),
+			array(
+				'bar',
+				'detail',
+				array(),
+				'<div class=""><figure class="img-ui">bar</figure></div>',
+			),
+			array(
+				'foo',
+				'summary',
+				array(
+					'detail_size'	=> 'medium-img',
+					'summary_size'	=> 'fullwidth-img',
+				),
+				'<div class="fullwidth-img"><figure class="img-ui">foo</figure></div>',
+			),
+			array(
+				'bar',
+				'detail',
+				array(
+					'detail_align'	=> 'img-align-left',
+					'summary_align'	=> 'img-align-right',
+					'detail_size'	=> 'medium-img',
+					'summary_size'	=> 'fullwidth-img',
+				),
+				'<div class="img-align-left medium-img"><figure class="img-ui">bar</figure></div>',
+			),
 		);
 	}
 
 	/**
 	 * @dataProvider display_field_test_data
 	 * @param string $field_value
+	 * @param string $view summary|detail|block
+	 * @param array $field_props
 	 * @param string $expected
 	 * @return void
 	 */
-	public function test_display_field($field_value, $expected)
+	public function test_display_field($field_value, $view, $field_props, $expected)
 	{
 		$field = $this->get_form_field('image');
 		$data = array(
 			'field_value' => $field_value,
-			'field_props' => $field->get_default_props()
+			'field_props' => $field_props + $field->get_default_props()
 		);
 
-		$this->assertEquals($expected, $field->display_field($data));
+		$this->assertEquals($expected, $field->display_field($data, $view));
 	}
 
 	/**

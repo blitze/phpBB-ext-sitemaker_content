@@ -76,7 +76,9 @@ class image extends base
 			$image = '<figure class="img-ui">' . $data['field_value'] . '</figure>';
 			if ($mode !== 'block')
 			{
-				$image = '<div class="' . join(' ', array_filter($data['field_props'])) . '">' . $image . '</div>';
+				$view_props = array_fill_keys(array($mode . '_size', $mode . '_align'), '');
+				$image_props = array_filter(array_intersect_key($data['field_props'], $view_props));
+				$image = '<div class="' . join(' ', $image_props) . '">' . $image . '</div>';
 			}
 		}
 		return $image;
@@ -88,8 +90,10 @@ class image extends base
 	public function get_default_props()
 	{
 		return array(
-			'size'	=> '',
-			'align'	=> '',
+			'detail_align'	=> '',
+			'detail_size'	=> '',
+			'summary_align'	=> '',
+			'summary_size'	=> '',
 		);
 	}
 

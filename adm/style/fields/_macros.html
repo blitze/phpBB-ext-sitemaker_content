@@ -6,6 +6,14 @@
 	<label><input type="{{ type|default('radio') }}" id="{{ id }}" class="{{ class }}" name="{{ name }}" value="{{ value }}"{{ checked ? ' checked="checked"' : '' }} /> {{ lang(label) }}</label>
 {% endmacro %}
 
+{% macro dropdown(id, name, value, options) %}
+	<select id="{{ id }}" name="{{ name }}">
+	{% for option in options -%}
+		<option value="{{ option.value }}"{% if option.value === value %} selected="selected"{% endif %}>{{ option.label }}</option>
+	{%- endfor %}
+	</select>
+{% endmacro %}
+
 {% macro options(field_name, type, option, index, checked) %}
     {{ include('fields/options.html') }}
 {% endmacro %}
@@ -63,16 +71,17 @@
 
 {% macro datetime(data) %}
 	{% import _self as forms %}
+	{%- set datetime_types = [
+		{value: 'date', label: lang('DATETIME_DATE')},
+		{value: 'datetime', label: lang('DATETIME_FULL')},
+		{value: 'timeonly', label: lang('DATETIME_TIMEONLY')},
+		{value: 'months', label: lang('DATETIME_MONTHS')},
+		{value: 'years', label: lang('DATETIME_YEARS')}
+	] -%}
 	<dl>
 		<dt><label for="{{ data.FIELD_NAME ~ '-type' }}">{{ lang('DATETIME_TYPE') ~ lang('COLON') }}</label></dt>
 		<dd>
-			<select id="{{ data.FIELD_NAME ~ '-type' }}" name="field_props[{{ data.FIELD_NAME }}][type]">
-				<option value="date"{% if data.FIELD_PROPS.type === 'date' %} selected="selected"{% endif %}>{{ lang('DATETIME_DATE') }}</option>
-				<option value="datetime"{% if data.FIELD_PROPS.type === 'datetime' %} selected="selected"{% endif %}>{{ lang('DATETIME_FULL') }}</option>
-				<option value="timeonly"{% if data.FIELD_PROPS.type === 'timeonly' %} selected="selected"{% endif %}>{{ lang('DATETIME_TIMEONLY') }}</option>
-				<option value="months"{% if data.FIELD_PROPS.type === 'months' %} selected="selected"{% endif %}>{{ lang('DATETIME_MONTHS') }}</option>
-				<option value="years"{% if data.FIELD_PROPS.type === 'years' %} selected="selected"{% endif %}>{{ lang('DATETIME_YEARS') }}</option>
-			</select>
+			{{ forms.dropdown(data.FIELD_NAME ~ '-type', 'field_props[' ~ data.FIELD_NAME ~ '][type]', data.FIELD_PROPS.type, datetime_types) }}
 		</dd>
 	</dl>
 	<dl>
@@ -110,24 +119,40 @@
 
 {% macro image(data) %}
     {% import _self as forms %}
+	{%- set image_size_options = [
+		{value: '', label: lang('DEFAULT')},
+		{value: 'small-img', label: lang('IMAGE_SIZE_SMALL')},
+		{value: 'medium-img', label: lang('IMAGE_SIZE_MEDIUM')},
+		{value: 'large-img', label: lang('IMAGE_SIZE_LARGE')},
+		{value: 'fullwidth-img', label: lang('IMAGE_SIZE_FULLWIDTH')}
+	] -%}
+	{%- set image_align_options = [
+		{value: '', label: lang('DEFAULT')},
+		{value: 'img-align-left', label: lang('IMAGE_ALIGN_LEFT')},
+		{value: 'img-align-right', label: lang('IMAGE_ALIGN_RIGHT')},
+	] -%}
 	<dl>
-		<dt><label for="{{ data.FIELD_NAME ~ '-size' }}">{{ lang('IMAGE_SIZE') ~ lang('COLON') }}</label></dt>
+		<dt><label for="{{ data.FIELD_NAME ~ '-summary_size' }}">{{ lang('IMAGE_SIZE') ~ lang('COLON') }}</label></dt>
 		<dd>
-			<select id="{{ data.FIELD_NAME ~ '-size' }}" name="field_props[{{ data.FIELD_NAME }}][size]">
-				<option value=""{% if !data.FIELD_PROPS.size %} selected="selected"{% endif %}>{{ lang('DEFAULT') }}</option>
-				<option value="small-img"{% if data.FIELD_PROPS.size === 'small-img' %} selected="selected"{% endif %}>{{ lang('IMAGE_SIZE_SMALL') }}</option>
-				<option value="medium-img"{% if data.FIELD_PROPS.size === 'medium-img' %} selected="selected"{% endif %}>{{ lang('IMAGE_SIZE_MEDIUM') }}</option>
-				<option value="large-img"{% if data.FIELD_PROPS.size === 'large-img' %} selected="selected"{% endif %}>{{ lang('IMAGE_SIZE_LARGE') }}</option>
-				<option value="fullwidth-img"{% if data.FIELD_PROPS.size === 'fullwidth-img' %} selected="selected"{% endif %}>{{ lang('IMAGE_SIZE_FULLWIDTH') }}</option>
-			</select>
+			<div class="column1">
+				<h5>{{ lang('CONTENT_INDEX') }}</h5>
+				{{ forms.dropdown(data.FIELD_NAME ~ '-summary_size', 'field_props[' ~ data.FIELD_NAME ~ '][summary_size]', data.FIELD_PROPS.summary_size, image_size_options) }}
+			</div>
+			<div class="column2">
+				<h5>{{ lang('CONTENT_DETAIL') }}</h5>
+				{{ forms.dropdown(data.FIELD_NAME ~ '-detail_size', 'field_props[' ~ data.FIELD_NAME ~ '][detail_size]', data.FIELD_PROPS.detail_size, image_size_options) }}
+			</div>
 		</dd>
 	</dl>
 	<dl>
-		<dt><label for="{{ data.FIELD_NAME ~ '-align-0' }}">{{ lang('IMAGE_ALIGN') ~ lang('COLON') }}</label></dt>
+		<dt><label for="{{ data.FIELD_NAME ~ '-summary_align' }}">{{ lang('IMAGE_ALIGN') ~ lang('COLON') }}</label></dt>
 		<dd>
-			{{ forms.pickem(data.FIELD_NAME ~ '-align-0', 'field_props[' ~ data.FIELD_NAME ~ '][align]', '', !data.FIELD_PROPS.align, 'radio', 'DEFAULT') }}
-			{{ forms.pickem(data.FIELD_NAME ~ '-align-1', 'field_props[' ~ data.FIELD_NAME ~ '][align]', 'img-align-left', (data.FIELD_PROPS.align === 'img-align-left'), 'radio', 'IMAGE_ALIGN_LEFT') }}
-			{{ forms.pickem(data.FIELD_NAME ~ '-align-2', 'field_props[' ~ data.FIELD_NAME ~ '][align]', 'img-align-right', (data.FIELD_PROPS.align === 'img-align-right'), 'radio', 'IMAGE_ALIGN_RIGHT') }}
+			<div class="column1">
+				{{ forms.dropdown(data.FIELD_NAME ~ '-summary_align', 'field_props[' ~ data.FIELD_NAME ~ '][summary_align]', data.FIELD_PROPS.summary_align, image_align_options) }}
+			</div>
+			<div class="column2">
+				{{ forms.dropdown(data.FIELD_NAME ~ '-detail_align', 'field_props[' ~ data.FIELD_NAME ~ '][detail_align]', data.FIELD_PROPS.detail_align, image_align_options) }}
+			</div>
 		</dd>
 	</dl>
 {% endmacro %}
