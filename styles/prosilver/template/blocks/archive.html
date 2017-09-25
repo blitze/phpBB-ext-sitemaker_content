@@ -1,5 +1,6 @@
 {% macro month(name, data, show_count) %}
-	{% if data.url|e %}<a class="postlink" href="{{ data.url }}">{{ name }}</a>{% else %}{{ name }}{% endif %}{% if show_count %}<span class="info">{{ data.count|default(0) }}</span>{% endif %}
+	{% if show_count %}<span class="info">{{ data.count|default(0) }}</span>{% endif %}
+	{% if data.url|e %}<a class="postlink" href="{{ data.url }}">{{ name }}</a>{% else %}{{ name }}{% endif %}
 {% endmacro %}
 
 {%- if archive|length -%}

@@ -1,17 +1,19 @@
-<div class="pull-right bg3">
-{% if topicrow.S_POST_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED %}
-	{% if topicrow.S_POST_UNAPPROVED %}<a href="{{ topicrow.U_MCP_REVIEW }}" title="{{ lang('TOPIC_UNAPPROVED') }}">{% else %}<a href="{{ topicrow.U_MCP_QUEUE }}" title="{{ lang('POSTS_UNAPPROVED') }}">{% endif %}
-		<i class="icon fa-question fa-fw icon-blue" aria-hidden="true"></i><span class="sr-only">{{ lang('TOPIC_UNAPPROVED') }}</span>
-	</a>
+{%- if topicrow.S_POST_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED or topicrow.S_TOPIC_DELETED or topicrow.S_TOPIC_REPORTED %}
+	<div class="bg3" style="position: absolute; right: 4px; top: 4px">
+	{% if topicrow.S_POST_UNAPPROVED or topicrow.S_POSTS_UNAPPROVED %}
+		{% if topicrow.S_POST_UNAPPROVED %}<a href="{{ topicrow.U_MCP_REVIEW }}" title="{{ lang('TOPIC_UNAPPROVED') }}">{% else %}<a href="{{ topicrow.U_MCP_QUEUE }}" title="{{ lang('POSTS_UNAPPROVED') }}">{% endif %}
+			<i class="icon fa-question fa-fw icon-blue" aria-hidden="true"></i><span class="sr-only">{{ lang('TOPIC_UNAPPROVED') }}</span>
+		</a>
+	{% endif %}
+	{% if topicrow.S_TOPIC_DELETED %}
+		<a href="{{ topicrow.U_MCP_QUEUE }}" title="{{ lang('TOPIC_DELETED') }}">
+			<i class="icon fa-recycle fa-fw icon-green" aria-hidden="true"></i><span class="sr-only">{{ lang('TOPIC_DELETED') }}</span>
+		</a>
+	{% endif %}
+	{% if topicrow.S_TOPIC_REPORTED %}
+		<a href="{{ topicrow.U_MCP_REPORT }}" title="{{ lang('TOPIC_REPORTED') }}">
+			<i class="icon fa-exclamation fa-fw icon-red" aria-hidden="true"></i><span class="sr-only">{{ lang('TOPIC_REPORTED') }}</span>
+		</a>
+	{% endif %}
+	</div>
 {% endif %}
-{% if topicrow.S_TOPIC_DELETED %}
-	<a href="{{ topicrow.U_MCP_QUEUE }}" title="{{ lang('TOPIC_DELETED') }}">
-		<i class="icon fa-recycle fa-fw icon-green" aria-hidden="true"></i><span class="sr-only">{{ lang('TOPIC_DELETED') }}</span>
-	</a>
-{% endif %}
-{% if topicrow.S_TOPIC_REPORTED %}
-	<a href="{{ topicrow.U_MCP_REPORT }}" title="{{ lang('TOPIC_REPORTED') }}">
-		<i class="icon fa-exclamation fa-fw icon-red" aria-hidden="true"></i><span class="sr-only">{{ lang('TOPIC_REPORTED') }}</span>
-	</a>
-{% endif %}
-</div>

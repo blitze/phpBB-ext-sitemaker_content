@@ -6,7 +6,7 @@
 		{% for type in types %}
 			<li>
 				<i class="fa fa-folder fa-4x fa-pull-left" aria-hidden="true" style="color: #{{ type.color }}"></i>
-				<h4><a href={{ type.url }}>{{ type.name }}</a></h4>
+				<h4><a href={{ type.url }}><strong>{{ type.name }}</strong></a></h4>
 				<p>{{ type.desc }}</p>
 			</li>
 		{% endfor %}
