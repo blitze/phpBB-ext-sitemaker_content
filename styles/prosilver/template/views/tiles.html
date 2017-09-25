@@ -30,7 +30,7 @@
 						{% endif %}
 						</div>
 						{% if not topicrow.FIELDS.CUSTOM_DISPLAY %}
-						{{ topicrow.FIELDS.footer|join }}
+						<div class="sm-content-footer">{{ topicrow.FIELDS.footer|join(' | ') }}</div>
 						{% endif %}
 					</div>
 				</div>
@@ -39,7 +39,6 @@
 		{% endfor %}
 	</div>
 	{% if loops.pagination|length %}
-	<div class="clear"></div>
 	<div class="panel bg2 load_more align-center">
 	{% for pagination in loops.pagination %}
 		{% if pagination.S_IS_NEXT %}

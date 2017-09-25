@@ -20,7 +20,7 @@
 			{% endif %}
 			</div>
 			{% if not topicrow.FIELDS.CUSTOM_DISPLAY %}
-			{{ topicrow.FIELDS.footer|join }}
+			<div class="sm-content-footer">{{ topicrow.FIELDS.footer|join(' | ') }}</div>
 			{% endif %}
 		</div>
 	</div>
