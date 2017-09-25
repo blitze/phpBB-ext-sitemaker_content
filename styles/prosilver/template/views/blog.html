@@ -6,8 +6,8 @@
 	<div class="inner">
 {% for topicrow in loops.topicrow %}
 		<div class="postbody sm-postbody">
-			<div class="calendar">{{ topicrow.TOPIC_DATE|date('d') }} <em>{{ topicrow.TOPIC_DATE|date('M') }}</em></div>
-			<div class="sm-blog-post">
+			<div class="calendar sm-responsive-hide">{{ topicrow.TOPIC_DATE|date('d') }} <em>{{ topicrow.TOPIC_DATE|date('M') }}</em></div>
+			<div class="sm-fill-space">
 				{% if not topicrow.CUSTOM_DISPLAY %}
 					{% INCLUDE 'parts/summary_title.html' %}
 				{% endif %}
@@ -23,7 +23,7 @@
 				{% endif %}
 				</div>
 				{% if not topicrow.FIELDS.CUSTOM_DISPLAY %}
-				{{ topicrow.FIELDS.footer|join }}
+				<div class="sm-content-footer">{{ topicrow.FIELDS.footer|join(' | ') }}</div>
 				{% endif %}
 			</div>
 		</div>
@@ -40,12 +40,18 @@
 
 {% if loops.pagination|length or TOTAL_POSTS %}
 <div class="action-bar bottom">
-	<div class="pagination">
-		{{ TOTAL_POSTS }} 
+	<div class="pagination" style="float: none">
 		{% if loops.pagination|length %}
-		{% INCLUDE 'pagination.html' %}
-		{% else %}
-		&bull; {{ PAGE_NUMBER }}
+		<ul style="width: 100%">
+		{% for pagination in loops.pagination %}
+			{% if pagination.S_IS_PREV %}
+			<li class="arrow previous left-box"><a class="button button-icon-only" href="{pagination.PAGE_URL}" rel="prev" role="button"><i class="icon fa-chevron-{S_CONTENT_FLOW_BEGIN} fa-fw" aria-hidden="true"></i><span class="sr-only1">{L_PREVIOUS}</span></a></li>
+			{% endif %}
+			{% if pagination.S_IS_NEXT %}
+			<li class="arrow next right-box"><a class="button button-icon-only" href="{pagination.PAGE_URL}" rel="next" role="button"><i class="icon fa-chevron-{S_CONTENT_FLOW_END} fa-fw" aria-hidden="true"></i><span class="sr-only1">{L_NEXT}</span></a></li>
+			{% endif %}
+		{% endfor %}
+		</ul>
 		{% endif %}
 	</div>
 	<div class="clear"></div>
