@@ -71,15 +71,9 @@ class image extends base
 	public function display_field(array $data, $mode = '')
 	{
 		$image = '';
-		if ($data['field_value'])
+		if ($data['field_value'] || $data['field_props']['default'])
 		{
-			$image = '<figure class="img-ui">' . $data['field_value'] . '</figure>';
-			if ($mode !== 'block')
-			{
-				$view_props = array_fill_keys(array($mode . '_size', $mode . '_align'), '');
-				$image_props = array_filter(array_intersect_key($data['field_props'], $view_props));
-				$image = '<div class="' . join(' ', $image_props) . '">' . $image . '</div>';
-			}
+			$image = $this->get_image_html($data['field_value'], $mode, $data['field_props']);
 		}
 		return $image;
 	}
@@ -90,6 +84,7 @@ class image extends base
 	public function get_default_props()
 	{
 		return array(
+			'default'		=> '',
 			'detail_align'	=> '',
 			'detail_size'	=> '',
 			'summary_align'	=> '',
@@ -112,5 +107,25 @@ class image extends base
 	private function get_image_src($bbcode_string)
 	{
 		return str_replace(array('[img]', '[/img]'), '', $bbcode_string);
+	}
+
+	/**
+	 * @param string $image
+	 * @param string $mode
+	 * @param array $field_props
+	 * @return string
+	 */
+	private function get_image_html($image, $mode, array $field_props)
+	{
+		$image = $image ?: '<img src="' . $field_props['default'] . '" class="postimage" alt="Image">';
+
+		$html = '<figure class="img-ui">' . $image . '</figure>';
+		if ($mode !== 'block')
+		{
+			$view_props = array_fill_keys(array($mode . '_size', $mode . '_align'), '');
+			$image_props = array_filter(array_intersect_key($field_props, $view_props));
+			$html = '<div class="' . join(' ', $image_props) . '">' . $html . '</div>';
+		}
+		return $html;
 	}
 }

@@ -52,6 +52,7 @@ class image_test extends base_form_field
 	{
 		$field = $this->get_form_field('image');
 		$this->assertEquals(array(
+			'default'		=> '',
 			'detail_align'	=> '',
 			'detail_size'	=> '',
 			'summary_align'	=> '',
@@ -70,28 +71,45 @@ class image_test extends base_form_field
 			array('', 'summary', array('summary_size' => 'medium-img'), ''),
 			array('', 'detail', array('detail_align' => 'img-align-left'), ''),
 			array(
-				'foo',
+				'',
+				'summary',
+				array(
+					'default'	=> 'bar',
+				),
+				'<div class=""><figure class="img-ui"><img src="bar" class="postimage" alt="Image" /></figure></div>',
+			),
+			array(
+				'',
+				'summary',
+				array(
+					'default'	=> 'bar',
+					'summary_size'	=> 'fullwidth-img',
+				),
+				'<div class="fullwidth-img"><figure class="img-ui"><img src="bar" class="postimage" alt="Image" /></figure></div>',
+			),
+			array(
+				'<img src="foo" class="postimage" alt="Image" />',
 				'summary',
 				array(),
-				'<div class=""><figure class="img-ui">foo</figure></div>',
+				'<div class=""><figure class="img-ui"><img src="foo" class="postimage" alt="Image" /></figure></div>',
 			),
 			array(
-				'bar',
+				'<img src="bar" class="postimage" alt="Image" />',
 				'detail',
 				array(),
-				'<div class=""><figure class="img-ui">bar</figure></div>',
+				'<div class=""><figure class="img-ui"><img src="bar" class="postimage" alt="Image" /></figure></div>',
 			),
 			array(
-				'foo',
+				'<img src="foo" class="postimage" alt="Image" />',
 				'summary',
 				array(
 					'detail_size'	=> 'medium-img',
 					'summary_size'	=> 'fullwidth-img',
 				),
-				'<div class="fullwidth-img"><figure class="img-ui">foo</figure></div>',
+				'<div class="fullwidth-img"><figure class="img-ui"><img src="foo" class="postimage" alt="Image" /></figure></div>',
 			),
 			array(
-				'bar',
+				'<img src="bar" class="postimage" alt="Image" />',
 				'detail',
 				array(
 					'detail_align'	=> 'img-align-left',
@@ -99,7 +117,7 @@ class image_test extends base_form_field
 					'detail_size'	=> 'medium-img',
 					'summary_size'	=> 'fullwidth-img',
 				),
-				'<div class="img-align-left medium-img"><figure class="img-ui">bar</figure></div>',
+				'<div class="img-align-left medium-img"><figure class="img-ui"><img src="bar" class="postimage" alt="Image" /></figure></div>',
 			),
 		);
 	}

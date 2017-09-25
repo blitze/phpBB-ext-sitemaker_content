@@ -99,6 +99,7 @@ $lang = array_merge($lang, array(
 	'IMAGE_ALIGN'				=> 'Align',
 	'IMAGE_ALIGN_LEFT'			=> 'Left',
 	'IMAGE_ALIGN_RIGHT'			=> 'Right',
+	'IMAGE_DEFAULT'				=> 'Default Image',
 	'IMAGE_SIZE'				=> 'Size',
 	'IMAGE_SIZE_SMALL'			=> 'Small',
 	'IMAGE_SIZE_MEDIUM'			=> 'Medium',

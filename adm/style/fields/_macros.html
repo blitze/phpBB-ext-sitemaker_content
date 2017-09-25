@@ -124,7 +124,8 @@
 		{value: 'small-img', label: lang('IMAGE_SIZE_SMALL')},
 		{value: 'medium-img', label: lang('IMAGE_SIZE_MEDIUM')},
 		{value: 'large-img', label: lang('IMAGE_SIZE_LARGE')},
-		{value: 'fullwidth-img', label: lang('IMAGE_SIZE_FULLWIDTH')}
+		{value: 'fullwidth-img', label: lang('IMAGE_SIZE_FULLWIDTH')},
+		{value: 'card-img', label: lang('IMAGE_SIZE_CARD')},
 	] -%}
 	{%- set image_align_options = [
 		{value: '', label: lang('DEFAULT')},
@@ -153,6 +154,12 @@
 			<div class="column2">
 				{{ forms.dropdown(data.FIELD_NAME ~ '-detail_align', 'field_props[' ~ data.FIELD_NAME ~ '][detail_align]', data.FIELD_PROPS.detail_align, image_align_options) }}
 			</div>
+		</dd>
+	</dl>
+	<dl>
+		<dt><label for="{{ data.FIELD_NAME ~ '-default' }}">{{ lang('IMAGE_DEFAULT') ~ lang('COLON') }}</label></dt>
+		<dd>
+			{{ forms.input(data.FIELD_NAME ~ '-default', 'field_props[' ~ data.FIELD_NAME ~ '][default]', data.FIELD_PROPS.default, 'text', 40) }}
 		</dd>
 	</dl>
 {% endmacro %}
