@@ -1,5 +1,5 @@
 {
-  "name": "SiteMaker Content",
+  "name": "phpbb_sitemaker_content",
   "dependencies": {
     "air-datepicker": "^2.2.3",
     "imagesloaded": "^4.1.3",
@@ -26,10 +26,6 @@
         "./css/ion.rangeSlider.*",
         "./img/*"
       ]
-    },
-    "masonry": {
-      "dependencies": null,
-      "main": "dist/masonry.pkgd.min.js"
     },
     "spectrum": {
       "dependencies": null
