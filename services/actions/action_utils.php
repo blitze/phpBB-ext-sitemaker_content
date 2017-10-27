@@ -17,9 +17,6 @@ abstract class action_utils
 	/** @var bool */
 	protected $redirect = true;
 
-	/** @var bool */
-	protected $trigger_error = true;
-
 	/**
 	 * @param string $u_action
 	 * @return void
@@ -48,6 +45,6 @@ abstract class action_utils
 	protected function trigger_error($message, $u_action = '', $errno = E_USER_NOTICE)
 	{
 		$message .= $u_action ? adm_back_link($u_action) : '';
-		$this->trigger_error ? trigger_error($message, $errno) : null;
+		trigger_error($message, $errno);
 	}
 }

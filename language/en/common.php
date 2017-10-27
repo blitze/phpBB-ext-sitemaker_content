@@ -40,6 +40,7 @@ $lang = array_merge($lang, array(
 	'ARCHIVES'						=> 'Archives',
 	'ARCHIVE_TOGGLE_DISPLAY'		=> 'Show more/less',
 	'COMMENTS'						=> 'Comments',
+	'CONTENT_TYPES'					=> 'Content Types',
 	'CONTENT_ANNOUNCEMENTS'			=> 'Recommended %s',
 	'CONTENT_GLOBAL_ANNOUNCEMENTS'	=> 'Must Read %s',
 	'CONTENT_LAST_READ_TIME'		=> 'Last Read %s',

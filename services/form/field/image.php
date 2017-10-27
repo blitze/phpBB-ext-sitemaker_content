@@ -117,7 +117,7 @@ class image extends base
 	 */
 	private function get_image_html($image, $mode, array $field_props)
 	{
-		$image = $image ?: '<img src="' . $field_props['default'] . '" class="postimage" alt="Image">';
+		$image = $image ?: '<img src="' . $field_props['default'] . '" class="postimage" alt="Image" />';
 
 		$html = '<figure class="img-ui">' . $image . '</figure>';
 		if ($mode !== 'block')

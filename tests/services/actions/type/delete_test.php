@@ -40,11 +40,12 @@ class delete_test extends \phpbb_database_test_case
 	}
 
 	/**
+	 * @param int $call_count
 	 * @return \blitze\content\services\actions\type\delete
 	 */
-	protected function get_command()
+	protected function get_command($call_count)
 	{
-		global $request;
+		global $config, $request, $user;
 
 		$table_prefix = 'phpbb_';
 		$content_type_tables = array(
@@ -62,7 +63,9 @@ class delete_test extends \phpbb_database_test_case
 
 		$cache = new \phpbb_mock_cache();
 
-		$config = new \phpbb\config\config(array());
+		$config = new \phpbb\config\config(array(
+			'form_token_lifetime'	=> -1,
+		));
 
 		$db = $this->new_dbal();
 
@@ -77,10 +80,15 @@ class delete_test extends \phpbb_database_test_case
 
 		$request = $this->getMock('\phpbb\request\request_interface');
 		$request->expects($this->any())
-			->method('variable')
-			->willReturnCallback(function($variable, $default) {
-				return $default;
-			});
+			->method('is_set_post')
+			->will($this->returnValueMap(array(
+				array('form_token', true),
+				array('creation_time', true),
+			)));
+		$this->request =& $request;
+
+		$user = new \phpbb\user($language, '\phpbb\datetime');
+		$user->data['user_id'] = 2;
 
 		$this->content_mapper_factory = new \blitze\content\model\mapper_factory($db, $content_type_tables);
 
@@ -91,7 +99,7 @@ class delete_test extends \phpbb_database_test_case
 		$forum_manager = $this->getMockBuilder('\blitze\sitemaker\services\forum\manager')
 			->disableOriginalConstructor()
 			->getMock();
-		$forum_manager->expects($this->once())
+		$forum_manager->expects($this->exactly($call_count))
 			->method('remove')
 			->with(
 				$this->greaterThan(0),
@@ -104,11 +112,32 @@ class delete_test extends \phpbb_database_test_case
 	}
 
 	/**
+	 * Show error when invalid/no form key is provided
+	 */
+	public function test_trigger_error_on_invalid_form_key()
+	{
+		$command = $this->get_command(0);
+
+		$this->setExpectedTriggerError(E_USER_ERROR, 'FORM_INVALID<br /><br /><a href="admin_url">&laquo; </a>');
+
+		$command->execute('admin_url', 'foo');
+	}
+
+	/**
 	 * Test delete content type
 	 */
 	public function test_delete_type()
 	{
-		$command = $this->get_command();
+		$command = $this->get_command(1);
+
+		$this->request->expects($this->any())
+			->method('variable')
+			->will($this->returnValueMap(array(
+				array('action_posts', 'delete', false, \phpbb\request\request_interface::REQUEST, 'delete'),
+				array('transfer_to_id', 0, false, \phpbb\request\request_interface::REQUEST, 0),
+				array('form_token', '', false, \phpbb\request\request_interface::REQUEST, sha1(0 . 'delete_content_type')),
+				array('creation_time', 0, false, \phpbb\request\request_interface::REQUEST, 0),
+			)));
 
 		$types_mapper = $this->content_mapper_factory->create('types');
 		$block_mapper = $this->sitemaker_mapper_factory->create('blocks');
@@ -118,6 +147,8 @@ class delete_test extends \phpbb_database_test_case
 
 		$collection = $block_mapper->find(array('bid', '=', 2));
 		$this->assertEquals(1, $collection->count());
+
+		$this->setExpectedTriggerError(E_USER_NOTICE, 'CONTENT_TYPE_DELETED<br /><br /><a href="admin_url">&laquo; </a>');
 
 		$command->execute('admin_url', 'foo');
 

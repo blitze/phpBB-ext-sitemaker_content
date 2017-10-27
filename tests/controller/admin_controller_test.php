@@ -10,12 +10,24 @@
 namespace blitze\content\tests\controller;
 
 use blitze\content\controller\admin_controller;
-use blitze\content\tests\framework\trigger_error_db_test_case;
 
 require_once dirname(__FILE__) . '/../../../../../includes/functions_acp.php';
 
-class admin_controller_test extends trigger_error_db_test_case
+class admin_controller_test extends \phpbb_database_test_case
 {
+	/**
+	* Define the extensions to be tested
+	*
+	* @return array vendor/name of extension(s) to test
+	*/
+	static protected function setup_extensions()
+	{
+		return array(
+			'blitze/sitemaker',
+			'blitze/content',
+		);
+	}
+
 	/**
 	 * Load required fixtures.
 	 *
@@ -93,7 +105,7 @@ class admin_controller_test extends trigger_error_db_test_case
 
 		$action = 'no_exists';
 		$controller = $this->get_controller($action, $type, $base_url);
+		$this->setExpectedTriggerError(E_USER_WARNING, 'EXCEPTION_UNEXPECTED_VALUE no_exists INVALID_ACTION<br /><br /><a href="admin_url">&laquo; </a>');
 		$controller->handle($action, $type, $base_url);
-		$this->assertError('EXCEPTION_UNEXPECTED_VALUE no_exists INVALID_ACTION<br /><br /><a href="admin_url">&laquo; </a>', E_USER_WARNING);
 	}
 }

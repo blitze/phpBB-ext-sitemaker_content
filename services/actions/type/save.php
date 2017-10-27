@@ -308,11 +308,11 @@ class save extends action_utils implements action_interface
 		$field_options = $this->request->variable(array('field_options', $field), array(0 => ''), true);
 		$fields_defaults = $this->request->variable(array('field_defaults', $field), array(0 => ''), true);
 
-		$field_props = (array) array_filter($field_props, 'strlen');
-		$field_props += array_filter(array(
+		$field_props = array_filter($field_props, 'strlen');
+		$field_props = array_merge($field_props, array_filter(array(
 			'options'	=> array_filter($field_options, 'strlen'),
 			'defaults'	=> array_filter($fields_defaults, 'strlen'),
-		));
+		)));
 
 		return $field_props;
 	}

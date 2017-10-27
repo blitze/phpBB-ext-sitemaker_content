@@ -66,7 +66,6 @@ $lang = array_merge($lang, array(
 	'CONTENT_SETTINGS'			=> 'Settings',
 	'CONTENT_STORED'			=> 'Your content has been successfully saved',
 	'CONTENT_TYPE'				=> 'Type',
-	'CONTENT_TYPES'				=> 'Content Types',
 	'CONTENT_TYPE_CREATED'		=> 'Content type successfully created.<br /><br />You may now %1$sset permissions%2$s for this content type',
 	'CONTENT_TYPE_DELETE'		=> 'Delete Content Type',
 	'CONTENT_TYPE_DELETED'		=> 'Content type deleted successfully',

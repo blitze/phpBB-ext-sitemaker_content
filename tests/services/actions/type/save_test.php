@@ -11,9 +11,8 @@ namespace blitze\content\tests\services\actions\type;
 
 use phpbb\request\request_interface;
 use blitze\content\services\actions\type\save;
-use blitze\content\tests\framework\trigger_error_db_test_case;
 
-class save_test extends trigger_error_db_test_case
+class save_test extends \phpbb_database_test_case
 {
 	protected $language;
 	protected $mapper_factory;
@@ -197,9 +196,12 @@ class save_test extends trigger_error_db_test_case
 					array('copy_forum_perm', 0, false, request_interface::REQUEST, 1),
 					array(array('view_settings', $content_view), array('' => ''), false, request_interface::REQUEST, array('' => '')),
 					array('field_data', array('' => array('' => '')), true, request_interface::REQUEST, $fields_data),
-					array(array('field_props', 'field2'), array('' => ''), false, request_interface::REQUEST, $field2_settings),
+					array(array('field_props', 'field1'), array('' => ''), false, request_interface::REQUEST, array('' => '')),
 					array(array('field_defaults', 'field1'), array(0 => ''), true, request_interface::REQUEST, $field1_defaults),
 					array(array('field_options', 'field1'), array(0 => ''), true, request_interface::REQUEST, $field1_options),
+					array(array('field_props', 'field2'), array('' => ''), false, request_interface::REQUEST, $field2_settings),
+					array(array('field_defaults', 'field2'), array(0 => ''), true, request_interface::REQUEST, array('' => '')),
+					array(array('field_options', 'field2'), array(0 => ''), true, request_interface::REQUEST, array('' => '')),
 				),
 				2,
 				array(
@@ -242,9 +244,12 @@ class save_test extends trigger_error_db_test_case
 					array('copy_forum_perm', 0, false, request_interface::REQUEST, 0),
 					array(array('view_settings', $content_view), array('' => ''), false, request_interface::REQUEST, array('' => '')),
 					array('field_data', array('' => array('' => '')), true, request_interface::REQUEST, $fields_data),
-					array(array('field_props', 'field2'), array('' => ''), false, request_interface::REQUEST, $field2_settings),
+					array(array('field_props', 'field1'), array('' => ''), false, request_interface::REQUEST, array('' => '')),
 					array(array('field_defaults', 'field1'), array(0 => ''), true, request_interface::REQUEST, $field1_defaults),
 					array(array('field_options', 'field1'), array(0 => ''), true, request_interface::REQUEST, $field1_options),
+					array(array('field_props', 'field2'), array('' => ''), false, request_interface::REQUEST, $field2_settings),
+					array(array('field_defaults', 'field2'), array(0 => ''), true, request_interface::REQUEST, array('' => '')),
+					array(array('field_options', 'field2'), array(0 => ''), true, request_interface::REQUEST, array('' => '')),
 				),
 				1,
 				array(
@@ -293,6 +298,11 @@ class save_test extends trigger_error_db_test_case
 
 		try
 		{
+			if (sizeof($expected_data))
+			{
+				$this->setExpectedTriggerError(E_USER_NOTICE, $expected_message);
+			}
+
 			$command->execute('admin_url', $type);
 
 			$types_mapper = $this->mapper_factory->create('types');
@@ -311,7 +321,6 @@ class save_test extends trigger_error_db_test_case
 			}
 
 			$this->assertEquals($expected_data, array_intersect_key($result, $expected_data));
-			$this->assertError($expected_message);
 		}
 		catch (\blitze\sitemaker\exception\base $e)
 		{
