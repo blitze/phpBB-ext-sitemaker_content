@@ -10,9 +10,13 @@
 namespace blitze\content\event;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class listener implements EventSubscriberInterface
 {
+	/* @var \phpbb\controller\helper */
+	protected $helper;
+
 	/** @var \phpbb\language\language */
 	protected $language;
 
@@ -25,12 +29,14 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Constructor
 	 *
+	 * @param \phpbb\controller\helper				$helper				Controller helper object
 	 * @param \phpbb\language\language				$language			Language object
 	 * @param \blitze\content\services\types		$content_types		Content types object
 	 * @param string								$php_ext			php file extension
 	*/
-	public function __construct(\phpbb\language\language $language, \blitze\content\services\types $content_types, $php_ext)
+	public function __construct(\phpbb\controller\helper $helper, \phpbb\language\language $language, \blitze\content\services\types $content_types, $php_ext)
 	{
+		$this->helper = $helper;
 		$this->language = $language;
 		$this->content_types = $content_types;
 		$this->php_ext = $php_ext;
@@ -42,9 +48,10 @@ class listener implements EventSubscriberInterface
 	public static function getSubscribedEvents()
 	{
 		return array(
-			'core.user_setup'						=> 'load_block_language',
-			'core.make_jumpbox_modify_forum_list'	=> 'update_jumpbox',
-			'core.viewonline_overwrite_location'	=> 'add_viewonline_location',
+			'core.user_setup'								=> 'load_block_language',
+			'core.make_jumpbox_modify_forum_list'			=> 'update_jumpbox',
+			'core.viewonline_overwrite_location'			=> 'add_viewonline_location',
+			'blitze.sitemaker.acp_add_bulk_menu_options'	=> 'add_bulk_menu_options',
 		);
 	}
 
@@ -93,5 +100,39 @@ class listener implements EventSubscriberInterface
 				unset($row);
 			}
 		}
+	}
+
+	/**
+	 * @param \phpbb\event\data $event
+	 * @return void
+	 */
+	public function add_bulk_menu_options(\phpbb\event\data $event)
+	{
+		$forumslist = $event['forumslist'];
+		$bulk_options = $even['bulk_options'];
+
+		$forumslist = array_diff_key($forumslist, $this->content_types->get_forum_types());
+		$bulk_options['CONTENT_TYPES'] = $this->get_content_types_string();
+
+		$event['forumslist'] = $forumslist;
+		$event['bulk_options'] = $bulk_options;
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function get_content_types_string()
+	{
+		$list = $this->content_types->get_all_types();
+
+		$text = $this->language->lang('CONTENT_TYPES') . '|' . $this->helper->route('blitze_content_types', array(), false, '', UrlGeneratorInterface::RELATIVE_PATH) . "\n";
+
+		foreach ($list as $type => $entity)
+		{
+			$text .= "\t" . $entity->get_content_langname() . '|';
+			$text .= $this->helper->route('blitze_content_type', array('type' => $type), false, '', UrlGeneratorInterface::RELATIVE_PATH) . "\n";
+		}
+
+		return trim($text);
 	}
 }

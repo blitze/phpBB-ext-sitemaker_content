@@ -15,6 +15,7 @@ services:
     blitze.content.event.listener:
         class: blitze\content\event\listener
         arguments:
+            - '@controller.helper'
             - '@language'
             - '@blitze.content.types'
             - '%core.php_ext%'
