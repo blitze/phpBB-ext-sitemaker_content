@@ -76,11 +76,11 @@ final class field extends base_entity
 	/** @var string */
 	protected $field_detail_show = '';
 
-	/** @var boolean */
-	protected $field_summary_ldisp = false;
+	/** @var integer */
+	protected $field_summary_ldisp = 1;
 
-	/** @var boolean */
-	protected $field_detail_ldisp = false;
+	/** @var integer */
+	protected $field_detail_ldisp = 1;
 
 	/** @var string */
 	protected $field_exp_uid = '';
