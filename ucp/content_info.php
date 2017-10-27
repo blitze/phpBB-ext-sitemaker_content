@@ -15,10 +15,10 @@ class content_info
 	{
 		return array(
 			'filename'	=> '\blitze\content\ucp\content_module',
-			'title'		=> 'UCP_BLITZE_CONTENT',
+			'title'		=> 'UCP_SITEMAKER_CONTENT',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'content'		=> array('title' => 'MY_CONTENT', 'auth' => 'ext_blitze/content', 'cat' => array('UCP_BLITZE_CONTENT')),
+				'content'		=> array('title' => 'MY_CONTENT', 'auth' => 'ext_blitze/content', 'cat' => array('UCP_SITEMAKER_CONTENT')),
 			),
 		);
 	}

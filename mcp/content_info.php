@@ -15,10 +15,10 @@ class content_info
 	{
 		return array(
 			'filename'	=> '\blitze\content\mcp\content_module',
-			'title'		=> 'MCP_BLITZE_CONTENT',
+			'title'		=> 'MCP_SITEMAKER_CONTENT',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'content'		=> array('title' => 'MCP_CONTENT', 'auth' => 'ext_blitze/content', 'cat' => array('MCP_BLITZE_CONTENT')),
+				'content'		=> array('title' => 'MCP_CONTENT', 'auth' => 'ext_blitze/content', 'cat' => array('MCP_SITEMAKER_CONTENT')),
 			),
 		);
 	}
