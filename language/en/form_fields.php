@@ -105,6 +105,7 @@ $lang = array_merge($lang, array(
 	'IMAGE_SIZE_MEDIUM'			=> 'Medium',
 	'IMAGE_SIZE_LARGE'			=> 'Large',
 	'IMAGE_SIZE_FULLWIDTH'		=> 'Full Width',
+	'IMAGE_SIZE_CARD'			=> 'Card',
 
 	// number settings
 	'NUMBER_MAX_VALUE'			=> 'Maximum value',
