@@ -109,7 +109,7 @@ class listener implements EventSubscriberInterface
 	public function add_bulk_menu_options(\phpbb\event\data $event)
 	{
 		$forumslist = $event['forumslist'];
-		$bulk_options = $even['bulk_options'];
+		$bulk_options = $event['bulk_options'];
 
 		$forumslist = array_diff_key($forumslist, $this->content_types->get_forum_types());
 		$bulk_options['CONTENT_TYPES'] = $this->get_content_types_string();
