@@ -48,6 +48,7 @@ class posting implements EventSubscriberInterface
 			'core.posting_modify_submit_post_after'		=> array(array('save_fields'), array('set_redirect_url')),
 			'core.topic_review_modify_post_list'		=> 'set_content_post_id',
 			'core.topic_review_modify_row'				=> 'modify_topic_review',
+			'core.posting_modify_submit_post_before'	=> 'force_visibility',
 			'core.posting_modify_template_vars'			=> 'build_form',
 		);
 	}
@@ -97,13 +98,27 @@ class posting implements EventSubscriberInterface
 	 * @param \phpbb\event\data $event
 	 * @return void
 	 */
+	public function force_visibility(\phpbb\event\data $event)
+	{
+		if ($this->build_content)
+		{
+			$data = $event['data'];
+			$this->builder->force_visibility($event['mode'], $data);
+
+			$event['data'] = $data;
+		}
+	}
+
+	/**
+	 * @param \phpbb\event\data $event
+	 * @return void
+	 */
 	public function modify_sql_data(\phpbb\event\data $event)
 	{
 		if ($this->build_content)
 		{
 			$sql_data = $event['sql_data'];
 			$this->builder->modify_posting_data($sql_data[TOPICS_TABLE]['sql']);
-			$this->builder->force_visibility($event['post_mode'], $sql_data);
 			$event['sql_data'] = $sql_data;
 		}
 	}

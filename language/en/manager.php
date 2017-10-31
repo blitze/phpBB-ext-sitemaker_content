@@ -43,7 +43,7 @@ $lang = array_merge($lang, array(
 	'CONTENT_TYPE'			=> 'Content Type',
 
 	'FIELD_REQUIRED'		=> 'Missing required field: %s',
-	'FORCE_STATUS'			=> 'Force status',
+	'FORCE_STATUS'			=> 'Force status?',
 
 	'INVALID_REQUEST'		=> 'Invalid request: %s',
 

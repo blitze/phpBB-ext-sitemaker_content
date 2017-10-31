@@ -306,15 +306,10 @@ class builder
 				))
 				->add('force_status', 'radio', array(
 					'field_label'	=> 'FORCE_STATUS',
-					'field_value'	=> 'NO',
+					'field_value'	=> '-1',
 					'field_props'	=> array(
 						'vertical'		=> true,
-						'options' 		=> array(
-							''					=> 'NO',
-							ITEM_UNAPPROVED		=> 'STATUS_DISAPPROVE',
-							ITEM_APPROVED		=> 'STATUS_APPROVE',
-							ITEM_REAPPROVE		=> 'STATUS_REAPPROVE',
-						)
+						'options' 		=> $this->get_moderator_options($post_data['topic_visibility']),
 					)
 				)
 			);
@@ -322,27 +317,22 @@ class builder
 	}
 
 	/**
-	 * @param string $post_mode
-	 * @param array $sql_data
+	 * @param string $mode
+	 * @param array $data
 	 * @return void
 	 */
-	public function force_visibility($post_mode, array &$sql_data)
+	public function force_visibility($mode, array &$data)
 	{
 		if ($this->mode === 'mcp')
 		{
-			if ('' !== $force_status = $this->request->variable('force_status', ''))
+			if ('-1' !== $visibility = $this->request->variable('force_status', ''))
 			{
-				$sql_data['topic_visibility'] = $force_status;
+				$data['force_visibility'] = $visibility;
 			}
 		}
-		else
+		else if ($this->force_state())
 		{
-			if ($this->force_state())
-			{
-				$visibility = ($post_mode == 'edit_first_post') ? ITEM_REAPPROVE : ITEM_UNAPPROVED;
-				$sql_data[TOPICS_TABLE]['sql']['topic_visibility'] = $visibility;
-				$sql_data[POSTS_TABLE]['sql']['post_visibility'] = $visibility;
-			}
+			$data['force_visibility'] = ($mode == 'edit_first_post') ? ITEM_REAPPROVE : ITEM_UNAPPROVED;
 		}
 	}
 
@@ -389,5 +379,28 @@ class builder
 		}
 
 		return $fields_data;
+	}
+
+	/**
+	 * @param int $visibility
+	 * @return array
+	 */
+	protected function get_moderator_options($visibility)
+	{
+		$options = array(
+			'-1' => 'NO',
+		);
+
+		if ($visibility == ITEM_APPROVED)
+		{
+			$options[ITEM_REAPPROVE] = 'STATUS_REAPPROVE';
+		}
+		else
+		{
+			$options[ITEM_UNAPPROVED]	= 'STATUS_DISAPPROVE';
+			$options[ITEM_APPROVED]		= 'STATUS_APPROVE';
+		}
+
+		return $options;
 	}
 }
