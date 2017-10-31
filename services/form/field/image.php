@@ -32,9 +32,9 @@ class image extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function get_field_value($name, $value)
+	public function get_field_value(array $data)
 	{
-		$value = $this->request->variable($name, $value);
+		$value = $this->request->variable($data['field_name'], $data['field_value']);
 		$value = $this->get_image_src($value);
 
 		return ($value) ? '[img]' . $value . '[/img]' : '';
@@ -45,7 +45,7 @@ class image extends base
 	 */
 	public function show_form_field($name, array &$data)
 	{
-		$bbcode_value = $this->get_field_value($name, $data['field_value']);
+		$bbcode_value = $this->get_field_value($data);
 
 		$field = $this->get_name();
 		$data['field_name'] = $name;

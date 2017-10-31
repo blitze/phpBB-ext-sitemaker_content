@@ -14,9 +14,9 @@ class number extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function get_field_value($name, $value)
+	public function get_field_value(array $data)
 	{
-		return $this->request->variable($name, (int) $value);
+		return $this->request->variable($data['field_name'], (int) $data['field_value']);
 	}
 
 	/**

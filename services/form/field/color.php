@@ -53,11 +53,12 @@ class color extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function get_field_value($name, $default)
+	public function get_field_value(array $data)
 	{
-		$default = is_array($default) ? $default : explode("\n", $default);
-		$value =  $this->request->variable($name, array(0 => ''), true);
+		$default = is_array($data['field_value']) ? $data['field_value'] : explode("\n", $data['field_value']);
+		return $this->request->variable($name, $default, true);
 
+		$value =  $this->request->variable($name, array(0 => ''), true);
 		return $value ? $value : $default;
 	}
 

@@ -200,6 +200,13 @@ final class field extends base_entity
 	 */
 	public function get_field_props()
 	{
-		return ($this->field_props) ? json_decode($this->field_props, true) : array();
+		$field_props = ($this->field_props) ? json_decode($this->field_props, true) : array();
+
+		if (in_array($this->field_type, array('radio', 'checkbox', 'select')))
+		{
+			$field_props['options'] = array_filter(array_combine($field_props['options'], $field_props['options']), 'strlen');
+		}
+
+		return $field_props;
 	}
 }

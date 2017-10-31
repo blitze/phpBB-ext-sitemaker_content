@@ -1,13 +1,14 @@
+{%- set name = field_props.multi_select ? field_name ~ '[]' : field_name -%}
 {% if field_props.vertical %}
 	{% for column in field_props.options|batch(5) %}
 	<div class="left-box" style="margin-right: 1em">
 	{% for option in column %}
-		<label for="{{ option.id }}"><input type="{{ field_type }}" id="{{ option.id }}" name="{{ field_name }}[]" value="{{ option.value }}"{% if option.selected %} checked="checked"{% endif %} /> {{ option.label }}</label><br />
+		<label for="{{ option.id }}"><input type="{{ field_type }}" id="{{ option.id }}" name="{{ name }}" value="{{ option.value }}"{% if option.selected %} checked="checked"{% endif %} /> {{ option.label }}</label><br />
 	{% endfor %}
 	</div>
 	{% endfor %}
 {% else %}
 	{% for option in field_props.options %}
-		<label for="{{ option.id }}"><input type="{{ field_type }}" id="{{ option.id }}" name="{{ field_name }}[]" value="{{ option.value }}"{% if option.selected %} checked="checked"{% endif %} /> {{ option.label }}</label>
+		<label for="{{ option.id }}"><input type="{{ field_type }}" id="{{ option.id }}" name="{{ name }}" value="{{ option.value }}"{% if option.selected %} checked="checked"{% endif %} /> {{ option.label }}</label>
 	{% endfor %}
 {% endif %}

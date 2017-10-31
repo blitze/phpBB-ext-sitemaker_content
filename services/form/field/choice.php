@@ -26,10 +26,10 @@ abstract class choice extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function get_field_value($name, $default)
+	public function get_field_value(array $data)
 	{
-		$default = is_array($default) ? $default : explode("\n", $default);
-		$value =  $this->request->variable($name, $default, true);
+		$default = $this->get_default_value($data);
+		$value = $this->request->variable($data['field_name'], $default, true);
 
 		if (empty($value) && $this->request->server('REQUEST_METHOD') !== 'POST')
 		{
@@ -53,7 +53,7 @@ abstract class choice extends base
 	 */
 	public function show_form_field($name, array &$data)
 	{
-		$selected = $this->get_selected_options($name, $data);
+		$selected = (array) $this->get_field_value($data);
 
 		$data['field_name'] = $name;
 		$data['field_value'] = join("\n", $selected);
@@ -81,7 +81,7 @@ abstract class choice extends base
 		$options = array();
 		if (is_array($data['field_props']['options']))
 		{
-			$choices = $this->get_options($data['field_props']['options']);
+			$choices = (array) $data['field_props']['options'];
 			foreach ($choices as $value => $option)
 			{
 				$options[] = array(
@@ -97,22 +97,15 @@ abstract class choice extends base
 	}
 
 	/**
-	 * @param array $options
-	 * @return array
-	 */
-	protected function get_options(array $options)
-	{
-		return array_combine($options, $options);
-	}
-
-	/**
-	 * @param string $name
 	 * @param array $data
-	 * @return array
+	 * @return string
 	 */
-	protected function get_selected_options($name, array $data)
+	protected function get_default_value(array $data)
 	{
-		$selected = $this->get_field_value($name, ($data['field_value']) ? $data['field_value'] : $data['field_props']['defaults']);
-		return (is_array($selected)) ? $selected : array($selected);
+		$default = (array) $data['field_props']['defaults'];
+		$default = $data['field_value'] ?: $default;
+		$default = is_array($default) ? $default : explode("\n", $default);
+
+		return ($data['field_props']['multi_select']) ? $default : (string) array_shift($default);
 	}
 }

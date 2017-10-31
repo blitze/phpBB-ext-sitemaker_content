@@ -53,9 +53,9 @@ abstract class base implements field_interface
 	/**
 	 * @inheritdoc
 	 */
-	public function get_field_value($name, $value)
+	public function get_field_value(array $data)
 	{
-		return $this->request->variable($name, $value, true);
+		return $this->request->variable($data['field_name'], $data['field_value'], true);
 	}
 
 	/**
@@ -64,7 +64,7 @@ abstract class base implements field_interface
 	public function show_form_field($name, array &$data)
 	{
 		$data['field_name'] = $name;
-		$data['field_value'] = $this->get_field_value($name, $data['field_value']);
+		$data['field_value'] = $this->get_field_value($data);
 
 		$this->ptemplate->assign_vars($data);
 

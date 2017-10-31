@@ -1,4 +1,4 @@
-<select id="smc-{{ field_name }}" name="{{ field_name }}[]"{% if field_props.multi_select %} multiple="multiple"{% endif %} class="inputbox autowidth">
+<select id="smc-{{ field_name }}" name="{{ field_name }}{% if field_props.multi_select %}[]" multiple="multiple{% endif %}" class="inputbox autowidth">
 {% for option in field_props.options %}
 	<option value="{{ option.value }}"{% if option.selected %} selected="selected"{% endif %}>{{ option.label }}</option>
 {% endfor %}
