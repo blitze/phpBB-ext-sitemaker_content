@@ -17,7 +17,7 @@ class m1_initial_schema extends \phpbb\db\migration\migration
 	static public function depends_on()
 	{
 		return array(
-			'\blitze\sitemaker\migrations\v20x\m1_initial_schema',
+			'\blitze\sitemaker\migrations\v31x\m310_filemanager',
 		);
 	}
 
