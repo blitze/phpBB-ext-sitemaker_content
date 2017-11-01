@@ -150,7 +150,8 @@ class image_test extends base_form_field
 			array(
 				'foo',
 				array(
-					'field_value' => '',
+					'field_name'	=> 'foo',
+					'field_value'	=> '',
 				),
 				array(
 					array('foo', '', false, request_interface::REQUEST, ''),
@@ -161,8 +162,9 @@ class image_test extends base_form_field
 			array(
 				'foo',
 				array(
-					'field_value' => '',
-					'field_props' => array(
+					'field_name'	=> 'foo',
+					'field_value'	=> '',
+					'field_props'	=> array(
 						'size'	=> 65,
 					),
 				),
@@ -175,7 +177,8 @@ class image_test extends base_form_field
 			array(
 				'foo2',
 				array(
-					'field_value' => 'bar',
+					'field_name'	=> 'foo2',
+					'field_value'	=> 'bar',
 				),
 				array(
 					array('foo2', 'bar', false, request_interface::REQUEST, 'foo_bar'),

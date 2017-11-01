@@ -148,6 +148,7 @@ class range_test extends base_form_field
 			array(
 				'foo',
 				array(
+					'field_name'	=> 'foo',
 					'field_value'	=> '',
 					'field_props'	=> array(),
 				),
@@ -161,6 +162,7 @@ class range_test extends base_form_field
 			array(
 				'foo',
 				array(
+					'field_name'	=> 'foo',
 					'field_value'	=> '15;35',
 					'field_props'	=> array(
 						'type'		=> 'double',
@@ -185,6 +187,7 @@ class range_test extends base_form_field
 			array(
 				'bar',
 				array(
+					'field_name'	=> 'bar',
 					'field_value'	=> 'test2',
 					'field_props'	=> array(
 						'type'		=> 'single',

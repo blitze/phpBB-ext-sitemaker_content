@@ -69,6 +69,7 @@ class number_test extends base_form_field
 			array(
 				'foo',
 				array(
+					'field_name'	=> 'foo',
 					'field_value'	=> '',
 				),
 				array(
@@ -79,6 +80,7 @@ class number_test extends base_form_field
 			array(
 				'foo',
 				array(
+					'field_name'	=> 'foo',
 					'field_value'	=> 10,
 					'field_props'	=> array(
 						'min'	=> 5,
@@ -95,6 +97,7 @@ class number_test extends base_form_field
 			array(
 				'bar',
 				array(
+					'field_name'	=> 'bar',
 					'field_value'	=> 20,
 				),
 				array(

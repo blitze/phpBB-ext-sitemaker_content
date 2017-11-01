@@ -68,6 +68,7 @@ class telephone_test extends base_form_field
 			array(
 				'foo',
 				array(
+					'field_name'	=> 'foo',
 					'field_value'	=> '',
 				),
 				array(
@@ -80,6 +81,7 @@ class telephone_test extends base_form_field
 			array(
 				'foo2',
 				array(
+					'field_name'	=> 'foo2',
 					'field_value'	=> 'bar',
 				),
 				array(

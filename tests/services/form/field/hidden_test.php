@@ -64,6 +64,7 @@ class hidden_test extends base_form_field
 			array(
 				'foo1',
 				array(
+					'field_name'	=> 'foo1',
 					'field_value'	=> '',
 				),
 				array(
@@ -74,6 +75,7 @@ class hidden_test extends base_form_field
 			array(
 				'foo2',
 				array(
+					'field_name'	=> 'foo2',
 					'field_value'	=> 'bar',
 				),
 				array(
@@ -84,6 +86,7 @@ class hidden_test extends base_form_field
 			array(
 				'foo3',
 				array(
+					'field_name'	=> 'foo3',
 					'field_value'	=> 'bar',
 				),
 				array(

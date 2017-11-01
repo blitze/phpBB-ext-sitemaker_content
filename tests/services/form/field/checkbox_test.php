@@ -71,9 +71,14 @@ class checkbox_test extends base_form_field
 			array(
 				'foo',
 				array(
+					'field_name'	=> 'foo',
 					'field_value'	=> '',
 					'field_props'	=> array(
-						'options'		=> array('option1', 'option2', 'option3'),
+						'options'		=> array(
+							'option1' => 'option1',
+							'option2' => 'option2',
+							'option3' => 'option3',
+						),
 						'defaults'		=> array(),
 						'vertical'		=> false,
 					),
@@ -88,9 +93,36 @@ class checkbox_test extends base_form_field
 			array(
 				'foo',
 				array(
+					'field_name'	=> 'foo',
+					'field_value'	=> 2,
+					'field_props'	=> array(
+						'options'		=> array(
+							'1' => 'option1',
+							'2' => 'option2',
+							'3' => 'option3',
+						),
+						'defaults'		=> array(),
+						'vertical'		=> false,
+					),
+				),
+				array(
+					array('foo', '', true, request_interface::REQUEST, '2'),
+				),
+				'<label for="smc-foo-0"><input type="checkbox" id="smc-foo-0" name="foo[]" value="1" /> option1</label>' .
+				'<label for="smc-foo-1"><input type="checkbox" id="smc-foo-1" name="foo[]" value="2" checked="checked" /> option2</label>' .
+				'<label for="smc-foo-2"><input type="checkbox" id="smc-foo-2" name="foo[]" value="3" /> option3</label>',
+			),
+			array(
+				'foo',
+				array(
+					'field_name'	=> 'foo',
 					'field_value'	=> "option2\noption3",
 					'field_props'	=> array(
-						'options'		=> array('option1', 'option2', 'option3'),
+						'options'		=> array(
+							'option1' => 'option1',
+							'option2' => 'option2',
+							'option3' => 'option3',
+						),
 						'defaults'		=> array(),
 						'vertical'		=> false,
 					),
@@ -105,9 +137,14 @@ class checkbox_test extends base_form_field
 			array(
 				'foo',
 				array(
+					'field_name'	=> 'foo',
 					'field_value'	=> '',
 					'field_props'	=> array(
-						'options'		=> array('option1', 'option2', 'option3'),
+						'options'		=> array(
+							'option1' => 'option1',
+							'option2' => 'option2',
+							'option3' => 'option3',
+						),
 						'defaults'		=> array('option1', 'option3'),
 					),
 				),
@@ -123,9 +160,17 @@ class checkbox_test extends base_form_field
 			array(
 				'bar',
 				array(
+					'field_name'	=> 'bar',
 					'field_value'	=> array('option1'),
 					'field_props'	=> array(
-						'options'		=> array('option1', 'option2', 'option3', 'option4', 'option5', 'option6'),
+						'options'		=> array(
+							'option1' => 'option1',
+							'option2' => 'option2',
+							'option3' => 'option3',
+							'option4' => 'option4',
+							'option5' => 'option5',
+							'option6' => 'option6',
+						),
 						'defaults'		=> array('option1', 'option3'),
 						'vertical'		=> true,
 					),

@@ -63,7 +63,6 @@ abstract class base implements field_interface
 	 */
 	public function show_form_field($name, array &$data)
 	{
-		$data['field_name'] = $name;
 		$data['field_value'] = $this->get_field_value($data);
 
 		$this->ptemplate->assign_vars($data);

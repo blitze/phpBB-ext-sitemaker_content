@@ -113,6 +113,7 @@ class color_test extends base_form_field
 			array(
 				'foo',
 				array(
+					'field_name'	=> 'foo',
 					'field_value'	=> '',
 					'field_props'	=> array(),
 				),
@@ -124,6 +125,7 @@ class color_test extends base_form_field
 			array(
 				'foo',
 				array(
+					'field_name'	=> 'foo',
 					'field_value'	=> 'bar',
 					'field_props'	=> array(
 						'num_colors'	=> 2,
@@ -140,6 +142,7 @@ class color_test extends base_form_field
 			array(
 				'foo2',
 				array(
+					'field_name'	=> 'foo2',
 					'field_value'	=> 'bar',
 					'field_props'	=> array(
 						'display'		=> 'box',

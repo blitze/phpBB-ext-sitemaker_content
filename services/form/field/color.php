@@ -56,10 +56,8 @@ class color extends base
 	public function get_field_value(array $data)
 	{
 		$default = is_array($data['field_value']) ? $data['field_value'] : explode("\n", $data['field_value']);
-		return $this->request->variable($name, $default, true);
-
-		$value =  $this->request->variable($name, array(0 => ''), true);
-		return $value ? $value : $default;
+		$value =  $this->request->variable($name, array(0 => ''));
+		return $value ?: $default;
 	}
 
 	/**

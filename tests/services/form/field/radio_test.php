@@ -71,73 +71,96 @@ class radio_test extends base_form_field
 			array(
 				'foo',
 				array(
+					'field_name'	=> 'foo',
 					'field_value'	=> '',
 					'field_props'	=> array(
-						'options'		=> array('option1', 'option2', 'option3'),
+						'options'		=> array(
+							'option1' => 'option1',
+							'option2' => 'option2',
+							'option3' => 'option3',
+						),
 						'defaults'		=> array(),
 					),
 				),
 				array(
 					array('foo', '', true, request_interface::REQUEST, ''),
 				),
-				'<label for="smc-foo-0"><input type="radio" id="smc-foo-0" name="foo[]" value="option1" /> option1</label>' .
-				'<label for="smc-foo-1"><input type="radio" id="smc-foo-1" name="foo[]" value="option2" /> option2</label>' .
-				'<label for="smc-foo-2"><input type="radio" id="smc-foo-2" name="foo[]" value="option3" /> option3</label>',
+				'<label for="smc-foo-0"><input type="radio" id="smc-foo-0" name="foo" value="option1" /> option1</label>' .
+				'<label for="smc-foo-1"><input type="radio" id="smc-foo-1" name="foo" value="option2" /> option2</label>' .
+				'<label for="smc-foo-2"><input type="radio" id="smc-foo-2" name="foo" value="option3" /> option3</label>',
 			),
 			array(
 				'foo',
 				array(
+					'field_name'	=> 'foo',
 					'field_value'	=> '',
 					'field_props'	=> array(
-						'options'		=> array('option1', 'option2', 'option3'),
+						'options'		=> array(
+							'option1' => 'option1',
+							'option2' => 'option2',
+							'option3' => 'option3',
+						),
 						'defaults'		=> array('option2'),
 					),
 				),
 				array(
 					array('foo', '', true, request_interface::REQUEST, ''),
 				),
-				'<label for="smc-foo-0"><input type="radio" id="smc-foo-0" name="foo[]" value="option1" /> option1</label>' .
-				'<label for="smc-foo-1"><input type="radio" id="smc-foo-1" name="foo[]" value="option2" checked="checked" /> option2</label>' .
-				'<label for="smc-foo-2"><input type="radio" id="smc-foo-2" name="foo[]" value="option3" /> option3</label>',
+				'<label for="smc-foo-0"><input type="radio" id="smc-foo-0" name="foo" value="option1" /> option1</label>' .
+				'<label for="smc-foo-1"><input type="radio" id="smc-foo-1" name="foo" value="option2" checked="checked" /> option2</label>' .
+				'<label for="smc-foo-2"><input type="radio" id="smc-foo-2" name="foo" value="option3" /> option3</label>',
 			),
 			array(
 				'bar',
 				array(
-					'field_value'	=> array('option2'),
+					'field_name'	=> 'bar',
+					'field_value'	=> 'option2',
 					'field_props'	=> array(
-						'options'		=> array('option1', 'option2', 'option3'),
+						'options'		=> array(
+							'option1' => 'option1',
+							'option2' => 'option2',
+							'option3' => 'option3',
+						),
 						'defaults'		=> array('option2'),
 					),
 				),
 				array(
-					array('bar', array('option2'), true, request_interface::REQUEST, array('option3')),
+					array('bar', 'option2', true, request_interface::REQUEST, 'option3'),
 				),
-				'<label for="smc-bar-0"><input type="radio" id="smc-bar-0" name="bar[]" value="option1" /> option1</label>' .
-				'<label for="smc-bar-1"><input type="radio" id="smc-bar-1" name="bar[]" value="option2" /> option2</label>' .
-				'<label for="smc-bar-2"><input type="radio" id="smc-bar-2" name="bar[]" value="option3" checked="checked" /> option3</label>',
+				'<label for="smc-bar-0"><input type="radio" id="smc-bar-0" name="bar" value="option1" /> option1</label>' .
+				'<label for="smc-bar-1"><input type="radio" id="smc-bar-1" name="bar" value="option2" /> option2</label>' .
+				'<label for="smc-bar-2"><input type="radio" id="smc-bar-2" name="bar" value="option3" checked="checked" /> option3</label>',
 			),
 			array(
 				'bar',
 				array(
-					'field_value'	=> array('option2'),
+					'field_name'	=> 'bar',
+					'field_value'	=> 'option2',
 					'field_props'	=> array(
-						'options'		=> array('option1', 'option2', 'option3', 'option4', 'option5', 'option6'),
+						'options'		=> array(
+							'option1' => 'option1',
+							'option2' => 'option2',
+							'option3' => 'option3',
+							'option4' => 'option4',
+							'option5' => 'option5',
+							'option6' => 'option6',
+						),
 						'defaults'		=> array('option2'),
 						'vertical'		=> true,
 					),
 				),
 				array(
-					array('bar', array('option2'), true, request_interface::REQUEST, array('option3', 'option6')),
+					array('bar', 'option2', true, request_interface::REQUEST, 'option3'),
 				),
 				'<div class="left-box" style="margin-right: 1em">' .
-					'<label for="smc-bar-0"><input type="radio" id="smc-bar-0" name="bar[]" value="option1" /> option1</label><br />' .
-					'<label for="smc-bar-1"><input type="radio" id="smc-bar-1" name="bar[]" value="option2" /> option2</label><br />' .
-					'<label for="smc-bar-2"><input type="radio" id="smc-bar-2" name="bar[]" value="option3" checked="checked" /> option3</label><br />' .
-					'<label for="smc-bar-3"><input type="radio" id="smc-bar-3" name="bar[]" value="option4" /> option4</label><br />' .
-					'<label for="smc-bar-4"><input type="radio" id="smc-bar-4" name="bar[]" value="option5" /> option5</label><br />' .
+					'<label for="smc-bar-0"><input type="radio" id="smc-bar-0" name="bar" value="option1" /> option1</label><br />' .
+					'<label for="smc-bar-1"><input type="radio" id="smc-bar-1" name="bar" value="option2" /> option2</label><br />' .
+					'<label for="smc-bar-2"><input type="radio" id="smc-bar-2" name="bar" value="option3" checked="checked" /> option3</label><br />' .
+					'<label for="smc-bar-3"><input type="radio" id="smc-bar-3" name="bar" value="option4" /> option4</label><br />' .
+					'<label for="smc-bar-4"><input type="radio" id="smc-bar-4" name="bar" value="option5" /> option5</label><br />' .
 				'</div>' .
 				'<div class="left-box" style="margin-right: 1em">' .
-					'<label for="smc-bar-5"><input type="radio" id="smc-bar-5" name="bar[]" value="option6" checked="checked" /> option6</label><br />' .
+					'<label for="smc-bar-5"><input type="radio" id="smc-bar-5" name="bar" value="option6" /> option6</label><br />' .
 				'</div>',
 			),
 		);

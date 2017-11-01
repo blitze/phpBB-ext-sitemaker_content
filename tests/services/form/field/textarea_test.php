@@ -305,6 +305,7 @@ class textarea_test extends base_form_field
 			array(
 				'foo',
 				array(
+					'field_name'	=> 'foo',
 					'field_value'	=> '',
 				),
 				array(
@@ -315,6 +316,7 @@ class textarea_test extends base_form_field
 			array(
 				'foo',
 				array(
+					'field_name'	=> 'foo',
 					'field_value'	=> 'bar',
 					'field_props'	=> array(
 						'size'			=> 'small',
