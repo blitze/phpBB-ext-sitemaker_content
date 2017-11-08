@@ -15,6 +15,7 @@ use blitze\content\services\form\field\image;
 class image_test extends base_form_field
 {
 	protected $util;
+	protected $filemanager;
 
 	/**
 	 * Create the form field service
@@ -24,16 +25,22 @@ class image_test extends base_form_field
 	 */
 	protected function get_form_field($field, array $variable_map = array())
 	{
+		global $phpbb_root_path, $phpEx;
+
 		$this->request->expects($this->any())
 			->method('variable')
 			->with($this->anything())
 			->will($this->returnValueMap($variable_map));
 
+		$this->filemanager = $this->getMockBuilder('\blitze\sitemaker\services\filemanager\setup')
+			->disableOriginalConstructor()
+			->getMock();
+
 		$this->util = $this->getMockBuilder('\blitze\sitemaker\services\util')
 			->disableOriginalConstructor()
 			->getMock();
 
-		return new image($this->language, $this->request, $this->ptemplate, $this->util);
+		return new image($this->language, $this->request, $this->ptemplate, $this->filemanager, $this->util, $phpbb_root_path, $phpEx);
 	}
 
 	public function test_name()
@@ -156,6 +163,7 @@ class image_test extends base_form_field
 				array(
 					array('foo', '', false, request_interface::REQUEST, ''),
 				),
+				false,
 				'<input type="text" class="inputbox autowidth image-field" id="smc-foo" name="foo" value="" size="45" />' .
 				'<div class="medium-img"><div id="preview-foo" class="img-ui"></div></div>',
 			),
@@ -171,7 +179,9 @@ class image_test extends base_form_field
 				array(
 					array('foo', '', false, request_interface::REQUEST, 'bar'),
 				),
+				true,
 				'<input type="text" class="inputbox autowidth image-field" id="smc-foo" name="foo" value="bar" size="45" />' .
+				'<a href="phpBB/ResponsiveFilemanager/filemanager/dialog.php?type=1&amp;field_id=smc-foo&amp;akey=foo_key" class="button"><i class="fa fa-upload"></i> SELECT</a>' .
 				'<div class="medium-img"><div id="preview-foo" class="img-ui"><img src="bar" alt="" /></div></div>',
 			),
 			array(
@@ -183,6 +193,7 @@ class image_test extends base_form_field
 				array(
 					array('foo2', 'bar', false, request_interface::REQUEST, 'foo_bar'),
 				),
+				false,
 				'<input type="text" class="inputbox autowidth image-field" id="smc-foo2" name="foo2" value="foo_bar" size="45" />' .
 				'<div class="medium-img"><div id="preview-foo2" class="img-ui"><img src="foo_bar" alt="" /></div></div>',
 			),
@@ -194,12 +205,22 @@ class image_test extends base_form_field
 	 * @param string $name
 	 * @param array $data
 	 * @param array $variable_map
+	 * @param bool $allow_filemanager
 	 * @param string $expected
 	 * @return void
 	 */
-	public function test_show_image_field($name, array $data, array $variable_map, $expected)
+	public function test_show_image_field($name, array $data, array $variable_map, $allow_filemanager, $expected)
 	{
 		$field = $this->get_form_field('image', $variable_map);
+
+		$this->filemanager->expects($this->exactly(1))
+			->method('is_enabled')
+			->willReturn($allow_filemanager);
+
+		$this->filemanager->expects($this->exactly((int) $allow_filemanager))
+			->method('get_access_key')
+			->willReturn('foo_key');
+
 		$data = $this->get_data('image', $name, $data, $field->get_default_props());
 
 		$this->assertEquals($expected, str_replace(array("\n", "\t", "\r"), '', $field->show_form_field($name, $data)));

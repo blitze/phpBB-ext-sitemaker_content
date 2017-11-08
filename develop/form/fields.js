@@ -1,3 +1,8 @@
+// Responsive Filemanager callback
+var responsive_filemanager_callback = function(field_id) {
+	$('#'+field_id).trigger('change');
+};
+
 ;(function($, window, document) {
 	'use strict';
 
@@ -75,8 +80,16 @@
 		// image field
 		$('.image-field').change(function(e) {
 			var imgSrc = $(this).val();
+			var fieldId = $(this).attr('name');
 
-			$(this).next().children('.img-ui').html(imgSrc.length ? '<img src=' + imgSrc + ' />' : '');
+			$('#preview-' + fieldId).html(imgSrc.length ? '<img src=' + imgSrc + ' />' : '');
 		})
-	});
+		.next()
+		.fancybox({	
+			'width'		: 900,
+			'height'	: 600,
+	        'autoScale'	: false,
+			'type'		: 'iframe'
+	    });
+    });
 })(jQuery, window, document);

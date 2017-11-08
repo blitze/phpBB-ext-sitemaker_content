@@ -11,22 +11,37 @@ namespace blitze\content\services\form\field;
 
 class image extends base
 {
+	/** @var \blitze\sitemaker\services\filemanager\setup */
+	protected $filemanager;
+
 	/** @var \blitze\sitemaker\services\util */
 	protected $util;
+
+	/** @var string */
+	protected $phpbb_root_path;
+
+	/** @var string */
+	protected $php_ext;
 
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\language\language                  $language       Language object
-	 * @param \phpbb\request\request_interface			$request		Request object
-	 * @param \blitze\sitemaker\services\template		$ptemplate		Sitemaker template object
-	 * @param \blitze\sitemaker\services\util			$util       	Sitemaker utility object
+	 * @param \phpbb\language\language                  	$language       	Language object
+	 * @param \phpbb\request\request_interface				$request			Request object
+	 * @param \blitze\sitemaker\services\template			$ptemplate			Sitemaker template object
+	 * @param \blitze\sitemaker\services\filemanager\setup	$filemanager		Filemanager object
+	 * @param \blitze\sitemaker\services\util				$util       		Sitemaker utility object
+	 * @param string										$phpbb_root_path	phpBB root path
+	 * @param string										$php_ext			php file extension
 	 */
-	public function __construct(\phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\sitemaker\services\template $ptemplate, \blitze\sitemaker\services\util $util)
+	public function __construct(\phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\sitemaker\services\template $ptemplate, \blitze\sitemaker\services\filemanager\setup $filemanager, \blitze\sitemaker\services\util $util, $phpbb_root_path, $php_ext)
 	{
 		parent::__construct($language, $request, $ptemplate);
 
+		$this->filemanager = $filemanager;
 		$this->util = $util;
+		$this->phpbb_root_path = $phpbb_root_path;
+		$this->php_ext = $php_ext;
 	}
 
 	/**
@@ -36,6 +51,7 @@ class image extends base
 	{
 		$value = $this->request->variable($data['field_name'], $data['field_value']);
 		$value = $this->get_image_src($value);
+		$value = str_replace(generate_board_url() . '/', $this->phpbb_root_path, $value);
 
 		return ($value) ? '[img]' . $value . '[/img]' : '';
 	}
@@ -48,15 +64,19 @@ class image extends base
 		$bbcode_value = $this->get_field_value($data);
 
 		$field = $this->get_name();
-		$data['field_name'] = $name;
 		$data['field_value'] = $this->get_image_src($bbcode_value);
 
 		$this->util->add_assets(array(
-			'js'   => array(
-				'@blitze_content/assets/form/fields.min.js',
+			'js'	=> array(
+				'@blitze_content/vendor/fancybox/dist/jquery.fancybox.min.js',
+				100 => '@blitze_content/assets/form/fields.min.js',
+			),
+			'css'	=> array(
+				'@blitze_content/vendor/fancybox/dist/jquery.fancybox.min.css',
 			),
 		));
 
+		$this->set_filemanager($data);
 		$this->ptemplate->assign_vars($data);
 		$field = $this->ptemplate->render_view('blitze/content', "fields/image.html", $field . '_field');
 
@@ -127,5 +147,21 @@ class image extends base
 			$html = '<div class="' . join(' ', $image_props) . '">' . $html . '</div>';
 		}
 		return $html;
+	}
+
+	/**
+	 * @param array $data
+	 * @return void
+	 */
+	protected function set_filemanager(array &$data)
+	{
+		if ($this->filemanager->is_enabled())
+		{
+			$data['filemanager_path'] = append_sid("{$this->phpbb_root_path}ResponsiveFilemanager/filemanager/dialog.$this->php_ext", array(
+				'type'			=> 1,
+				'field_id'		=> 'smc-' . $data['field_name'],
+				'akey'			=> $this->filemanager->get_access_key(),
+			));
+		}
 	}
 }

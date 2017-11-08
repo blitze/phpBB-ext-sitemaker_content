@@ -6,10 +6,14 @@
     "ion.rangeSlider": "ionrangeslider#^2.1.7",
     "spectrum": "^1.8.0",
     "geocomplete": "^1.7.0",
-    "awesome-grid": "^2.0.2"
+    "awesome-grid": "^2.0.2",
+    "fancybox": "^3.1.25"
   },
   "overrides": {
     "air-datepicker": {
+      "dependencies": null
+    },
+    "fancybox": {
       "dependencies": null
     },
     "geocomplete": {

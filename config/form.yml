@@ -40,7 +40,10 @@ services:
         class: blitze\content\services\form\field\image
         parent: blitze.content.form.field.base
         arguments:
+            - '@blitze.sitemaker.filemanager.setup'
             - '@blitze.sitemaker.util'
+            - '%core.root_path%'
+            - '%core.php_ext%'
         tags:
             - { name: sitemaker.content.form.field }
 
