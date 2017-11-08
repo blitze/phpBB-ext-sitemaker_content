@@ -63,11 +63,11 @@ class datetime extends base
 	public function show_form_field($name, array &$data)
 	{
 		$this->util->add_assets(array(
-			'js'   => array(
-				'@blitze_content/vendor/air-datepicker/dist/js/datepicker.min.js',
-				'@blitze_content/assets/form/fields.min.js',
+			'js'	=> array(
+				99	=> '@blitze_content/vendor/air-datepicker/dist/js/datepicker.min.js',
+				100	=> '@blitze_content/assets/form/fields.min.js',
 			),
-			'css'   => array(
+			'css'	=> array(
 				'@blitze_content/vendor/air-datepicker/dist/css/datepicker.min.css',
 			)
 		));

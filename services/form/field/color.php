@@ -85,7 +85,7 @@ class color extends base
 		$this->util->add_assets(array(
 			'js'   => array(
 				'@blitze_content/vendor/spectrum/spectrum.min.js',
-				'@blitze_content/assets/form/fields.min.js',
+				100 => '@blitze_content/assets/form/fields.min.js',
 			),
 			'css'   => array(
 				'@blitze_content/vendor/spectrum/spectrum.min.css',
