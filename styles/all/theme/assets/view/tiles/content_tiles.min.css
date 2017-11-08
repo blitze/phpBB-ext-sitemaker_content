@@ -1,14 +1,2 @@
-.tile {
-	margin-left: 10px;
-}
-
-@media screen and (max-width: 480px) {
-	.tile {
-		margin-left: 0;
-	}
-}
-.load_more {
-	font-weight: bold;
-	clear: both;
-	padding: 10px;
-}
+.tile{margin-left:10px}@media screen and (max-width:480px){.tile{margin-left:0}}.load_more{font-weight:700;clear:both;padding:10px}
+/*# sourceMappingURL=content_tiles.min.css.map */
