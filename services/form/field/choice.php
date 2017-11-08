@@ -55,6 +55,7 @@ abstract class choice extends base
 	{
 		$selected = (array) $this->get_field_value($data);
 
+		$data['field_name'] = $name;
 		$data['field_value'] = join("\n", $selected);
 
 		$this->set_field_options($name, $data, $selected);
