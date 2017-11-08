@@ -21,7 +21,7 @@
 		var ocontainer = $('#' + fieldName + '-options-container');
 		var itemsCount = ocontainer.children().length;
 
-		ocontainer.append(Twig.twig({ref: 'option'}).render({
+		ocontainer.append(Twig.twig({ ref: 'option' }).render({
 			field_name: fieldName,
 			type: $element.data('type'),
 			index: itemsCount + 1
@@ -52,7 +52,7 @@
 
 		$.getJSON(window.ajaxUrl + '&type=' + fieldType, data, function(row) {
 			containerObj.append(row).accordion('refresh').accordion('option', 'active', items);
-			$('html,body').animate({scrollTop: $('#cfield-' + fieldName).offset().top}, 500, 'swing');
+			$('html,body').animate({ scrollTop: $('#cfield-' + fieldName).offset().top }, 500, 'swing');
 			setAvailableFields();
 		});
 	};
@@ -72,7 +72,7 @@
 			$.getJSON(window.ajaxUrl + '&type=' + nType, data, function(newRow) {
 				row.replaceWith(newRow);
 				containerObj.accordion('refresh').accordion('option', 'active', index);
-				$('html,body').animate({scrollTop: $('#cfield-' + field).offset().top}, 500, 'swing');
+				$('html,body').animate({ scrollTop: $('#cfield-' + field).offset().top }, 500, 'swing');
 				setAvailableFields();
 			});
 		}
@@ -94,7 +94,7 @@
 			buttons.push('<a class="button" href="#" data-tag="' + field + '" data-ftype="' + ftype + '">' + label + '</a>');
 		});
 
-		$('#available-fields').html(buttons.join()).children('.button').button({disabled: false});
+		$('#available-fields').html(buttons.join()).children('.button').button({ disabled: false });
 	};
 
 	var showTab = function(tab) {
@@ -144,7 +144,7 @@
 			theme: 'monokai',
 			mode: 'html',
 			lineNumbers: true,
-			lineWrapping : false,
+			lineWrapping: false,
 			autoRefresh: true,
 			styleActiveLine: true,
 			fixedGutter: true,
@@ -269,31 +269,41 @@
 		var stop = false;
 
 		containerObj.accordion({
-			header: '> div > h3',
-			active: false,
-			collapsible: true,
-			heightStyle: 'content'
-		})
-		.sortable({
-			handle: 'h3',
-			cursor: 'move',
-			axis: 'y',
-			opacity: 0.6,
-			forcePlaceholderSize: true,
-			placeholder: 'ui-state-highlight',
-			stop: function(event, ui) {
-				// IE doesn't register the blur when sorting
-				// so trigger focusout handlers to remove .ui-state-focus
-				ui.item.children('h3').triggerHandler('focusout');
-				stop = true;
-				setAvailableFields();
-			}
-		});
+				header: '> div > h3',
+				active: false,
+				collapsible: true,
+				heightStyle: 'content'
+			})
+			.sortable({
+				handle: 'h3',
+				cursor: 'move',
+				axis: 'y',
+				opacity: 0.6,
+				forcePlaceholderSize: true,
+				placeholder: 'ui-state-highlight',
+				stop: function(event, ui) {
+					// IE doesn't register the blur when sorting
+					// so trigger focusout handlers to remove .ui-state-focus
+					ui.item.children('h3').triggerHandler('focusout');
+					stop = true;
+					setAvailableFields();
+				}
+			});
 
 		$('#fields-container').on('blur', '.field_label', function() {
 			setAvailableFields();
 		}).on('keyup', '.field-option input[type="text"]', function() {
 			$(this).prev().val($(this).val());
+		}).on('click', 'input.field-defaults[type=radio]', function(e) {
+			// Credit: http://smoothprogramming.com/jquery/toggle-radio-button-using-jquery/
+			var previousValue = $(this).data('storedValue');
+			if (previousValue) {
+				$(this).prop('checked', !previousValue);
+				$(this).data('storedValue', !previousValue);
+			} else {
+				$(this).data('storedValue', true);
+				$("input.field-defaults[type=radio]:not(:checked)").data("storedValue", false);
+			}
 		});
 
 		$('body').on('click', '.toggle', function(e) {
@@ -317,11 +327,11 @@
 			textarea[view] = getEditor(view);
 
 			textarea[view].on('change', function() {
-				preview[view].html(Twig.twig({data: textarea[view].getValue()}).render(postData));
+				preview[view].html(Twig.twig({ data: textarea[view].getValue() }).render(postData));
 			});
 		});
 
-		$('#post-info > a.button').button({disabled: false}).click(function(e) {
+		$('#post-info > a.button').button({ disabled: false }).click(function(e) {
 			e.preventDefault();
 			textarea[view].replaceSelection('{{ ' + $(this).data('tag') + ' }}');
 		});
@@ -333,19 +343,7 @@
 
 			textarea[view].focus();
 			textarea[view].replaceSelection(field);
-		}).children('a.button').button({disabled: false});
-
-		// Tabs for field templates
-		/*
-		$('#fields-template').on('click', '.toggle-tpl', function(e) {
-			var id = $(this).attr('id');
-			$(this).removeClass('ui-state-active').parent().children('li').not(this).addClass('ui-state-active');
-			$('.toggle-panel').hide();
-			$('#' + id + '-tpl').show();
-			view = id.substring(7);
-			e.preventDefault();
-		});
-		*/
+		}).children('a.button').button({ disabled: false });
 
 		// Tabs for content type
 		$('.ctab').click(function(e) {
