@@ -1,12 +1,11 @@
 .tile {
 	margin-left: 10px;
-}
 
-@media screen and (max-width: 480px) {
-	.tile {
+	@media screen and (max-width: 480px) {
 		margin-left: 0;
 	}
 }
+
 .load_more {
 	font-weight: bold;
 	clear: both;

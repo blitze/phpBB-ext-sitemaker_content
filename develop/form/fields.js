@@ -1,9 +1,11 @@
 // Responsive Filemanager callback
 var responsive_filemanager_callback = function(field_id) {
+	'use strict';
+	/* global $ */
 	$('#'+field_id).trigger('change');
 };
 
-;(function($, window, document) {
+(function($, window, document) {
 	'use strict';
 
 	var resizeInput = function(element) {
@@ -43,7 +45,7 @@ var responsive_filemanager_callback = function(field_id) {
 			});
 
 			// overwrite prosilver's fieldset field1 margin-bottom: 3px
-			$('.sp-replacer div').css('marginBottom', 0)
+			$('.sp-replacer div').css('marginBottom', 0);
 		}
 
 		// Datetime picker
@@ -66,7 +68,7 @@ var responsive_filemanager_callback = function(field_id) {
 			if (current) {
 				var selected = [];
 				$.each(current.split(','), function(i, dateStr) {
-					selected.push(new Date(dateStr))
+					selected.push(new Date(dateStr));
 				});
 				dp.selectDate(selected);
 			}
@@ -78,7 +80,7 @@ var responsive_filemanager_callback = function(field_id) {
 		}
 
 		// image field
-		$('.image-field').change(function(e) {
+		$('.image-field').change(function() {
 			var imgSrc = $(this).val();
 			var fieldId = $(this).attr('name');
 

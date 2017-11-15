@@ -1,4 +1,4 @@
-;(function($, window, document) {
+(function($, window, document) {
 	'use strict';
 
 	var fNameObj = {};
@@ -175,7 +175,7 @@
 		nTypeObj = $('#dialog-newtype');
 		containerObj = $('#fields-container');
 
-		aButtons[trans.add] = function() {
+		aButtons[trans.addField] = function() {
 			var fieldName = fNameObj.val();
 			var fieldType = typeObj.val();
 			var fieldLabel = fLabelObj.val();
@@ -191,7 +191,7 @@
 			$(this).dialog('close');
 		};
 
-		cButtons[trans.delete] = function() {
+		cButtons[trans.deleteField] = function() {
 			removeElement(removeObj);
 			containerObj.sortable('refresh');
 			$(this).dialog('close');
@@ -202,7 +202,7 @@
 			$(this).dialog('close');
 		};
 
-		eButtons[trans.edit] = function() {
+		eButtons[trans.editField] = function() {
 			editField(fid);
 			$(this).dialog('close');
 		};
@@ -294,7 +294,7 @@
 			setAvailableFields();
 		}).on('keyup', '.field-option input[type="text"]', function() {
 			$(this).prev().val($(this).val());
-		}).on('click', 'input.field-defaults[type=radio]', function(e) {
+		}).on('click', 'input.field-defaults[type=radio]', function() {
 			// Credit: http://smoothprogramming.com/jquery/toggle-radio-button-using-jquery/
 			var previousValue = $(this).data('storedValue');
 			if (previousValue) {
@@ -339,7 +339,6 @@
 		$('#available-fields').on('click', 'a.button', function(e) {
 			e.preventDefault();
 			var field = '{{ ' + $(this).data('tag').toUpperCase() + ' }}';
-			var ftype = $(this).data('ftype');
 
 			textarea[view].focus();
 			textarea[view].replaceSelection(field);

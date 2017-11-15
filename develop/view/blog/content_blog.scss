@@ -1,0 +1,86 @@
+/*
+* Based on tutorial at http://cssglobe.com/drawing-calendar-icon-with-css3/
+*/
+
+//colors
+$calendar_text_color: #000;
+$calendar_bg_color: #ededef;
+$calendar_shadow_color: #888;
+$month_text_color: #fff;
+$month_shadow_color: #00365a;
+$month_bg_color: #04599a;
+$punch_hole_color: #111;
+$ring_color: #dadada;
+
+//@extend-elements
+%cal_before_after {
+	position: absolute;
+	z-index: 1;
+	top: 4px;
+	float: left;
+	width: 6px;
+	height: 6px;
+	content: '';
+	border-radius: 10px;
+	background: $punch_hole_color;
+	box-shadow: 0 1px 1px $month_text_color;
+}
+
+%month_before_after {
+	position: absolute;
+	z-index: 2;
+	top: -3px;
+	float: left;
+	width: 2px;
+	height: 10px;
+	content: '';
+	border-radius: 2px;
+	background: $ring_color;
+}
+
+
+.calendar {
+	font: bold 1.3em/2em Arial Black, Arial, Helvetica, sans-serif;
+	position: relative;
+	float: left;
+	width: 50px;
+	margin: 0.25em 0.5em 0.5em 0;
+	padding-top: 5px;
+	text-align: center;
+	color: $calendar_text_color;
+	border-radius: 3px;
+	background: $calendar_bg_color;
+	text-shadow: $month_text_color 0 1px 0;
+	box-shadow: 0 2px 2px $calendar_shadow_color;
+
+	em {
+		font: bold 1em/2em Arial, Helvetica, sans-serif;
+		display: block;
+		color: $month_text_color;
+		border-top: 1px solid $month_shadow_color;
+		border-bottom-right-radius: 3px;
+		border-bottom-left-radius: 3px;
+		background: $month_bg_color;
+		text-shadow: $month_shadow_color 0 -1px 0;
+
+		&:before {
+			@extend %month_before_after;
+			left: 9px;
+		}
+
+		&:after {
+			@extend %month_before_after;
+			right: 9px;
+		}
+	}
+
+	&:before {
+		@extend %cal_before_after;
+		left: 7px;
+	}
+
+	&:after {
+		@extend %cal_before_after;
+		right: 7px;
+	}
+}

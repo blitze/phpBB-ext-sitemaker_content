@@ -1,0 +1,153 @@
+.hide {
+	display: none;
+}
+
+.clear {
+	clear: both;
+	height: 0;
+}
+
+.add-field-info {
+	text-align: center;
+	background-color: #ee3;
+	color: red;
+	font-weight: bolder;
+	display: none;
+	padding: 8px;
+}
+
+.field-settings {
+	background: #cff;
+	padding: 10px;
+	margin: 0 -10px;
+	border-radius: 5px;
+}
+
+.field {
+	position: relative;
+
+	.field-actions {
+		position: absolute;
+		top: 4px;
+		right: 4px;
+		width: auto;
+	}
+
+	.field-icon {
+		position: relative;
+		float: right;
+		margin: 2px;
+
+		span:hover {
+			border: 1px solid #ccc;
+		}
+	}
+
+	.field-type {
+		position: absolute;
+		left: 47%;
+	}
+}
+
+.field-options-list {
+	max-height: 150px;
+	overflow: auto;
+}
+
+.field-option {
+	margin: 3px 0;
+}
+
+.field-option-input {
+	width: 80%;
+}
+
+.add-option {
+	display: inline-block;
+	margin: 4px 0;
+	padding: 6px;
+	width: auto;
+	font-weight: bolder;
+
+	a:hover {
+		text-decoration: none;
+	}
+}
+
+.editor {
+	width: 99.5%;
+	height: 250px;
+}
+
+.tpl-tabs {
+	margin-bottom: -2px;
+
+	.ui-state-default {
+		font-weight: bold;
+		background-color: #3fc;
+		background-image: none;
+	}
+
+	.ui-state-active {
+		font-weight: normal;
+		background-color: white;
+	}
+
+	li a {
+		margin: 10px;
+	}
+}
+
+.tpl-boxes {
+	padding: 10px;
+	background-color: #3fc;
+
+	.header {
+		margin-top: 5px;
+	}
+
+	.ui-tabs-nav {
+		margin-right: 8px;
+	}
+}
+
+.tpl-fields-container {
+	padding: 5px;
+
+	.button {
+		margin: 8px 4px 0 0;
+	}
+}
+
+.rightside {
+	position: relative;
+	float: right;
+	margin-left: 25px;
+}
+
+.dialog-tpl {
+	fieldset {
+		margin-top: 25px;
+		padding: 0;
+		border: 0;
+	}
+
+	.error {
+		font-size: 9px;
+		font-weight: bolder;
+		text-align: center;
+		color: red;
+	}
+}
+
+.full-width {
+	width: 100%;
+}
+
+.ui-accordion .ui-accordion-header {
+	margin-top: 5px;
+}
+
+.toggle-tpl a:hover {
+	text-decoration: none;
+}
