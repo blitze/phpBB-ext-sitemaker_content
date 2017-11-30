@@ -208,18 +208,18 @@ class form
 	}
 
 	/**
-	 * @param int $topic_id
+	 * @param array $topic_data
 	 * @param array $content_fields
 	 * @return void
 	 */
-	public function save_db_fields($topic_id, array $content_fields)
+	public function save_db_fields(array $topic_data, array $content_fields)
 	{
 		foreach ($this->db_fields as $field => $value)
 		{
 			$field_data = $content_fields[$field];
 			$obj = $this->fields_factory->get($field_data['field_type']);
 			$field_data['field_props'] += $obj->get_default_props();
-			$obj->save_field($topic_id, $value, $field_data);
+			$obj->save_field($value, $field_data, $topic_data);
 		}
 	}
 

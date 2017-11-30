@@ -21,9 +21,7 @@ class add_test extends add_edit_base
 	{
 		parent::get_command($call_count);
 
-		$phpbb_dispatcher = new \phpbb_mock_event_dispatcher();
-
-		return new add($this->auth, $this->controller_helper, $phpbb_dispatcher, $this->language, $this->template, $this->user, $this->auto_lang, $this->fields_factory, $this->views_factory);
+		return new add($this->auth, $this->controller_helper, $this->language, $this->template, $this->user, $this->auto_lang, $this->fields_factory, $this->views_factory);
 	}
 
 	public function test_add_type()

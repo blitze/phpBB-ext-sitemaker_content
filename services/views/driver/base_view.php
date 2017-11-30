@@ -68,12 +68,11 @@ abstract class base_view implements views_interface
 	}
 
 	/**
-	 * @param array $filters
-	 * @param int $forum_id
-	 * @return void
+	 * {@inheritdoc}
 	 */
-	public function build_index_query(array $filters, $forum_id = 0)
+	public function build_index_query(array $filters, \blitze\content\model\entity\type $entity = null)
 	{
+		$forum_id = $entity ? $entity->get_forum_id() : 0;
 		$sql_array = $this->get_filter_sql($filters, $forum_id);
 
 		$this->forum->query()
@@ -91,11 +90,10 @@ abstract class base_view implements views_interface
 	{
 		$content_type = $entity->get_content_name();
 		$items_per_page = $entity->get_items_per_page();
-		$forum_id = $entity->get_forum_id();
 		$start = ($page - 1) * $items_per_page;
 
-		$this->build_index_query($filters, $forum_id);
-		$this->set_mcp_url($forum_id);
+		$this->build_index_query($filters, $entity);
+		$this->set_mcp_url($entity->get_forum_id());
 
 		if ($entity->get_show_pagination())
 		{

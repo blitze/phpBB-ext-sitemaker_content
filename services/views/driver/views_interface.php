@@ -36,6 +36,13 @@ interface views_interface
 	public function get_detail_template();
 
 	/**
+	 * @param array $filters
+	 * @param \blitze\content\model\entity\type $entity
+	 * @return void
+	 */
+	public function build_index_query(array $filters, \blitze\content\model\entity\type $entity = null);
+
+	/**
 	 * Display topics on content index
 	 *
 	 * @param \blitze\content\model\entity\type $entity

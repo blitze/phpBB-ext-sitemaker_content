@@ -49,6 +49,9 @@ class builder
 	/** @var string */
 	protected $mode = '';
 
+	/** @var int */
+	protected $topic_time = 0;
+
 	/** @var bool */
 	protected $req_approval = false;
 
@@ -111,13 +114,13 @@ class builder
 			/**
 			 * Event to set the values for fields that are stored in the database, for purposes of displaying the form field
 			 *
-			 * @event blitze.content.builder.set_values
+			 * @event blitze.content.builder.set_field_values
 			 * @var int									topic_id		Current topic id
 			 * @var array								fields_data		Array containing fields data, minus 'field_value' prop, which is what we are setting here
 			 * @var \blitze\content\model\entity\type	entity			Content type entity
 			 */
 			$vars = array('topic_id', 'fields_data', 'entity');
-			extract($this->phpbb_dispatcher->trigger_event('blitze.content.builder.set_values', compact($vars)));
+			extract($this->phpbb_dispatcher->trigger_event('blitze.content.builder.set_field_values', compact($vars)));
 
 			$this->content_fields = $fields_data;
 			$this->user_is_mod = $this->auth->acl_get('m_', $entity->get_forum_id());
@@ -151,12 +154,13 @@ class builder
 	}
 
 	/**
-	 * @param int $topic_id
+	 * @param array $topic_data
 	 * @return void
 	 */
-	public function save_db_fields($topic_id)
+	public function save_db_fields(array $topic_data)
 	{
-		$this->form->save_db_fields($topic_id, $this->content_fields);
+		$topic_data['topic_time'] = $topic_data['topic_time'] ?: $this->topic_time;
+		$this->form->save_db_fields($topic_data, $this->content_fields);
 	}
 
 	/**
@@ -229,6 +233,8 @@ class builder
 		$slugify = new Slugify();
 		$sql_data['topic_slug'] = $slugify->slugify($sql_data['topic_title']);
 		$sql_data['req_mod_input'] = $this->req_mod_input;
+
+		$this->topic_time = $sql_data['topic_time'];
 
 		if ($this->mode === 'mcp')
 		{

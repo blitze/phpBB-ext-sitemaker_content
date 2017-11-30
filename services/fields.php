@@ -79,14 +79,14 @@ class fields extends topic
 		$db_fields = array_fill_keys($topic_ids, array());
 
 		/**
-		 * Event to set the values for fields that are stored in the database, as opposed to post text
+		 * Event to set the values for fields that are stored in the database as opposed to post text e.g. categories
+		 * We do this here so that we can get all values with one query instead of multiple queries for each field for each topic
 		 *
 		 * @event blitze.content.fields.set_values
 		 * @var string								view_mode			The current view mode (summary|detail|block)
 		 * @var	array								view_mode_fields	Array containing fields for current view_mode
 		 * @var \blitze\content\model\entity\type	entity				Content type entity
 		 * @var array								db_fields			This array allows extensions that provide fields to list field values for current topic ids.
-		 *																Extensions should merge and not overwrite/replace these entries, unless it is necessary to do so
 		 *																Ex. array([topic_id] => array([field_name] => [field_value]))
 		 */
 		$vars = array('view_mode', 'view_mode_fields', 'entity', 'db_fields');

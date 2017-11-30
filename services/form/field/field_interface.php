@@ -32,25 +32,25 @@ interface field_interface
 	/**
 	 * Returns the value of the field.
 	 *
-	 * @param array $data	This holds field props and field value before bbcode parsing has occurred
+	 * @param array $field_data	This holds field props and field value before bbcode parsing has occurred
 	 * @return mixed
 	 */
-	public function get_field_value(array $data);
+	public function get_field_value(array $field_data);
 
 	/**
 	 * Display content field
 	 *
-	 * @param array $data		This holds field props and field value after bbcode parsing has occurred
-	 *							Which means, line breaks have been replaced with <br>
+	 * @param array $field_data		This holds field props and field value after bbcode parsing has occurred
+	 *								Which means, line breaks have been replaced with <br>
 	 * @return string
 	 */
-	public function display_field(array $data);
+	public function display_field(array $field_data);
 
 	/**
 	 * Render content field as form element
 	 *
 	 * @param string $field_name
-	 * @param array $data  Ex. array(
+	 * @param array $field_data  Ex. array(
 	 * 								'field_type'	=> 'foo',		// string
 	 *								'field_value'	=> '',			// string/array
 	 *								'field_props'	=> array(
@@ -60,23 +60,23 @@ interface field_interface
 	 *							)
 	 * @return string
 	 */
-	public function show_form_field($field_name, array &$data);
+	public function show_form_field($field_name, array &$field_data);
 
 	/**
 	 * Save content field
 	 *
-	 * @param int $topic_id
 	 * @param mixed $field_value
 	 * @param array $field_data
+	 * @param array $topic_data
 	 * @return void
 	 */
-	public function save_field($topic_id, $field_value, array $data);
+	public function save_field($field_value, array $field_data, array $topic_data);
 
 	/**
 	 * Validate content field
 	 *
-	 * @param array $data
+	 * @param array $field_data
 	 * @return string
 	 */
-	public function validate_field(array $data);
+	public function validate_field(array $field_data);
 }

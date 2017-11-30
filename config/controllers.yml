@@ -9,6 +9,7 @@ services:
     blitze.content.field.controller:
         class: blitze\content\controller\field_controller
         arguments:
+            - '@dispatcher'
             - '@request'
             - '@template'
             - '@blitze.sitemaker.auto_lang'

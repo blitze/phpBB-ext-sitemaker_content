@@ -34,7 +34,7 @@ class edit_test extends add_edit_base
 		$mapper_factory = new \blitze\content\model\mapper_factory($this->db, $tables);
 		$types = new \blitze\content\services\types($cache, $mapper_factory);
 
-		return new edit($this->auth, $this->controller_helper, $phpbb_dispatcher, $this->language, $this->template, $this->user, $this->auto_lang, $this->fields_factory, $this->views_factory, $types, $mapper_factory);
+		return new edit($this->auth, $this->controller_helper, $this->language, $this->template, $this->user, $this->auto_lang, $this->fields_factory, $this->views_factory, $phpbb_dispatcher, $types, $mapper_factory);
 	}
 
 	/**

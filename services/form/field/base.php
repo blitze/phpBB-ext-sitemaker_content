@@ -75,7 +75,7 @@ abstract class base implements field_interface
 	/**
 	 * @inheritdoc
 	 */
-	public function save_field($topic_id, $field_value, array $field_data)
+	public function save_field($value, array $field_data, array $topic_data)
 	{
 		return false;
 	}

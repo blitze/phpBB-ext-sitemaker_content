@@ -185,7 +185,7 @@ class posting implements EventSubscriberInterface
 	{
 		if ($this->build_content && in_array($event['mode'], array('post', 'edit', 'save')))
 		{
-			$this->builder->save_db_fields($event['topic_id']);
+			$this->builder->save_db_fields(array_merge($event['post_data'], $event['data']));
 		}
 	}
 

@@ -13,6 +13,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class field_controller
 {
+	/** @var \phpbb\event\dispatcher_interface */
+	protected $phpbb_dispatcher;
+
 	/** @var \phpbb\request\request_interface */
 	protected $request;
 
@@ -31,13 +34,15 @@ class field_controller
 	/**
 	 * Constructor
 	 *
+	 * @param \phpbb\event\dispatcher_interface				$phpbb_dispatcher	Event dispatcher object
 	 * @param \phpbb\request\request_interface				$request			Request object
 	 * @param \phpbb\template\template						$template			Template object
 	 * @param \blitze\sitemaker\services\auto_lang			$auto_lang			Auto add lang file
 	 * @param \blitze\content\services\form\fields_factory	$fields_factory		Fields factory  object
 	 */
-	public function __construct(\phpbb\request\request_interface $request, \phpbb\template\template $template, \blitze\sitemaker\services\auto_lang $auto_lang, \blitze\content\services\form\fields_factory $fields_factory)
+	public function __construct(\phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\request\request_interface $request, \phpbb\template\template $template, \blitze\sitemaker\services\auto_lang $auto_lang, \blitze\content\services\form\fields_factory $fields_factory)
 	{
+		$this->phpbb_dispatcher = $phpbb_dispatcher;
 		$this->request = $request;
 		$this->template = $template;
 		$this->auto_lang = $auto_lang;
@@ -56,15 +61,19 @@ class field_controller
 
 		$this->auto_lang->add('form_fields');
 
-		$fields_template = 'content_fields.html';
+		$this->template->set_custom_style(array(
+			array(
+				'name' 		=> 'adm',
+				'ext_path' 	=> 'adm/style/',
+			)),
+			array('ext/blitze/content/adm/style')
+		);
 
-		$this->template->set_custom_style($fields_template, 'ext/blitze/content/adm/style');
-
-		$data = $this->get_field_data();
-		$this->template->assign_var('CONTENT_FIELDS', array(array_change_key_case($data, CASE_UPPER)));
+		$field_data = $this->get_field_data();
+		$this->template->assign_var('CONTENT_FIELDS', array(array_change_key_case($field_data, CASE_UPPER)));
 
 		$this->template->set_filenames(array(
-			'field'	=> $fields_template
+			'field'	=> 'content_fields.html'
 		));
 
 		return new JsonResponse($this->template->assign_display('field'));
@@ -79,31 +88,41 @@ class field_controller
 		$fields_data = $this->request->variable('field_data', array('' => array('' => '')), true);
 		$field_props = $this->request->variable('field_props', array('' => array('' => '')), true);
 
-		$data = (array) array_pop($fields_data);
+		$field_data = (array) array_pop($fields_data);
 
 		// set defaults if adding new field
-		$data += array(
+		$field_data += array(
 			'field_detail_ldisp'	=> 1,
 			'field_summary_ldisp'	=> 1,
 			'field_detail_show'		=> 'body',
 			'field_summary_show'	=> 'body',
 		);
 
-		/** @var \blitze\content\services\form\field\field_interface $object */
-		$field = $this->fields_factory->get($field_type);
-		$default_props = $field->get_default_props();
+		/** @var \blitze\content\services\form\field\field_interface $field_instance */
+		$field_instance = $this->fields_factory->get($field_type);
+		$default_props = $field_instance->get_default_props();
 
-		$data['field_type'] = $field_type;
-		$data['type_label'] = $field->get_langname();
-		$data['field_props'] = array_replace_recursive($default_props,
+		$field_data['field_type'] = $field_type;
+		$field_data['type_label'] = $field_instance->get_langname();
+		$field_data['field_props'] = array_replace_recursive($default_props,
 			array_intersect_key((array) array_pop($field_props), $default_props)
 		);
 
-		$this->set_prop('options', $data);
-		$this->set_prop('defaults', $data);
-		$this->force_prop($field_type, $data);
+		$this->set_prop('options', $field_data);
+		$this->set_prop('defaults', $field_data);
+		$this->force_prop($field_type, $field_data);
 
-		return $data;
+		/**
+		 * Event to modify field data
+		 *
+		 * @event blitze.content.field.modify_data
+		 * @var	array													field_data		Array containing field data
+		 * @var	\blitze\content\services\form\field\field_interface		field_instance	Field instance
+		 */
+		$vars = array('field_data', 'field_instance');
+		extract($this->phpbb_dispatcher->trigger_event('blitze.content.field.modify_data', compact($vars)));
+
+		return $field_data;
 	}
 
 	/**

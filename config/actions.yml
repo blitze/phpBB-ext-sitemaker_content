@@ -55,7 +55,6 @@ services:
         arguments:
             - '@auth'
             - '@controller.helper'
-            - '@dispatcher'
             - '@language'
             - '@template'
             - '@user'
@@ -67,6 +66,7 @@ services:
         class: blitze\content\services\actions\type\edit
         parent: blitze.content.actions.type.add
         arguments:
+            - '@dispatcher'
             - '@blitze.content.types'
             - '@blitze.content.mapper.factory'
 
