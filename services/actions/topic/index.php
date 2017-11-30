@@ -173,7 +173,6 @@ class index extends filter implements action_interface
 		return array(
 			'ATTACH_ICON_IMG'	=> $this->get_attachment_icon($row),
 			'U_REVIEW_TOPIC'	=> $u_action . "&amp;do=view&amp;type=$content_type&amp;t=" . $row['topic_id'],
-			'U_DELETE'			=> $this->get_delete_url($mode, $u_action, $row, $post_row),
 		);
 	}
 
