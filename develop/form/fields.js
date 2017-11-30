@@ -9,7 +9,10 @@ var responsive_filemanager_callback = function(field_id) {
 	'use strict';
 
 	var resizeInput = function(element) {
-		element.parent().width(element.val().length + '%');
+		var width = element.val().length;
+		if (width) {
+			element.parent().width(width + '%');
+		}
 	};
 
 	$(document).ready(function() {
