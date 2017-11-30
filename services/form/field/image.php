@@ -51,7 +51,6 @@ class image extends base
 	{
 		$value = $this->request->variable($data['field_name'], $data['field_value']);
 		$value = $this->get_image_src($value);
-		$value = str_replace(generate_board_url() . '/', $this->phpbb_root_path, $value);
 
 		return ($value) ? '[img]' . $value . '[/img]' : '';
 	}
