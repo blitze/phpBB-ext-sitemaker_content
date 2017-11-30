@@ -56,6 +56,8 @@ $lang = array_merge($lang, array(
 	'NO_TOPICS_SCHEDULED'	=> 'There are no scheduled topics to display',
 	'NO_TOPICS_UNAPPROVED'	=> 'There are no unapproved topics to display',
 
+	'PUBLISHED'				=> 'Published',
+
 	'STATUS_APPROVE'		=> 'Yes - Approve',
 	'STATUS_DISAPPROVE'		=> 'Yes - Disapprove',
 	'STATUS_REAPPROVE'		=> 'Yes - Reapprove',

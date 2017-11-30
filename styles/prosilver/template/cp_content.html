@@ -148,9 +148,9 @@
 										{% if topicrow.S_HAS_POLL %}<i class="icon fa-bar-chart fa-fw" aria-hidden="true"></i>{% endif %}
 										{% if topicrow.ATTACH_ICON_IMG %}<i class="icon fa-paperclip fa-fw" aria-hidden="true"></i>{% endif %}
 										{% if MODE == 'mcp' %}<strong>{{ topicrow.USERNAME_FULL }}</strong> | {% endif %}
-										<i class="fa fa-calendar"></i> <strong>{{ topicrow.TOPIC_TIME|date("m/d/Y") }}</strong> |
+										<i class="fa fa-calendar-o"></i> <strong>{{ topicrow.TOPIC_TIME|date("m/d/Y") }}</strong> |
+										<i class="fa fa-calendar"></i> <strong>{{ topicrow.TOPIC_DATE|date("m/d/Y") }}</strong> |
 										<i class="fa fa-eye"></i> <strong>{{ topicrow.TOPIC_VIEWS }}</strong>
-										{% if topicrow.S_COMMENTS %} | <i class="fa fa-comments"></i> <a href="{{ topicrow.U_VIEW_TOPIC }}#comments"><strong>{{ topicrow.TOPIC_COMMENTS }}</strong></a>{% endif %}
 									</div>
 									<span class="responsive-show left-box" style="display: none;">{{ lang('TYPE') }}{{ lang('COLON') }} <strong>{{ topicrow.CONTENT_TYPE }}</strong></span>
 
@@ -158,9 +158,9 @@
 										{% if topicrow.S_HAS_POLL %}<i class="icon fa-bar-chart fa-fw" aria-hidden="true"></i>{% endif %}
 										{% if topicrow.ATTACH_ICON_IMG %}<i class="icon fa-paperclip fa-fw" aria-hidden="true"></i>{% endif %}
 										{% if MODE == 'mcp' %}{{ lang('POST_BY_AUTHOR') }} <strong>{{ topicrow.USERNAME_FULL }}</strong> | {% endif %}
-										<i class="fa fa-calendar"></i> {{ lang('POSTED') }}{{ lang('COLON') }} <strong>{{ topicrow.TOPIC_TIME|date("m/d/Y") }}</strong> |
+										<i class="fa fa-calendar-o"></i> {{ lang('POSTED') }}{{ lang('COLON') }} <strong>{{ topicrow.TOPIC_TIME|date("m/d/Y") }}</strong> |
+										<i class="fa fa-calendar"></i> {{ lang('PUBLISHED') }}{{ lang('COLON') }} <strong>{{ topicrow.TOPIC_DATE|date("m/d/Y") }}</strong> |
 										<i class="fa fa-eye"></i> {{ lang('VIEWS') }}{{ lang('COLON') }} <strong>{{ topicrow.TOPIC_VIEWS }}</strong>
-										{% if topicrow.S_COMMENTS %} | <i class="fa fa-comments"></i> {{ lang('COMMENTS') }}{{ lang('COLON') }} <a href="{{ topicrow.U_VIEW_TOPIC }}#comments"><strong>{{ topicrow.TOPIC_COMMENTS }}</strong></a>{% endif %}
 									</div>
 								</div>
 							</dt>
