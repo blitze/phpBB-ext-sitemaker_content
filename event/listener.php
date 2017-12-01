@@ -14,6 +14,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class listener implements EventSubscriberInterface
 {
+	/** @var \phpbb\db\driver\driver_interface */
+	protected $db;
+
 	/* @var \phpbb\controller\helper */
 	protected $helper;
 
@@ -29,13 +32,15 @@ class listener implements EventSubscriberInterface
 	/**
 	 * Constructor
 	 *
+	 * @param \phpbb\db\driver\driver_interface		$db					Database connection
 	 * @param \phpbb\controller\helper				$helper				Controller helper object
 	 * @param \phpbb\language\language				$language			Language object
 	 * @param \blitze\content\services\types		$content_types		Content types object
 	 * @param string								$php_ext			php file extension
 	*/
-	public function __construct(\phpbb\controller\helper $helper, \phpbb\language\language $language, \blitze\content\services\types $content_types, $php_ext)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\language\language $language, \blitze\content\services\types $content_types, $php_ext)
 	{
+		$this->db = $db;
 		$this->helper = $helper;
 		$this->language = $language;
 		$this->content_types = $content_types;
@@ -49,6 +54,7 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.user_setup'								=> 'load_block_language',
+			'core.feed_base_modify_item_sql'				=> 'hide_from_feeds',
 			'core.make_jumpbox_modify_forum_list'			=> 'update_jumpbox',
 			'core.viewonline_overwrite_location'			=> 'add_viewonline_location',
 			'blitze.sitemaker.acp_add_bulk_menu_options'	=> 'add_bulk_menu_options',
@@ -67,6 +73,22 @@ class listener implements EventSubscriberInterface
 			'lang_set' => 'common',
 		);
 		$event['lang_set_ext'] = $lang_set_ext;
+	}
+
+	/**
+	 * This excludes content forums from feeds
+	 *
+	 * @param \phpbb\event\data $event
+	 * @return void
+	 */
+	public function hide_from_feeds(\phpbb\event\data $event)
+	{
+		$sql_ary = $event['sql_ary'];
+
+		$forum_ids = array_keys($this->content_types->get_forum_types());
+		$sql_ary['WHERE'] .= ' AND ' . $this->db->sql_in_set('f.forum_id', array_map('intval', $forum_ids), true);
+
+		$event['sql_ary'] = $sql_ary;
 	}
 
 	/**
