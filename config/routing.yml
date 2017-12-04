@@ -21,16 +21,22 @@ blitze_content_type_page:
 blitze_content_type_filter:
     path: /content/{type}/{filter_type}/{filter_value}
     defaults: { _controller: blitze.content.main.controller:index, page: 1 }
+    options:
+        utf8: true
 
 blitze_content_type_filter_page:
     path: /content/{type}/{filter_type}/{filter_value}/page/{page}
     defaults: { _controller: blitze.content.main.controller:index, page: 1 }
     requirements:
         page: \d+
+    options:
+        utf8: true
 
 blitze_content_filter:
     path: /content/{filter_type}/{filter_value}
     defaults: { _controller: blitze.content.main.controller:filter }
+    options:
+        utf8: true
 
 blitze_content_types:
     path: /content
@@ -41,6 +47,8 @@ blitze_content_filter_page:
     defaults: { _controller: blitze.content.main.controller:filter, page: 1 }
     requirements:
         page: \d+
+    options:
+        utf8: true
 
 blitze_content_multi_filter:
     path: /content/filter
@@ -57,3 +65,7 @@ blitze_content_show_comments_page:
     defaults: { _controller: blitze.content.main.controller:show }
     requirements:
         page: \d+
+
+blitze_content_feeds:
+    resource: routing_feed.yml
+    prefix: /feed

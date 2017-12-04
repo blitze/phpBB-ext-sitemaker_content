@@ -3,13 +3,13 @@ parameters:
     tables.blitze.content_fields: '%core.table_prefix%sm_content_fields'
 
 imports:
-    - { resource: actions.yml }
-    - { resource: blocks.yml }
-    - { resource: controllers.yml }
-    - { resource: form.yml }
-    - { resource: listeners.yml }
-    - { resource: template.yml }
-    - { resource: views.yml }
+    - { resource: services_actions.yml }
+    - { resource: services_blocks.yml }
+    - { resource: services_controllers.yml }
+    - { resource: services_form.yml }
+    - { resource: services_listeners.yml }
+    - { resource: services_template.yml }
+    - { resource: services_views.yml }
 
 services:
 
@@ -49,6 +49,16 @@ services:
             - '@blitze.sitemaker.forum.data'
             - '@blitze.content.topic'
             - '%core.root_path%'
+            - '%core.php_ext%'
+
+    blitze.content.feed:
+        class: blitze\content\services\feed
+        arguments:
+            - '@config'
+            - '@controller.helper'
+            - '@symfony_request'
+            - '@template'
+            - '@user'
             - '%core.php_ext%'
 
     blitze.content.fields:

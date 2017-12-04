@@ -72,6 +72,7 @@ class portal extends base_view
 	{
 		$this->build_index_query($filters);
 
+		$max_update_time = 0;
 		$total_topics = $this->forum->get_topics_count();
 		$items_per_page = $this->config['topics_per_page'];
 		$start = ($page - 1) * $items_per_page;
@@ -90,17 +91,19 @@ class portal extends base_view
 				$forums_data[$post['forum_id']][$topic_id] = $post;
 			}
 
-			$this->display_filtered_topics($forums_data, $topics_data, $users_cache);
+			$this->display_filtered_topics($forums_data, $topics_data, $users_cache, $max_update_time);
 		}
+		return $max_update_time;
 	}
 
 	/**
 	 * @param array $forums_data
 	 * @param array $topics_data
 	 * @param array $users_cache
+	 * @param int $max_update_time
 	 * @return void
 	 */
-	protected function display_filtered_topics(array $forums_data, array $topics_data, array $users_cache)
+	protected function display_filtered_topics(array $forums_data, array $topics_data, array $users_cache, &$max_update_time)
 	{
 		$update_count = array();
 		foreach ($forums_data as $forum_id => $posts_data)
@@ -120,9 +123,10 @@ class portal extends base_view
 			foreach ($posts_data as $topic_id => $post_data)
 			{
 				$topic_data	= $topics_data[$topic_id];
-				$topic = $this->fields->show($content_type, $topic_data, $post_data, $users_cache, $attachments, $update_count, $topic_tracking_info);
+				$topic_data = $this->fields->show($content_type, $topic_data, $post_data, $users_cache, $attachments, $update_count, $topic_tracking_info);
 
-				$this->template->assign_block_vars('topicrow', $topic);
+				$this->template->assign_block_vars('topicrow', $topic_data);
+				$max_update_time = max($max_update_time, $topic_data['UPDATED']);
 			}
 		}
 	}

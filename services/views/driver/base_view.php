@@ -108,7 +108,7 @@ abstract class base_view implements views_interface
 			));
 		}
 
-		$this->display_topics($entity, $items_per_page, $start, $topic_data_overwrite);
+		return $this->display_topics($entity, $items_per_page, $start, $topic_data_overwrite);
 	}
 
 	/**
@@ -116,7 +116,7 @@ abstract class base_view implements views_interface
 	 * @param int $items_per_page
 	 * @param int $start
 	 * @param array $topic_data_overwrite
-	 * @return void
+	 * @return int
 	 */
 	protected function display_topics(\blitze\content\model\entity\type $entity, $items_per_page = 1, $start = 0, array $topic_data_overwrite = array())
 	{
@@ -130,17 +130,23 @@ abstract class base_view implements views_interface
 		$this->fields->prepare_to_show($entity, array_keys($topics_data), $entity->get_summary_fields(), $entity->get_summary_tpl(), 'summary');
 
 		$update_count = array();
+		$max_update_time = 0;
+
 		foreach ($posts_data as $topic_id => $posts)
 		{
 			$post_data	= array_shift($posts);
 			$topic_data	= $topics_data[$topic_id];
-
-			$this->template->assign_block_vars('topicrow', array_merge(
+			$topic_data = array_merge(
 				$this->fields->show($content_type, $topic_data, $post_data, $users_cache, $attachments, $update_count, $topic_tracking_info),
 				$topic_data_overwrite
-			));
+			);
+
+			$this->template->assign_block_vars('topicrow', $topic_data);
+			$max_update_time = max($max_update_time, $topic_data['UPDATED']);
 		}
 		unset($topics_data, $posts_data, $users_cache, $attachments, $topic_tracking_info);
+
+		return $max_update_time;
 	}
 
 	/**

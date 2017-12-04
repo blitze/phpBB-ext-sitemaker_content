@@ -1,0 +1,37 @@
+blitze_content_type_feed:
+    path: /content/{type}
+    defaults: { _controller: blitze.content.main.controller:index, page: 1, _format: 'xml' }
+
+blitze_content_type_feed_page:
+    path: /content/{type}/page/{page}
+    defaults: { _controller: blitze.content.main.controller:index, page: 1, _format: 'xml' }
+    requirements:
+        page: \d+
+
+blitze_content_type_filter_feed:
+    path: /content/{type}/{filter_type}/{filter_value}
+    defaults: { _controller: blitze.content.main.controller:index, page: 1, _format: 'xml' }
+    options:
+        utf8: true
+
+blitze_content_type_filter_feed_page:
+    path: /content/{type}/{filter_type}/{filter_value}/page/{page}
+    defaults: { _controller: blitze.content.main.controller:index, page: 1, _format: 'xml' }
+    requirements:
+        page: \d+
+    options:
+        utf8: true
+
+blitze_content_filter_feed:
+    path: /content/{filter_type}/{filter_value}
+    defaults: { _controller: blitze.content.main.controller:filter, _format: 'xml' }
+    options:
+        utf8: true
+
+blitze_content_filter_feed_page:
+    path: /content/{filter_type}/{filter_value}/page/{page}
+    defaults: { _controller: blitze.content.main.controller:filter, page: 1, _format: 'xml' }
+    requirements:
+        page: \d+
+    options:
+        utf8: true

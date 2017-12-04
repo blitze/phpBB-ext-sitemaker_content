@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="{{ FEED_LANG }}">
+
+	<link rel="self" type="application/atom+xml" href="{{ SELF_LINK }}" />
+
+	{% if not FEED_TITLE is empty %}<title>{{ FEED_TITLE }}</title>{% endif %}
+
+	{% if not FEED_SUBTITLE is empty %}<subtitle>{{ FEED_SUBTITLE }}</subtitle>{% endif %}
+
+	{% if not FEED_LINK is empty %}<link href="{{ FEED_LINK }}" />{% endif %}
+
+	<updated>{{ FEED_UPDATED|date("c") }}</updated>
+
+	<author><name><![CDATA[{{ FEED_AUTHOR }}]]></name></author>
+	<id>{{ SELF_LINK }}</id>
+
+	{% for row in loops.topicrow %}
+	{%- set link = BOARD_URL ~ row.TOPIC_URL -%}
+	<entry>
+		{% if not row.USERNAME is empty %}<author><name><![CDATA[{{ row.USERNAME }}]]></name></author>{% endif %}
+
+		<updated>{{ row.UPDATED|date("c") }}</updated>
+
+		{% if not row.TOPIC_DATE is empty %}<published>{{ row.TOPIC_DATE|date("c") }}</published>{% endif %}
+
+		<id>{{ link }}</id>
+		<link href="{{ link }}"/>
+		<title type="html"><![CDATA[{{ row.TOPIC_TITLE }}]]></title>
+
+		{% if not row.category is empty and row.category_name is defined and row.category_name != '' %}
+			<category term="{{ row.category_name }}" scheme="{{ row.category }}" label="{{ row.category_name }}"/>
+		{% endif %}
+
+		<content type="html" xml:base="{{ link }}"><![CDATA[
+{{ row.FIELDS.all|join }}
+]]></content>
+	</entry>
+	{% endfor %}
+</feed>

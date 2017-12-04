@@ -95,6 +95,7 @@ class topic
 			array(
 				'POST_ID'				=> $post_data['post_id'],
 				'POSTER_ID'				=> $post_data['poster_id'],
+				'UPDATED'				=> max($post_data['post_edit_time'], $topic_data['topic_time']),
 				'MESSAGE'				=> $this->get_parsed_text($post_data, $attachments, $update_count),
 
 				'S_TOPIC_TYPE'			=> $topic_data['topic_type'],

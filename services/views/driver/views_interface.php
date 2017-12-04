@@ -48,7 +48,7 @@ interface views_interface
 	 * @param \blitze\content\model\entity\type $entity
 	 * @param int $page
 	 * @param array $filters
-	 * @return void
+	 * @return int
 	 */
 	public function render_index(\blitze\content\model\entity\type $entity, $page, array $filters);
 

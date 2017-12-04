@@ -29,11 +29,14 @@ class main_controller
 	/* @var \blitze\content\services\comments\comments_interface */
 	protected $comments;
 
-	/** @var \blitze\content\services\poll */
-	protected $poll;
-
 	/** @var \blitze\content\services\types */
 	protected $content_types;
+
+	/** @var \blitze\content\services\feed */
+	protected $feed;
+
+	/** @var \blitze\content\services\poll */
+	protected $poll;
 
 	/** @var \blitze\content\services\views\views_factory */
 	protected $views_factory;
@@ -47,11 +50,12 @@ class main_controller
 	 * @param \phpbb\template\template								$template			Template object
 	 * @param \phpbb\user											$user				User object
 	 * @param \blitze\content\services\comments\comments_interface	$comments			Comments object
-	 * @param \blitze\content\services\poll							$poll				Poll object
 	 * @param \blitze\content\services\types						$content_types		Content types object
+	 * @param \blitze\content\services\feed							$feed				Feed object
+	 * @param \blitze\content\services\poll							$poll				Poll object
 	 * @param \blitze\content\services\views\views_factory			$views_factory		Views handlers
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\comments\comments_interface $comments, \blitze\content\services\poll $poll, \blitze\content\services\types $content_types, \blitze\content\services\views\views_factory $views_factory)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\comments\comments_interface $comments, \blitze\content\services\types $content_types, \blitze\content\services\feed $feed, \blitze\content\services\poll $poll, \blitze\content\services\views\views_factory $views_factory)
 	{
 		$this->db = $db;
 		$this->helper = $helper;
@@ -59,8 +63,9 @@ class main_controller
 		$this->template = $template;
 		$this->user = $user;
 		$this->comments = $comments;
-		$this->poll = $poll;
 		$this->content_types = $content_types;
+		$this->feed = $feed;
+		$this->poll = $poll;
 		$this->views_factory = $views_factory;
 	}
 
@@ -68,12 +73,13 @@ class main_controller
 	 * Display list of topics for content type
 	 *
 	 * @param string $type
-	 * @param int $page
+	 * @param string $_format
 	 * @param string $filter_type
 	 * @param mixed $filter_value
+	 * @param int $page
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function index($type, $page = 1, $filter_type = '', $filter_value = '')
+	public function index($type, $_format = '', $filter_type = '', $filter_value = '', $page = 1)
 	{
 		$entity = $this->get_type_entity($type);
 		$filter = $this->get_filter($filter_type, $filter_value);
@@ -81,9 +87,9 @@ class main_controller
 		$this->template->assign_vars($entity->to_array());
 
 		$view_handler = $this->views_factory->get($entity->get_content_view());
-		$view_handler->render_index($entity, $page, $filter);
+		$max_update_time = $view_handler->render_index($entity, $page, $filter);
 
-		return $this->helper->render($view_handler->get_index_template(), $entity->get_content_langname());
+		return $this->get_response($max_update_time, $_format, $view_handler->get_index_template(), $entity->get_content_langname());
 	}
 
 	/**
@@ -152,20 +158,21 @@ class main_controller
 	/**
 	 * Filter topics by a filter
 	 *
+	 * @param string $_format
 	 * @param string $filter_type
 	 * @param mixed $filter_value
 	 * @param int $page
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function filter($filter_type = '', $filter_value = '', $page = 1)
+	public function filter($_format = '', $filter_type = '', $filter_value = '', $page = 1)
 	{
 		$filter = $this->get_filter($filter_type, $filter_value);
 
 		/** @var \blitze\content\services\views\driver\portal $view_handler */
 		$view_handler = $this->views_factory->get('blitze.content.view.portal');
-		$view_handler->render_filter($filter, $page);
+		$max_update_time = $view_handler->render_filter($filter, $page);
 
-		return $this->helper->render($view_handler->get_index_template());
+		return $this->get_response($max_update_time, $_format, $view_handler->get_index_template());
 	}
 
 	/**
@@ -240,9 +247,26 @@ class main_controller
 		}
 		else
 		{
-			$filters = $this->request->variable('filters', array('' => array('' => '')));
+			$filters = $this->request->variable('filters', array('' => array('' => '')), true);
 		}
 
 		return array_filter($filters);
+	}
+
+	/**
+	 * @param int $max_update_time
+	 * @param string $_format
+	 * @param string $view_template
+	 * @param string $page_title
+	 * @return string
+	 */
+	protected function get_response($max_update_time, $_format, $view_template, $page_title = '')
+	{
+		if ($_format === 'xml')
+		{
+			return $this->feed->render($max_update_time);
+		}
+
+		return $this->helper->render($view_template, $page_title);
 	}
 }

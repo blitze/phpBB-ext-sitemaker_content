@@ -5,6 +5,16 @@ services:
         tags:
             - { name: event.listener }
 
+    blitze.content.event.feed:
+        class: blitze\content\event\feed
+        arguments:
+            - '@config'
+            - '@dbal.conn'
+            - '@template'
+            - '@blitze.content.types'
+        tags:
+            - { name: event.listener }
+
     blitze.content.event.filters:
         class: blitze\content\event\filters
         arguments:
@@ -15,7 +25,6 @@ services:
     blitze.content.event.listener:
         class: blitze\content\event\listener
         arguments:
-            - '@dbal.conn'
             - '@controller.helper'
             - '@language'
             - '@blitze.content.types'

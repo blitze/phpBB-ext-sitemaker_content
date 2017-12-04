@@ -1,0 +1,3 @@
+	{% for row in CONTENT_FEEDS %}
+		<link rel="alternate" type="application/atom+xml" title="{{ lang('FEED') }} - {{ lang('CONTENT_TYPES') }} - {{ row.langname }}" href="{{ path('blitze_content_type_feed', { type : row.type } ) }}">
+	{% endfor %}

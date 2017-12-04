@@ -24,8 +24,9 @@ services:
             - '@template'
             - '@user'
             - '@blitze.content.comments'
-            - '@blitze.content.poll'
             - '@blitze.content.types'
+            - '@blitze.content.feed'
+            - '@blitze.content.poll'
             - '@blitze.content.views.factory'
 
     blitze.content.mcp.controller:
