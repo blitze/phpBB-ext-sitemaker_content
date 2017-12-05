@@ -93,7 +93,6 @@ services:
             - '@config'
             - '@pagination'
             - '@template'
-            - '@template_context'
             - '@blitze.sitemaker.util'
             - '%core.root_path%'
             - '%core.php_ext%'

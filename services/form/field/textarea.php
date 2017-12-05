@@ -25,9 +25,6 @@ class textarea extends base
 	/** @var \phpbb\template\template */
 	protected $template;
 
-	/** @var \phpbb\template\context */
-	protected $template_context;
-
 	/** @var \blitze\sitemaker\services\util */
 	protected $util;
 
@@ -47,12 +44,11 @@ class textarea extends base
 	 * @param \phpbb\config\config						$config				Config object
 	 * @param \phpbb\pagination							$pagination			Pagination object
 	 * @param \phpbb\template\template					$template			Template object
-	 * @param \phpbb\template\context					$template_context	Template context object
 	 * @param \blitze\sitemaker\services\util			$util				Sitemaker utility object
 	 * @param string									$phpbb_root_path	Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	 */
-	public function __construct(\phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\sitemaker\services\template $ptemplate, \phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\pagination $pagination, \phpbb\template\template $template, \phpbb\template\context $template_context, \blitze\sitemaker\services\util $util, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\sitemaker\services\template $ptemplate, \phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\pagination $pagination, \phpbb\template\template $template, \blitze\sitemaker\services\util $util, $phpbb_root_path, $php_ext)
 	{
 		parent::__construct($language, $request, $ptemplate);
 
@@ -60,7 +56,6 @@ class textarea extends base
 		$this->config = $config;
 		$this->pagination = $pagination;
 		$this->template = $template;
-		$this->template_context = $template_context;
 		$this->util = $util;
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $php_ext;
@@ -289,7 +284,6 @@ class textarea extends base
 
 		display_custom_bbcodes();
 
-		$dataref = $this->template_context->get_data_ref();
-		$this->ptemplate->assign_block_vars_array('custom_tags', $dataref['custom_tags'] ?: array());
+		$this->ptemplate->assign_block_vars_array('custom_tags', $this->template->retrieve_block_vars('custom_tags', array()));
 	}
 }

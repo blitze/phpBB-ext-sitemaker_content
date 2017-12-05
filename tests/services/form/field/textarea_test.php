@@ -49,13 +49,6 @@ class textarea_test extends base_form_field
 			->disableOriginalConstructor()
 			->getMock();
 
-		$template_context = $this->getMockBuilder('\phpbb\template\context')
-			->disableOriginalConstructor()
-			->getMock();
-		$template_context->expects($this->any())
-			->method('get_data_ref')
-			->willReturn(array());
-
 		$tpl_data = array();
 		$template = $this->getMockBuilder('\phpbb\template\template')
 			->getMock();
@@ -74,6 +67,9 @@ class textarea_test extends base_form_field
 			->will($this->returnCallback(function($key, $data) use (&$tpl_data) {
 				$tpl_data[$key][] = $data;
 			}));
+		$template->expects($this->any())
+			->method('retrieve_block_vars')
+			->willReturn(array());
 		$template->expects($this->any())
 			->method('assign_display')
 			->will($this->returnCallback(function() use (&$tpl_data) {
@@ -115,7 +111,7 @@ class textarea_test extends base_form_field
 			->disableOriginalConstructor()
 			->getMock();
 
-		return new textarea($this->language, $this->request, $this->ptemplate, $auth, $config, $pagination, $template, $template_context, $this->util, $phpbb_root_path, $phpEx);
+		return new textarea($this->language, $this->request, $this->ptemplate, $auth, $config, $pagination, $template, $this->util, $phpbb_root_path, $phpEx);
 	}
 
 	public function test_name()
