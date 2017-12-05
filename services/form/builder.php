@@ -218,8 +218,7 @@ class builder
 	 */
 	public function generate_preview($content_type, array $post_data)
 	{
-		$dataref = $this->template_context->get_data_ref();
-		$post_data['MESSAGE'] = $dataref['.'][0]['PREVIEW_MESSAGE'];
+		$post_data['MESSAGE'] = $this->template_context->get_root_ref()['PREVIEW_MESSAGE'];
 
 		return $this->get_content_view($content_type, $post_data, 'detail');
 	}

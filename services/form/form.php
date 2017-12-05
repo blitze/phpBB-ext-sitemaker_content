@@ -76,14 +76,12 @@ class form
 
 		add_form_key($form_key);
 
-		$rootref = $this->template_context->get_root_ref();
-
 		$this->form = array(
 			'form_name'		=> $form_name,
 			'form_action'	=> $action,
 			'form_legend'	=> $legend,
 			'form_method'	=> $method,
-			'form_key'		=> $rootref['S_FORM_TOKEN'],
+			'form_key'		=> $this->template_context->get_root_ref()['S_FORM_TOKEN'],
 		);
 		unset($rootref);
 
