@@ -28,12 +28,12 @@ abstract class choice extends base
 	 */
 	public function get_field_value(array $data)
 	{
-		$default = $this->get_default_value($data);
-		$value = $this->request->variable($data['field_name'], $default, true);
+		$value = $this->get_default_value($data);
 
-		if (empty($value) && $this->request->server('REQUEST_METHOD') !== 'POST')
+		// form has been submitted so get value from request object
+		if ($this->request->is_set_post('cp'))
 		{
-			$value = $default;
+			$value = $this->request->variable($data['field_name'], $value, true);
 		}
 
 		return $value;

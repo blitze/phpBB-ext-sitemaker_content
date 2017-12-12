@@ -67,7 +67,8 @@ class location extends base
 	 */
 	public function get_field_value(array $data)
 	{
-		if ($this->request->server('REQUEST_METHOD') === 'POST')
+		// form has been submitted so get value from request object
+		if ($this->request->is_set_post('cp'))
 		{
 			return array_filter($this->request->variable($data['field_name'], array('' => ''), true));
 		}
@@ -132,7 +133,8 @@ class location extends base
 	 */
 	protected function display_active_map(array $data)
 	{
-		if ($this->request->server('REQUEST_METHOD') !== 'POST')
+		// do not include assets on preview page as form already handles this
+		if (!$this->request->is_set_post('cp'))
 		{
 			$this->util->add_assets(array(
 				'js'	=> array(
