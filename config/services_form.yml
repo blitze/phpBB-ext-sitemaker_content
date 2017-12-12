@@ -47,6 +47,16 @@ services:
         tags:
             - { name: sitemaker.content.form.field }
 
+    blitze.content.form.field.location:
+        class: blitze\content\services\form\field\location
+        parent: blitze.content.form.field.base
+        arguments:
+            - '@config'
+            - '@user'
+            - '@blitze.sitemaker.util'
+        tags:
+            - { name: sitemaker.content.form.field }
+
     blitze.content.form.field.number:
         class: blitze\content\services\form\field\number
         parent: blitze.content.form.field.base

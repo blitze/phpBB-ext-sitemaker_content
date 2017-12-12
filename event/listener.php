@@ -52,6 +52,7 @@ class listener implements EventSubscriberInterface
 			'core.make_jumpbox_modify_forum_list'			=> 'update_jumpbox',
 			'core.viewonline_overwrite_location'			=> 'add_viewonline_location',
 			'blitze.sitemaker.acp_add_bulk_menu_options'	=> 'add_bulk_menu_options',
+			'blitze.sitemaker.acp_display_settings_form'	=> 'load_settings_language',
 		);
 	}
 
@@ -134,5 +135,14 @@ class listener implements EventSubscriberInterface
 		}
 
 		return trim($text);
+	}
+
+	/**
+	 * @param \phpbb\event\data $event
+	 * @return void
+	 */
+	public function load_settings_language()
+	{
+		$this->language->add_lang('settings', 'blitze/content');
 	}
 }

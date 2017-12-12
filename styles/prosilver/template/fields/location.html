@@ -1,0 +1,17 @@
+{% if show_input %}
+    {%- set view = 'map' -%}
+    {%- set autoComplete = ' data-autocomplete="true"' -%}
+    <input type="text" class="inputbox autowidth search-location" id="search-{{ field_name }}" size="55" />
+
+    <input type="hidden" id="{{ field_name }}-address" name="{{ field_name }}[address]" value="{{ field_value.address }}" />
+    <input type="hidden" id="{{ field_name }}-latitude" name="{{ field_name }}[latitude]" value="{{ field_value.latitude }}" />
+    <input type="hidden" id="{{ field_name }}-longitude" name="{{ field_name }}[longitude]" value="{{ field_value.longitude }}" />
+    <input type="hidden" id="{{ field_name }}-place" name="{{ field_name }}[place]" value="{{ field_value.place }}" />
+    <input type="hidden" id="{{ field_name }}-map-type" name="{{ field_name }}[map_type]" value="{{ field_value.map_type }}" />
+    <input type="hidden" id="{{ field_name }}-zoom" name="{{ field_name }}[zoom]" value="{{ field_value.zoom }}" />
+{% else %}
+    {%- set view = 'loc' -%}
+{% endif %}
+{%- set map_types = field_props.options|length ? field_props.options : [ 'roadmap', 'satellite', 'hybrid', 'terrain' ] -%}
+{%- set map_type = field_value.map_type in map_types ? field_value.map_type : map_types[0] -%}
+<div class="location-map" id="{{ view ~ '-' ~ field_name }}" data-map-type="{{ map_type }}" data-place="{{ field_value.place }}" data-address="{{ field_value.address }}" data-latitude="{{ field_value.latitude|default(0) }}" data-longitude="{{ field_value.longitude|default(0) }}" data-zoom="{{ field_props.map_zoom ? field_props.map_zoom : field_value.zoom }}" data-width="{{ field_props.map_width }}" data-height="{{ field_props.map_height }}" data-map-types="{{ map_types|join(',') }}"{{ autoComplete }}></div>

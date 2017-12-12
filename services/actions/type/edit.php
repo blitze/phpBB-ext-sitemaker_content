@@ -75,7 +75,11 @@ class edit extends add
 		foreach ($collection as $entity)
 		{
 			/** @var \blitze\content\services\form\field\field_interface $field_instance */
-			$field_instance = $this->available_fields[$entity->get_field_type()];
+			if (!($field_instance = $this->available_fields[$entity->get_field_type()]))
+			{
+				continue;
+			}
+
 			$field_data = $entity->to_array();
 			$field_data['field_props'] = array_replace_recursive($field_instance->get_default_props(), $field_data['field_props']);
 
