@@ -1,4 +1,5 @@
 <div class="field-option">
+	<i class="fa fa-bars" aria-hidden="true"></i>
 	<input type="{{ type }}" id="{{ field_name ~ '-default_' ~ index }}" class="field-defaults" name="field_defaults[{{ field_name }}][]" value="{{ option }}"{{ checked ? ' checked="checked"' : '' }} />
 	<input type="text" id="{{ field_name ~ '-option_' ~ index }}" name="field_options[{{ field_name }}][]" class="field-option-input ui-corner-all" value="{{ option }}" />
 	<a href="#" class="remove-option"><span class="ui-icon ui-icon-closethick">Delete</span></a>

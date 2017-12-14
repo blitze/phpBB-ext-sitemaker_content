@@ -16,6 +16,13 @@
 	var trans = window.trans || {};
 	var Twig = window.Twig || {};
 
+	var makeOptionsSortable = function(element) {
+		element.sortable({
+			placeholder: "ui-state-highlight",
+			forcePlaceholderSize: true,
+		}).disableSelection();
+	};
+
 	var addFieldOption = function($element) {
 		var fieldName = $element.attr('id').substring(11);
 		var ocontainer = $('#' + fieldName + '-options-container');
@@ -53,6 +60,7 @@
 		$.getJSON(window.ajaxUrl + '&type=' + fieldType, data, function(row) {
 			containerObj.append(row).accordion('refresh').accordion('option', 'active', items);
 			$('html,body').animate({ scrollTop: $('#cfield-' + fieldName).offset().top }, 500, 'swing');
+			makeOptionsSortable(containerObj.find('#' + fieldName + '-options-container'));
 			setAvailableFields();
 		});
 	};
@@ -266,6 +274,26 @@
 			toggleFieldOptionDefaultsType($(this));
 		});
 
+		containerObj.on('blur', '.field_label', function() {
+			setAvailableFields();
+		});
+
+		containerObj.on('keyup', '.field-option input[type="text"]', function() {
+			$(this).prev().val($(this).val());
+		});
+
+		containerObj.on('click', 'input.field-defaults[type=radio]', function() {
+			// Credit: http://smoothprogramming.com/jquery/toggle-radio-button-using-jquery/
+			var previousValue = $(this).data('storedValue');
+			if (previousValue) {
+				$(this).prop('checked', !previousValue);
+				$(this).data('storedValue', !previousValue);
+			} else {
+				$(this).data('storedValue', true);
+				$("input.field-defaults[type=radio]:not(:checked)").data("storedValue", false);
+			}
+		});
+
 		var stop = false;
 
 		containerObj.accordion({
@@ -290,21 +318,7 @@
 				}
 			});
 
-		$('#fields-container').on('blur', '.field_label', function() {
-			setAvailableFields();
-		}).on('keyup', '.field-option input[type="text"]', function() {
-			$(this).prev().val($(this).val());
-		}).on('click', 'input.field-defaults[type=radio]', function() {
-			// Credit: http://smoothprogramming.com/jquery/toggle-radio-button-using-jquery/
-			var previousValue = $(this).data('storedValue');
-			if (previousValue) {
-				$(this).prop('checked', !previousValue);
-				$(this).data('storedValue', !previousValue);
-			} else {
-				$(this).data('storedValue', true);
-				$("input.field-defaults[type=radio]:not(:checked)").data("storedValue", false);
-			}
-		});
+		makeOptionsSortable(containerObj.find('.field-options-list'));
 
 		$('body').on('click', '.toggle', function(e) {
 			var id = $(this).attr('id');
