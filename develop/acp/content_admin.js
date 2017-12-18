@@ -19,7 +19,7 @@
 	var makeOptionsSortable = function(element) {
 		element.sortable({
 			placeholder: "ui-state-highlight",
-			forcePlaceholderSize: true,
+			forcePlaceholderSize: true
 		}).disableSelection();
 	};
 
