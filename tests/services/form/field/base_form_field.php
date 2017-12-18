@@ -110,6 +110,14 @@ abstract class base_form_field extends \phpbb_test_case
 			->with($this->anything())
 			->will($this->returnValueMap($variable_map));
 
+		if (sizeof($variable_map))
+		{
+			$this->request->expects($this->any())
+				->method('is_set_post')
+				->with('cp')
+				->willReturn(true);
+		}
+
 		$form_field_class = '\\blitze\\content\\services\\form\\field\\' . $form_field;
 		return new $form_field_class($this->language, $this->request, $this->ptemplate);
 	}

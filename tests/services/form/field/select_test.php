@@ -106,9 +106,7 @@ class select_test extends base_form_field
 						'multi_select'	=> false,
 					),
 				),
-				array(
-					array('foo', '', true, request_interface::REQUEST, ''),
-				),
+				array(),
 				'<select id="smc-foo" name="foo" class="inputbox autowidth">' .
 					'<option value="option1">option1</option>' .
 					'<option value="option2" selected="selected">option2</option>' .
@@ -154,9 +152,7 @@ class select_test extends base_form_field
 						'multi_select'	=> true,
 					),
 				),
-				array(
-					array('foo', array('option1', 'option2'), true, request_interface::REQUEST, array()),
-				),
+				array(),
 				'<select id="smc-foo" name="foo[]" multiple="multiple" class="inputbox autowidth">' .
 					'<option value="option1" selected="selected">option1</option>' .
 					'<option value="option2" selected="selected">option2</option>' .

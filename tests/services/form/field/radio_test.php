@@ -103,9 +103,7 @@ class radio_test extends base_form_field
 						'defaults'		=> array('option2'),
 					),
 				),
-				array(
-					array('foo', '', true, request_interface::REQUEST, ''),
-				),
+				array(),
 				'<label for="smc-foo-0"><input type="radio" id="smc-foo-0" name="foo" value="option1" /> option1</label>' .
 				'<label for="smc-foo-1"><input type="radio" id="smc-foo-1" name="foo" value="option2" checked="checked" /> option2</label>' .
 				'<label for="smc-foo-2"><input type="radio" id="smc-foo-2" name="foo" value="option3" /> option3</label>',

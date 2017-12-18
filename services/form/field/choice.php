@@ -24,6 +24,18 @@ abstract class choice extends base
 	}
 
 	/**
+	 * @param array $data
+	 * @return string
+	 */
+	protected function get_default_value(array $data)
+	{
+		$default = $data['field_value'] ?: ($data['field_props']['defaults'] ?: array(0 => ''));
+		$default = is_array($default) ? $default : explode("\n", $default);
+
+		return ($data['field_props']['multi_select']) ? $default : array_shift($default);
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public function get_field_value(array $data)
@@ -94,18 +106,5 @@ abstract class choice extends base
 			}
 		}
 		$data['field_props']['options'] = $options;
-	}
-
-	/**
-	 * @param array $data
-	 * @return string
-	 */
-	protected function get_default_value(array $data)
-	{
-		$default = (array) $data['field_props']['defaults'];
-		$default = $data['field_value'] ?: $default;
-		$default = is_array($default) ? $default : explode("\n", $default);
-
-		return ($data['field_props']['multi_select']) ? $default : (string) array_shift($default);
 	}
 }

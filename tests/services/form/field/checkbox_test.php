@@ -84,7 +84,7 @@ class checkbox_test extends base_form_field
 					),
 				),
 				array(
-					array('foo', '', true, request_interface::REQUEST, ''),
+					array('foo', array(0 => ''), true, request_interface::REQUEST, array('')),
 				),
 				'<label for="smc-foo-0"><input type="checkbox" id="smc-foo-0" name="foo[]" value="option1" /> option1</label>' .
 				'<label for="smc-foo-1"><input type="checkbox" id="smc-foo-1" name="foo[]" value="option2" /> option2</label>' .
@@ -106,7 +106,7 @@ class checkbox_test extends base_form_field
 					),
 				),
 				array(
-					array('foo', '', true, request_interface::REQUEST, '2'),
+					array('foo', array(0 => '2'), true, request_interface::REQUEST, array('2')),
 				),
 				'<label for="smc-foo-0"><input type="checkbox" id="smc-foo-0" name="foo[]" value="1" /> option1</label>' .
 				'<label for="smc-foo-1"><input type="checkbox" id="smc-foo-1" name="foo[]" value="2" checked="checked" /> option2</label>' .
@@ -148,9 +148,7 @@ class checkbox_test extends base_form_field
 						'defaults'		=> array('option1', 'option3'),
 					),
 				),
-				array(
-					array('foo', '', true, request_interface::REQUEST, ''),
-				),
+				array(),
 				'<div class="left-box" style="margin-right: 1em">' .
 					'<label for="smc-foo-0"><input type="checkbox" id="smc-foo-0" name="foo[]" value="option1" checked="checked" /> option1</label><br />' .
 					'<label for="smc-foo-1"><input type="checkbox" id="smc-foo-1" name="foo[]" value="option2" /> option2</label><br />' .
