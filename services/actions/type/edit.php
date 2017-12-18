@@ -80,8 +80,9 @@ class edit extends add
 				continue;
 			}
 
+			$default_props = $field_instance->get_default_props();
 			$field_data = $entity->to_array();
-			$field_data['field_props'] = array_replace_recursive($field_instance->get_default_props(), $field_data['field_props']);
+			$field_data['field_props'] = (!empty($field_data['field_props'])) ? array_replace_recursive($default_props, $field_data['field_props']) : $default_props;
 
 			/**
 			 * Event to modify field data
