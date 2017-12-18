@@ -171,7 +171,7 @@ function initMap() {
 	 * Resize datepicker input field to appropriate size for picker type
 	 */
 	function resizeDatePickerInput($element) {
-		var width = $element.val().length || 20;
+		var width = $element.val().length || 15;
 		var adj = $element.data('range') || $element.data('multiple-dates') || 1;
 		$element.parent().width(width + (adj * 6) + '%');
 	}
