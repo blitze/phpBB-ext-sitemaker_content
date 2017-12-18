@@ -153,7 +153,7 @@ class index extends filter implements action_interface
 				$this->get_content_type_info($content_type, $base_url),
 				$this->get_topic_type_info($tpl_data['S_UNREAD_POST'], $tpl_data['TOPIC_COMMENTS'], $row),
 				$this->get_topic_status_info($tpl_data['S_POST_UNAPPROVED'], $tpl_data['S_TOPIC_DELETED'], $base_url, $row),
-				$this->get_topic_info($mode, $content_type, $u_action, $row, $post_row),
+				$this->get_topic_info($content_type, $u_action, $row),
 				$this->get_moderator_info($mode, $row['topic_id'], $tpl_data['S_TOPIC_UNAPPROVED'], false, $tpl_data['S_TOPIC_DELETED'])
 			));
 			unset($topics_data[$i]);
@@ -161,14 +161,12 @@ class index extends filter implements action_interface
 	}
 
 	/**
-	 * @param string $mode
 	 * @param string $content_type
 	 * @param string $u_action
 	 * @param array $row
-	 * @param array $post_row
 	 * @return array
 	 */
-	protected function get_topic_info($mode, $content_type, $u_action, array $row, array $post_row)
+	protected function get_topic_info($content_type, $u_action, array $row)
 	{
 		return array(
 			'ATTACH_ICON_IMG'	=> $this->get_attachment_icon($row),
