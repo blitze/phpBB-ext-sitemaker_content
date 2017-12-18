@@ -61,7 +61,6 @@
 				{% endif %}
 
 				{% if not CUSTOM_DISPLAY %}{% INCLUDE 'parts/detail_title.html' %}{% endif %}
-				{% INCLUDE 'parts/topic_tools.html' %}
 
 				{% if S_POST_UNAPPROVED %}
 				<form method="post" class="mcp_approve" action="{{ U_APPROVE_ACTION }}">
@@ -141,6 +140,10 @@
 				{% endif %}
 			{% endif %}
 
+			{% if not FIELDS.CUSTOM_DISPLAY %}
+			<div class="sm-content-footer">{{ FIELDS.footer|join(' | ') }}</div>
+			{% endif %}
+
 			{% if not S_PREVIEW && loops.page|length %}
 			<div class="clear"></div>
 			<p>&nbsp;</p>
@@ -172,25 +175,26 @@
 		{% INCLUDE 'author_contact.html' %}
 	{% endif %}
 
-	{% if S_TOOLS && loops.quickmod|length %}
-		<div class="quickmod dropdown-container dropdown-container-left dropdown-up dropdown-{{ S_CONTENT_FLOW_END }} dropdown-button-control" id="quickmod">
-			<span title="{{ lang('QUICK_MOD') }}" class="button button-secondary dropdown-trigger dropdown-select">
-				<i class="icon fa-gavel fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('QUICK_MOD') }}</span>
-				<span class="caret"><i class="icon fa-sort-down fa-fw" aria-hidden="true"></i></span>
-			</span>
-			<div class="dropdown">
-				<div class="pointer"><div class="pointer-inner"></div></div>
-				<ul class="dropdown-contents">
-				{% for quickmod in loops.quickmod %}
-					{% DEFINE QUICKMOD_AJAX = (quickmod.VALUE in ['lock', 'unlock', 'delete_topic', 'restore_topic', 'make_normal', 'make_sticky', 'make_announce', 'make_global']) %}
-					<li><a href="{{ quickmod.LINK }}"{% if definition.QUICKMOD_AJAX %} data-ajax="true" data-refresh="true"{% endif %}>{{ quickmod.TITLE }}</a></li>
-				{% endfor %}
-				</ul>
+		<div class="action-bar bar-bottom">
+			<!-- INCLUDE viewtopic_topic_tools.html -->
+			{% if S_TOOLS && loops.quickmod|length %}
+			<div class="quickmod dropdown-container dropdown-container-left dropdown-up dropdown-{{ S_CONTENT_FLOW_END }} dropdown-button-control" id="quickmod">
+				<span title="{{ lang('QUICK_MOD') }}" class="button button-secondary dropdown-trigger dropdown-select">
+					<i class="icon fa-gavel fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('QUICK_MOD') }}</span>
+					<span class="caret"><i class="icon fa-sort-down fa-fw" aria-hidden="true"></i></span>
+				</span>
+				<div class="dropdown">
+					<div class="pointer"><div class="pointer-inner"></div></div>
+					<ul class="dropdown-contents">
+					{% for quickmod in loops.quickmod %}
+						{% DEFINE QUICKMOD_AJAX = (quickmod.VALUE in ['lock', 'unlock', 'delete_topic', 'restore_topic', 'make_normal', 'make_sticky', 'make_announce', 'make_global']) %}
+						<li><a href="{{ quickmod.LINK }}"{% if definition.QUICKMOD_AJAX %} data-ajax="true" data-refresh="true"{% endif %}>{{ quickmod.TITLE }}</a></li>
+					{% endfor %}
+					</ul>
+				</div>
 			</div>
+			{% endif %}
 		</div>
-	{% endif %}
-
-		{{ topicrow.FIELDS.footer|join }}
 
 		<div class="back2top">
 			<a href="#top" class="top" title="{{ lang('BACK_TO_TOP') }}">
