@@ -1,0 +1,36 @@
+/* csslint ignore:start */
+@import "bower_components/jssocials/styles/jssocials";
+/* csslint ignore:end */
+
+.jssocials-share-link {
+	&:hover {
+		text-decoration: none;
+	}
+
+	.fa {
+		margin: 0;
+	}
+
+	.share-rounded & {
+		border-radius: 50%;
+	}
+}
+
+.share-left,
+.share-right {
+	.jssocials-share {
+		display: block;
+	}
+}
+
+.share-left {
+	float: left;
+}
+
+.share-center {
+	text-align: center;
+}
+
+.share-right {
+	float: right;
+}

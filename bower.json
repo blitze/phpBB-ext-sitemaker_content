@@ -6,6 +6,7 @@
     "fancybox": "^3.1.25",
     "imagesloaded": "^4.1.3",
     "ion.rangeSlider": "ionrangeslider#^2.1.7",
+    "jssocials": "^1.5.0",
     "spectrum": "^1.8.0"
   },
   "overrides": {
@@ -29,6 +30,10 @@
         "./css/ion.rangeSlider.*",
         "./img/*"
       ]
+    },
+    "jssocials": {
+      "main": "dist/jssocials.min.js",
+      "dependencies": null
     },
     "spectrum": {
       "dependencies": null

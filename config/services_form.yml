@@ -83,6 +83,14 @@ services:
         tags:
             - { name: sitemaker.content.form.field }
 
+    blitze.content.form.field.share:
+        class: blitze\content\services\form\field\share
+        parent: blitze.content.form.field.base
+        arguments:
+            - '@blitze.sitemaker.util'
+        tags:
+            - { name: sitemaker.content.form.field }
+
     blitze.content.form.field.telephone:
         class: blitze\content\services\form\field\telephone
         parent: blitze.content.form.field.base

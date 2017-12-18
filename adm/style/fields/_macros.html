@@ -327,6 +327,97 @@
 	</dl>
 {% endmacro %}
 
+{% macro share(data) %}
+    {% import _self as forms %}
+	{%- set share_themes = [
+		{value: 'flat', label: lang('SHARE_THEME_FLAT')},
+		{value: 'classic', label: lang('SHARE_THEME_CLASSIC')},
+		{value: 'minima', label: lang('SHARE_THEME_MINI')},
+		{value: 'plain', label: lang('SHARE_THEME_PLAIN')},
+	] -%}
+	<dl>
+		<dt><label for="{{ data.FIELD_NAME ~ '-theme' }}">{{ lang('SHARE_THEME') ~ lang('COLON') }}</label></dt>
+		<dd>
+			{{ forms.dropdown(data.FIELD_NAME ~ '-theme', 'field_props[' ~ data.FIELD_NAME ~ '][theme]', data.FIELD_PROPS.theme, share_themes) }}
+		</dd>
+	</dl>
+	<dl>
+		<dt><label for="{{ data.FIELD_NAME ~ '-sharein' }}">{{ lang('SHARE_STRATEGY') ~ lang('COLON') }}</label></dt>
+		<dd>
+			{{ forms.pickem(data.FIELD_NAME ~ '-sharein', 'field_props[' ~ data.FIELD_NAME ~ '][sharein]', 'blank', (data.FIELD_PROPS.sharein === 'blank'), 'radio', 'SHARE_STRATEGY_BLANK') }}
+			{{ forms.pickem(data.FIELD_NAME ~ '-sharein', 'field_props[' ~ data.FIELD_NAME ~ '][sharein]', 'popup', (data.FIELD_PROPS.sharein === 'popup'), 'radio', 'SHARE_STRATEGY_POPUP') }}
+			{{ forms.pickem(data.FIELD_NAME ~ '-sharein', 'field_props[' ~ data.FIELD_NAME ~ '][sharein]', 'self', (data.FIELD_PROPS.sharein === 'self'), 'radio', 'SHARE_STRATEGY_SELF') }}
+		</dd>
+	</dl>
+	<dl>
+		<dt><label for="{{ data.FIELD_NAME ~ '-show-count' }}">{{ lang('SHARE_SHOW_COUNT') ~ lang('COLON') }}</label></dt>
+		<dd>
+			{{ forms.pickem(data.FIELD_NAME ~ '-show-count', 'field_props[' ~ data.FIELD_NAME ~ '][show_count]', 'false', data.FIELD_PROPS.show_count === 'false', 'radio', 'NO') }}
+			{{ forms.pickem(data.FIELD_NAME ~ '-show-count', 'field_props[' ~ data.FIELD_NAME ~ '][show_count]', 'true', data.FIELD_PROPS.show_count === 'true', 'radio', 'SHARE_SHOW_COUNT_OUTSIDE') }}
+			{{ forms.pickem(data.FIELD_NAME ~ '-show-count', 'field_props[' ~ data.FIELD_NAME ~ '][show_count]', 'inside', data.FIELD_PROPS.show_count === 'inside', 'radio', 'SHARE_SHOW_COUNT_INSIDE') }}
+		</dd>
+	</dl>
+	<dl>
+		<dt><label for="{{ data.FIELD_NAME ~ '-show-label' }}">{{ lang('SHARE_SHOW_LABEL') ~ lang('COLON') }}</label></dt>
+		<dd>
+			{{ forms.pickem(data.FIELD_NAME ~ '-show-label', 'field_props[' ~ data.FIELD_NAME ~ '][show_label]', 'true', data.FIELD_PROPS.show_label, 'radio', 'YES') }}
+			{{ forms.pickem(data.FIELD_NAME ~ '-show-label', 'field_props[' ~ data.FIELD_NAME ~ '][show_label]', 'false', data.FIELD_PROPS.show_label, 'radio', 'NO') }}
+		</dd>
+	</dl>
+	<dl>
+		<dt><label for="{{ data.FIELD_NAME ~ '-placement' }}">{{ lang('SHARE_PLACEMENT') ~ lang('COLON') }}</label></dt>
+		<dd>
+			{{ forms.pickem(data.FIELD_NAME ~ '-placement', 'field_props[' ~ data.FIELD_NAME ~ '][placement]', '', !data.FIELD_PROPS.placement, 'radio', 'SHARE_PLACEMENT_DEFAULT') }}
+			{{ forms.pickem(data.FIELD_NAME ~ '-placement', 'field_props[' ~ data.FIELD_NAME ~ '][placement]', 'share-left', data.FIELD_PROPS.placement === 'share-left', 'radio', 'SHARE_PLACEMENT_LEFT') }}
+			{{ forms.pickem(data.FIELD_NAME ~ '-placement', 'field_props[' ~ data.FIELD_NAME ~ '][placement]', 'share-center', data.FIELD_PROPS.placement === 'share-center', 'radio', 'SHARE_PLACEMENT_CENTER') }}
+			{{ forms.pickem(data.FIELD_NAME ~ '-placement', 'field_props[' ~ data.FIELD_NAME ~ '][placement]', 'share-right', data.FIELD_PROPS.placement === 'share-right', 'radio', 'SHARE_PLACEMENT_RIGHT') }}
+		</dd>
+	</dl>
+	<dl>
+		<dt><label for="{{ data.FIELD_NAME ~ '-corners' }}">{{ lang('SHARE_CORNERS') ~ lang('COLON') }}</label></dt>
+		<dd>
+			{{ forms.pickem(data.FIELD_NAME ~ '-corners', 'field_props[' ~ data.FIELD_NAME ~ '][corners]', '', !data.FIELD_PROPS.corners, 'radio', 'SHARE_CORNERS_SQUARE') }}
+			{{ forms.pickem(data.FIELD_NAME ~ '-corners', 'field_props[' ~ data.FIELD_NAME ~ '][corners]', 'share-rounded', data.FIELD_PROPS.corners, 'radio', 'SHARE_CORNERS_ROUND') }}
+		</dd>
+	</dl>
+	<dl>
+		<dt><label for="{{ data.FIELD_NAME ~ '-size' }}">{{ lang('SHARE_SIZE') ~ lang('COLON') }}</label></dt>
+		<dd>
+			{{ forms.input(data.FIELD_NAME ~ '-size', 'field_props[' ~ data.FIELD_NAME ~ '][size]', data.FIELD_PROPS.size, 'number', 5, '', 8) }}
+		</dd>
+	</dl>
+	<dl>
+		<dt><label for="{{ data.FIELD_NAME ~ '-shares' }}">{{ lang('SHARE_SITES') ~ lang('COLON') }}</label></dt>
+		<dd>
+			<div id="{{ data.FIELD_NAME }}-options-container" class="field-options-list">
+			{%- set sites = {
+				'twitter': 'Twitter',
+				'facebook': 'Facebook',
+				'googleplus': 'Google+',
+				'linkedin': 'LinkedIn',
+				'pinterest': 'Pinterest',
+				'email': 'Email',
+				'stumbleupon': 'StumbleUpon',
+				'whatsapp': 'WhatsApp',
+				'telegram': 'Telegram',
+				'line': 'LINE',
+				'viber': 'Viber',
+				'pocket': 'Pocket',
+				'messenger': 'Messenger',
+				'vkontakte': 'VK',
+			} -%}
+			{% for option in data.FIELD_PROPS.options if sites[option] %}
+				<div class="row2 field-option">
+					<i class="fa fa-bars" aria-hidden="true"></i>
+					{{ forms.pickem(data.FIELD_NAME ~ '-shares-default' ~ loop.index, 'field_defaults[' ~ data.FIELD_NAME ~ '][]', option, (option in data.FIELD_PROPS.defaults), 'checkbox', sites[option]) }}
+					{{ forms.input(data.FIELD_NAME ~ '-shares-option' ~ loop.index, 'field_options[' ~ data.FIELD_NAME ~ '][]', option, 'hidden') }}
+				</div>
+			{% endfor %}
+			</div>
+		</dd>
+	</dl>
+{% endmacro %}
+
 {% macro select(data) %}
     {% import _self as forms %}
 	{{ forms.choice('select', data) }}
