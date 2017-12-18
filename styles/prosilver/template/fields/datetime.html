@@ -5,6 +5,6 @@
 	{%- set view_setttings = (field_props.type === 'months' || field_props.type === 'years') ? ' data-view="' ~ field_props.type ~ '" data-min-view="' ~ field_props.type ~ '"' : '' -%}
 	{%- set time_settings = (field_props.type === 'datetime') ? ' data-timepicker="true"' : '' -%}
 {%- endif -%}
-<div style="width: 10%; max-width: 100%;">
-	<input type="text" id="smc-{{ field_name }}" name="{{ field_name }}" class="inputbox datetimepicker" data-date-format="{{ formats[field_props.type] }}"{{ view_setttings }}{{ time_settings }}{% if field_props.num_dates > 1 %} data-multiple-dates="{{ field_props.num_dates }}"{% endif %} data-range="{{ field_props.range }}"{% if field_props.min_date %} data-min-date="{{ field_props.min_date|date("m/d/Y") }}"{% endif %}{% if field_props.max_date %} data-max-date="{{ field_props.max_date|date("m/d/Y") }}"{% endif %} value="{{ field_value }}" />
+<div style="width: 15%; max-width: 100%;">
+	<input type="text" id="smc-{{ field_name }}" name="{{ field_name }}" class="inputbox datetimepicker" data-date-format="{{ formats[field_props.type] }}"{{ view_setttings }}{{ time_settings }}{% if field_props.num_dates > 1 %} data-multiple-dates="{{ field_props.num_dates }}"{% endif %} data-range="{{ field_props.range ? 2 : 0 }}"{% if field_props.min_date %} data-min-date="{{ field_props.min_date|date("m/d/Y") }}"{% endif %}{% if field_props.max_date %} data-max-date="{{ field_props.max_date|date("m/d/Y") }}"{% endif %} value="{{ field_value }}" />
 </div>
