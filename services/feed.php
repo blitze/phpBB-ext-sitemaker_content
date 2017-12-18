@@ -32,6 +32,9 @@ class feed
 	/** @var string */
 	protected $php_ext;
 
+	/** @var string */
+	protected $board_url;
+
 	/**
 	 * Constructor
 	 *

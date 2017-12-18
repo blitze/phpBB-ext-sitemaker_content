@@ -138,7 +138,6 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * @param \phpbb\event\data $event
 	 * @return void
 	 */
 	public function load_settings_language()

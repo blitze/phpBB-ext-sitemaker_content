@@ -258,7 +258,7 @@ class main_controller
 	 * @param string $_format
 	 * @param string $view_template
 	 * @param string $page_title
-	 * @return string
+	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
 	protected function get_response($max_update_time, $_format, $view_template, $page_title = '')
 	{
