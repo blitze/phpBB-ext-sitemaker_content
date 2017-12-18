@@ -68,7 +68,7 @@ class image extends base
 		$this->util->add_assets(array(
 			'js'	=> array(
 				'@blitze_content/vendor/fancybox/dist/jquery.fancybox.min.js',
-				100 => '@blitze_content/assets/form/fields.min.js',
+				100 => '@blitze_content/assets/fields/form.min.js',
 			),
 			'css'	=> array(
 				'@blitze_content/vendor/fancybox/dist/jquery.fancybox.min.css',

@@ -120,7 +120,7 @@ class textarea extends base
 			$this->util->add_assets(array(
 				'js'   => array(
 					$asset_path . 'assets/javascript/editor.js',
-					'@blitze_content/assets/form/textarea.min.js'
+					'@blitze_content/assets/fields/textarea.min.js'
 				)
 			));
 

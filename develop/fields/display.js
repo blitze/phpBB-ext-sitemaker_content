@@ -1,9 +1,11 @@
-var google = window.google;
-
+/**
+ * Display location map
+ */
 function initMap() {
 	'use strict';
 
 	$('.location-map').each(function() {
+		var google = window.google;
 		var data = $(this).data();
 		var position = { lat: data.latitude, lng: data.longitude };
 		var map = new google.maps.Map(this, {

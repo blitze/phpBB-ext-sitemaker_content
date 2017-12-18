@@ -83,7 +83,7 @@ class location extends base
 	{
 		$this->util->add_assets(array(
 			'js'	=> array(
-				100 => '@blitze_content/assets/form/fields.min.js',
+				100 => '@blitze_content/assets/fields/form.min.js',
 				101 => '//maps.googleapis.com/maps/api/js?key=' . $this->google_api_key . '&libraries=places&callback=initMap&language=' . $this->language->get_used_language() . '" async defer charset="UTF-8',
 			)
 		));
@@ -139,7 +139,7 @@ class location extends base
 			$this->util->add_assets(array(
 				'js'	=> array(
 					'//maps.googleapis.com/maps/api/js?key=' . $this->google_api_key . '&callback=initMap&language=' . $this->language->get_used_language() . '" async defer charset="UTF-8',
-					'@blitze_content/assets/form/map.min.js',
+					'@blitze_content/assets/fields/display.min.js',
 				)
 			));
 		}
