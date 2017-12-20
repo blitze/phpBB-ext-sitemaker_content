@@ -34,3 +34,27 @@ function initMap() {
 		$(this).width(data.width).height(data.height);
 	});
 }
+
+/**
+ * social share
+ */
+function initSocialShare() {
+	'use strict';
+
+	$('.social-share').each(function() {
+		var options = $(this).data();
+		options.shares = options.shares.split(',');
+		$(this).jsSocials(options);
+	});
+}
+
+$(document).ready(function() {
+	'use strict';
+
+	if (window.jsSocials) {
+		/* global jsSocials */
+		jsSocials.shares.email.shareUrl = $('.topic-tools a[href*="mode=email"]').attr('href');
+
+		initSocialShare();
+	}
+});
