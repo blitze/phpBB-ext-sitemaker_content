@@ -78,6 +78,10 @@ class save_test extends \phpbb_database_test_case
 				return implode(' ', func_get_args());
 			});
 
+		$logger = $this->getMockBuilder('\phpbb\log\log')
+			->disableOriginalConstructor()
+			->getMock();
+
 		$request = $this->getMock('\phpbb\request\request_interface');
 		$request->expects($this->any())
 			->method('variable')
@@ -97,7 +101,7 @@ class save_test extends \phpbb_database_test_case
 				$forum_data['forum_id'] = (isset($forum_data['forum_id'])) ? $forum_data['forum_id'] : 8;
 			});
 
-		return new save($auth, $cache, $config, $db, $this->language, $request, $types, $forum_manager, $this->mapper_factory, $phpbb_admin_path, $phpEx, false);
+		return new save($auth, $cache, $config, $db, $this->language, $logger, $request, $user, $types, $forum_manager, $this->mapper_factory, $phpbb_admin_path, $phpEx, false);
 	}
 
 	/**

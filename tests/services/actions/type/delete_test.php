@@ -78,6 +78,10 @@ class delete_test extends \phpbb_database_test_case
 				return implode(' ', func_get_args());
 			});
 
+		$logger = $this->getMockBuilder('\phpbb\log\log')
+			->disableOriginalConstructor()
+			->getMock();
+
 		$request = $this->getMock('\phpbb\request\request_interface');
 		$request->expects($this->any())
 			->method('is_set_post')
@@ -108,7 +112,7 @@ class delete_test extends \phpbb_database_test_case
 				$this->isType('integer')
 			);
 
-		return new delete($cache, $language, $request, $types, $forum_manager, $this->content_mapper_factory, $this->sitemaker_mapper_factory, false, false);
+		return new delete($cache, $language, $logger, $request, $user, $types, $forum_manager, $this->content_mapper_factory, $this->sitemaker_mapper_factory, false, false);
 	}
 
 	/**

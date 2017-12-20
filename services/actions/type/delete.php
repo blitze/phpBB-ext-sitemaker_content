@@ -20,8 +20,14 @@ class delete extends action_utils implements action_interface
 	/** @var\phpbb\language\language */
 	protected $language;
 
+	/** @var \phpbb\log\log_interface */
+	protected $logger;
+
 	/** @var \phpbb\request\request_interface */
 	protected $request;
+
+	/** @var \phpbb\user */
+	protected $user;
 
 	/** @var \blitze\content\services\types */
 	protected $content_types;
@@ -46,7 +52,9 @@ class delete extends action_utils implements action_interface
 	 *
 	 * @param \phpbb\cache\driver\driver_interface		$cache						Cache object
 	 * @param \phpbb\language\language					$language					Language Object
+	 * @param \phpbb\log\log_interface					$logger						phpBB logger
 	 * @param \phpbb\request\request_interface			$request					Request object
+	 * @param \phpbb\user								$user						User object
 	 * @param \blitze\content\services\types			$content_types				Content types object
 	 * @param \blitze\sitemaker\services\forum\manager	$forum_manager				Forum manager object
 	 * @param \blitze\content\model\mapper_factory		$content_mapper_factory		Content Mapper factory object
@@ -54,11 +62,13 @@ class delete extends action_utils implements action_interface
 	 * @param bool										$auto_refresh				Used during testing
 	 * @param bool										$trigger_error				Used during testing
 	*/
-	public function __construct(\phpbb\cache\driver\driver_interface $cache, \phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\content\services\types $content_types, \blitze\sitemaker\services\forum\manager $forum_manager, \blitze\content\model\mapper_factory $content_mapper_factory, \blitze\sitemaker\model\mapper_factory $sitemaker_mapper_factory, $auto_refresh = true, $trigger_error = true)
+	public function __construct(\phpbb\cache\driver\driver_interface $cache, \phpbb\language\language $language, \phpbb\log\log_interface $logger, \phpbb\request\request_interface $request, \phpbb\user $user, \blitze\content\services\types $content_types, \blitze\sitemaker\services\forum\manager $forum_manager, \blitze\content\model\mapper_factory $content_mapper_factory, \blitze\sitemaker\model\mapper_factory $sitemaker_mapper_factory, $auto_refresh = true, $trigger_error = true)
 	{
 		$this->cache = $cache;
 		$this->language = $language;
+		$this->logger = $logger;
 		$this->request = $request;
+		$this->user = $user;
 		$this->content_types = $content_types;
 		$this->forum_manager = $forum_manager;
 		$this->content_mapper_factory = $content_mapper_factory;
@@ -86,6 +96,8 @@ class delete extends action_utils implements action_interface
 		// Delete the content type
 		$types_mapper->delete($entity);
 		$this->cache->destroy('_content_types');
+
+		$this->logger->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_LOG_CONTENT_TYPE_DELETED');
 
 		$this->meta_refresh(3, $u_action);
 		$this->trigger_error($this->language->lang('CONTENT_TYPE_DELETED'), $u_action);

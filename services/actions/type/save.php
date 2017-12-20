@@ -29,8 +29,14 @@ class save extends action_utils implements action_interface
 	/** @var \phpbb\language\language */
 	protected $language;
 
+	/** @var \phpbb\log\log_interface */
+	protected $logger;
+
 	/** @var \phpbb\request\request_interface */
 	protected $request;
+
+	/** @var \phpbb\user */
+	protected $user;
 
 	/** @var \blitze\content\services\types */
 	protected $content_types;
@@ -58,7 +64,9 @@ class save extends action_utils implements action_interface
 	 * @param \phpbb\config\config						$config					Config object
 	 * @param \phpbb\db\driver\driver_interface			$db						Database object
 	 * @param \phpbb\language\language					$language				Language Object
+	 * @param \phpbb\log\log_interface					$logger					phpBB logger
 	 * @param \phpbb\request\request_interface			$request				Template object
+	 * @param \phpbb\user								$user					User object
 	 * @param \blitze\content\services\types			$content_types			Content types object
 	 * @param \blitze\sitemaker\services\forum\manager	$forum_manager			Forum manager object
 	 * @param \blitze\content\model\mapper_factory		$mapper_factory			Mapper factory object
@@ -66,14 +74,16 @@ class save extends action_utils implements action_interface
 	 * @param string									$php_ext				php file extension
 	 * @param boolean									$auto_refresh			Used for testing
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\driver\driver_interface $cache, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\content\services\types $content_types, \blitze\sitemaker\services\forum\manager $forum_manager, \blitze\content\model\mapper_factory $mapper_factory, $phpbb_admin_path, $php_ext, $auto_refresh = true)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\driver\driver_interface $cache, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\language\language $language, \phpbb\log\log_interface $logger, \phpbb\request\request_interface $request, \phpbb\user $user, \blitze\content\services\types $content_types, \blitze\sitemaker\services\forum\manager $forum_manager, \blitze\content\model\mapper_factory $mapper_factory, $phpbb_admin_path, $php_ext, $auto_refresh = true)
 	{
 		$this->auth = $auth;
 		$this->cache = $cache;
 		$this->config = $config;
 		$this->db = $db;
 		$this->language = $language;
+		$this->logger = $logger;
 		$this->request = $request;
+		$this->user = $user;
 		$this->content_types = $content_types;
 		$this->forum_manager = $forum_manager;
 		$this->mapper_factory = $mapper_factory;
@@ -96,7 +106,7 @@ class save extends action_utils implements action_interface
 		$this->ensure_content_has_fields($fields_data);
 		$this->db->sql_transaction('begin');
 
-		$this->handle_content_type($type, $unsaved_entity);
+		$old_langname = $this->handle_content_type($type, $unsaved_entity);
 
 		/** @var \blitze\content\model\entity\type $entity */
 		$entity = $types_mapper->save($unsaved_entity);
@@ -104,22 +114,24 @@ class save extends action_utils implements action_interface
 		$this->handle_content_fields($entity->get_content_id(), $fields_data);
 		$this->db->sql_transaction('commit');
 		$this->cache->destroy('_content_types');
-		$this->show_results($entity->get_forum_id(), $u_action, $type);
+		$this->show_results($entity, $u_action, $type, $old_langname);
 	}
 
 	/**
 	 * @param string $type
 	 * @param \blitze\content\model\entity\type $unsaved_entity
-	 * @return void
+	 * @return string
 	 */
 	protected function handle_content_type($type, \blitze\content\model\entity\type &$unsaved_entity)
 	{
+		$existing_langname = '';
 		$forum_perm_from = $this->request->variable('copy_forum_perm', 0);
 
 		if ($type)
 		{
 			$entity = $this->content_types->get_type($type);
 			$forum_id = $entity->get_forum_id();
+			$existing_langname = $entity->get_content_langname();
 
 			$unsaved_entity->set_forum_id($forum_id);
 			$unsaved_entity->set_content_id($entity->get_content_id());
@@ -131,6 +143,8 @@ class save extends action_utils implements action_interface
 			$forum_id = $this->create_content_forum($unsaved_entity->get_content_langname(), $forum_perm_from);
 			$unsaved_entity->set_forum_id($forum_id);
 		}
+
+		return $existing_langname;
 	}
 
 	/**
@@ -183,23 +197,36 @@ class save extends action_utils implements action_interface
 	}
 
 	/**
-	 * @param int $forum_id
+	 * @param \blitze\content\model\entity\type $entity
 	 * @param string $u_action
 	 * @param string $type
+	 * @param string $old_langname
 	 * @return void
 	 */
-	protected function show_results($forum_id, $u_action, $type)
+	protected function show_results(\blitze\content\model\entity\type $entity, $u_action, $type, $old_langname)
 	{
 		if (!$type)
 		{
-			$u_set_permission = append_sid("{$this->phpbb_admin_path}index.$this->php_ext", 'i=permissions&mode=setting_forum_local&forum_id[]=' . $forum_id, true);
-			$message = $this->language->lang('CONTENT_TYPE_CREATED', '<a href="' . $u_set_permission . '">', '</a>');
+			$u_set_permission = append_sid("{$this->phpbb_admin_path}index.$this->php_ext", 'i=permissions&mode=setting_forum_local&forum_id[]=' . $entity->get_forum_id(), true);
+			$lang_key = 'CONTENT_TYPE_CREATED';
+			$message = $this->language->lang($lang_key, '<a href="' . $u_set_permission . '">', '</a>');
 		}
 		else
 		{
 			$this->meta_refresh(3, $u_action);
-			$message = $this->language->lang('CONTENT_TYPE_UPDATED');
+			$lang_key = 'CONTENT_TYPE_UPDATED';
+			$message = $this->language->lang($lang_key);
 		}
+
+		$additional_data = array();
+		if ($type && $entity->get_content_name() !== $type)
+		{
+			$lang_key = 'CONTENT_TYPE_RENAMED';
+			$additional_data[] = $old_langname;
+		}
+
+		$additional_data[] = $entity->get_content_langname();
+		$this->logger->add('admin', $this->user->data['user_id'], $this->user->ip, 'ACP_LOG_' . $lang_key, time(), $additional_data);
 
 		$this->trigger_error($message, $u_action);
 	}
