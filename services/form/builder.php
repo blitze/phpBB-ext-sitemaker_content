@@ -105,7 +105,7 @@ class builder
 	{
 		if ($type = $this->types->get_forum_type($forum_id))
 		{
-			$this->language->add_lang('manager', 'blitze/content');
+			$this->language->add_lang('posting', 'blitze/content');
 
 			/** @var \blitze\content\model\entity\type $entity */
 			$entity = $this->types->get_type($type, true);
@@ -303,14 +303,14 @@ class builder
 		{
 			$this->form->add('topic_time', 'hidden', array('field_value' => $post_data['topic_time']))
 				->add('publish_on', 'datetime', array(
-					'field_label'	=> $this->language->lang('CONTENT_POST_DATE'),
+					'field_label'	=> $this->language->lang('CONTENT_PUBLISH_DATE'),
 					'field_value'	=> $this->user->format_date($post_data['topic_time'], 'm/d/Y H:i'),
 					'field_props'	=> array(
 						'min_date'	=> 0,
 					),
 				))
 				->add('force_status', 'radio', array(
-					'field_label'	=> 'FORCE_STATUS',
+					'field_label'	=> 'CONTENT_FORCE_STATUS',
 					'field_value'	=> '-1',
 					'field_props'	=> array(
 						'vertical'		=> true,
@@ -398,12 +398,12 @@ class builder
 
 		if ($visibility == ITEM_APPROVED)
 		{
-			$options[ITEM_REAPPROVE] = 'STATUS_REAPPROVE';
+			$options[ITEM_REAPPROVE] = 'CONTENT_STATUS_REAPPROVE';
 		}
 		else
 		{
-			$options[ITEM_UNAPPROVED]	= 'STATUS_DISAPPROVE';
-			$options[ITEM_APPROVED]		= 'STATUS_APPROVE';
+			$options[ITEM_UNAPPROVED]	= 'CONTENT_STATUS_DISAPPROVE';
+			$options[ITEM_APPROVED]		= 'CONTENT_STATUS_APPROVE';
 		}
 
 		return $options;

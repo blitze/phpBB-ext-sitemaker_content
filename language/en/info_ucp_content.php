@@ -37,16 +37,5 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'CONTENT_UPDATED'		=> 'Your content has been successfully saved',
-
-	'GOTO_TOPIC'			=> 'Go to topic',
-
-	'MANAGE_CONTENT'		=> 'Manage Your Content',
-	'MY_CONTENT'			=> 'My Content',
-
-	'NO_CONTENT_TOPICS'		=> '<strong>There are no suitable topics to display!</strong><br />Either you have not posted any topics or you have applied filters that result in no topics to display.',
-
-	'RETURN_TOPIC'			=> '%sReturn to previous page%s',
-
-	'TOPIC_DELETED_SUCCESS'	=> 'The topic has been successfully removed from the database.',
+	'MY_CONTENT'	=> 'My Content',
 ));

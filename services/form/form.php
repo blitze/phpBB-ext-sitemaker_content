@@ -241,7 +241,7 @@ class form
 		{
 			if (!$row['field_mod_only'] || $cp_class === 'mcp')
 			{
-				$this->errors[] = $this->language->lang_array('FIELD_REQUIRED', array($row['field_label']));
+				$this->errors[] = $this->language->lang_array('CONTENT_FIELD_REQUIRED', array($row['field_label']));
 			}
 			else
 			{

@@ -93,7 +93,6 @@ class index extends filter implements action_interface
 		include($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
 
 		$this->language->add_lang('viewforum');
-		$this->language->add_lang('manager', 'blitze/content');
 		$this->template->assign_var('MODE', $mode);
 
 		$content_types = $this->content_types->get_all_types();

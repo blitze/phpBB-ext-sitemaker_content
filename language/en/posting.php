@@ -37,4 +37,12 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
+	'CONTENT_FIELD_REQUIRED'		=> 'Missing required field: %s',
+	'CONTENT_FORCE_STATUS'			=> 'Force status?',
+
+	'CONTENT_PUBLISH_DATE'			=> 'Publish date',
+
+	'CONTENT_STATUS_APPROVE'		=> 'Yes - Approve',
+	'CONTENT_STATUS_DISAPPROVE'		=> 'Yes - Disapprove',
+	'CONTENT_STATUS_REAPPROVE'		=> 'Yes - Reapprove',
 ));

@@ -37,15 +37,34 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'CONTENT_NEW'			=> 'New Content',
-	'CONTENT_POST_DATE'		=> 'Publish date',
-	'CONTENT_TITLE'			=> 'Title',
-	'CONTENT_TYPE'			=> 'Content Type',
+	'CONTENT_NEW'						=> 'New Content',
+	'CONTENT_PUBLISHED'					=> 'Published',
+	'CONTENT_TITLE'						=> 'Title',
+	'CONTENT_TYPE'						=> 'Content Type',
+	'CONTENT_UPDATED'					=> 'The topic was successfully saved',
 
-	'FIELD_REQUIRED'		=> 'Missing required field: %s',
-	'FORCE_STATUS'			=> 'Force status?',
+	'GOTO_TOPIC'						=> 'Go to topic',
 
-	'INVALID_REQUEST'		=> 'Invalid request: %s',
+	'INVALID_REQUEST'					=> 'Invalid request: %s',
+
+	'MAKE_NORMAL'						=> 'Approve',
+	'MANAGE_CONTENT'					=> 'Manage Content',
+	'MCP_MAKE_ANNOUNCEMENT'				=> 'Modify to “Recommended”',
+	'MCP_MAKE_ANNOUNCEMENTS'			=> 'Modify to “Recommended”',
+	'MCP_MAKE_ANNOUNCEMENTS_CONFIRM'	=> 'Are you sure you want to change the selected topics to “Recommended”?',
+	'MCP_MAKE_ANNOUNCEMENT_CONFIRM'		=> 'Are you sure you want to change this topic to “Recommended”?',
+	'MCP_MAKE_GLOBAL'					=> 'Modify to “Must Read”',
+	'MCP_MAKE_GLOBALS'					=> 'Modify to “Must Read”',
+	'MCP_MAKE_GLOBALS_CONFIRM'			=> 'Are you sure you want to change the selected topics to a “Must Read”?',
+	'MCP_MAKE_GLOBAL_CONFIRM'			=> 'Are you sure you want to change this topic to a “Must Read”?',
+	'MCP_MAKE_NORMAL'					=> 'Modify to “Standard Topic”',
+	'MCP_MAKE_NORMALS'					=> 'Modify to “Standard Topics”',
+	'MCP_MAKE_NORMALS_CONFIRM'			=> 'Are you sure you want to change the selected topics to “Standard Topics”?',
+	'MCP_MAKE_NORMAL_CONFIRM'			=> 'Are you sure you want to change this topic to a “Standard Topic”?',
+	'MCP_MAKE_STICKIES'					=> 'Modify to “Featured”',
+	'MCP_MAKE_STICKIES_CONFIRM'			=> 'Are you sure you want to change the selected topics to “Featured”?',
+	'MCP_MAKE_STICKY'					=> 'Modify to “Featured”',
+	'MCP_MAKE_STICKY_CONFIRM'			=> 'Are you sure you want to change this topic to “Featured”?',
 
 	'NO_TOPICS_ALL'			=> 'There are no topics to display',
 	'NO_TOPICS_DELETED'		=> 'There are no deleted topics to display',
@@ -55,12 +74,6 @@ $lang = array_merge($lang, array(
 	'NO_TOPICS_RECOMMENDED'	=> 'There are no recommended topics to display',
 	'NO_TOPICS_SCHEDULED'	=> 'There are no scheduled topics to display',
 	'NO_TOPICS_UNAPPROVED'	=> 'There are no unapproved topics to display',
-
-	'PUBLISHED'				=> 'Published',
-
-	'STATUS_APPROVE'		=> 'Yes - Approve',
-	'STATUS_DISAPPROVE'		=> 'Yes - Disapprove',
-	'STATUS_REAPPROVE'		=> 'Yes - Reapprove',
 
 	'TOPIC_ALL'				=> 'All',
 	'TOPIC_DELETED'			=> 'Deleted',

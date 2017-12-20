@@ -38,6 +38,8 @@ class mcp_controller
 	 */
 	public function handle($action, $base_url)
 	{
+		$this->language->add_lang('cp', 'blitze/content');
+
 		try
 		{
 			$command = $this->action_handler->create('topic', $action);

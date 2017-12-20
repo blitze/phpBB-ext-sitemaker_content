@@ -39,6 +39,8 @@ class admin_controller
 	 */
 	public function handle($action, $type, $base_url)
 	{
+		$this->language->add_lang('admin', 'blitze/content');
+
 		try
 		{
 			$command = $this->action_handler->create('type', $action);
