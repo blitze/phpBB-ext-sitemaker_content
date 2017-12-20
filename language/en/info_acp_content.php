@@ -37,7 +37,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	// Logs  
+	// Logs
 	'ACP_LOG_CONTENT_TYPE_CREATED'	=> '<strong>Content type added</strong><br />» %s',
 	'ACP_LOG_CONTENT_TYPE_DELETED'	=> '<strong>Content type deleted</strong><br />» %s',
 	'ACP_LOG_CONTENT_TYPE_RENAMED'	=> '<strong>Content type renamed</strong><br />» %s → %s',
