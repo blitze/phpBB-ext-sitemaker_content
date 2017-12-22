@@ -137,6 +137,9 @@ $lang = array_merge($lang, array(
 	'NUMBER_STEP'				=> 'Increase/decrease by',
 
 	// range settings
+	'RANGE_DISPLAY'				=> 'Display',
+	'RANGE_DISPLAY_TEXT'		=> 'Text',
+	'RANGE_DISPLAY_SLIDER'		=> 'Slider',
 	'RANGE_TYPE'				=> 'Range Type',
 	'RANGE_TYPE_SINGLE'			=> 'Single',
 	'RANGE_TYPE_DOUBLE'			=> 'Double',

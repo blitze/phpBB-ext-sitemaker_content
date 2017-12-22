@@ -57,4 +57,11 @@ $(document).ready(function() {
 
 		initSocialShare();
 	}
+
+	/**
+	 * Range picker
+	 */
+	if (typeof $.fn.ionRangeSlider !== 'undefined') {
+		$('.rangepicker').ionRangeSlider();
+	}
 });

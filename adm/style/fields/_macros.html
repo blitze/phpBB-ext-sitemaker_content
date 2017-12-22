@@ -258,6 +258,13 @@
 {% macro range(data) %}
     {% import _self as forms %}
 	<dl>
+		<dt><label for="{{ data.FIELD_NAME ~ '-display-0' }}">{{ lang('RANGE_DISPLAY') ~ lang('COLON') }}</label></dt>
+		<dd>
+			{{ forms.pickem(data.FIELD_NAME ~ '-display-0', 'field_props[' ~ data.FIELD_NAME ~ '][display]', 'text', (data.FIELD_PROPS.display === 'text'), 'radio', 'RANGE_DISPLAY_TEXT') }}
+			{{ forms.pickem(data.FIELD_NAME ~ '-display-1', 'field_props[' ~ data.FIELD_NAME ~ '][display]', 'slider', (data.FIELD_PROPS.display === 'slider'), 'radio', 'RANGE_DISPLAY_SLIDER') }}
+		</dd>
+	</dl>
+	<dl>
 		<dt><label for="{{ data.FIELD_NAME ~ '-type-0' }}">{{ lang('RANGE_TYPE') ~ lang('COLON') }}</label></dt>
 		<dd>
 			{{ forms.pickem(data.FIELD_NAME ~ '-type-0', 'field_props[' ~ data.FIELD_NAME ~ '][type]', 'single', (data.FIELD_PROPS.type === 'single'), 'radio', 'RANGE_TYPE_SINGLE') }}
@@ -267,13 +274,14 @@
 	<dl>
 		<dt><label for="{{ data.FIELD_NAME ~ '-theme' }}">{{ lang('RANGE_THEME') ~ lang('COLON') }}</label></dt>
 		<dd>
-			<select id="{{ data.FIELD_NAME ~ '-theme' }}" name="field_props[{{ data.FIELD_NAME }}][theme]">
-				<option value="skinFlat"{% if data.FIELD_PROPS.theme === 'skinFlat' %} selected="selected"{% endif %}>skinFlat</option>
-				<option value="skinHTML5"{% if data.FIELD_PROPS.theme === 'skinHTML5' %} selected="selected"{% endif %}>skinHTML5</option>
-				<option value="skinModern"{% if data.FIELD_PROPS.theme === 'skinModern' %} selected="selected"{% endif %}>skinModern</option>
-				<option value="skinNice"{% if data.FIELD_PROPS.theme === 'skinNice' %} selected="selected"{% endif %}>skinNice</option>
-				<option value="skinSimple"{% if data.FIELD_PROPS.theme === 'skinSimple' %} selected="selected"{% endif %}>skinSimple</option>
-			</select>
+			{%- set range_themes = [
+				{value: 'skinFlat', label: 'skinFlat'},
+				{value: 'skinHTML5', label: 'skinHTML5'},
+				{value: 'skinModern', label: 'skinModern'},
+				{value: 'skinNice', label: 'skinNice'},
+				{value: 'skinSimple', label: 'skinSimple'},
+			] -%}
+			{{ forms.dropdown(data.FIELD_NAME ~ '-theme', 'field_props[' ~ data.FIELD_NAME ~ '][theme]', data.FIELD_PROPS.theme, range_themes) }}
 		</dd>
 	</dl>
 	<dl>

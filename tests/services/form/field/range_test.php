@@ -52,7 +52,8 @@ class range_test extends base_form_field
 	{
 		$field = $this->get_form_field('range');
 		$this->assertEquals(array(
-			'type'		=> 'double',
+			'display'	=> 'text',
+			'type'		=> 'single',
 			'theme'		=> 'skinFlat',
 			'size'		=> 100,
 			'values'	=> '',
@@ -82,6 +83,7 @@ class range_test extends base_form_field
 				array(
 					'field_value'	=> '19',
 					'field_props'	=> array(
+						'display'	=> 'text',
 						'type'		=> 'single',
 						'prefix'	=> '',
 						'postfix'	=> '',
@@ -93,6 +95,7 @@ class range_test extends base_form_field
 				array(
 					'field_value'	=> '19',
 					'field_props'	=> array(
+						'display'	=> 'text',
 						'type'		=> 'single',
 						'prefix'	=> '$',
 						'postfix'	=> ' per oz',
@@ -104,6 +107,7 @@ class range_test extends base_form_field
 				array(
 					'field_value'	=> '19',
 					'field_props'	=> array(
+						'display'	=> 'text',
 						'type'		=> 'double',
 						'prefix'	=> '$',
 						'postfix'	=> '',
@@ -115,12 +119,35 @@ class range_test extends base_form_field
 				array(
 					'field_value'	=> '25;55',
 					'field_props'	=> array(
+						'display'	=> 'text',
 						'type'		=> 'double',
 						'prefix'	=> '$',
 						'postfix'	=> ' per oz',
 					),
 				),
 				'$25 - $55 per oz',
+			),
+			array(
+				array(
+					'field_name'	=> 'foo',
+					'field_value'	=> '15;35',
+					'field_props'	=> array(
+						'display'	=> 'slider',
+						'type'		=> 'double',
+						'theme'		=> 'skinHTML5',
+						'size'		=> 50,
+						'values'	=> '',
+						'prefix'	=> '$',
+						'postfix'	=> ' per Ib',
+						'min'		=> '0',
+						'max'		=> '100',
+						'step'		=> 1,
+						'grid'		=> false,
+					),
+				),
+				'<div style="width: 50%">' .
+					'<input type="text" class="inputbox autowidth rangepicker" id="smc-foo" name="foo" data-type="double" data-values="" data-prefix="$" data-postfix=" per Ib" data-min="0" data-max="100" data-step="1" data-grid="false" data-from="" data-to="" data-force-edges="true" data-disable="true" value="15;35" />' .
+				'</div>',
 			),
 		);
 	}
@@ -136,7 +163,10 @@ class range_test extends base_form_field
 		$field = $this->get_form_field('range');
 		$data = $this->get_data('range', 'foo', $data, $field->get_default_props());
 
-		$this->assertEquals($expected, $field->display_field($data));
+		$this->util->expects($this->exactly(($data['field_props']['display'] === 'slider') ? 2 : 0))
+			->method('add_assets');
+
+		$this->assertEquals($expected, str_replace(array("\n", "\t"), '', $field->display_field($data)));
 	}
 
 	/**
@@ -156,7 +186,7 @@ class range_test extends base_form_field
 					array('foo', '', true, request_interface::REQUEST, ''),
 				),
 				'<div style="width: 100%">' .
-					'<input type="text" class="inputbox autowidth rangepicker" id="smc-foo" name="foo" data-type="double" data-values="" data-prefix="" data-postfix="" data-min="0" data-max="" data-step="1" data-grid="false" data-from="" data-to="" data-force-edges="true" value="" />' .
+					'<input type="text" class="inputbox autowidth rangepicker" id="smc-foo" name="foo" data-type="single" data-values="" data-prefix="" data-postfix="" data-min="0" data-max="" data-step="1" data-grid="false" data-from="" data-to="" data-force-edges="true" value="" />' .
 				'</div>',
 			),
 			array(
@@ -219,7 +249,7 @@ class range_test extends base_form_field
 		$field = $this->get_form_field('range', $variable_map);
 		$data = $this->get_data('range', $name, $data, $field->get_default_props());
 
-		$this->util->expects($this->once())
+		$this->util->expects($this->exactly(2))
 			->method('add_assets');
 
 		$this->assertEquals($expected, str_replace(array("\n", "\t"), '', $field->show_form_field($name, $data)));
