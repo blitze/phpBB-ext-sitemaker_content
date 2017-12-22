@@ -88,6 +88,7 @@ gulp.task('vendor', function() {
 		.pipe(cssFilter)
 			.pipe(plugins.rename({ suffix: '.min' }))
 			.pipe(plugins.cleanCss())
+			.pipe(plugins.replace('url(../../../ion.rangeSlider/', 'url(../'))
 			.pipe(gulp.dest(paths.prod.vendor))
 			.pipe(cssFilter.restore)
 			.pipe(gulp.dest(paths.prod.vendor));
