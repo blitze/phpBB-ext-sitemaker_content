@@ -48,4 +48,9 @@ $lang = array_merge($lang, array(
 	'TOPIC_TIME'						=> 'Topic Time',
 	'TOPIC_TYPE'						=> 'Topic Type',
 	'TOPIC_VIEWS'						=> 'Topic Views',
+
+	// Overwrite phpBB post types
+	'POST_STICKY'			=> 'Featured',
+	'POST_GLOBAL'			=> 'Must Read',
+	'POST_ANNOUNCEMENT'		=> 'Recommended',
 ));

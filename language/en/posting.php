@@ -45,4 +45,9 @@ $lang = array_merge($lang, array(
 	'CONTENT_STATUS_APPROVE'		=> 'Yes - Approve',
 	'CONTENT_STATUS_DISAPPROVE'		=> 'Yes - Disapprove',
 	'CONTENT_STATUS_REAPPROVE'		=> 'Yes - Reapprove',
+
+	// Overwrite phpBB post types
+	'POST_STICKY'			=> 'Featured',
+	'POST_GLOBAL'			=> 'Must Read',
+	'POST_ANNOUNCEMENT'		=> 'Recommended',
 ));
