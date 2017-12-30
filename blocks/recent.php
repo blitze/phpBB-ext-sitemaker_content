@@ -155,7 +155,7 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 		$topics_data = $this->forum->get_topic_data($this->settings['max_topics'], $this->settings['offset_start']);
 		$posts_data = $this->forum->get_post_data('first');
 
-		$title = $content = '';
+		$content = '';
 		if (sizeof($posts_data) || $edit_mode !== false)
 		{
 			$users_cache = $this->forum->get_posters_info();
@@ -174,12 +174,11 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 			}
 			unset($topics_data, $posts_data, $users_cache, $attachments, $topic_tracking_info);
 
-			$title = $this->get_block_title($entity->get_content_langname());
 			$content = $this->ptemplate->render_view('blitze/content', 'blocks/recent_content.html', 'recent_content_block');
 		}
 
 		return array(
-			'title'		=> $title,
+			'title'		=> $this->get_block_title($entity->get_content_langname()),
 			'content'	=> $content,
 		);
 	}
@@ -196,7 +195,7 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 			POST_STICKY		=> 'CONTENT_STICKY_POSTS',
 		);
 
-		return (isset($topic_types[$this->settings['topic_type']])) ? $topic_types[$this->settings['topic_types']] :  $this->language->lang('CONTENT_' . $this->sort_options[$this->settings['sort_key']], $content_langname);
+		return $this->language->lang((isset($topic_types[$this->settings['topic_type']])) ? $topic_types[$this->settings['topic_type']] : 'CONTENT_' . $this->sort_options[$this->settings['sort_key']], $content_langname);
 	}
 
 	/**
