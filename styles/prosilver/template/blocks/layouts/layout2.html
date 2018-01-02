@@ -1,0 +1,15 @@
+<div class="column1">
+	{{ macro.show_summary(loops.topicrow[0]) }}
+</div>
+<div class="column2">
+	<ul class="sm-list">
+	{% for topicrow in loops.topicrow[1:] %}
+		<li>
+			<div class="small-img img-align-left">
+				{{ topicrow.FIELDS.all[image_field] }}<br />
+				{{ macro.show_title(topicrow) }}
+			</div>
+		</li>
+	{% endfor %}
+	</ul>
+</div>
