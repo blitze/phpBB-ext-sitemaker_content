@@ -1,5 +1,18 @@
 {% import './fields/_macros.html' as forms %}
-{% set DB_FIELD = FROM_DB ? ' db-field' : '' %}
+{%- set DB_FIELD = FROM_DB ? ' db-field' : '' -%}
+{%- set label_disp_options = [
+	{ value: 0, label: 'NO' },
+	{ value: 1, label: 'LABEL_HIDDEN' },
+	{ value: 2, label: 'LABEL_INLINE' },
+	{ value: 3, label: 'LABEL_NEWLINE' }
+] -%}
+{%- set field_disp_options = [
+	{ value: 'above', label: 'FIELD_SHOW_ABOVE' },
+	{ value: 'inline', label: 'FIELD_SHOW_INLINE' },
+	{ value: 'body', label: 'FIELD_SHOW_BODY' },
+	{ value: 'footer', label: 'FIELD_SHOW_FOOTER' },
+	{ value: '', label: 'FIELD_DONOT_SHOW' }
+] -%}
 {% for field in CONTENT_FIELDS %}
 	<div id="{{ 'cfield-' ~ field.FIELD_NAME }}" class="field">
 		<h3 id="{{ field.FIELD_NAME ~ '-header' }}">
@@ -39,19 +52,11 @@
 				<dd>
 					<div class="column1">
 						<h5>{{ lang('CONTENT_INDEX') }}</h5>
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_summary_show-0' }}" name="field_data[{{ field.FIELD_NAME }}][field_summary_show]" value="above"{% if field.FIELD_SUMMARY_SHOW == 'above' %} checked="checked"{% endif %} /> {{ lang('FIELD_SHOW_ABOVE') }}</label><br />
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_summary_show-1' }}" name="field_data[{{ field.FIELD_NAME }}][field_summary_show]" value="inline"{% if field.FIELD_SUMMARY_SHOW == 'inline' %} checked="checked"{% endif %} /> {{ lang('FIELD_SHOW_INLINE') }}</label><br />
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_summary_show-2' }}" name="field_data[{{ field.FIELD_NAME }}][field_summary_show]" value="body"{% if field.FIELD_SUMMARY_SHOW == 'body' %} checked="checked"{% endif %} /> {{ lang('FIELD_SHOW_BODY') }}</label><br />
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_summary_show-3' }}" name="field_data[{{ field.FIELD_NAME }}][field_summary_show]" value="footer"{% if field.FIELD_SUMMARY_SHOW == 'footer' %} checked="checked"{% endif %} /> {{ lang('FIELD_SHOW_FOOTER') }}</label><br />
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_summary_show-4' }}" name="field_data[{{ field.FIELD_NAME }}][field_summary_show]" value=""{% if !field.FIELD_SUMMARY_SHOW %} checked="checked"{% endif %} /> {{ lang('FIELD_DONOT_SHOW') }}</label>
+						{{ forms.dropdown(field.FIELD_NAME ~ '-field_summary_show', 'field_data[' ~ field.FIELD_NAME ~ '][field_summary_show]', field.FIELD_SUMMARY_SHOW, field_disp_options) }}
 					</div>
 					<div class="column2">
 						<h5>{{ lang('CONTENT_DETAIL') }}</h5>
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_detail_show-0' }}" name="field_data[{{ field.FIELD_NAME }}][field_detail_show]" value="above"{% if field.FIELD_DETAIL_SHOW == 'above' %} checked="checked"{% endif %} /> {{ lang('FIELD_SHOW_ABOVE') }}</label><br />
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_detail_show-1' }}" name="field_data[{{ field.FIELD_NAME }}][field_detail_show]" value="inline"{% if field.FIELD_DETAIL_SHOW == 'inline' %} checked="checked"{% endif %} /> {{ lang('FIELD_SHOW_INLINE') }}</label><br />
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_detail_show-2' }}" name="field_data[{{ field.FIELD_NAME }}][field_detail_show]" value="body"{% if field.FIELD_DETAIL_SHOW == 'body' %} checked="checked"{% endif %} /> {{ lang('FIELD_SHOW_BODY') }}</label><br />
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_detail_show-3' }}" name="field_data[{{ field.FIELD_NAME }}][field_detail_show]" value="footer"{% if field.FIELD_DETAIL_SHOW == 'footer' %} checked="checked"{% endif %} /> {{ lang('FIELD_SHOW_FOOTER') }}</label><br />
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-field_detail_show-4' }}" name="field_data[{{ field.FIELD_NAME }}][field_detail_show]" value=""{% if !field.FIELD_DETAIL_SHOW %} checked="checked"{% endif %} /> {{ lang('FIELD_DONOT_SHOW') }}</label>
+						{{ forms.dropdown(field.FIELD_NAME ~ '-field_detail_show', 'field_data[' ~ field.FIELD_NAME ~ '][field_detail_show]', field.FIELD_DETAIL_SHOW, field_disp_options) }}
 					</div>
 				</dd>
 			</dl>
@@ -60,15 +65,11 @@
 				<dd>
 					<div class="column1">
 						<h5>{{ lang('CONTENT_INDEX') }}</h5>
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-summary_ldisp-0' }}" name="field_data[{{ field.FIELD_NAME }}][field_summary_ldisp]" value="0"{% if !field.FIELD_SUMMARY_LDISP %} checked="checked"{% endif %} /> {{ lang('NO') }}</label><br />
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-summary_ldisp-1' }}" name="field_data[{{ field.FIELD_NAME }}][field_summary_ldisp]" value="1"{% if field.FIELD_SUMMARY_LDISP == 1 %} checked="checked"{% endif %} /> {{ lang('LABEL_INLINE') }}</label><br />
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-summary_ldisp-2' }}" name="field_data[{{ field.FIELD_NAME }}][field_summary_ldisp]" value="2"{% if field.FIELD_SUMMARY_LDISP == 2 %} checked="checked"{% endif %} /> {{ lang('LABEL_NEWLINE') }}</label>
+						{{ forms.dropdown(field.FIELD_NAME ~ '-field_summary_ldisp', 'field_data[' ~ field.FIELD_NAME ~ '][field_summary_ldisp]', field.FIELD_SUMMARY_LDISP, label_disp_options) }}
 					</div>
 					<div class="column2">
 						<h5>{{ lang('CONTENT_DETAIL') }}</h5>
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-detail_ldisp-0' }}" name="field_data[{{ field.FIELD_NAME }}][field_detail_ldisp]" value="0"{% if !field.FIELD_DETAIL_LDISP %} checked="checked"{% endif %} /> {{ lang('NO') }}</label><br />
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-detail_ldisp-1' }}" name="field_data[{{ field.FIELD_NAME }}][field_detail_ldisp]" value="1"{% if field.FIELD_DETAIL_LDISP == 1 %} checked="checked"{% endif %} /> {{ lang('LABEL_INLINE') }}</label><br />
-						<label><input type="radio" class="radio" id="{{ field.FIELD_NAME ~ '-detail_ldisp-2' }}" name="field_data[{{ field.FIELD_NAME }}][field_detail_ldisp]" value="2"{% if field.FIELD_DETAIL_LDISP == 2 %} checked="checked"{% endif %} /> {{ lang('LABEL_NEWLINE') }}</label>
+						{{ forms.dropdown(field.FIELD_NAME ~ '-field_detail_ldisp', 'field_data[' ~ field.FIELD_NAME ~ '][field_detail_ldisp]', field.FIELD_DETAIL_LDISP, label_disp_options) }}
 					</div>
 				</dd>
 			</dl>

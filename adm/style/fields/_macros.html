@@ -9,7 +9,7 @@
 {% macro dropdown(id, name, value, options) %}
 	<select id="{{ id }}" name="{{ name }}">
 	{% for option in options -%}
-		<option value="{{ option.value }}"{% if option.value === value %} selected="selected"{% endif %}>{{ option.label }}</option>
+		<option value="{{ option.value }}"{% if option.value == value %} selected="selected"{% endif %}>{{ lang(option.label) }}</option>
 	{%- endfor %}
 	</select>
 {% endmacro %}
@@ -72,11 +72,11 @@
 {% macro datetime(data) %}
 	{% import _self as forms %}
 	{%- set datetime_types = [
-		{value: 'date', label: lang('DATETIME_DATE')},
-		{value: 'datetime', label: lang('DATETIME_FULL')},
-		{value: 'timeonly', label: lang('DATETIME_TIMEONLY')},
-		{value: 'months', label: lang('DATETIME_MONTHS')},
-		{value: 'years', label: lang('DATETIME_YEARS')}
+		{ value: 'date', label: 'DATETIME_DATE' },
+		{ value: 'datetime', label: 'DATETIME_FULL' },
+		{ value: 'timeonly', label: 'DATETIME_TIMEONLY' },
+		{ value: 'months', label: 'DATETIME_MONTHS' },
+		{ value: 'years', label: 'DATETIME_YEARS' }
 	] -%}
 	<dl>
 		<dt><label for="{{ data.FIELD_NAME ~ '-type' }}">{{ lang('DATETIME_TYPE') ~ lang('COLON') }}</label></dt>
@@ -120,17 +120,17 @@
 {% macro image(data) %}
     {% import _self as forms %}
 	{%- set image_size_options = [
-		{value: '', label: lang('DEFAULT')},
-		{value: 'small-img', label: lang('IMAGE_SIZE_SMALL')},
-		{value: 'medium-img', label: lang('IMAGE_SIZE_MEDIUM')},
-		{value: 'large-img', label: lang('IMAGE_SIZE_LARGE')},
-		{value: 'fullwidth-img', label: lang('IMAGE_SIZE_FULLWIDTH')},
-		{value: 'card-img', label: lang('IMAGE_SIZE_CARD')},
+		{ value: '', label: 'DEFAULT'},
+		{ value: 'small-img', label: 'IMAGE_SIZE_SMALL' },
+		{ value: 'medium-img', label: 'IMAGE_SIZE_MEDIUM' },
+		{ value: 'large-img', label: 'IMAGE_SIZE_LARGE' },
+		{ value: 'fullwidth-img', label: 'IMAGE_SIZE_FULLWIDTH' },
+		{ value: 'card-img', label: 'IMAGE_SIZE_CARD' },
 	] -%}
 	{%- set image_align_options = [
-		{value: '', label: lang('DEFAULT')},
-		{value: 'img-align-left', label: lang('IMAGE_ALIGN_LEFT')},
-		{value: 'img-align-right', label: lang('IMAGE_ALIGN_RIGHT')},
+		{ value: '', label: 'DEFAULT' },
+		{ value: 'img-align-left', label: 'IMAGE_ALIGN_LEFT' },
+		{ value: 'img-align-right', label: 'IMAGE_ALIGN_RIGHT' },
 	] -%}
 	<dl>
 		<dt><label for="{{ data.FIELD_NAME ~ '-summary_size' }}">{{ lang('IMAGE_SIZE') ~ lang('COLON') }}</label></dt>
@@ -167,10 +167,10 @@
 {% macro location(data) %}
     {% import _self as forms %}
 	{%- set display_types = [
-		{value: 'address', label: lang('LOCATION_DISPLAY_TYPE_ADDRESS')},
-		{value: 'coordinates', label: lang('LOCATION_DISPLAY_TYPE_COORDINATES')},
-		{value: 'active_map', label: lang('LOCATION_DISPLAY_TYPE_INTERACTIVE_MAP')},
-		{value: 'static_map', label: lang('LOCATION_DISPLAY_TYPE_STATIC_MAP')},
+		{ value: 'address', label: 'LOCATION_DISPLAY_TYPE_ADDRESS' },
+		{ value: 'coordinates', label: 'LOCATION_DISPLAY_TYPE_COORDINATES' },
+		{ value: 'active_map', label: 'LOCATION_DISPLAY_TYPE_INTERACTIVE_MAP' },
+		{ value: 'static_map', label: 'LOCATION_DISPLAY_TYPE_STATIC_MAP' },
 	] -%}
 	<dl>
 		<dt><label for="{{ data.FIELD_NAME ~ '-disp-type' }}">{{ lang('LOCATION_DISPLAY_TYPE') ~ lang('COLON') }}</label></dt>
@@ -179,10 +179,10 @@
 		</dd>
 	</dl>
 	{%- set map_types = [
-		{value: 'roadmap', label: lang('LOCATION_MAP_TYPES_DEFAULT')},
-		{value: 'satellite', label: lang('LOCATION_MAP_TYPES_SATELLITE')},
-		{value: 'hybrid', label: lang('LOCATION_MAP_TYPES_HYBRID')},
-		{value: 'terrain', label: lang('LOCATION_MAP_TYPES_TERRAIN')},
+		{ value: 'roadmap', label: 'LOCATION_MAP_TYPES_DEFAULT' },
+		{ value: 'satellite', label: 'LOCATION_MAP_TYPES_SATELLITE' },
+		{ value: 'hybrid', label: 'LOCATION_MAP_TYPES_HYBRID' },
+		{ value: 'terrain', label: 'LOCATION_MAP_TYPES_TERRAIN' },
 	] -%}
 	<dl>
 		<dt><label for="{{ data.FIELD_NAME ~ '-map-type' }}">{{ lang('LOCATION_MAP_TYPES') ~ lang('COLON') }}</label></dt>
@@ -275,11 +275,11 @@
 		<dt><label for="{{ data.FIELD_NAME ~ '-theme' }}">{{ lang('RANGE_THEME') ~ lang('COLON') }}</label></dt>
 		<dd>
 			{%- set range_themes = [
-				{value: 'skinFlat', label: 'skinFlat'},
-				{value: 'skinHTML5', label: 'skinHTML5'},
-				{value: 'skinModern', label: 'skinModern'},
-				{value: 'skinNice', label: 'skinNice'},
-				{value: 'skinSimple', label: 'skinSimple'},
+				{ value: 'skinFlat', label: 'skinFlat' },
+				{ value: 'skinHTML5', label: 'skinHTML5' },
+				{ value: 'skinModern', label: 'skinModern' },
+				{ value: 'skinNice', label: 'skinNice' },
+				{ value: 'skinSimple', label: 'skinSimple' },
 			] -%}
 			{{ forms.dropdown(data.FIELD_NAME ~ '-theme', 'field_props[' ~ data.FIELD_NAME ~ '][theme]', data.FIELD_PROPS.theme, range_themes) }}
 		</dd>
@@ -338,10 +338,10 @@
 {% macro share(data) %}
     {% import _self as forms %}
 	{%- set share_themes = [
-		{value: 'flat', label: lang('SHARE_THEME_FLAT')},
-		{value: 'classic', label: lang('SHARE_THEME_CLASSIC')},
-		{value: 'minima', label: lang('SHARE_THEME_MINI')},
-		{value: 'plain', label: lang('SHARE_THEME_PLAIN')},
+		{ value: 'flat', label: 'SHARE_THEME_FLAT' },
+		{ value: 'classic', label: 'SHARE_THEME_CLASSIC' },
+		{ value: 'minima', label: 'SHARE_THEME_MINI' },
+		{ value: 'plain', label: 'SHARE_THEME_PLAIN' },
 	] -%}
 	<dl>
 		<dt><label for="{{ data.FIELD_NAME ~ '-theme' }}">{{ lang('SHARE_THEME') ~ lang('COLON') }}</label></dt>

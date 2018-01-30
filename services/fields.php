@@ -39,7 +39,7 @@ class fields extends topic
 	protected $db_fields = array();
 
 	/** @var array */
-	protected $label = array('label-hidden', 'label-inline', 'label-newline');
+	protected $label = array('', 'label-hidden', 'label-inline', 'label-newline');
 
 	/**
 	 * Construct
@@ -193,13 +193,28 @@ class fields extends topic
 
 			if (!empty($field_contents))
 			{
-				$field = '<div class="field-label ' . $this->label[$field_data['field_' . $this->view_mode . '_ldisp']] . '">' . $field_data['field_label'] . $this->language->lang('COLON') . ' </div>' . $field_contents;
+				$field = $this->get_field_label($field_data['field_' . $this->view_mode . '_ldisp'], $field_data['field_label']) . $field_contents;
 				$display_data['all'][$field_name] = $field;
 				$display_data[$field_data['field_' . $this->view_mode . '_show']][$field_name] = $field;
 			}
 		}
 
 		return $display_data;
+	}
+
+	/**
+	 * @param int $label_type
+	 * @param string $label_text
+	 * @return string
+	 */
+	protected function get_field_label($label_type, $label_text)
+	{
+		$html = '';
+		if ($label_type)
+		{
+			$html = '<div class="field-label ' . $this->label[$label_type] . '">' . $label_text . $this->language->lang('COLON') . ' </div>';
+		}
+		return $html;
 	}
 
 	/**
