@@ -1,0 +1,7 @@
+<ul class="sm-list">
+{% for topicrow in loops.topicrow %}
+	<li>
+		{{ macro.show_summary(topicrow) }}
+	</li>
+{% endfor %}
+</ul>
