@@ -29,6 +29,9 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 	/** @var \blitze\sitemaker\services\forum\data */
 	protected $forum;
 
+	/** @var string */
+	protected $tpl_name = 'recent_content';
+
 	/** @var  array */
 	protected $settings;
 
@@ -116,6 +119,7 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 
 		$forum_id = $entity->get_forum_id();
 		$this->build_query($forum_id);
+		$this->forum->build(true, true, false);
 		$this->ptemplate->assign_vars(array(
 			'LAYOUT'		=> $this->settings['layout'],
 			'FIELD_TYPES'	=> $entity->get_field_types(),
@@ -142,8 +146,7 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 			->fetch_forum($forum_id)
 			->fetch_topic_type(array($this->settings['topic_type']))
 			->fetch_date_range($range_info['start'], $range_info['stop'])
-			->set_sorting($sort_keys[$this->settings['sort_key']])
-			->build(true, true, false);
+			->set_sorting($sort_keys[$this->settings['sort_key']]);
 	}
 
 	/**
@@ -178,7 +181,7 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 			}
 			unset($topics_data, $posts_data, $users_cache, $attachments, $topic_tracking_info);
 
-			$content = $this->ptemplate->render_view('blitze/content', 'blocks/recent_content.html', 'recent_content_block');
+			$content = $this->ptemplate->render_view('blitze/content', "blocks/{$this->tpl_name}.html", $this->tpl_name . '_block');
 		}
 
 		return array(
