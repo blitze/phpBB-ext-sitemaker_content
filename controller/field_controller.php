@@ -115,12 +115,12 @@ class field_controller
 		/**
 		 * Event to modify field data
 		 *
-		 * @event blitze.content.field.modify_data
+		 * @event blitze.content.field_controller.modify_data
 		 * @var	array													field_data		Array containing field data
 		 * @var	\blitze\content\services\form\field\field_interface		field_instance	Field instance
 		 */
 		$vars = array('field_data', 'field_instance');
-		extract($this->phpbb_dispatcher->trigger_event('blitze.content.field.modify_data', compact($vars)));
+		extract($this->phpbb_dispatcher->trigger_event('blitze.content.field_controller.modify_data', compact($vars)));
 
 		return $field_data;
 	}
