@@ -231,6 +231,7 @@ class form
 	{
 		$obj = $this->fields_factory->get($row['field_type']);
 		$row['field_props'] += $obj->get_default_props();
+		$row['field_value'] = $row['field_value'] ?: '';
 		$field_value = $obj->get_field_value($row);
 
 		if (!empty($field_value))
