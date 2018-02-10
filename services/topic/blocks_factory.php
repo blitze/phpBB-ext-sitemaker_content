@@ -31,9 +31,9 @@ class blocks_factory
 	protected function register_blocks(\phpbb\di\service_collection $blocks)
 	{
 		$this->blocks = array();
-		foreach ($blocks as $service => $driver)
+		foreach ($blocks as $driver)
 		{
-			$this->blocks[$service] = $driver;
+			$this->blocks[$driver->get_name()] = $driver;
 		}
 	}
 

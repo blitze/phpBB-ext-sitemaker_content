@@ -42,6 +42,14 @@ class author_contents implements block_interface
 	/**
 	 * @inheritdoc
 	 */
+	public function get_name()
+	{
+		return 'author_contents';
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function get_langname()
 	{
 		return 'AUTHOR_CONTENTS';

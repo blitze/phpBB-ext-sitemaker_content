@@ -12,6 +12,12 @@ namespace blitze\content\services\topic\driver;
 interface block_interface
 {
 	/**
+	 * Name of content topic block
+	 * @return string
+	 */
+	public function get_name();
+
+	/**
 	 * Lang name of content topic block
 	 * @return string
 	 */

@@ -42,6 +42,14 @@ class author_info implements block_interface
 	/**
 	 * @inheritdoc
 	 */
+	public function get_name()
+	{
+		return 'author_info';
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function get_langname()
 	{
 		return 'AUTHOR_INFO';
