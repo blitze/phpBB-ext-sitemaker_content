@@ -26,6 +26,9 @@ class save extends action_utils implements action_interface
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
+	/** @var \phpbb\event\dispatcher_interface */
+	protected $phpbb_dispatcher;
+
 	/** @var \phpbb\language\language */
 	protected $language;
 
@@ -63,6 +66,7 @@ class save extends action_utils implements action_interface
 	 * @param \phpbb\cache\driver\driver_interface		$cache					Cache object
 	 * @param \phpbb\config\config						$config					Config object
 	 * @param \phpbb\db\driver\driver_interface			$db						Database object
+	 * @param \phpbb\event\dispatcher_interface			$phpbb_dispatcher		Event dispatcher object
 	 * @param \phpbb\language\language					$language				Language Object
 	 * @param \phpbb\log\log_interface					$logger					phpBB logger
 	 * @param \phpbb\request\request_interface			$request				Template object
@@ -74,12 +78,13 @@ class save extends action_utils implements action_interface
 	 * @param string									$php_ext				php file extension
 	 * @param boolean									$auto_refresh			Used for testing
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\driver\driver_interface $cache, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\language\language $language, \phpbb\log\log_interface $logger, \phpbb\request\request_interface $request, \phpbb\user $user, \blitze\content\services\types $content_types, \blitze\sitemaker\services\forum\manager $forum_manager, \blitze\content\model\mapper_factory $mapper_factory, $phpbb_admin_path, $php_ext, $auto_refresh = true)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\driver\driver_interface $cache, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\language\language $language, \phpbb\log\log_interface $logger, \phpbb\request\request_interface $request, \phpbb\user $user, \blitze\content\services\types $content_types, \blitze\sitemaker\services\forum\manager $forum_manager, \blitze\content\model\mapper_factory $mapper_factory, $phpbb_admin_path, $php_ext, $auto_refresh = true)
 	{
 		$this->auth = $auth;
 		$this->cache = $cache;
 		$this->config = $config;
 		$this->db = $db;
+		$this->phpbb_dispatcher = $phpbb_dispatcher;
 		$this->language = $language;
 		$this->logger = $logger;
 		$this->request = $request;
@@ -106,10 +111,22 @@ class save extends action_utils implements action_interface
 		$this->ensure_content_has_fields($fields_data);
 		$this->db->sql_transaction('begin');
 
+		$field_types = $this->get_field_types($fields_data);
 		$old_langname = $this->handle_content_type($type, $unsaved_entity);
 
 		/** @var \blitze\content\model\entity\type $entity */
 		$entity = $types_mapper->save($unsaved_entity);
+
+		/**
+		 * Event to modify submitted field data before they are saved
+		 *
+		 * @event blitze.content.acp_save_fields_before
+		 * @var	array									field_types			Array mapping field types to field names of form array([field_type] => array([field_name1], [field_name2]))
+		 * @var	array									field_data			Array containing field data of form array([field_name] => array([field_type] => 'foo', ...))
+		 * @var	\blitze\content\model\entity\type		entity				Content type entity
+		 */
+		$vars = array('field_types', 'field_data', 'entity');
+		extract($this->phpbb_dispatcher->trigger_event('blitze.content.acp_save_fields_before', compact($vars)));
 
 		$this->handle_content_fields($entity->get_content_id(), $fields_data);
 		$this->db->sql_transaction('commit');
@@ -166,13 +183,12 @@ class save extends action_utils implements action_interface
 			'req_approval'			=> $this->request->variable('req_approval', 1),
 			'allow_comments'		=> $this->request->variable('allow_comments', 0),
 			'allow_views'			=> $this->request->variable('allow_views', 0),
-			'show_poster_info'		=> $this->request->variable('show_info', 0),
-			'show_poster_contents'	=> $this->request->variable('show_contents', 0),
 			'show_pagination'		=> $this->request->variable('show_pagination', 0),
 			'index_show_desc'		=> $this->request->variable('index_show_desc', 0),
 			'items_per_page'		=> $this->request->variable('items_per_page', 1),
 			'summary_tpl'			=> $this->request->variable('summary_tpl', '', true),
-			'detail_tpl'			=> $this->request->variable('detail_tpl', '', true),
+			'content_name'			=> $this->request->variable('content_name', ''),
+			'topic_blocks'			=> $this->request->variable('topic_blocks', ''),
 			'last_modified'			=> time(),
 		));
 
@@ -302,18 +318,16 @@ class save extends action_utils implements action_interface
 	{
 		$mapper = $this->mapper_factory->create('fields');
 
-		// delete all fields for this content type
-		$mapper->delete(array('content_id', '=', $content_id));
+		$fields_ary = array_filter(array_keys($fields_data));
+		$field_ids = $this->get_existing_field_ids($content_id);
+		$max_id = $mapper->get_max_field_id();
 
 		$form_fields = array();
-		$max_id = $mapper->get_max_field_id();
-		$fields_ary = array_filter(array_keys($fields_data));
-
 		foreach ($fields_ary as $i => $field)
 		{
 			/** @var \blitze\content\model\entity\field $entity */
 			$entity = $mapper->create_entity($fields_data[$field]);
-			$entity->set_field_id($max_id + $i + 1)
+			$entity->set_field_id($field_ids[$field] ?: ++$max_id)
 				->set_content_id($content_id)
 				->set_field_order($i)
 				->set_field_explain($fields_data[$field]['field_explain'], 'storage')
@@ -322,6 +336,10 @@ class save extends action_utils implements action_interface
 			$form_fields[$field] = $entity->to_db();
 		}
 
+		// delete all fields for this content type
+		$mapper->delete(array('content_id', '=', $content_id));
+
+		// add the submitted fields
 		$mapper->multi_insert($form_fields);
 	}
 
@@ -342,5 +360,40 @@ class save extends action_utils implements action_interface
 		)));
 
 		return $field_props;
+	}
+
+	/**
+	 * @param int $content_id
+	 * @return array
+	 */
+	protected function get_existing_field_ids($content_id)
+	{
+		$mapper = $this->mapper_factory->create('fields');
+		$collection = $mapper->find(array(
+			array('content_id', '=', $content_id),
+		));
+
+		$field_ids = array();
+		foreach ($collection as $id => $entity)
+		{
+			$field_ids[$entity->get_field_name()] = $id;
+		}
+
+		return $field_ids;
+	}
+
+	/**
+	 * @param array $fields_data
+	 * @return array[]
+	 */
+	protected function get_field_types(array $fields_data)
+	{
+		$field_types = array();
+		foreach ($fields_data as $field => $row)
+		{
+			$field_types[$row['field_type']][] = $field;
+		}
+
+		return $field_types;
 	}
 }

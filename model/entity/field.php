@@ -100,6 +100,7 @@ final class field extends base_entity
 	/** @var array */
 	protected $db_fields = array(
 		'content_id',
+		'field_id',
 		'field_name',
 		'field_label',
 		'field_explain',

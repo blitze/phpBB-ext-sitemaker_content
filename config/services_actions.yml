@@ -98,6 +98,7 @@ services:
             - '@cache.driver'
             - '@config'
             - '@dbal.conn'
+            - '@dispatcher'
             - '@language'
             - '@log'
             - '@request'
