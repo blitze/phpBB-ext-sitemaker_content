@@ -1,6 +1,6 @@
 {% if not S_HIDE_HEADERS %}{% INCLUDE 'overall_header.html' %}{% endif %}
 
-<div class="panel post cms-block-spacing">
+<div class="panel post">
 	<div class="inner">
 		<div class="postbody sm-postbody">
 			{% if S_POST_HIDDEN %}
@@ -205,7 +205,9 @@
 	</div>
 </div>
 
-{% INCLUDE 'author_contents.html' %}
+{% for block in loops.topic_blocks %}
+	{% include block.TPL_NAME %}
+{% endfor %}
 
 {% if S_COMMENTS %}{% INCLUDE 'comments.html' %}{% endif %}
 
