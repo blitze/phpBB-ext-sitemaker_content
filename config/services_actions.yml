@@ -60,6 +60,7 @@ services:
             - '@user'
             - '@blitze.sitemaker.auto_lang'
             - '@blitze.content.form.fields.factory'
+            - '@blitze.content.topic_blocks.factory'
             - '@blitze.content.views.factory'
 
     blitze.content.actions.type.edit:

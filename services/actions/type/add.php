@@ -34,6 +34,9 @@ class add implements action_interface
 	/** @var \blitze\content\services\form\fields_factory */
 	protected $fields_factory;
 
+	/** @var \blitze\content\services\topic\blocks_factory */
+	protected $topic_blocks_factory;
+
 	/** @var \blitze\content\services\views\views_factory */
 	protected $views_factory;
 
@@ -50,9 +53,10 @@ class add implements action_interface
 	 * @param \phpbb\user										$user					User object
 	 * @param \blitze\sitemaker\services\auto_lang				$auto_lang				Auto add lang file
 	 * @param \blitze\content\services\form\fields_factory		$fields_factory			Fields factory  object
+	 * @param \blitze\content\services\topic\blocks_factory		$topic_blocks_factory	Topic blocks factory object
 	 * @param \blitze\content\services\views\views_factory		$views_factory			Views factory object
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\controller\helper $controller_helper, \phpbb\language\language $language, \phpbb\template\template $template, \phpbb\user $user, \blitze\sitemaker\services\auto_lang $auto_lang, \blitze\content\services\form\fields_factory $fields_factory, \blitze\content\services\views\views_factory $views_factory)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\controller\helper $controller_helper, \phpbb\language\language $language, \phpbb\template\template $template, \phpbb\user $user, \blitze\sitemaker\services\auto_lang $auto_lang, \blitze\content\services\form\fields_factory $fields_factory, \blitze\content\services\topic\blocks_factory $topic_blocks_factory, \blitze\content\services\views\views_factory $views_factory)
 	{
 		$this->auth = $auth;
 		$this->controller_helper = $controller_helper;
@@ -61,6 +65,7 @@ class add implements action_interface
 		$this->user = $user;
 		$this->auto_lang = $auto_lang;
 		$this->fields_factory = $fields_factory;
+		$this->topic_blocks_factory = $topic_blocks_factory;
 		$this->views_factory = $views_factory;
 	}
 
@@ -82,8 +87,8 @@ class add implements action_interface
 			'CONTENT_VIEWS'		=> $this->views_factory->get_all_views(),
 			'POST_AUTHOR'		=> $this->user->data['username'],
 			'POST_DATE'			=> $this->user->format_date(time()),
+			'TOPIC_BLOCK_OPS'	=> $this->topic_blocks_factory->get_all(),
 			'ITEMS_PER_PAGE'	=> 10,
-			'TOPICS_PER_GROUP'	=> 4,
 
 			'U_ACTION'			=> $u_action . "&amp;do=save&amp;type=$type",
 			'UA_AJAX_URL'		=> $this->controller_helper->route('blitze_content_field_settings', array(), false),
