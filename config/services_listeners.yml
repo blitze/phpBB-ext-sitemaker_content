@@ -46,6 +46,8 @@ services:
     blitze.content.event.posting:
         class: blitze\content\event\posting
         arguments:
+            - '@controller.helper'
+            - '@template'
             - '@blitze.content.form.builder'
         tags:
             - { name: event.listener }

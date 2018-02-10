@@ -13,8 +13,17 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class posting implements EventSubscriberInterface
 {
+	/** @var \phpbb\controller\helper */
+	protected $helper;
+
+	/** @var \phpbb\template\template */
+	protected $template;
+
 	/** @var \blitze\content\services\form\builder */
 	protected $builder;
+
+	/** @var string */
+	protected $content_langname = '';
 
 	/** @var string|bool */
 	protected $content_type = false;
@@ -28,10 +37,14 @@ class posting implements EventSubscriberInterface
 	/**
 	 * Constructor
 	 *
+	 * @param \phpbb\controller\helper					$helper			Controller helper class
+	 * @param \phpbb\template\template					$template		Template object
 	 * @param \blitze\content\services\form\builder		$builder		Form builder object
 	*/
-	public function __construct(\blitze\content\services\form\builder $builder)
+	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \blitze\content\services\form\builder $builder)
 	{
+		$this->helper = $helper;
+		$this->template = $template;
 		$this->builder = $builder;
 	}
 
@@ -50,6 +63,7 @@ class posting implements EventSubscriberInterface
 			'core.topic_review_modify_row'				=> 'modify_topic_review',
 			'core.posting_modify_submit_post_before'	=> 'force_visibility',
 			'core.posting_modify_template_vars'			=> 'build_form',
+			'core.page_footer'							=> 'update_navbar',
 		);
 	}
 
@@ -59,7 +73,7 @@ class posting implements EventSubscriberInterface
 	 */
 	public function init_builder(\phpbb\event\data $event)
 	{
-		$this->content_type = $this->builder->init($event['forum_id'], $event['topic_id'], $event['mode'], $event['save']);
+		list($this->content_type, $this->content_langname) = $this->builder->init($event['forum_id'], $event['topic_id'], $event['mode'], $event['save']);
 
 		$topic_first_post_id = $event['post_data']['topic_first_post_id'];
 		if (!$topic_first_post_id || $topic_first_post_id == $event['post_id'])
@@ -210,6 +224,27 @@ class posting implements EventSubscriberInterface
 
 			$event['page_data'] = $page_data;
 			unset($post_data, $page_data);
+		}
+	}
+
+	/**
+	 * @return void
+	 */
+	public function update_navbar()
+	{
+		if ($this->content_type)
+		{
+			// remove 'Forum' nav added by Sitemaker when a startpage is specified
+			if ($this->template->find_key_index('navlinks', 0))
+			{
+				$this->template->alter_block_array('navlinks', array(), 0, 'delete');
+			}
+
+			// update label & url that currently points to the forum to now point to the content type
+			$this->template->alter_block_array('navlinks', array(
+				'FORUM_NAME'	=> $this->content_langname,
+				'U_VIEW_FORUM'	=> $this->helper->route('blitze_content_type', array('type' => $this->content_type)),
+			), 0, 'change');
 		}
 	}
 }
