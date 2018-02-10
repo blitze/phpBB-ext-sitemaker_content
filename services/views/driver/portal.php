@@ -20,20 +20,21 @@ class portal extends base_view
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\event\dispatcher_interface			$phpbb_dispatcher	Event dispatcher object
-	 * @param \phpbb\language\language					$language			Language Object
-	 * @param \phpbb\pagination							$pagination			Pagination object
-	 * @param \phpbb\template\template					$template			Template object
-	 * @param \blitze\content\services\fields			$fields				Content fields object
-	 * @param \blitze\sitemaker\services\forum\data		$forum				Forum Data object
-	 * @param \blitze\content\services\helper			$helper				Content helper object
-	 * @param \blitze\content\services\quickmod			$quickmod			Quick moderator tools
-	 * @param \phpbb\config\config						$config				Config object
-	 * @param \blitze\content\services\types			$content_types		Content types object
+	 * @param \phpbb\event\dispatcher_interface					$phpbb_dispatcher		Event dispatcher object
+	 * @param \phpbb\language\language							$language				Language Object
+	 * @param \phpbb\pagination									$pagination				Pagination object
+	 * @param \phpbb\template\template							$template				Template object
+	 * @param \blitze\content\services\fields					$fields					Content fields object
+	 * @param \blitze\sitemaker\services\forum\data				$forum					Forum Data object
+	 * @param \blitze\content\services\helper					$helper					Content helper object
+	 * @param \blitze\content\services\quickmod					$quickmod				Quick moderator tools
+	 * @param \blitze\content\services\topic\blocks_factory		$topic_blocks_factory	Topic blocks factory object
+	 * @param \phpbb\config\config								$config					Config object
+	 * @param \blitze\content\services\types					$content_types			Content types object
 	*/
-	public function __construct(\phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\language\language $language, \phpbb\pagination $pagination, \phpbb\template\template $template, \blitze\content\services\fields $fields, \blitze\sitemaker\services\forum\data $forum, \blitze\content\services\helper $helper, \blitze\content\services\quickmod $quickmod, \phpbb\config\config $config, \blitze\content\services\types $content_types)
+	public function __construct(\phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\language\language $language, \phpbb\pagination $pagination, \phpbb\template\template $template, \blitze\content\services\fields $fields, \blitze\sitemaker\services\forum\data $forum, \blitze\content\services\helper $helper, \blitze\content\services\quickmod $quickmod, \blitze\content\services\topic\blocks_factory $topic_blocks_factory, \phpbb\config\config $config, \blitze\content\services\types $content_types)
 	{
-		parent::__construct($phpbb_dispatcher, $language, $pagination, $template, $fields, $forum, $helper, $quickmod);
+		parent::__construct($phpbb_dispatcher, $language, $pagination, $template, $fields, $forum, $helper, $quickmod, $topic_blocks_factory);
 
 		$this->config = $config;
 		$this->content_types = $content_types;

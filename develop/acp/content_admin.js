@@ -19,7 +19,8 @@
 	var makeOptionsSortable = function(element) {
 		element.sortable({
 			placeholder: "ui-state-highlight",
-			forcePlaceholderSize: true
+			forcePlaceholderSize: true,
+			dropOnEmpty: true
 		}).disableSelection();
 	};
 
@@ -319,6 +320,25 @@
 			});
 
 		makeOptionsSortable(containerObj.find('.field-options-list'));
+
+		var $topicBlocksInput = $('#input-topic-blocks');
+		var topicBlocksSortableOptions = {
+			connectWith: '.topic-blocks',
+			placeholder: "ui-state-highlight",
+			forcePlaceholderSize: true,
+			dropOnEmpty: true
+		};
+
+		$('#available-topic-block-options').sortable(topicBlocksSortableOptions);
+
+		topicBlocksSortableOptions.update = function() {
+			var items = [];
+			$(this).find('li').each(function() {
+				items.push($(this).data('service'));
+			});
+			$topicBlocksInput.val(items.join(','));
+		};
+		$('#selected-topic-blocks').sortable(topicBlocksSortableOptions);
 
 		$('body').on('click', '.toggle', function(e) {
 			var id = $(this).attr('id');

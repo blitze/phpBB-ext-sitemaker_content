@@ -1,0 +1,21 @@
+services:
+
+    blitze.content.topic_blocks.author_info:
+        class: blitze\content\services\topic\driver\author_info
+        arguments:
+            - '@language'
+            - '@template'
+            - '@blitze.sitemaker.forum.data'
+            - '@blitze.content.helper'
+        tags:
+            - { name: sitemaker.content.topic_blocks }
+
+    blitze.content.topic_blocks.author_contents:
+        class: blitze\content\services\topic\driver\author_contents
+        arguments:
+            - '@language'
+            - '@template'
+            - '@blitze.content.fields'
+            - '@blitze.sitemaker.forum.data'
+        tags:
+            - { name: sitemaker.content.topic_blocks }

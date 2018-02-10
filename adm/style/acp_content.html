@@ -12,13 +12,15 @@
 	{% INCLUDECSS '@blitze_sitemaker/vendor/codemirror/theme/monokai.css' %}
 	{% INCLUDECSS '@blitze_content/assets/acp/content_admin.min.css' %}
 
+	{% if CONTENT_LANGNAME %}{{ lang('CONTENT_TYPE') ~ lang('COLON') }} <strong>{{ CONTENT_LANGNAME }}</strong>{% endif %}
+
 	<form id="edit-type" method="post" action="{{ U_ACTION }}">
 	<fieldset class="permissions">
 		<p class="small">{{ lang('REQUIRED_FIELDS') }}</p><br />
 
 		<div class="permissions-category">
 			<ul id="content-tabs">
-				<li class="activetab"><a class="ctab" href="#ctype"><span class="tabbg">{{ lang('CONTENT_TYPE') }}</span></a></li>
+				<li class="activetab"><a class="ctab" href="#ctype"><span class="tabbg">{{ lang('TYPE') }}</span></a></li>
 				<li><a class="ctab" href="#cfields"><span class="tabbg">{{ lang('CONTENT_FIELDS') }}*</span></a></li>
 				<li><a class="ctab" href="#ctemplates"><span class="tabbg">{{ lang('FIELDS_TEMPLATE') }}</span></a></li>
 				<li><a class="ctab" href="#csettings"><span class="tabbg">{{ lang('CONTENT_SETTINGS') }}</span></a></li>
@@ -188,22 +190,31 @@
 							</dd>
 						</dl>
 						<dl>
-							<dt><label for="show-info">{{ lang('SHOW_AUTHOR_INFO') ~ lang('COLON') }}</label></dt>
-							<dd>
-								<label><input type="radio" class="radio" id="show-info" name="show_info" value="1"{% if SHOW_POSTER_INFO !== false %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-								<label><input type="radio" class="radio" name="show_info" value="0"{% if SHOW_POSTER_INFO === false %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
-							</dd>
-						</dl>
-						<dl>
-							<dt><label for="show-contents">{{ lang('SHOW_AUTHOR_CONTENTS') ~ lang('COLON') }}</label><br /><span>{{ lang('AUTHOR_CONTENTS_EXPLAIN') }}</span></dt>
-							<dd>
-								<label><input type="radio" class="radio" id="show-contents" name="show_contents" value="1"{% if SHOW_POSTER_CONTENTS !== false %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-								<label><input type="radio" class="radio" name="show_contents" value="0"{% if SHOW_POSTER_CONTENTS === false %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
-							</dd>
-						</dl>
-						<dl>
 							<dt><label for="items-per-page">{{ lang('ITEMS_PER_PAGE') ~ lang('COLON') }}</label></dt>
 							<dd><input type="number" id="items-per-page" class="small" size="5" name="items_per_page" value="{{ ITEMS_PER_PAGE }}" /></dd>
+						</dl>
+						<dl>
+							<dt><label for="items-per-page">{{ lang('TOPIC_BLOCKS') ~ lang('COLON') }}</label><br /><span>{{ lang('TOPIC_BLOCKS_EXPLAIN') }}</span></dt>
+							<dd>
+								<input type="hidden" id="input-topic-blocks" name="topic_blocks" value="{{ TOPIC_BLOCKS|join(',') }}" />
+								<div class="options-box">
+									<h6>{{ lang('TOPIC_BLOCKS_SELECTED') }}</h6>
+									<ul id="selected-topic-blocks" class="topic-blocks">
+									{% for service in TOPIC_BLOCKS if TOPIC_BLOCK_OPS[service] %}
+										{%- set name = TOPIC_BLOCK_OPS[service] -%}
+										<li data-service="{{ service }}" title="{{ lang(name ~ '_EXPLAIN') }}">{{ lang(name) }}</li>
+									{% endfor %}
+									</ul>
+								</div>
+								<div class="options-box">
+									<h6>{{ lang('TOPIC_BLOCKS_AVAILABLE') }}</h6>
+									<ul id="available-topic-block-options" class="topic-blocks">
+									{% for service, name in TOPIC_BLOCK_OPS if service not in TOPIC_BLOCKS %}
+										<li data-service="{{ service }}" title="{{ lang(name ~ '_EXPLAIN') }}">{{ lang(name) }}</li>
+									{% endfor %}
+									</ul>
+								</div>
+							</dd>
 						</dl>
 					</fieldset>
 				<span class="corners-bottom"><span></span></span>
