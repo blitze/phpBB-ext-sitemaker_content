@@ -44,6 +44,8 @@ function initSocialShare() {
 	$('.social-share').each(function() {
 		var options = $(this).data();
 		options.shares = options.shares.split(',');
+
+		/* global jsSocials */
 		$(this).jsSocials(options);
 	});
 }
@@ -52,9 +54,6 @@ $(document).ready(function() {
 	'use strict';
 
 	if (window.jsSocials) {
-		/* global jsSocials */
-		jsSocials.shares.email.shareUrl = $('.topic-tools a[href*="mode=email"]').attr('href');
-
 		initSocialShare();
 	}
 
