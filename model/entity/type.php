@@ -35,10 +35,6 @@ use blitze\sitemaker\model\base_entity;
  * @method boolean get_allow_comments()
  * @method object set_allow_views($allow_views)
  * @method boolean get_allow_views()
- * @method object set_show_poster_info($show_poster_info)
- * @method boolean get_show_poster_info()
- * @method object set_show_poster_contents($show_poster_contents)
- * @method boolean get_show_poster_contents()
  * @method object set_show_pagination($show_pagination)
  * @method boolean get_show_pagination()
  * @method object set_index_show_desc($index_show_desc)
@@ -105,12 +101,6 @@ final class type extends base_entity
 	protected $allow_views = true;
 
 	/** @var boolean */
-	protected $show_poster_info = true;
-
-	/** @var boolean */
-	protected $show_poster_contents = true;
-
-	/** @var boolean */
 	protected $show_pagination = true;
 
 	/** @var boolean */
@@ -127,6 +117,9 @@ final class type extends base_entity
 
 	/** @var integer */
 	protected $last_modified = 0;
+
+	/** @var string */
+	protected $topic_blocks = '';
 
 	/** @var array */
 	protected $content_fields = array();
@@ -159,14 +152,13 @@ final class type extends base_entity
 		'req_approval',
 		'allow_comments',
 		'allow_views',
-		'show_poster_info',
-		'show_poster_contents',
 		'show_pagination',
 		'index_show_desc',
 		'items_per_page',
 		'summary_tpl',
 		'detail_tpl',
 		'last_modified',
+		'topic_blocks',
 	);
 
 	/**
@@ -313,6 +305,24 @@ final class type extends base_entity
 
 		$this->content_fields	= $content_fields;
 		$this->field_types		= $field_types;
+	}
+
+	/**
+	 * @param array|string $topic_blocks
+	 * @return $this
+	 */
+	public function set_topic_blocks($topic_blocks)
+	{
+		$this->topic_blocks = is_array($topic_blocks) ? join(',', array_filter($topic_blocks)) : $topic_blocks;
+		return $this;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function get_topic_blocks()
+	{
+		return array_filter(explode(',', $this->topic_blocks));
 	}
 
 	/**
