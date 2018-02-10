@@ -137,7 +137,8 @@ class index extends filter implements action_interface
 		$topic_tracking_info = $this->forum->get_topic_tracking_info();
 
 		$topics_data = array_values($topics_data);
-		$base_url = $u_action . http_build_query($this->params);
+		unset($this->params['type']);
+		$base_url = join('&amp;', array($u_action, http_build_query($this->params)));
 
 		for ($i = 0, $size = sizeof($topics_data); $i < $size; $i++)
 		{
