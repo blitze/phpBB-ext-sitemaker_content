@@ -252,7 +252,8 @@ function initMap() {
 		/**
 		 * Image field
 		 */
-		$('.image-field').change(function() {
+		$('.image-field').each(function() {
+			$(this).change(function() {
 				var imgSrc = $(this).val();
 				var fieldId = $(this).attr('name');
 
@@ -265,5 +266,6 @@ function initMap() {
 				'autoScale': false,
 				'type': 'iframe'
 			});
+		});
 	});
 })(jQuery, window, document);
