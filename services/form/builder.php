@@ -99,16 +99,18 @@ class builder
 	 * @param int $topic_id
 	 * @param string $mode
 	 * @param bool $save_draft
-	 * @return string|false
+	 * @return array
 	 */
 	public function init($forum_id, $topic_id, $mode, $save_draft)
 	{
+		$content_langname = '';
 		if ($type = $this->types->get_forum_type($forum_id))
 		{
 			$this->language->add_lang('posting', 'blitze/content');
 
 			/** @var \blitze\content\model\entity\type $entity */
 			$entity = $this->types->get_type($type, true);
+			$content_langname = $entity->get_content_langname();
 			$fields_data = $entity->get_content_fields();
 
 			/**
@@ -133,7 +135,7 @@ class builder
 			}
 		}
 
-		return $type;
+		return array($type, $content_langname);
 	}
 
 	/**
