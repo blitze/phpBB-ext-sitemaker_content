@@ -6,10 +6,10 @@
 	<label><input type="{{ type|default('radio') }}" id="{{ id }}" class="{{ class }}" name="{{ name }}" value="{{ value }}"{{ checked ? ' checked="checked"' : '' }} /> {{ lang(label) }}</label>
 {% endmacro %}
 
-{% macro dropdown(id, name, value, options) %}
-	<select id="{{ id }}" name="{{ name }}">
+{% macro dropdown(id, name, value, options, togglable) %}
+	<select id="{{ id }}" name="{{ name }}"{% if togglable %} data-togglable-settings="true"{% endif %}>
 	{% for option in options -%}
-		<option value="{{ option.value }}"{% if option.value == value %} selected="selected"{% endif %}>{{ lang(option.label) }}</option>
+		<option value="{{ option.value }}"{% if option.value == value %} selected="selected"{% endif %}{% if togglable %} data-toggle-setting="#{{ id ~ '-' ~ option.value|replace({'.': '\\.'}) }}"{% endif %}>{{ lang(option.label) }}</option>
 	{%- endfor %}
 	</select>
 {% endmacro %}
