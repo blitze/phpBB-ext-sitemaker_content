@@ -63,11 +63,11 @@ class fields extends topic
 	}
 
 	/**
-	 * Set type data needed to display topics
+	 * Set type data needed to display topics. This should only run once
 	 *
 	 * @param \blitze\content\model\entity\type $entity
 	 * @param array $topic_ids
-	 * @param array $view_mode_fields
+	 * @param array $view_mode_fields	array of form array([field_name] => [field_type])
 	 * @param string $custom_tpl
 	 * @param string $view_mode
 	 * @param string $tpl_name
@@ -93,11 +93,12 @@ class fields extends topic
 		extract($this->phpbb_dispatcher->trigger_event('blitze.content.fields.set_values', compact($vars)));
 
 		$this->display_mode = $view_mode;
-		$this->content_type = $entity->get_content_name();
 		$this->tpl_name	= ($custom_tpl) ? $tpl_name ?: $this->content_type . '_' . $view_mode : '';
 		$this->view_mode = (in_array($view_mode, array('summary', 'detail'))) ? $view_mode : 'summary';
-		$this->form_fields = array_intersect_key($this->fields_factory->get_all(), array_flip($view_mode_fields));
 		$this->db_fields = $db_fields;
+
+		$this->content_type = $entity->get_content_name();
+		$this->set_form_fields($view_mode_fields);
 		$this->set_content_fields($view_mode_fields, $entity->get_content_fields());
 	}
 
@@ -151,11 +152,11 @@ class fields extends topic
 	}
 
 	/**
-	 * @param array $view_mode_fields
+	 * @param array $view_mode_fields	array of form array([field_name] => [field_type])
 	 * @param array $fields_data
 	 * @return void
 	 */
-	protected function set_content_fields(array $view_mode_fields, array $fields_data)
+	public function set_content_fields(array $view_mode_fields, array $fields_data)
 	{
 		foreach ($view_mode_fields as $name => $field_type)
 		{
@@ -164,6 +165,24 @@ class fields extends topic
 				$this->content_fields[$name] = $fields_data[$name];
 			}
 		}
+	}
+
+	/**
+	 * @param array $view_mode_fields	array of form array([field_name] => [field_type])
+	 * @return void
+	 */
+	public function set_form_fields(array $view_mode_fields)
+	{
+		$this->form_fields = array_intersect_key($this->fields_factory->get_all(), array_flip($view_mode_fields));
+	}
+
+	/**
+	 * @param string $type
+	 * @return void
+	 */
+	public function set_content_type($type)
+	{
+		$this->content_type = $type;
 	}
 
 	/**
