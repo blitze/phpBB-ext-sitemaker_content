@@ -62,8 +62,7 @@ class view implements action_interface
 		$view_tpl = '';
 		if (($entity = $this->content_types->get_type($type)) !== false)
 		{
-			$entity->set_show_poster_info(false);
-			$entity->set_show_poster_contents(false);
+			$entity->set_topic_blocks('');
 			$entity->set_allow_comments(false);
 
 			$update_count = array();
