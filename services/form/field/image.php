@@ -87,12 +87,12 @@ class image extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field(array $data, $mode = '')
+	public function display_field(array $data = array(), $view_mode = 'summary')
 	{
 		$image = '';
 		if ($data['field_value'] || $data['field_props']['default'])
 		{
-			$image = $this->get_image_html($data['field_value'], $mode, $data['field_props']);
+			$image = $this->get_image_html($data['field_value'], $view_mode, $data['field_label'], $data['field_props']);
 		}
 		return $image;
 	}
@@ -131,12 +131,13 @@ class image extends base
 	/**
 	 * @param string $image
 	 * @param string $mode
+	 * @param string $title
 	 * @param array $field_props
 	 * @return string
 	 */
-	private function get_image_html($image, $mode, array $field_props)
+	private function get_image_html($image, $mode, $title, array $field_props)
 	{
-		$image = $image ?: '<img src="' . $field_props['default'] . '" class="postimage" alt="Image" />';
+		$image = $image ?: '<img src="' . $field_props['default'] . '" class="postimage" alt="' . $title . '" />';
 
 		$html = '<figure class="img-ui">' . $image . '</figure>';
 		if ($mode !== 'block')
