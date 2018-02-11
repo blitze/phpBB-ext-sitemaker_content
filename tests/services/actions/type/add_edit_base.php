@@ -21,6 +21,7 @@ class add_edit_base extends \phpbb_database_test_case
 	protected $user;
 	protected $auto_lang;
 	protected $fields_factory;
+	protected $topic_blocks_factory;
 	protected $views_factory;
 
 	/**
@@ -137,11 +138,33 @@ class add_edit_base extends \phpbb_database_test_case
 			->method('get_langname')
 			->will($this->returnValue('CONTENT_DISPLAY_BAR'));
 
+		$foo_topic_block = $this->getMockBuilder('\stdClass')
+			->setMethods(array('get_name', 'get_langname'))
+			->getMock();
+		$foo_topic_block->expects($this->any())
+			->method('get_name')
+			->will($this->returnValue('foo'));
+		$foo_topic_block->expects($this->any())
+			->method('get_langname')
+			->will($this->returnValue('TOPIC_BLOCK_FOO'));
+
+		$bar_topic_block = $this->getMockBuilder('\stdClass')
+			->setMethods(array('get_name', 'get_langname'))
+			->getMock();
+		$bar_topic_block->expects($this->any())
+			->method('get_name')
+			->will($this->returnValue('bar'));
+		$bar_topic_block->expects($this->any())
+			->method('get_langname')
+			->will($this->returnValue('TOPIC_BLOCK_BAR'));
+
 		$phpbb_container = new \phpbb_mock_container_builder();
 		$phpbb_container->set('my.foo.field', $text_field);
 		$phpbb_container->set('my.bar.field', $checkbox_field);
 		$phpbb_container->set('my.foo.view', $foo_view);
 		$phpbb_container->set('my.bar.view', $bar_view);
+		$phpbb_container->set('my.foo.topic_block', $foo_topic_block);
+		$phpbb_container->set('my.bar.topic_block', $bar_topic_block);
 
 		$form_fields = new \phpbb\di\service_collection($phpbb_container);
 		$form_fields->add('my.foo.field');
@@ -152,5 +175,10 @@ class add_edit_base extends \phpbb_database_test_case
 		$views->add('my.foo.view');
 		$views->add('my.bar.view');
 		$this->views_factory = new \blitze\content\services\views\views_factory($this->language, $views);
+
+		$topic_blocks = new \phpbb\di\service_collection($phpbb_container);
+		$topic_blocks->add('my.foo.topic_block');
+		$topic_blocks->add('my.bar.topic_block');
+		$this->topic_blocks_factory = new \blitze\content\services\topic\blocks_factory($topic_blocks);
 	}
 }

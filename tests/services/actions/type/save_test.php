@@ -101,7 +101,7 @@ class save_test extends \phpbb_database_test_case
 				$forum_data['forum_id'] = (isset($forum_data['forum_id'])) ? $forum_data['forum_id'] : 8;
 			});
 
-		return new save($auth, $cache, $config, $db, $this->language, $logger, $request, $user, $types, $forum_manager, $this->mapper_factory, $phpbb_admin_path, $phpEx, false);
+		return new save($auth, $cache, $config, $db, $phpbb_dispatcher, $this->language, $logger, $request, $user, $types, $forum_manager, $this->mapper_factory, $phpbb_admin_path, $phpEx, false);
 	}
 
 	/**
@@ -198,6 +198,7 @@ class save_test extends \phpbb_database_test_case
 					array('content_enabled', true, false, request_interface::REQUEST, true),
 					array('content_view', '', false, request_interface::REQUEST, 'blitze.content.view.blog'),
 					array('copy_forum_perm', 0, false, request_interface::REQUEST, 1),
+					array('topic_blocks', '', false, request_interface::REQUEST, 'foo'),
 					array(array('view_settings', $content_view), array('' => ''), false, request_interface::REQUEST, array('' => '')),
 					array('field_data', array('' => array('' => '')), true, request_interface::REQUEST, $fields_data),
 					array(array('field_props', 'field1'), array('' => ''), false, request_interface::REQUEST, array('' => '')),
@@ -234,6 +235,7 @@ class save_test extends \phpbb_database_test_case
 							),
 						),
 					),
+					'topic_blocks'		=> array('foo'),
 				),
 				'CONTENT_TYPE_CREATED <a href="index.php?i=permissions&mode=setting_forum_local&forum_id[]=8"> </a><br /><br /><a href="admin_url">&laquo; </a>',
 			),
@@ -246,6 +248,7 @@ class save_test extends \phpbb_database_test_case
 					array('content_enabled', true, false, request_interface::REQUEST, true),
 					array('content_view', '', false, request_interface::REQUEST, $content_view),
 					array('copy_forum_perm', 0, false, request_interface::REQUEST, 0),
+					array('topic_blocks', '', false, request_interface::REQUEST, 'foo,bar'),
 					array(array('view_settings', $content_view), array('' => ''), false, request_interface::REQUEST, array('' => '')),
 					array('field_data', array('' => array('' => '')), true, request_interface::REQUEST, $fields_data),
 					array(array('field_props', 'field1'), array('' => ''), false, request_interface::REQUEST, array('' => '')),
@@ -280,6 +283,7 @@ class save_test extends \phpbb_database_test_case
 							),
 						),
 					),
+					'topic_blocks'		=> array('foo', 'bar'),
 				),
 				'CONTENT_TYPE_UPDATED<br /><br /><a href="admin_url">&laquo; </a>',
 			),

@@ -83,7 +83,7 @@ class image_test extends base_form_field
 				array(
 					'default'	=> 'bar',
 				),
-				'<div class=""><figure class="img-ui"><img src="bar" class="postimage" alt="Image" /></figure></div>',
+				'<div class=""><figure class="img-ui"><img src="bar" class="postimage" alt="My Field" /></figure></div>',
 			),
 			array(
 				'',
@@ -92,31 +92,31 @@ class image_test extends base_form_field
 					'default'	=> 'bar',
 					'summary_size'	=> 'fullwidth-img',
 				),
-				'<div class="fullwidth-img"><figure class="img-ui"><img src="bar" class="postimage" alt="Image" /></figure></div>',
+				'<div class="fullwidth-img"><figure class="img-ui"><img src="bar" class="postimage" alt="My Field" /></figure></div>',
 			),
 			array(
-				'<img src="foo" class="postimage" alt="Image" />',
+				'<img src="foo" class="postimage" alt="My Field" />',
 				'summary',
 				array(),
-				'<div class=""><figure class="img-ui"><img src="foo" class="postimage" alt="Image" /></figure></div>',
+				'<div class=""><figure class="img-ui"><img src="foo" class="postimage" alt="My Field" /></figure></div>',
 			),
 			array(
-				'<img src="bar" class="postimage" alt="Image" />',
+				'<img src="bar" class="postimage" alt="My Field" />',
 				'detail',
 				array(),
-				'<div class=""><figure class="img-ui"><img src="bar" class="postimage" alt="Image" /></figure></div>',
+				'<div class=""><figure class="img-ui"><img src="bar" class="postimage" alt="My Field" /></figure></div>',
 			),
 			array(
-				'<img src="foo" class="postimage" alt="Image" />',
+				'<img src="foo" class="postimage" alt="My Field" />',
 				'summary',
 				array(
 					'detail_size'	=> 'medium-img',
 					'summary_size'	=> 'fullwidth-img',
 				),
-				'<div class="fullwidth-img"><figure class="img-ui"><img src="foo" class="postimage" alt="Image" /></figure></div>',
+				'<div class="fullwidth-img"><figure class="img-ui"><img src="foo" class="postimage" alt="My Field" /></figure></div>',
 			),
 			array(
-				'<img src="bar" class="postimage" alt="Image" />',
+				'<img src="bar" class="postimage" alt="My Field" />',
 				'detail',
 				array(
 					'detail_align'	=> 'img-align-left',
@@ -124,7 +124,7 @@ class image_test extends base_form_field
 					'detail_size'	=> 'medium-img',
 					'summary_size'	=> 'fullwidth-img',
 				),
-				'<div class="img-align-left medium-img"><figure class="img-ui"><img src="bar" class="postimage" alt="Image" /></figure></div>',
+				'<div class="img-align-left medium-img"><figure class="img-ui"><img src="bar" class="postimage" alt="My Field" /></figure></div>',
 			),
 		);
 	}
@@ -141,6 +141,7 @@ class image_test extends base_form_field
 	{
 		$field = $this->get_form_field('image');
 		$data = array(
+			'field_label' => 'My Field',
 			'field_value' => $field_value,
 			'field_props' => $field_props + $field->get_default_props()
 		);

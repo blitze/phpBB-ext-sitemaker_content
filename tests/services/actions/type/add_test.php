@@ -21,7 +21,7 @@ class add_test extends add_edit_base
 	{
 		parent::get_command($call_count);
 
-		return new add($this->auth, $this->controller_helper, $this->language, $this->template, $this->user, $this->auto_lang, $this->fields_factory, $this->views_factory);
+		return new add($this->auth, $this->controller_helper, $this->language, $this->template, $this->user, $this->auto_lang, $this->fields_factory, $this->topic_blocks_factory,  $this->views_factory);
 	}
 
 	public function test_add_type()
@@ -38,7 +38,6 @@ class add_test extends add_edit_base
 		    'POST_AUTHOR'		=> 'admin',
 		    'POST_DATE'			=> 'NOW',
 		    'ITEMS_PER_PAGE'	=> 10,
-		    'TOPICS_PER_GROUP'	=> 4,
 		    'U_ACTION'			=> 'admin_url&amp;do=save&amp;type=',
 		    'S_TYPE_OPS'		=> '<option value="text">FORM_FIELD_TEXT</option>' .
 		    						'<option value="checkbox">FORM_FIELD_CHECKBOX</option>',
@@ -49,6 +48,10 @@ class add_test extends add_edit_base
 		    'S_CAN_COPY_PERMISSIONS'	=> true,
 		    'S_EDIT'					=> true,
 			'UA_AJAX_URL'				=> 'phpBB/app.php/content/admin/field',
+			'TOPIC_BLOCK_OPS'			=> array(
+				'bar'	=> 'TOPIC_BLOCK_BAR',
+				'foo'	=> 'TOPIC_BLOCK_FOO',
+			),
 		);
 
 		$this->assertEquals($expected, $this->template->assign_display('test'));
