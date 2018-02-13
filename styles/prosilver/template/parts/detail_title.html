@@ -8,7 +8,7 @@
 		<i class="icon fa-file fa-fw {% if S_UNREAD_POST %}icon-red{% else %}icon-lightgray{% endif %} icon-md" aria-hidden="true"></i><span class="sr-only">{{ MINI_POST }}</span>
 	</a>
 	{% endif %}
-	<span class="responsive-hide">{{ lang('POST_BY_AUTHOR') }} </span><strong>{{ USERNAME_FULL }}</strong> | <i class="fa fa-calendar"></i>{{ TOPIC_DATE|date("m/d/Y") }}
+	<span class="responsive-hide">{{ lang('POST_BY_AUTHOR') }} </span><strong>{{ USERNAME_FULL }}</strong> | <i class="fa fa-calendar"></i>{{ TOPIC_DATE|date(lang('CONTENT_SHORT_DATE_FORMAT')) }}
 	{% if S_VIEWS %} | <i class="fa fa-eye"></i><span class="responsive-hide">{{ lang('VIEWS') }}{{ lang('COLON') }} </span>{{ TOPIC_VIEWS }}{% endif %}
 	{% if S_COMMENTS %} | <i class="fa fa-comments-o fa-lg"></i><a href="{{ TOPIC_URL }}#comments"><span class="responsive-hide">{{ lang('COMMENTS') }}{{ lang('COLON') }} </span>{{ TOPIC_COMMENTS }}</a>{% endif %}
 	<span class="responsive-hide">{{ topicrow.FIELDS.inline|join('|') }}</span>

@@ -62,6 +62,7 @@ $lang = array_merge($lang, array(
 
 	'INPUT_SIZE'				=> 'Input size',
 
+	'LABEL_HIDDEN'				=> 'Yes - Hidden (spacer)',
 	'LABEL_INLINE'				=> 'Yes - Same line',
 	'LABEL_NEWLINE'				=> 'Yes - New line',
 
