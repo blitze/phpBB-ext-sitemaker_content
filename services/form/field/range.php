@@ -77,7 +77,7 @@ class range extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field(array $data)
+	public function display_field(array $data, array $topic_data, $view_mode)
 	{
 		if (!$data['field_value'])
 		{

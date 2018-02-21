@@ -56,7 +56,7 @@ class telephone_test extends base_form_field
 	{
 		$field = $this->get_form_field('telephone');
 		$data = array('field_value' => $field_value);
-		$this->assertEquals($expected, $field->display_field($data));
+		$this->assertEquals($expected, $field->display_field($data, array(), 'summary'));
 	}
 
 	/**

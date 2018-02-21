@@ -63,7 +63,7 @@ class color extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field(array $data)
+	public function display_field(array $data, array $topic_data, $view_mode)
 	{
 		$sep = $this->language->lang('COMMA_SEPARATOR');
 		$field_value = array_filter(explode('<br>', $data['field_value']));

@@ -83,14 +83,9 @@ class textarea extends base
 	}
 
 	/**
-	 * Display content field
-	 *
-	 * @param array $data
-	 * @param string $view_mode
-	 * @param array $topic_data
-	 * @return mixed
+	 * @inheritdoc
 	 */
-	public function display_field(array $data = array(), $view_mode = 'summary', array $topic_data = array())
+	public function display_field(array $data, array $topic_data, $view_mode)
 	{
 		$toc_pattern = '(<h4>(.*?)</h4>)?';
 		$pages_pattern = '<p><!-- pagebreak --></p>';

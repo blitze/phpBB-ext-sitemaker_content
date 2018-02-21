@@ -166,7 +166,7 @@ class range_test extends base_form_field
 		$this->util->expects($this->exactly(($data['field_props']['display'] === 'slider') ? 2 : 0))
 			->method('add_assets');
 
-		$this->assertEquals($expected, str_replace(array("\n", "\t"), '', $field->display_field($data)));
+		$this->assertEquals($expected, str_replace(array("\n", "\t"), '', $field->display_field($data, array(), 'summary')));
 	}
 
 	/**

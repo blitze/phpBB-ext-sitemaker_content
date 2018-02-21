@@ -58,8 +58,9 @@ class checkbox_test extends base_form_field
 	public function test_display_field($field_value, $expected)
 	{
 		$field = $this->get_form_field('checkbox');
+
 		$data = array('field_value' => $field_value);
-		$this->assertEquals($expected, $field->display_field($data));
+		$this->assertEquals($expected, $field->display_field($data, array(), 'summary'));
 	}
 
 	/**

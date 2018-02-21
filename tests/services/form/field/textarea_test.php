@@ -289,7 +289,7 @@ class textarea_test extends base_form_field
 		// can't test TOC and pages as a result
 		// $result = $this->template->assign_display('test');
 
-		$this->assertEquals($expected_content, $field->display_field($data, $view));
+		$this->assertEquals($expected_content, $field->display_field($data, array(), $view));
 	}
 
 	/**

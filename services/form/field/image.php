@@ -87,7 +87,7 @@ class image extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field(array $data = array(), $view_mode = 'summary')
+	public function display_field(array $data, array $topic_data, $view_mode)
 	{
 		$image = '';
 		if ($data['field_value'] || $data['field_props']['default'])

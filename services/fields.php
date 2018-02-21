@@ -27,6 +27,9 @@ class fields extends topic
 	protected $content_fields;
 
 	/** @var string */
+	protected $board_url = '';
+
+	/** @var string */
 	protected $tpl_name = '';
 
 	/** @var string */
@@ -92,6 +95,7 @@ class fields extends topic
 		$vars = array('view_mode', 'view_mode_fields', 'entity', 'db_fields');
 		extract($this->phpbb_dispatcher->trigger_event('blitze.content.fields.set_values', compact($vars)));
 
+		$this->board_url = generate_board_url(true);
 		$this->display_mode = $view_mode;
 		$this->tpl_name	= ($custom_tpl) ? $tpl_name ?: $this->content_type . '_' . $view_mode : '';
 		$this->view_mode = (in_array($view_mode, array('summary', 'detail'))) ? $view_mode : 'summary';
@@ -124,6 +128,8 @@ class fields extends topic
 			$this->{$callable}($type, $topic_data, $post_data, $users_cache, $attachments, $topic_tracking_info, $update_count, $mode),
 			$topic_data_overwrite
 		);
+
+		$tpl_data['PERMA_LINK'] = $this->board_url . parse_url($tpl_data['TOPIC_URL'], PHP_URL_PATH);
 
 		return $this->build_content($tpl_data);
 	}
@@ -197,10 +203,11 @@ class fields extends topic
 		foreach ($this->content_fields as $field_name => $field_data)
 		{
 			$field_type = $field_data['field_type'];
+			$field_data['content_type'] = $this->content_type;
 			$field_data['field_props'] = array_replace_recursive($this->form_fields[$field_type]->get_default_props(), $field_data['field_props']);
 			$field_data['field_value'] = &$field_values[$field_name];
 
-			$field_contents	= $this->form_fields[$field_type]->display_field($field_data, $this->display_mode, $tpl_data, $this->content_type);
+			$field_contents	= $this->form_fields[$field_type]->display_field($field_data, $tpl_data, $this->display_mode);
 
 			// this essentially hides other fields if the field returns an array
 			if (is_array($field_contents))

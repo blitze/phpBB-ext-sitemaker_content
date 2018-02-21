@@ -55,7 +55,7 @@ class text_test extends base_form_field
 	{
 		$field = $this->get_form_field('text');
 		$data = array('field_value' => $field_value);
-		$this->assertEquals($expected, $field->display_field($data));
+		$this->assertEquals($expected, $field->display_field($data, array(), 'summary'));
 	}
 
 	/**

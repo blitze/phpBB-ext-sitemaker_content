@@ -95,7 +95,7 @@ class location extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field(array $data, $mode = '')
+	public function display_field(array $data, array $topic_data, $view_mode)
 	{
 		if (!$data['field_value'])
 		{

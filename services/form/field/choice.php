@@ -54,7 +54,7 @@ abstract class choice extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field(array $data)
+	public function display_field(array $data, array $topic_data, $view_mode)
 	{
 		$field_value = array_filter(explode('<br>', $data['field_value']));
 		return sizeof($field_value) ? join($this->language->lang('COMMA_SEPARATOR'), $field_value) : '';

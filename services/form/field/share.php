@@ -48,7 +48,7 @@ class share extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field(array $data, $mode = '')
+	public function display_field(array $data, array $topic_data, $view_mode)
 	{
 		$props = $data['field_props'];
 
@@ -69,6 +69,7 @@ class share extends base
 			'data-show-count="' . $props['show_count'] . '"',
 			'data-share-in="' . $props['sharein'] . '"',
 			'data-shares="' . join(',', $props['defaults']) . '"',
+			'data-url="' . $topic_data['PERMA_LINK'] . '"',
 			'style="font-size: ' . $props['size'] . 'px"',
 		];
 

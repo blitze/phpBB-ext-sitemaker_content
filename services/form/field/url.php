@@ -14,7 +14,7 @@ class url extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field(array $data)
+	public function display_field(array $data, array $topic_data, $view_mode)
 	{
 		return make_clickable($data['field_value']);
 	}
