@@ -1,5 +1,10 @@
 services:
 
+    blitze.content.event.assets:
+        class: blitze\content\event\assets
+        tags:
+            - { name: event.listener }
+
     blitze.content.event.bbcodes:
         class: blitze\content\event\bbcodes
         tags:

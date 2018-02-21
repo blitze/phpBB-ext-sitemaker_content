@@ -26,3 +26,13 @@ services:
             - [set_name, [blitze.content.block.recent]]
         tags:
             - { name: sitemaker.block }
+
+    blitze.content.block.swiper:
+        class: blitze\content\blocks\swiper
+        parent: blitze.content.block.recent
+        arguments:
+            - '@blitze.sitemaker.util'
+        calls:
+            - [set_name, [blitze.content.block.swiper]]
+        tags:
+            - { name: sitemaker.block }

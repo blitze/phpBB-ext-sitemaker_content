@@ -1,0 +1,52 @@
+{%- if loops.topicrow|length -%}
+	{%- set image_field = '' -%}
+	{%- for field_name, field_type in FIELD_TYPES if field_type == 'image' -%}
+		{%- set image_field = field_name -%}
+	{%- endfor -%}
+	
+	{%- set props = '' -%}
+	{%- for attribute in ['autoplay', 'centered-slides', 'direction', 'effect', 'free-mode', 'loop', 'navigation', 'pagination', 'parallax', 'set-wrapper-size', 'slides-per-group', 'slides-per-view', 'space-between', 'text_position', 'theme', 'thumbs'] -%}
+		{%- set props = props ~ ' data-' ~ attribute ~ '="' ~ SETTINGS[attribute] ~ '"' -%}
+	{%- endfor -%}
+	<div id="swiper-{{ ID }}" class="swiper swiper-container gallery-top"{{ props }}{% if SETTINGS.height %} style="height: {{ SETTINGS.height }}px"{% endif %}>
+		{%- if SETTINGS.parallax -%}
+			{%- set image_field = '' -%}
+		<div class="swiper-parallax" style="background-image:url({{ SETTINGS.parallax }})" data-swiper-parallax="-{{ (1 / topicrow|length) * 100 - 5 }}%"></div>
+		{%- endif -%}
+		<div class="swiper-wrapper">
+			{% for topicrow in loops.topicrow %}
+			<div class="swiper-slide img-responsive-16by9">
+				<div class="txt-pos-{{ SETTINGS.text_position !== 'random' ? SETTINGS.text_position : random(['top', 'left', 'center', 'right', 'bottom']) }}">
+					{{ topicrow.FIELDS.all[image_field] }}
+					<div class="postbody sm-postbody sm-inner">
+						<div class="content">
+							<h3 class="topic-title"><a href="{{ topicrow.TOPIC_URL }}">{{ topicrow.TOPIC_TITLE }}</a></h3>
+						{%- for field, content in topicrow.FIELDS.all if field !== image_field -%}
+							{{ content }}
+						{%- endfor -%}
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	
+		{%- if SETTINGS.pagination -%}
+		<div class="swiper-pagination swiper-pagination-{{ SETTINGS.theme }}"></div>
+		{%- endif -%}
+	
+		{%- if SETTINGS.navigation -%}
+		<div class="swiper-button-prev swiper-button-{{ SETTINGS.theme }}"></div>
+		<div class="swiper-button-next swiper-button-{{ SETTINGS.theme }}"></div>
+		{%- endif -%}
+	</div>
+	{% if SETTINGS.thumbs %}
+	<div id="thumbs-{{ ID }}" class="swiper-container gallery-thumbs">
+		<div class="swiper-wrapper">
+			{% for topicrow in loops.topicrow %}
+			<div class="bg3 swiper-slide img-responsive-16by9">{{ topicrow.FIELDS.all[image_field]|default('<img src="" />') }}</div>
+			{% endfor %}
+		</div>
+	</div>
+	{% endif %}
+{%- endif -%}
