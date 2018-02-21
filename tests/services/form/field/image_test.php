@@ -146,7 +146,7 @@ class image_test extends base_form_field
 			'field_props' => $field_props + $field->get_default_props()
 		);
 
-		$this->assertEquals($expected, $field->display_field($data, array(), 'summary'));
+		$this->assertEquals($expected, $field->display_field($data, array(), $view));
 	}
 
 	/**
