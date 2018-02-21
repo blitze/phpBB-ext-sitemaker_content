@@ -32,7 +32,7 @@
 		</div>
 	
 		{%- if SETTINGS.pagination -%}
-		<div class="swiper-pagination swiper-pagination-{{ SETTINGS.theme }}"></div>
+		<div class="swiper-pagination swiper-pagination-{{ SETTINGS.theme }}{% if SETTINGS.text_position == 'after'  %} swiper-pagination-after{% endif %}"></div>
 		{%- endif -%}
 	
 		{%- if SETTINGS.navigation -%}

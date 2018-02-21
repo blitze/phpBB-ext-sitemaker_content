@@ -84,6 +84,11 @@ $text-color: #d2d2d2;
 	}
 }
 
+.swiper-pagination-after {
+	position: static;
+	margin-top: 5px;
+}
+
 .swiper-parallax {
 	position: absolute;
 	left: 0;
