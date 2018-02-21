@@ -13,18 +13,20 @@
 			"role": "Lead Developer"
 		}],
 	"require": {
-		"php": ">=5.3",
+		"php": ">=5.4",
+		"composer/installers": "^1.1",
 		"cocur/slugify" : "@stable",
-		"composer/installers": "~1.0",
 		"urodoz/truncate-html": "@stable"
-	},
-	"require-dev": {
-		"phpbb/epv": "dev-master"
 	},
 	"extra": {
 		"display-name": "SiteMaker Content Types",
 		"soft-require": {
 			"phpbb/phpbb": ">=3.2.1,<3.3.0@dev"
+		},
+		"version-check": {
+			"host": "www.phpbb.com",
+			"directory": "/customise/db/extension/sitemaker_content",
+			"filename": "version_check"
 		}
 	}
 }
