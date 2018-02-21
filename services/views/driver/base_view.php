@@ -211,6 +211,7 @@ abstract class base_view implements views_interface
 		$this->fields->show_attachments($attachments, $post_data['post_id']);
 		$this->show_topic_blocks($entity, $topic_data, $post_data, array_shift($users_cache));
 		$this->quickmod->show_tools($topic_data);
+		$this->set_meta_tags($entity->get_detail_fields(), $tpl_data);
 
 		return array_merge($topic_data, array(
 			'topic_title'		=> $tpl_data['TOPIC_TITLE'],
@@ -328,5 +329,61 @@ abstract class base_view implements views_interface
 	protected function set_mcp_url($forum_id, $topic_id = 0)
 	{
 		$this->template->assign_var('U_MCP', $this->helper->get_mcp_url($forum_id, $topic_id));
+	}
+
+	/**
+	 * @param array $field_types
+	 * @param array $topic_data
+	 * @return array
+	 */
+	protected function set_meta_tags(array $field_types, array $topic_data)
+	{
+		$image_url = $this->get_topic_image_url($field_types, $topic_data['FIELDS']['all']);
+		$description = $this->get_topic_description($field_types, $topic_data['FIELDS']['all']);
+
+		$meta = "<meta name=\"description\" content=\"$description\" />\n";
+		$meta .= "<meta name=\"twitter:card\" value=\"summary\">\n";
+		$meta .= "<meta property=\"og:title\" content=\"{$topic_data['TOPIC_TITLE']}\" />\n";
+		$meta .= "<meta property=\"og:type\" content=\"article\" />\n";
+		$meta .= "<meta property=\"og:url\" content=\"{$topic_data['PERMA_LINK']}\" />\n";
+		$meta .= "<meta property=\"og:image\" content=\"$image_url\" />\n";
+		$meta .= "<meta property=\"og:description\" content=\"$description\" />";
+
+		$this->template->assign_var('META', $meta);
+	}
+
+	/**
+	 * @param array $field_types
+	 * @param array $fields_data
+	 * @return string
+	 */
+	protected function get_topic_image_url(array $field_types, array $fields_data)
+	{
+		$image_url = '';
+
+		$image_field = array_shift(array_keys($field_types, 'image'));
+		if (null !== ($figure = $fields_data[$image_field]) && preg_match('/src="(.*?)"/i', $figure, $matches))
+		{
+			$image_url = $matches[1];
+		}
+
+		return $image_url;
+	}
+
+	/**
+	 * @param array $field_types
+	 * @param array $fields_data
+	 * @return string
+	 */
+	protected function get_topic_description(array $field_types, array $fields_data)
+	{
+		$desc_field = array_shift(array_keys($field_types, 'textarea'));
+
+		if (null !== ($description = $fields_data[$desc_field]))
+		{
+			$description = implode(' ', array_slice(explode(' ', strip_tags($description)), 1, 20));
+		}
+
+		return $description;
 	}
 }
