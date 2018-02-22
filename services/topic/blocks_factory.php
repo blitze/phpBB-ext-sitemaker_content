@@ -41,7 +41,7 @@ class blocks_factory
 	 * Get topic block object
 	 *
 	 * @param string $service_name
-	 * @return null|\blitze\content\services\topic\block_interface
+	 * @return null|\blitze\content\services\topic\driver\block_interface
 	 */
 	public function get($service_name)
 	{
