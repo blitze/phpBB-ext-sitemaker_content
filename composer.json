@@ -15,7 +15,7 @@
 	"require": {
 		"php": ">=5.4",
 		"composer/installers": "^1.1",
-		"cocur/slugify" : "@stable",
+		"cocur/slugify": "1.4.1",
 		"urodoz/truncate-html": "@stable"
 	},
 	"extra": {
