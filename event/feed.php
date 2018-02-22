@@ -78,11 +78,12 @@ class feed implements EventSubscriberInterface
 			$types_ary = $this->content_types->get_all_types();
 
 			$feeds = array();
-			foreach ($types_ary as $type)
+			foreach ($types_ary as $entity)
 			{
-				$feeds[] = array(
-					'type'		=> $type->get_content_name(),
-					'langname'	=> $type->get_content_langname(),
+                /** @var \blitze\content\model\entity\type $entity */
+                $feeds[] = array(
+					'type'		=> $entity->get_content_name(),
+					'langname'	=> $entity->get_content_langname(),
 				);
 			}
 

@@ -130,7 +130,8 @@ class listener implements EventSubscriberInterface
 
 		foreach ($list as $type => $entity)
 		{
-			$text .= "\t" . $entity->get_content_langname() . '|';
+            /** @var \blitze\content\model\entity\type $entity */
+            $text .= "\t" . $entity->get_content_langname() . '|';
 			$text .= $this->helper->route('blitze_content_type', array('type' => $type), false, '', UrlGeneratorInterface::RELATIVE_PATH) . "\n";
 		}
 

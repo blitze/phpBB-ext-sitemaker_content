@@ -62,7 +62,7 @@ class tiles extends base_view
 	/**
 	 * @inheritdoc
 	 */
-	public function render_index(\blitze\content\model\entity\type $entity, $page, array $filters)
+    public function render_index(\blitze\content\model\entity\type $entity, $page, array $filters, array $topic_data_overwrite = array())
 	{
 		parent::render_index($entity, $page, $filters);
 

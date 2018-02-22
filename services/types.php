@@ -52,7 +52,8 @@ class types
 
 			foreach ($collection as $entity)
 			{
-				$forum_id = $entity->get_forum_id();
+                /** @var \blitze\content\model\entity\type $entity */
+                $forum_id = $entity->get_forum_id();
 				$content_name = $entity->get_content_name();
 
 				$types_data['forums'][$forum_id] = $content_name;

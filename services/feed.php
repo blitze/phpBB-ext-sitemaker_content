@@ -20,6 +20,9 @@ class feed
 	/** @var \phpbb\controller\helper */
 	protected $controller_helper;
 
+    /** @var \phpbb\language\language */
+    protected $language;
+
 	/** @var \phpbb\symfony_request */
 	protected $symfony_request;
 
@@ -40,15 +43,17 @@ class feed
 	 *
 	 * @param \phpbb\config\config			$config					Config object
 	 * @param \phpbb\controller\helper		$controller_helper		Controller Helper object
+     * @param \phpbb\language\language		$language				Language object
 	 * @param \phpbb\symfony_request		$symfony_request		Symfony request
 	 * @param \phpbb\template\template		$template				Template object
 	 * @param \phpbb\user					$user					User object
 	 * @param string						$php_ext				php file extension
 	*/
-	public function __construct(\phpbb\config\config $config, \phpbb\controller\helper $controller_helper, \phpbb\symfony_request $symfony_request, \phpbb\template\template $template, \phpbb\user $user, $php_ext)
+	public function __construct(\phpbb\config\config $config, \phpbb\controller\helper $controller_helper, \phpbb\language\language $language, \phpbb\symfony_request $symfony_request, \phpbb\template\template $template, \phpbb\user $user, $php_ext)
 	{
 		$this->config = $config;
 		$this->controller_helper = $controller_helper;
+		$this->language = $language;
 		$this->symfony_request = $symfony_request;
 		$this->template = $template;
 		$this->user = $user;
@@ -70,7 +75,7 @@ class feed
 			'FEED_TITLE'			=> $this->config['sitename'],
 			'FEED_SUBTITLE'			=> $this->config['site_desc'],
 			'FEED_UPDATED'			=> $max_update_time,
-			'FEED_LANG'				=> $this->user->lang['USER_LANG'],
+			'FEED_LANG'				=> $this->language->lang('USER_LANG'),
 			'FEED_AUTHOR'			=> $this->config['sitename'],
 		));
 
@@ -84,7 +89,7 @@ class feed
 	/**
 	 * @param string $content
 	 * @param int $max_update_time
-	 * @return string
+	 * @return Response
 	 */
 	protected function get_response($content, $max_update_time)
 	{
