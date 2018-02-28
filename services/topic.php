@@ -126,7 +126,7 @@ class topic
 	 * @param array $attachments
 	 * @param array $topic_tracking_info
 	 * @param array $update_count
-	 * @param string $mode
+	 * @param string $mode	ucp/mcp
 	 * @return array
 	 */
 	public function get_detail_template_data($type, array &$topic_data, array $post_data, array $users_cache, array &$attachments, array $topic_tracking_info, array &$update_count, $mode = '')

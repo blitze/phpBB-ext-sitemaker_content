@@ -28,11 +28,11 @@ class index extends filter implements action_interface
 	/** @var \phpbb\user */
 	protected $user;
 
-	/* @var \blitze\content\services\topic */
-	protected $topic;
-
 	/** @var \blitze\content\services\types */
 	protected $content_types;
+
+	/* @var \blitze\content\services\fields */
+	protected $fields;
 
 	/** @var \blitze\sitemaker\services\forum\data */
 	protected $forum;
@@ -61,14 +61,14 @@ class index extends filter implements action_interface
 	 * @param \phpbb\request\request_interface				$request				Request object
 	 * @param \phpbb\template\template						$template				Template object
 	 * @param \phpbb\user									$user					User object
-	 * @param \blitze\content\services\topic				$topic					Content topic object
 	 * @param \blitze\content\services\types				$content_types			Content types object
+	 * @param \blitze\content\services\fields				$fields					Content fields object
 	 * @param \blitze\sitemaker\services\forum\data			$forum					Forum query object
 	 * @param \blitze\content\services\helper				$helper					Content helper object
 	 * @param string										$phpbb_root_path		Path to the phpbb includes directory.
 	 * @param string										$php_ext				php file extension
 	 */
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $controller_helper, \phpbb\language\language $language, \phpbb\pagination $pagination, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\topic $topic, \blitze\content\services\types $content_types, \blitze\sitemaker\services\forum\data $forum, \blitze\content\services\helper $helper, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $controller_helper, \phpbb\language\language $language, \phpbb\pagination $pagination, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\types $content_types, \blitze\content\services\fields $fields, \blitze\sitemaker\services\forum\data $forum, \blitze\content\services\helper $helper, $phpbb_root_path, $php_ext)
 	{
 		parent::__construct($db, $language, $request, $template);
 
@@ -77,8 +77,8 @@ class index extends filter implements action_interface
 		$this->controller_helper = $controller_helper;
 		$this->pagination = $pagination;
 		$this->user = $user;
-		$this->topic = $topic;
 		$this->content_types = $content_types;
+		$this->fields = $fields;
 		$this->forum = $forum;
 		$this->helper = $helper;
 		$this->phpbb_root_path = $phpbb_root_path;
@@ -136,27 +136,23 @@ class index extends filter implements action_interface
 		$users_cache = $this->forum->get_posters_info();
 		$topic_tracking_info = $this->forum->get_topic_tracking_info();
 
-		$topics_data = array_values($topics_data);
 		unset($this->params['type']);
 		$base_url = join('&amp;', array($u_action, http_build_query($this->params)));
 
-		for ($i = 0, $size = sizeof($topics_data); $i < $size; $i++)
+		$attachments = $update_count = array();
+		foreach ($topics_data as $topic_id => $topic_row)
 		{
-			$row = $topics_data[$i];
-			$post_row = array_shift($posts_data[$row['topic_id']]);
-			$content_type = $this->content_forums[$row['forum_id']];
-
-			$attachments = $update_count = array();
-			$tpl_data = $this->topic->get_detail_template_data($content_type, $row, $post_row, $users_cache, $attachments, $topic_tracking_info, $update_count, $mode);
+			$post_row = array_shift($posts_data[$topic_id]);
+			$content_type = $this->content_forums[$topic_row['forum_id']];
+			$tpl_data = $this->fields->show($content_type, $topic_row, $post_row, $users_cache, $attachments, $update_count, $topic_tracking_info);
 
 			$this->template->assign_block_vars('topicrow', array_merge($tpl_data,
 				$this->get_content_type_info($content_type, $base_url),
-				$this->get_topic_type_info($tpl_data['S_UNREAD_POST'], $tpl_data['TOPIC_COMMENTS'], $row),
-				$this->get_topic_status_info($tpl_data['S_POST_UNAPPROVED'], $tpl_data['S_TOPIC_DELETED'], $base_url, $row),
-				$this->get_topic_info($content_type, $u_action, $row),
-				$this->get_moderator_info($mode, $row['topic_id'], $tpl_data['S_TOPIC_UNAPPROVED'], false, $tpl_data['S_TOPIC_DELETED'])
+				$this->get_topic_type_info($tpl_data['S_UNREAD_POST'], $tpl_data['TOPIC_COMMENTS'], $topic_row),
+				$this->get_topic_status_info($tpl_data['S_POST_UNAPPROVED'], $tpl_data['S_TOPIC_DELETED'], $base_url, $topic_row),
+				$this->get_topic_info($content_type, $u_action, $topic_row),
+				$this->get_moderator_info($mode, $topic_id, $tpl_data['S_TOPIC_UNAPPROVED'], false, $tpl_data['S_TOPIC_DELETED'])
 			));
-			unset($topics_data[$i]);
 		}
 	}
 
@@ -330,27 +326,6 @@ class index extends filter implements action_interface
 	protected function get_mcp_queue_url($topic_unapproved, $posts_unapproved, $topic_id)
 	{
 		return ($topic_unapproved || $posts_unapproved) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=queue&amp;mode=' . (($topic_unapproved) ? 'approve_details' : 'unapproved_posts') . "&amp;t=$topic_id", true, $this->user->session_id) : '';
-	}
-
-	/**
-	 * @param string $mode
-	 * @param string $u_action
-	 * @param array $row
-	 * @param array $post_row
-	 * @return string
-	 */
-	protected function get_delete_url($mode, $u_action, array $row, array $post_row)
-	{
-		if ($u_delete = $this->helper->get_delete_url($row, $post_row, $mode))
-		{
-			if ($mode === 'mcp')
-			{
-				$redirect_url = $this->get_redirect_url($u_action);
-				$u_delete = append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'quickmod=1&amp;action=delete_topic&amp;t=' . $row['topic_id'] . '&amp;redirect=' . $redirect_url, true, $this->user->session_id);
-			}
-		}
-
-		return $u_delete;
 	}
 
 	/**

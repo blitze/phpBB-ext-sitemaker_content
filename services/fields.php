@@ -17,14 +17,8 @@ class fields extends topic
 	/** @var \blitze\content\services\form\fields_factory */
 	protected $fields_factory;
 
-	/** @var array */
-	protected $form_fields;
-
 	/** @var string */
 	protected $content_type;
-
-	/** @var array */
-	protected $content_fields;
 
 	/** @var string */
 	protected $board_url = '';
@@ -33,13 +27,19 @@ class fields extends topic
 	protected $tpl_name = '';
 
 	/** @var string */
-	protected $display_mode = '';
+	protected $display_mode = 'detail';
 
 	/** @var string */
-	protected $view_mode = '';
+	protected $view_mode = 'detail';
+
+	/** @var array */
+	protected $content_fields = array();
 
 	/** @var array */
 	protected $db_fields = array();
+
+	/** @var array */
+	protected $form_fields = array();
 
 	/** @var array */
 	protected $label = array('', 'label-hidden', 'label-inline', 'label-newline');
@@ -72,7 +72,7 @@ class fields extends topic
 	 * @param array $topic_ids
 	 * @param array $view_mode_fields	array of form array([field_name] => [field_type])
 	 * @param string $custom_tpl
-	 * @param string $view_mode
+	 * @param string $view_mode		summary|detail|block
 	 * @param string $tpl_name
 	 * @return void
 	 */
@@ -96,12 +96,11 @@ class fields extends topic
 		extract($this->phpbb_dispatcher->trigger_event('blitze.content.fields.set_values', compact($vars)));
 
 		$this->board_url = generate_board_url(true);
-		$this->display_mode = $view_mode;
 		$this->tpl_name	= ($custom_tpl) ? $tpl_name ?: $this->content_type . '_' . $view_mode : '';
-		$this->view_mode = (in_array($view_mode, array('summary', 'detail'))) ? $view_mode : 'summary';
 		$this->db_fields = $db_fields;
 
 		$this->content_type = $entity->get_content_name();
+		$this->set_view_mode($view_mode);
 		$this->set_form_fields($view_mode_fields);
 		$this->set_content_fields($view_mode_fields, $entity->get_content_fields());
 	}
@@ -115,7 +114,7 @@ class fields extends topic
 	 * @param array $update_count
 	 * @param array $topic_tracking_info
 	 * @param array $topic_data_overwrite
-	 * @param string $mode
+	 * @param string $mode	ucp/mcp
 	 * @return array
 	 */
 	public function show($type, array $topic_data, array $post_data, array $users_cache, array &$attachments, array &$update_count, array $topic_tracking_info, array $topic_data_overwrite = array(), $mode = '')
@@ -158,6 +157,27 @@ class fields extends topic
 	}
 
 	/**
+	 * @param string $type
+	 * @return $this
+	 */
+	public function set_content_type($type)
+	{
+		$this->content_type = $type;
+		return $this;
+	}
+
+	/**
+	 * @param string $view_mode		summary|detail|block
+	 * @return $this
+	 */
+	public function set_view_mode($view_mode)
+	{
+		$this->display_mode = $view_mode;
+		$this->view_mode = (in_array($view_mode, array('summary', 'detail'))) ? $view_mode : 'summary';
+		return $this;
+	}
+
+	/**
 	 * @param array $view_mode_fields	array of form array([field_name] => [field_type])
 	 * @param array $fields_data
 	 * @return void
@@ -171,24 +191,17 @@ class fields extends topic
 				$this->content_fields[$name] = $fields_data[$name];
 			}
 		}
+		return $this;
 	}
 
 	/**
 	 * @param array $view_mode_fields	array of form array([field_name] => [field_type])
-	 * @return void
+	 * @return $this
 	 */
 	public function set_form_fields(array $view_mode_fields)
 	{
 		$this->form_fields = array_intersect_key($this->fields_factory->get_all(), array_flip($view_mode_fields));
-	}
-
-	/**
-	 * @param string $type
-	 * @return void
-	 */
-	public function set_content_type($type)
-	{
-		$this->content_type = $type;
+		return $this;
 	}
 
 	/**
