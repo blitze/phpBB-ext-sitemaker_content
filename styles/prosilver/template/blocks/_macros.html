@@ -10,8 +10,8 @@
 				<i class="icon fa-file fa-fw {% if postrow.S_UNREAD_POST %}icon-red{% else %}icon-lightgray{% endif %} icon-md" aria-hidden="true"></i><span class="sr-only">{{ postrow.MINI_POST }}</span>
 			</a>
 		{% endif %}
-			<span class="responsive-hide">{{ lang('POST_BY_AUTHOR') }} <strong>{{ topicrow.USERNAME_FULL }}</strong> &raquo; {{ topicrow.TOPIC_DATE|date(lang('CONTENT_SHORT_DATE_FORMAT')) }}</span>
-			<span class="responsive-hide">{{ topicrow.FIELDS.inline|join('|') }}</span>
+			<span>{{ lang('POST_BY_AUTHOR') }} <strong>{{ topicrow.USERNAME_FULL }}</strong> &raquo; {{ topicrow.TOPIC_DATE|date(lang('CONTENT_SHORT_DATE_FORMAT')) }}</span>
+			<span>{{ topicrow.FIELDS.inline|join('|') }}</span>
 		</p>
 	{% endif %}
 	{% if topicrow.CUSTOM_DISPLAY || topicrow.FIELDS.body %}
