@@ -143,8 +143,8 @@ class main_controller
 
 		foreach ($types as &$type)
 		{
-            /** @var \blitze\content\model\entity\type $type */
-            $type = array(
+			/** @var \blitze\content\model\entity\type $type */
+			$type = array(
 				'name'	=> $type->get_content_langname(),
 				'desc'	=> $type->get_content_desc(),
 				'color'	=> $type->get_content_colour(),

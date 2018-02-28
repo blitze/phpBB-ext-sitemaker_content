@@ -48,10 +48,10 @@ interface views_interface
 	 * @param \blitze\content\model\entity\type $entity
 	 * @param int $page
 	 * @param array $filters
-     * @param array $topic_data_overwrite
+	 * @param array $topic_data_overwrite
 	 * @return int
 	 */
-    public function render_index(\blitze\content\model\entity\type $entity, $page, array $filters, array $topic_data_overwrite = array());
+	public function render_index(\blitze\content\model\entity\type $entity, $page, array $filters, array $topic_data_overwrite = array());
 
 	/**
 	 * Show topic details
@@ -59,7 +59,7 @@ interface views_interface
 	 * @param \blitze\content\model\entity\type $entity
 	 * @param int $topic_id
 	 * @param array $update_count
-     * @param array $topic_data_overwrite
+	 * @param array $topic_data_overwrite
 	 * @return array
 	 */
 	public function render_detail(\blitze\content\model\entity\type $entity, $topic_id, array &$update_count, array $topic_data_overwrite = array());

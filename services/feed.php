@@ -20,8 +20,8 @@ class feed
 	/** @var \phpbb\controller\helper */
 	protected $controller_helper;
 
-    /** @var \phpbb\language\language */
-    protected $language;
+	/** @var \phpbb\language\language */
+	protected $language;
 
 	/** @var \phpbb\symfony_request */
 	protected $symfony_request;
@@ -43,7 +43,7 @@ class feed
 	 *
 	 * @param \phpbb\config\config			$config					Config object
 	 * @param \phpbb\controller\helper		$controller_helper		Controller Helper object
-     * @param \phpbb\language\language		$language				Language object
+	 * @param \phpbb\language\language		$language				Language object
 	 * @param \phpbb\symfony_request		$symfony_request		Symfony request
 	 * @param \phpbb\template\template		$template				Template object
 	 * @param \phpbb\user					$user					User object
