@@ -140,10 +140,7 @@ abstract class base_view implements views_interface
 		{
 			$post_data	= array_shift($posts);
 			$topic_data	= $topics_data[$topic_id];
-			$topic_data = array_merge(
-				$this->fields->show($content_type, $topic_data, $post_data, $users_cache, $attachments, $update_count, $topic_tracking_info),
-				$topic_data_overwrite
-			);
+			$topic_data = $this->fields->show($content_type, $topic_data, $post_data, $users_cache, $attachments, $update_count, $topic_tracking_info, $topic_data_overwrite);
 
 			$this->template->assign_block_vars('topicrow', $topic_data);
 			$max_update_time = max($max_update_time, $topic_data['UPDATED']);
