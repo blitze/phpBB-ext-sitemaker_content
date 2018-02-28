@@ -44,7 +44,7 @@ use blitze\sitemaker\model\base_entity;
 final class field extends base_entity
 {
 	/** @var integer */
-	protected $field_id;
+	protected $field_id = 0;
 
 	/** @var integer */
 	protected $content_id;
