@@ -44,7 +44,7 @@ use blitze\sitemaker\model\base_entity;
 final class field extends base_entity
 {
 	/** @var integer */
-	protected $field_id = 0;
+	protected $field_id;
 
 	/** @var integer */
 	protected $content_id;
@@ -209,5 +209,21 @@ final class field extends base_entity
 		}
 
 		return $field_props;
+	}
+
+	/**
+	* {@inheritdoc}
+	*/
+	public function to_db()
+	{
+		$db_data = parent::to_db();
+
+		// we do this for postgresql since passing a field_id of null will cause a not-null constraint violation
+		if (!$db_data['field_id'])
+		{
+			unset($db_data['field_id']);
+		}
+
+		return $db_data;
 	}
 }

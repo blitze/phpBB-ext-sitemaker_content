@@ -183,11 +183,10 @@ class field_test extends \phpbb_test_case
 	}
 
 	/**
-	 *
 	 */
 	function test_to_array()
 	{
-		$block = new field(array(
+		$entity = new field(array(
 			'field_id'				=> 2,
 			'content_id'			=> 1,
 			'field_name'			=> 'test',
@@ -224,7 +223,54 @@ class field_test extends \phpbb_test_case
 			'field_order'			=> 0,
 		);
 
-		$to_db_expected = array(
+		$this->assertEquals($to_array_expected, $entity->to_array());
+	}
+
+	/**
+	 */
+	function test_to_db()
+	{
+		$data = array(
+			'content_id'			=> 1,
+			'field_name'			=> 'test',
+			'field_label'			=> 'test',
+			'field_explain'			=> 'my [b]test[/b] field',
+			'field_type'			=> 'textarea',
+			'field_props'			=> array('size' => 'large', 'editor' => 1, 'max_chars' => 200),
+			'field_mod_only'		=> false,
+			'field_required'		=> true,
+			'field_summary_show'	=> 'inline',
+			'field_detail_show'		=> 'body',
+			'field_summary_ldisp'	=> 0,
+			'field_detail_ldisp'	=> 1,
+			'field_order'			=> 0,
+		);
+
+		$entity = new field($data);
+		$expected = array(
+			'content_id'			=> 1,
+			'field_name'			=> 'test',
+			'field_label'			=> 'Test',
+			'field_explain'			=> 'my [b]test[/b] field',
+			'field_type'			=> 'textarea',
+			'field_props'			=> '{"size":"large","editor":1,"max_chars":200}',
+			'field_mod_only'		=> false,
+			'field_required'		=> true,
+			'field_summary_show'	=> 'inline',
+			'field_detail_show'		=> 'body',
+			'field_summary_ldisp'	=> 0,
+			'field_detail_ldisp'	=> 1,
+			'field_exp_uid'			=> '',
+			'field_exp_bitfield'	=> '',
+			'field_exp_options'		=> 7,
+			'field_order'			=> 0,
+		);
+
+		$this->assertEquals($expected, $entity->to_db());
+
+		$entity = new field($data);
+		$entity->set_field_id(2);
+		$expected = array(
 			'field_id'				=> 2,
 			'content_id'			=> 1,
 			'field_name'			=> 'test',
@@ -244,7 +290,6 @@ class field_test extends \phpbb_test_case
 			'field_order'			=> 0,
 		);
 
-		$this->assertEquals($to_array_expected, $block->to_array());
-		$this->assertEquals($to_db_expected, $block->to_db());
+		$this->assertEquals($expected, $entity->to_db());
 	}
 }

@@ -250,13 +250,24 @@ class save_test extends \phpbb_database_test_case
 					array('copy_forum_perm', 0, false, request_interface::REQUEST, 0),
 					array('topic_blocks', '', false, request_interface::REQUEST, 'foo,bar'),
 					array(array('view_settings', $content_view), array('' => ''), false, request_interface::REQUEST, array('' => '')),
-					array('field_data', array('' => array('' => '')), true, request_interface::REQUEST, $fields_data),
+					array('field_data', array('' => array('' => '')), true, request_interface::REQUEST, array_merge($fields_data, array(
+						// here we're updating an existing field, we need to verify that the field_id (in this case, 1) is retained
+						'foo'	=> array(
+							'field_label'	=> 'Foo Updated',
+							'field_name'	=> 'foo',
+							'field_explain'	=> '',
+							'field_type'	=> 'textarea',
+						),
+					))),
 					array(array('field_props', 'field1'), array('' => ''), false, request_interface::REQUEST, array('' => '')),
 					array(array('field_defaults', 'field1'), array(0 => ''), true, request_interface::REQUEST, $field1_defaults),
 					array(array('field_options', 'field1'), array(0 => ''), true, request_interface::REQUEST, $field1_options),
 					array(array('field_props', 'field2'), array('' => ''), false, request_interface::REQUEST, $field2_settings),
 					array(array('field_defaults', 'field2'), array(0 => ''), true, request_interface::REQUEST, array('' => '')),
 					array(array('field_options', 'field2'), array(0 => ''), true, request_interface::REQUEST, array('' => '')),
+					array(array('field_props', 'foo'), array('' => ''), false, request_interface::REQUEST, array('' => '')),
+					array(array('field_defaults', 'foo'), array(0 => ''), true, request_interface::REQUEST, array('' => '')),
+					array(array('field_options', 'foo'), array(0 => ''), true, request_interface::REQUEST, array('' => '')),
 				),
 				1,
 				array(
@@ -267,6 +278,7 @@ class save_test extends \phpbb_database_test_case
 					'content_fields'	=> array(
 						'field1'	=> array(
 							'content_id'		=> 1,
+							'field_id'			=> 3,
 							'field_order'		=> 0,
 							'field_props'		=> array(
 								'options'	=> array('Option 1', 'Option 2', 'Option 3'),
@@ -275,6 +287,17 @@ class save_test extends \phpbb_database_test_case
 						),
 						'field2'	=> array(
 							'content_id'	=> 1,
+							'field_id'		=> 4,
+							'field_order'	=> 1,
+							'field_props'	=> array(
+								'size'			=> 'small',
+								'max_chars'		=> 300,
+								'editor'		=> true,
+							),
+						),
+						'foo'	=> array(
+							'content_id'	=> 1,
+							'field_id'		=> 1,
 							'field_order'	=> 1,
 							'field_props'	=> array(
 								'size'			=> 'small',
