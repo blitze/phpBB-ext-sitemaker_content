@@ -180,7 +180,7 @@ class fields extends topic
 	/**
 	 * @param array $view_mode_fields	array of form array([field_name] => [field_type])
 	 * @param array $fields_data
-	 * @return void
+	 * @return $this
 	 */
 	public function set_content_fields(array $view_mode_fields, array $fields_data)
 	{
