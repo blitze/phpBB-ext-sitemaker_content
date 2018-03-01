@@ -43,9 +43,10 @@ class save_test extends \phpbb_database_test_case
 	/**
 	 * @param string $type
 	 * @param array $variable_map
+	 * @param int $acl_clear_prefetch_count
 	 * @return \blitze\content\services\actions\type\save
 	 */
-	protected function get_command($type, $variable_map)
+	protected function get_command($type, $variable_map, $acl_clear_prefetch_count)
 	{
 		global $db, $request, $phpbb_dispatcher, $user, $phpbb_admin_path, $phpEx;
 
@@ -58,6 +59,9 @@ class save_test extends \phpbb_database_test_case
 		);
 
 		$auth = $this->getMock('\phpbb\auth\auth');
+		$auth->expects($this->exactly($acl_clear_prefetch_count))
+			->method('acl_clear_prefetch');
+
 		$cache = new \phpbb_mock_cache();
 		$config = new \phpbb\config\config(array(
 			'blitze_content_forum_id' => 6,
@@ -247,7 +251,7 @@ class save_test extends \phpbb_database_test_case
 					array('content_desc', '', true, request_interface::REQUEST, ''),
 					array('content_enabled', true, false, request_interface::REQUEST, true),
 					array('content_view', '', false, request_interface::REQUEST, $content_view),
-					array('copy_forum_perm', 0, false, request_interface::REQUEST, 0),
+					array('copy_forum_perm', 0, false, request_interface::REQUEST, 2),
 					array('topic_blocks', '', false, request_interface::REQUEST, 'foo,bar'),
 					array(array('view_settings', $content_view), array('' => ''), false, request_interface::REQUEST, array('' => '')),
 					array('field_data', array('' => array('' => '')), true, request_interface::REQUEST, array_merge($fields_data, array(
@@ -309,6 +313,7 @@ class save_test extends \phpbb_database_test_case
 					'topic_blocks'		=> array('foo', 'bar'),
 				),
 				'CONTENT_TYPE_UPDATED<br /><br /><a href="admin_url">&laquo; </a>',
+				1
 			),
 		);
 	}
@@ -322,10 +327,11 @@ class save_test extends \phpbb_database_test_case
 	 * @param int $expected_content_id
 	 * @param array $expected_data
 	 * @param string $expected_message
+	 * @param int $acl_clear_count
 	 */
-	public function test_save_type($type, $variable_map, $expected_content_id, $expected_data, $expected_message)
+	public function test_save_type($type, $variable_map, $expected_content_id, $expected_data, $expected_message, $acl_clear_count = 0)
 	{
-		$command = $this->get_command($type, $variable_map);
+		$command = $this->get_command($type, $variable_map, $acl_clear_count);
 
 		try
 		{

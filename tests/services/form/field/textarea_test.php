@@ -42,7 +42,14 @@ class textarea_test extends base_form_field
 		global $db, $phpbb_dispatcher, $phpbb_path_helper, $template, $phpbb_root_path, $phpEx;
 
 		$auth = $this->getMock('\phpbb\auth\auth');
-		$config = new \phpbb\config\config(array());
+		$auth->expects($this->any())
+			->method('acl_get')
+			->with($this->stringContains('_'), $this->anything())
+			->willReturn(true);
+		$config = new \phpbb\config\config(array(
+			'allow_bbcode'	=> true,
+			'allow_post_flash'	=> true,
+		));
 		$phpbb_dispatcher = new \phpbb_mock_event_dispatcher();
 
 		$db = $this->getMockBuilder('\phpbb\db\driver\factory')
@@ -160,6 +167,7 @@ class textarea_test extends base_form_field
 				),
 				0,
 				'',
+				array(),
 			),
 			array(
 				'detail',
@@ -168,6 +176,9 @@ class textarea_test extends base_form_field
 				),
 				0,
 				'',
+				array(
+					'S_NOT_LAST_PAGE' => true,
+				),
 			),
 
 		// content is truncated if summary view and max_chars is provided
@@ -181,6 +192,7 @@ class textarea_test extends base_form_field
 				),
 				2,
 				'Conveniently incentivize extensive e-commerce vis-a-vis.',
+				array(),
 			),
 			array(
 				'summary',
@@ -192,6 +204,7 @@ class textarea_test extends base_form_field
 				),
 				0,
 				'Conveniently incentivize...',
+				array(),
 			),
 			array(
 				'detail',
@@ -203,6 +216,9 @@ class textarea_test extends base_form_field
 				),
 				2,
 				'Conveniently incentivize extensive e-commerce vis-a-vis.',
+				array(
+					'S_NOT_LAST_PAGE' => false,
+				),
 			),
 
 		// summary view should always display first page with no heading
@@ -213,6 +229,7 @@ class textarea_test extends base_form_field
 				),
 				2,
 				'Page 1 content',
+				array(),
 			),
 			array(
 				'summary',
@@ -221,6 +238,7 @@ class textarea_test extends base_form_field
 				),
 				2,
 				'Page 1 content',
+				array(),
 			),
 
 		// detail view should display requested page, if it exists, with heading, if it exists
@@ -233,6 +251,9 @@ class textarea_test extends base_form_field
 				array(
 					'foo' => 'Page 3 content',
 				),
+				array(
+					'S_NOT_LAST_PAGE' => false,
+				),
 			),
 			array(
 				'detail',
@@ -242,6 +263,56 @@ class textarea_test extends base_form_field
 				2,
 				array(
 					'foo' => '<h4>Title 2</h4>Page 2 content',
+				),
+				array(
+					'S_NOT_LAST_PAGE' => true,
+					'toc'	=> array(
+						0 => array(
+							'TITLE' => 'CONTENT_TOC_OVERVIEW',
+							'S_PAGE' => false,
+							'U_VIEW' => 'phpBB/?',
+						),
+						1 => array(
+							'TITLE' => 'Title 2',
+							'S_PAGE' => true,
+							'U_VIEW' => 'phpBB/?&amp;page=1',
+						),
+						2 => array(
+							'TITLE' => 'CONTENT_TOC_UNTITLED',
+							'S_PAGE' => false,
+							'U_VIEW' => 'phpBB/?&amp;page=2',
+						),
+					),
+				),
+			),
+			array(
+				'detail',
+				array(
+					'field_value'	=> $pages_toc_string,
+				),
+				3,
+				array(
+					'foo' => 'Page 3 content',
+				),
+				array(
+					'S_NOT_LAST_PAGE' => false,
+					'toc'	=> array(
+						0 => array(
+							'TITLE' => 'CONTENT_TOC_OVERVIEW',
+							'S_PAGE' => false,
+							'U_VIEW' => 'phpBB/?',
+						),
+						1 => array(
+							'TITLE' => 'Title 2',
+							'S_PAGE' => false,
+							'U_VIEW' => 'phpBB/?&amp;page=1',
+						),
+						2 => array(
+							'TITLE' => 'CONTENT_TOC_UNTITLED',
+							'S_PAGE' => true,
+							'U_VIEW' => 'phpBB/?&amp;page=2',
+						),
+					),
 				),
 			),
 
@@ -253,6 +324,26 @@ class textarea_test extends base_form_field
 				),
 				5,
 				'Page 1 content',
+				array(
+					'S_NOT_LAST_PAGE' => true,
+					'toc'	=> array(
+						0 => array(
+							'TITLE' => 'CONTENT_TOC_OVERVIEW',
+							'S_PAGE' => true,
+							'U_VIEW' => 'phpBB/?',
+						),
+						1 => array(
+							'TITLE' => 'Title 2',
+							'S_PAGE' => false,
+							'U_VIEW' => 'phpBB/?&amp;page=1',
+						),
+						2 => array(
+							'TITLE' => 'CONTENT_TOC_UNTITLED',
+							'S_PAGE' => false,
+							'U_VIEW' => 'phpBB/?&amp;page=2',
+						),
+					),
+				),
 			),
 
 		// Form submitted and we are previewing
@@ -265,6 +356,7 @@ class textarea_test extends base_form_field
 				'Page 1 content<p><hr class="dashed"></p>' .
 				'<h4>Title 2</h4>Page 2 content<p><hr class="dashed"></p>' .
 				'Page 3 content',
+				array(),
 				true,
 			),
 		);
@@ -276,20 +368,19 @@ class textarea_test extends base_form_field
 	 * @param array $data
 	 * @param int $page
 	 * @param string $expected_content
+	 * @param array $expected_toc
 	 * @return void
 	 */
-	public function test_display_textarea_field($view, array $data, $page, $expected_content, $previewing = false)
+	public function test_display_textarea_field($view, array $data, $page, $expected_content, $expected_toc, $previewing = false)
 	{
 		$variable_map = array(array('page', 0, false, request_interface::REQUEST, $page - 1));
 		$data['field_name'] = 'foo';
 
 		$field = $this->get_form_field('textarea', $variable_map, $previewing);
+		$html = $field->display_field($data, array(), $view);
 
-		// mocking template returns is not working for some reason
-		// can't test TOC and pages as a result
-		// $result = $this->template->assign_display('test');
-
-		$this->assertEquals($expected_content, $field->display_field($data, array(), $view));
+		$this->assertEquals($expected_content, $html);
+		$this->assertEquals($expected_toc, $this->template->assign_display('test'));
 	}
 
 	/**
