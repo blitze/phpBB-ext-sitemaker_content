@@ -4,8 +4,67 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8d78a6575949fa434fa64edd54ae2742",
+    "content-hash": "6e8bc59f6b388d602ac24c3ede34221b",
     "packages": [
+        {
+            "name": "blitze/sitemaker",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/blitze/phpBB-ext-sitemaker.git",
+                "reference": "4edad46a2b6c95281cfdc08899864d14ba211758"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/blitze/phpBB-ext-sitemaker/zipball/4edad46a2b6c95281cfdc08899864d14ba211758",
+                "reference": "4edad46a2b6c95281cfdc08899864d14ba211758",
+                "shasum": ""
+            },
+            "require": {
+                "composer/installers": "^1.1",
+                "php": ">=5.4",
+                "urodoz/truncate-html": "@stable"
+            },
+            "require-dev": {
+                "responsivefilemanager": "9.12.*"
+            },
+            "type": "phpbb-extension",
+            "extra": {
+                "display-name": "phpBB SiteMaker",
+                "soft-require": {
+                    "phpbb/phpbb": ">=3.2.1,<3.3.0@dev"
+                },
+                "version-check": {
+                    "host": "blitze.github.io",
+                    "directory": "/versions",
+                    "filename": "sitemaker.json"
+                }
+            },
+            "license": [
+                "GPL-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel A.",
+                    "email": "shizzah@hotmail.com",
+                    "homepage": "https://github.com/blitze",
+                    "role": "Lead Developer"
+                }
+            ],
+            "description": "A portal/CMS for phpBB 3.2x.",
+            "homepage": "https://github.com/blitze/phpBB-ext-sitemaker",
+            "keywords": [
+                "cms",
+                "extension",
+                "phpbb",
+                "portal"
+            ],
+            "support": {
+                "source": "https://github.com/blitze/phpBB-ext-sitemaker/tree/develop",
+                "issues": "https://github.com/blitze/phpBB-ext-sitemaker/issues"
+            },
+            "time": "2018-02-14T04:29:58+00:00"
+        },
         {
             "name": "cocur/slugify",
             "version": "v1.4.1",
@@ -244,6 +303,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "blitze/sitemaker": 20,
         "urodoz/truncate-html": 0
     },
     "prefer-stable": false,
