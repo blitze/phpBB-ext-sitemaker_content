@@ -7,7 +7,7 @@
  *
  */
 
-namespace blitze\content\services;
+namespace blitze\content\services\actions;
 
 use Symfony\Component\DependencyInjection\Container;
 

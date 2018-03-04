@@ -18,5 +18,5 @@ interface action_interface
 	 * @param string $mode
 	 * @return void
 	 */
-	public function execute($u_action, $mode);
+	public function execute($u_action, $mode = '');
 }

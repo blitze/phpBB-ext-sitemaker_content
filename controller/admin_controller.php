@@ -14,16 +14,16 @@ class admin_controller
 	/** @var \phpbb\language\language */
 	protected $language;
 
-	/** @var \blitze\content\services\action_handler */
+	/** @var \blitze\content\services\actions\action_handler */
 	protected $action_handler;
 
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\language\language					$language			Language object
-	 * @param \blitze\content\services\action_handler	$action_handler		Handles actions
+	 * @param \phpbb\language\language							$language			Language object
+	 * @param \blitze\content\services\actions\action_handler	$action_handler		Handles actions
 	*/
-	public function __construct(\phpbb\language\language $language, \blitze\content\services\action_handler $action_handler)
+	public function __construct(\phpbb\language\language $language, \blitze\content\services\actions\action_handler $action_handler)
 	{
 		$this->language = $language;
 		$this->action_handler = $action_handler;

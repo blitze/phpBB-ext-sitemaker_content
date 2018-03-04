@@ -54,7 +54,7 @@ class moderate implements action_interface
 	/**
 	 * @inheritdoc
 	 */
-	public function execute($u_action)
+	public function execute($u_action, $mode = '')
 	{
 		$this->language->add_lang('manager', 'blitze/content');
 

@@ -15,7 +15,7 @@ imports:
 services:
 
     blitze.content.action_handler:
-        class: blitze\content\services\action_handler
+        class: blitze\content\services\actions\action_handler
         arguments:
             - '@service_container'
 

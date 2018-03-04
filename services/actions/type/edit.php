@@ -52,11 +52,14 @@ class edit extends add
 	{
 		$entity = $this->content_types->get_type($type);
 
-		parent::execute($u_action, $type, $entity->get_content_view(), $entity->get_forum_id());
+		$this->forum_id = $entity->get_forum_id();
+
+		parent::execute($u_action, $type);
 
 		$this->template->assign_vars(array_change_key_case(array_merge($entity->to_array(), array(
 			'content_desc'		=> $entity->get_content_desc('edit'),
 			'content_fields'	=> $this->generate_content_fields($entity->get_content_id()),
+			'view'				=> $entity->get_content_view(),
 			'from_db'			=> true,
 		)), CASE_UPPER));
 	}
