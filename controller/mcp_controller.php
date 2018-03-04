@@ -47,8 +47,8 @@ class mcp_controller
 		}
 		catch (\blitze\sitemaker\exception\base $e)
 		{
-			$message = $e->get_message($this->language);
-			trigger_error($message . '<br /><br />' . $this->language->lang('RETURN_PAGE', '<a href="' . $base_url . '">', '</a>'));
+			$message = (array) $e->get_message($this->language);
+			trigger_error(join('<br />', $message) . '<br />' . $this->language->lang('RETURN_PAGE', '<a href="' . $base_url . '">', '</a>'));
 		}
 	}
 }

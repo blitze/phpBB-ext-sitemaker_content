@@ -87,7 +87,7 @@ class feed implements EventSubscriberInterface
 				);
 			}
 
-			$this->template->assign_var('CONTENT_FEEDS', $feeds);
+			$this->template->assign_vars(array('CONTENT_FEEDS' => $feeds));
 		}
 	}
 }

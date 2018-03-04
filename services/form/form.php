@@ -83,7 +83,6 @@ class form
 			'form_method'	=> $method,
 			'form_key'		=> $this->template_context->get_root_ref()['S_FORM_TOKEN'],
 		);
-		unset($rootref);
 
 		return $this;
 	}
@@ -108,7 +107,7 @@ class form
 			$field_data['field_type'] = $type;
 			$field_data['field_props'] += $obj->get_default_props();
 			$field_data['field_label'] = $this->language->lang($field_data['field_label']);
-			$field_data['field_view'] = $obj->show_form_field($name, $field_data, $forum_id, $topic_id);
+			$field_data['field_view'] = $obj->show_form_field($name, $field_data);
 
 			$this->data[$name] = $field_data;
 		}

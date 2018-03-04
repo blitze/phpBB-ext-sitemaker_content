@@ -113,7 +113,7 @@ class delete extends action_utils implements action_interface
 		$action_posts = $this->request->variable('action_posts', 'delete');
 		$transfer_to_id = $this->request->variable('transfer_to_id', 0);
 
-		$this->forum_manager->remove($forum_id, $action_posts, true, $transfer_to_id);
+		$this->forum_manager->remove($forum_id, $action_posts, 'delete', $transfer_to_id);
 	}
 
 	/**

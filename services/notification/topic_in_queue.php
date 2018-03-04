@@ -36,6 +36,8 @@ class topic_in_queue extends \phpbb\notification\type\topic_in_queue
 	/**
 	* Get the url to this item
 	*
+	* @property int $item_parent_id
+	* @property int $item_id
 	* @return string URL
 	*/
 	public function get_url()

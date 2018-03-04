@@ -28,7 +28,7 @@ class mcp_topic implements EventSubscriberInterface
 	/** @var string */
 	protected $php_ext;
 
-	/** @var string|bool */
+	/** @var string|false */
 	private $type;
 
 	/**
@@ -79,18 +79,15 @@ class mcp_topic implements EventSubscriberInterface
 	 */
 	public function modify_review_row(\phpbb\event\data $event)
 	{
-		if ($event['row']['post_id'] === $event['topic_info']['topic_first_post_id'] && $this->type !== false)
+		if ($event['row']['post_id'] === $event['topic_info']['topic_first_post_id'] && $this->type && ($entity = $this->content_types->get_type($this->type)) !== false)
 		{
-			if (($entity = $this->content_types->get_type($this->type)) !== false)
-			{
-				$this->fields->prepare_to_show($entity, array($event['topic_info']['topic_id']), $entity->get_summary_fields(), $entity->get_summary_tpl(), 'summary');
+			$this->fields->prepare_to_show($entity, array($event['topic_info']['topic_id']), $entity->get_summary_fields(), $entity->get_summary_tpl(), 'summary');
 
-				$post_row = $event['post_row'];
-				$content = $this->fields->build_content($post_row);
-				$post_row['MESSAGE'] = $content['CUSTOM_DISPLAY'] ?: join('', $content['FIELDS']['all']);
+			$post_row = (array) $event['post_row'];
+			$content = $this->fields->build_content($post_row);
+			$post_row['MESSAGE'] = $content['CUSTOM_DISPLAY'] ?: join('', $content['FIELDS']['all']);
 
-				$event['post_row'] = $post_row;
-			}
+			$event['post_row'] = $post_row;
 		}
 	}
 
@@ -134,7 +131,7 @@ class mcp_topic implements EventSubscriberInterface
 	 */
 	public function modify_forumlist(\phpbb\event\data $event)
 	{
-		$event['forum_list'] = $this->get_forum_list($event['forum_list']);
+		$event['forum_list'] = $this->get_forum_list((array) $event['forum_list']);
 	}
 
 	/**

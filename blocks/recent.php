@@ -109,7 +109,7 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 		$this->settings = $bdata['settings'];
 		$type = $this->settings['content_type'];
 
-		if (empty($this->settings['content_type']) || false === $entity = $this->content_types->get_type($type, false))
+		if (empty($this->settings['content_type']) || ($entity = $this->content_types->get_type($type, false)) === false)
 		{
 			return array(
 				'title'		=> '',
@@ -235,7 +235,7 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 	/**
 	 * @param array $type_options
 	 * @param array $field_options
-	 * @return array
+	 * @return string|null
 	 */
 	protected function get_content_type_options(array &$type_options, array &$field_options)
 	{

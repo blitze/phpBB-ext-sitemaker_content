@@ -131,7 +131,7 @@ class index extends filter implements action_interface
 	 */
 	protected function show_topics($mode, $u_action, $start)
 	{
-		$topics_data = $this->forum->get_topic_data($this->config['topics_per_page'], $start);
+		$topics_data = $this->forum->get_topic_data((int) $this->config['topics_per_page'], $start);
 		$posts_data = $this->forum->get_post_data('first');
 		$users_cache = $this->forum->get_posters_info();
 		$topic_tracking_info = $this->forum->get_topic_tracking_info();
@@ -353,8 +353,8 @@ class index extends filter implements action_interface
 			'TOTAL_TOPICS'		=> $this->language->lang('VIEW_FORUM_TOPICS', $topics_count),
 		));
 
-		$start = $this->pagination->validate_start($start, $this->config['topics_per_page'], $topics_count);
-		$this->pagination->generate_template_pagination($u_action, 'pagination', 'start', $topics_count, $this->config['topics_per_page'], $start);
+		$start = $this->pagination->validate_start($start, (int) $this->config['topics_per_page'], $topics_count);
+		$this->pagination->generate_template_pagination($u_action, 'pagination', 'start', $topics_count, (int) $this->config['topics_per_page'], $start);
 
 		return $start;
 	}

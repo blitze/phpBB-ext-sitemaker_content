@@ -77,7 +77,6 @@ abstract class base implements field_interface
 	 */
 	public function save_field($value, array $field_data, array $topic_data)
 	{
-		return false;
 	}
 
 	/**

@@ -41,7 +41,7 @@ class loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface, \Twi
 			);
 		}
 
-		$block_mapper = $mapper_factory->create('blocks', 'blocks');
+		$block_mapper = $mapper_factory->create('blocks');
 		$collection = $block_mapper->find(array('name', '=', 'blitze.content.block.recent'));
 
 		foreach ($collection as $entity)
@@ -85,7 +85,7 @@ class loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface, \Twi
 	{
 		if (false === $source = $this->getValue('source', $name))
 		{
-			throw new Twig_Error_Loader(sprintf('Template "%s" does not exist.', $name));
+			throw new \Twig_Error_Loader(sprintf('Template "%s" does not exist.', $name));
 		}
 
 		return new \Twig_Source($source, $name);

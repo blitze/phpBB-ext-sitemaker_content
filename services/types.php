@@ -111,7 +111,7 @@ class types
 	/**
 	 * Get content type from forum_id
 	 * @param int $forum_id
-	 * @return string|bool|false
+	 * @return string|false
 	 */
 	public function get_forum_type($forum_id)
 	{

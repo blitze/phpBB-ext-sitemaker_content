@@ -72,7 +72,7 @@ class filter
 		{
 			$this->params['type'] = $content_type;
 			$this->content_forums = array_intersect($this->content_forums, array($content_type));
-			$this->template->assign_var('S_CONTENT_FILTER', true);
+			$this->template->assign_vars(array('S_CONTENT_FILTER' => true));
 		}
 
 		return $content_type;
@@ -117,7 +117,7 @@ class filter
 	{
 		if ($topic_status = $this->request->variable('status', ''))
 		{
-			$this->template->assign_var('S_STATUS_FILTER', true);
+			$this->template->assign_vars(array('S_STATUS_FILTER' => true));
 			$this->params['status'] = $topic_status;
 			$this->get_filter_status_sql($topic_status, $sql_where_array);
 		}
@@ -168,12 +168,12 @@ class filter
 			case 'unapproved':
 			case 'published':
 			case 'deleted':
-				$sql_where_array[] = 't.topic_visibility = ' . array_search($topic_status, $this->filter_topic_status_ary);
+				$sql_where_array[] = 't.topic_visibility = ' . (int) array_search($topic_status, $this->filter_topic_status_ary);
 			break;
 			case 'recommended':
 			case 'featured':
 			case 'must_read':
-				$sql_where_array[] = 't.topic_type = ' . array_search($topic_status, $this->filter_topic_types_ary);
+				$sql_where_array[] = 't.topic_type = ' . (int) array_search($topic_status, $this->filter_topic_types_ary);
 				$sql_where_array[] = 't.topic_visibility = ' . ITEM_APPROVED;
 			break;
 		}

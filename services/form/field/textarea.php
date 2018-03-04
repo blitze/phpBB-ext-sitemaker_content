@@ -91,7 +91,7 @@ class textarea extends base
 		$pages_pattern = '<p><!-- pagebreak --></p>';
 		$split_pattern = $pages_pattern . (($view_mode !== 'detail') ? $toc_pattern : '');
 
-		$pages = array_filter(preg_split('#' . $split_pattern . '#s', $data['field_value']));
+		$pages = array_filter((array) preg_split('#' . $split_pattern . '#s', $data['field_value']));
 
 		if ($view_mode !== 'detail')
 		{

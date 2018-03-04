@@ -83,7 +83,7 @@ class feed
 			'body'	=> 'feed.xml.twig',
 		));
 
-		return $this->get_response($this->template->assign_display('body'), $max_update_time);
+		return $this->get_response((string) $this->template->assign_display('body'), $max_update_time);
 	}
 
 	/**

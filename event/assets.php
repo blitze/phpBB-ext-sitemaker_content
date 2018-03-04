@@ -29,7 +29,7 @@ class assets implements EventSubscriberInterface
 	 */
 	public function set_swiper_assets(\phpbb\event\data $event)
 	{
-		$event['assets'] = array_merge_recursive($event['assets'], array(
+		$event['assets'] = array_merge_recursive((array) $event['assets'], array(
 			'js'   => array(
 				'@blitze_content/vendor/swiper/dist/js/swiper.min.js',
 				'@blitze_content/assets/blocks/swiper.min.js',

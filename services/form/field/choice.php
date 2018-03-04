@@ -25,7 +25,7 @@ abstract class choice extends base
 
 	/**
 	 * @param array $data
-	 * @return string
+	 * @return mixed
 	 */
 	protected function get_default_value(array $data)
 	{

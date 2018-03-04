@@ -77,7 +77,7 @@ class listener implements EventSubscriberInterface
 	 */
 	public function update_jumpbox(\phpbb\event\data $event)
 	{
-		$event['rowset'] = array_diff_key($event['rowset'], $this->content_types->get_forum_types());
+		$event['rowset'] = array_diff_key((array) $event['rowset'], $this->content_types->get_forum_types());
 	}
 
 	/**
@@ -109,8 +109,8 @@ class listener implements EventSubscriberInterface
 	 */
 	public function add_bulk_menu_options(\phpbb\event\data $event)
 	{
-		$forumslist = $event['forumslist'];
-		$bulk_options = $event['bulk_options'];
+		$forumslist = (array) $event['forumslist'];
+		$bulk_options = (array) $event['bulk_options'];
 
 		$forumslist = array_diff_key($forumslist, $this->content_types->get_forum_types());
 		$bulk_options['CONTENT_TYPES'] = $this->get_content_types_string();

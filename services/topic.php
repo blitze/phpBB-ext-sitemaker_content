@@ -206,7 +206,7 @@ class topic
 	 * @param array $post_data
 	 * @param array $attachments
 	 * @param array $update_count
-	 * @return array
+	 * @return string
 	 */
 	protected function get_parsed_text(array $post_data, array &$attachments, array &$update_count)
 	{

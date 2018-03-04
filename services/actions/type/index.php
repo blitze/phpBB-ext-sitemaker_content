@@ -59,7 +59,7 @@ class index implements action_interface
 	/**
 	 * @inheritdoc
 	 */
-	public function execute($u_action)
+	public function execute($u_action, $type)
 	{
 		$types_list = array();
 		$types = $this->content_types->get_all_types();

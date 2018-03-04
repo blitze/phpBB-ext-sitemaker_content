@@ -47,12 +47,14 @@ class toggle_status extends action_utils implements action_interface
 	 */
 	public function execute($u_action, $type = '')
 	{
-		$entity = $this->content_types->get_type($type);
-		$entity->set_content_enabled(!$entity->get_content_enabled());
+		if (($entity = $this->content_types->get_type($type)) !== false)
+		{
+			$entity->set_content_enabled(!$entity->get_content_enabled());
 
-		$this->mapper_factory->create('types')
-			->save($entity);
-		$this->cache->destroy('_content_types');
+			$this->mapper_factory->create('types')
+				->save($entity);
+			$this->cache->destroy('_content_types');
+		}
 
 		$this->redirect($u_action);
 	}

@@ -25,7 +25,7 @@ class posting implements EventSubscriberInterface
 	/** @var string */
 	protected $content_langname = '';
 
-	/** @var string|bool */
+	/** @var string|false */
 	protected $content_type = false;
 
 	/** @var bool */
@@ -78,7 +78,7 @@ class posting implements EventSubscriberInterface
 		$topic_first_post_id = $event['post_data']['topic_first_post_id'];
 		if (!$topic_first_post_id || $topic_first_post_id == $event['post_id'])
 		{
-			$this->build_content = ($this->content_type && $event['mode'] !== 'reply') ? true : false;
+			$this->build_content = ($this->content_type !== false && $event['mode'] !== 'reply') ? true : false;
 		}
 	}
 
@@ -116,7 +116,7 @@ class posting implements EventSubscriberInterface
 	{
 		if ($this->build_content)
 		{
-			$data = $event['data'];
+			$data = (array) $event['data'];
 			$this->builder->force_visibility($event['mode'], $data);
 
 			$event['data'] = $data;
@@ -145,7 +145,7 @@ class posting implements EventSubscriberInterface
 	{
 		if ($this->content_type)
 		{
-			$this->content_post_id = array_pop($event['post_list']);
+			$this->content_post_id = array_pop((array) $event['post_list']);
 		}
 	}
 
@@ -155,9 +155,9 @@ class posting implements EventSubscriberInterface
 	 */
 	public function modify_topic_review(\phpbb\event\data $event)
 	{
-		if ($this->content_type && $event['row']['post_id'] == $this->content_post_id)
+		if ($this->content_type !== false && $event['row']['post_id'] == $this->content_post_id)
 		{
-			$post_row = $event['post_row'];
+			$post_row = (array) $event['post_row'];
 			$post_row['MESSAGE'] = $this->builder->get_content_view($this->content_type, $post_row, 'summary');
 			$event['post_row'] = $post_row;
 			unset($post_row);
@@ -170,7 +170,7 @@ class posting implements EventSubscriberInterface
 	 */
 	public function set_redirect_url(\phpbb\event\data $event)
 	{
-		if ($this->content_type)
+		if ($this->content_type !== false)
 		{
 			if ($this->build_content)
 			{
@@ -178,7 +178,7 @@ class posting implements EventSubscriberInterface
 			}
 			else
 			{
-				$topic_url = $this->builder->get_post_url($this->content_type, $event['post_data']);
+				$topic_url = $this->builder->get_post_url($this->content_type, (array) $event['post_data']);
 
 				$post_id = $event['post_id'];
 				if ($post_id != $event['post_data']['topic_first_post_id'])
@@ -199,7 +199,7 @@ class posting implements EventSubscriberInterface
 	{
 		if ($this->build_content && in_array($event['mode'], array('post', 'edit', 'save')))
 		{
-			$this->builder->save_db_fields(array_merge($event['post_data'], $event['data']));
+			$this->builder->save_db_fields(array_merge((array) $event['post_data'], (array) $event['data']));
 		}
 	}
 
@@ -211,15 +211,15 @@ class posting implements EventSubscriberInterface
 	{
 		if ($this->build_content)
 		{
-			$post_data = $event['post_data'];
-			$page_data = $event['page_data'];
+			$post_data = (array) $event['post_data'];
+			$page_data = (array) $event['page_data'];
 
 			$post_data['TOPIC_URL'] = './';
-			$page_data['SITEMAKER_FORM'] = $this->builder->generate_form($event['topic_id'], $post_data, $page_data);
+			$page_data['SITEMAKER_FORM'] = $this->builder->generate_form((int) $event['topic_id'], $post_data, $page_data);
 
 			if ($event['preview'] && $this->content_type)
 			{
-				$page_data['PREVIEW_MESSAGE'] = $this->builder->generate_preview($this->content_type, $post_data);
+				$page_data['PREVIEW_MESSAGE'] = $this->builder->generate_preview((string) $this->content_type, $post_data);
 			}
 
 			$event['page_data'] = $page_data;

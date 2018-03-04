@@ -69,8 +69,9 @@ class field_controller
 			array('ext/blitze/content/adm/style')
 		);
 
-		$field_data = $this->get_field_data();
-		$this->template->assign_var('CONTENT_FIELDS', array(array_change_key_case($field_data, CASE_UPPER)));
+		$this->template->assign_vars(array(
+			'CONTENT_FIELDS' => array(array_change_key_case($this->get_field_data(), CASE_UPPER)),
+		));
 
 		$this->template->set_filenames(array(
 			'field'	=> 'content_fields.html'

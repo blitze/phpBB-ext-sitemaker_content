@@ -68,7 +68,7 @@ class tiles extends base_view
 
 		if ($this->request->is_ajax())
 		{
-			$this->template->assign_var('S_HIDE_HEADERS', true);
+			$this->template->assign_vars(array('S_HIDE_HEADERS' => true));
 		}
 	}
 }

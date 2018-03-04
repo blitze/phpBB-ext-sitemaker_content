@@ -235,7 +235,7 @@ class builder
 		$sql_data['topic_slug'] = $slugify->slugify($sql_data['topic_title']);
 		$sql_data['req_mod_input'] = $this->req_mod_input;
 
-		$this->topic_time = $sql_data['topic_time'];
+		$this->topic_time = (int) $sql_data['topic_time'];
 
 		if ($this->mode === 'mcp')
 		{

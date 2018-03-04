@@ -48,7 +48,9 @@ class types extends base_mapper
 
 			foreach ($content_fields as $content_id => $fields)
 			{
-				$this->collection[$content_id]->set_content_fields($fields);
+				/** @var \blitze\content\model\entity\type $entity */
+				$entity = &$this->collection[$content_id];
+				$entity->set_content_fields($fields);
 			}
 		}
 

@@ -125,7 +125,7 @@ class range extends base
 			array_walk($range, array($this, 'set_prefix'), $data['field_props']['prefix']);
 		}
 
-		return join($range, ' - ') . $data['field_props']['postfix'];
+		return join(' - ', $range) . $data['field_props']['postfix'];
 	}
 
 	/**

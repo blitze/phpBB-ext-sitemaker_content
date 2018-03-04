@@ -75,7 +75,7 @@ class portal extends base_view
 
 		$max_update_time = 0;
 		$total_topics = $this->forum->get_topics_count();
-		$items_per_page = $this->config['topics_per_page'];
+		$items_per_page = (int) $this->config['topics_per_page'];
 		$start = ($page - 1) * $items_per_page;
 		$topics_data = $this->forum->get_topic_data($items_per_page, $start);
 		$this->generate_pagination('summary', $total_topics, $start, $items_per_page, $this->get_filter_params($filters));

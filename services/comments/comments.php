@@ -93,7 +93,8 @@ class comments extends form implements comments_interface
 
 			$this->find_unread($view, $topic_data);
 
-			$sort_key = $sort_dir = $sort_days = $u_sort_param = '';
+			$sort_days = 0;
+			$sort_key = $sort_dir = $u_sort_param = '';
 			$this->set_sorting_options($sort_days, $sort_key, $sort_dir, $u_sort_param);
 
 			$base_url = append_sid(build_url(array('start', 'p')), (strlen($u_sort_param)) ? $u_sort_param : '');
@@ -102,7 +103,7 @@ class comments extends form implements comments_interface
 			$this->forum->query()
 				->fetch_date_range(time(), $sort_days * 86400, 'post')
 				->build();
-			$posts_data = $this->forum->get_post_data(false, array(), $this->config['posts_per_page'], $start, array(
+			$posts_data = $this->forum->get_post_data(false, array(), (int) $this->config['posts_per_page'], $start, array(
 				'WHERE'		=> array(
 					'p.topic_id = ' . (int) $topic_data['topic_id'],
 					'p.post_id <> ' . (int) $topic_data['topic_first_post_id'],
@@ -208,8 +209,8 @@ class comments extends form implements comments_interface
 			$start = floor($prev_posts / $this->config['posts_per_page']) * $this->config['posts_per_page'];
 		}
 
-		$start = $this->pagination->validate_start($start, $this->config['posts_per_page'], $topic_data['total_comments']);
-		$this->pagination->generate_template_pagination($base_url, 'pagination', 'start', $topic_data['total_comments'], $this->config['posts_per_page'], $start);
+		$start = $this->pagination->validate_start($start, (int) $this->config['posts_per_page'], $topic_data['total_comments']);
+		$this->pagination->generate_template_pagination($base_url, 'pagination', 'start', $topic_data['total_comments'], (int) $this->config['posts_per_page'], $start);
 
 		$data = (array) $this->template_context->get_data_ref()['pagination'];
 		foreach ($data as &$row)
@@ -332,7 +333,7 @@ class comments extends form implements comments_interface
 	}
 
 	/**
-	 * @param int post_id
+	 * @param int $post_id
 	 * @param array $attachments
 	 * @return array
 	 */
