@@ -74,7 +74,7 @@ class admin_controller_test extends \phpbb_database_test_case
 				}
 			}));
 
-		$action_handler = $this->getMockBuilder('\blitze\content\services\action_handler')
+		$action_handler = $this->getMockBuilder('\blitze\content\services\actions\action_handler')
 			->disableOriginalConstructor()
 			->getMock();
 

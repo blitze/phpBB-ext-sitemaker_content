@@ -30,7 +30,6 @@ class add_test extends add_edit_base
 		$command->execute('admin_url', '', 'my.bar.view');
 
 		$expected = array(
-			'VIEW'				=> 'my.bar.view',
 			'CONTENT_VIEWS'		=> array(
 				'my.bar.view'		=> 'CONTENT_DISPLAY_BAR',
 				'my.foo.view'		=> 'CONTENT_DISPLAY_FOO'

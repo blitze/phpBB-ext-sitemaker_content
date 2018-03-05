@@ -108,7 +108,7 @@ class delete_test extends \phpbb_database_test_case
 			->with(
 				$this->greaterThan(0),
 				$this->isType('string'),
-				true,
+				'delete',
 				$this->isType('integer')
 			);
 
