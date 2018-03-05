@@ -145,7 +145,8 @@ class posting implements EventSubscriberInterface
 	{
 		if ($this->content_type)
 		{
-			$this->content_post_id = array_pop((array) $event['post_list']);
+			$post_list = (array) $event['post_list'];
+			$this->content_post_id = array_pop($post_list);
 		}
 	}
 

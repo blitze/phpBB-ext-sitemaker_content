@@ -34,6 +34,8 @@ $lang = array_merge($lang, array(
 	'MONTH_FORMAT_LONG'					=> 'Long',
 	'MONTH_FORMAT_SHORT'				=> 'Short',
 
+	'NO_CONTENT_TYPE'					=> 'Please select a content type',
+
 	'OFFSET_START'						=> 'Offset start',
 	'ORDER_BY'							=> 'Order By',
 
