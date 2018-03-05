@@ -108,6 +108,11 @@
 
 	var showTab = function(tab) {
 		var panelId = $(tab).attr('href');
+
+		// we set the view for the summary|detail templates 
+		view = panelId.split('-')[0].substr(1);
+		view = (views.indexOf(view) < 0) ? 'summary' : view;
+
 		$(tab).parent().addClass('activetab').siblings('li').removeClass('activetab');
 		$(panelId).show().siblings().hide();
 	};
