@@ -48,8 +48,11 @@ class fields_test extends \phpbb_test_case
 
 		$field = $collection->offsetGet(1);
 		$this->assertEquals(2, $field->get_field_id());
-		$this->assertTrue($collection->offsetUnset($field));
-		$this->assertTrue($collection->offsetUnset(0));
+
+		$collection->offsetUnset($field);
+		$this->assertNull($collection->offsetGet(1));
+
+		$collection->offsetUnset(0);
 		$this->assertNull($collection->offsetGet(0));
 
 		$fields = $collection->get_entities();

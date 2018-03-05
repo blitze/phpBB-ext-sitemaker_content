@@ -48,8 +48,11 @@ class types_test extends \phpbb_test_case
 
 		$content_type = $collection->offsetGet(1);
 		$this->assertEquals(2, $content_type->get_content_id());
-		$this->assertTrue($collection->offsetUnset($content_type));
-		$this->assertTrue($collection->offsetUnset(0));
+
+		$collection->offsetUnset($content_type);
+		$this->assertNull($collection->offsetGet(1));
+
+		$collection->offsetUnset(0);
 		$this->assertNull($collection->offsetGet(0));
 
 		$content_types = $collection->get_entities();
