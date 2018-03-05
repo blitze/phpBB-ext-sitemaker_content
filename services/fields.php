@@ -95,14 +95,14 @@ class fields extends topic
 		$vars = array('view_mode', 'view_mode_fields', 'entity', 'db_fields');
 		extract($this->phpbb_dispatcher->trigger_event('blitze.content.fields.set_values', compact($vars)));
 
-		$this->board_url = generate_board_url(true);
-		$this->tpl_name	= ($custom_tpl) ? $tpl_name ?: $this->content_type . '_' . $view_mode : '';
-		$this->db_fields = $db_fields;
-
 		$this->content_type = $entity->get_content_name();
 		$this->set_view_mode($view_mode);
 		$this->set_form_fields($view_mode_fields);
 		$this->set_content_fields($view_mode_fields, $entity->get_content_fields());
+
+		$this->board_url = generate_board_url(true);
+		$this->tpl_name	= ($custom_tpl) ? ($tpl_name ?: $this->content_type . '_' . $view_mode) : '';
+		$this->db_fields = $db_fields;
 	}
 
 	/**
@@ -143,7 +143,7 @@ class fields extends topic
 
 		if ($this->tpl_name)
 		{
-			$this->template->assign_vars(array_change_key_case(array_merge($tpl_data, $fields_data['all']), CASE_UPPER));
+			$this->template->assign_vars(array_change_key_case(array_merge($tpl_data, (array) $fields_data['all']), CASE_UPPER));
 			$this->template->set_filenames(array('content' => $this->tpl_name));
 			$tpl_data['CUSTOM_DISPLAY'] = $this->template->assign_display('content');
 		}

@@ -333,8 +333,8 @@ abstract class base_view implements views_interface
 	 */
 	protected function set_meta_tags(array $field_types, array $topic_data)
 	{
-		$image_url = $this->get_topic_image_url($field_types, $topic_data['FIELDS']['all']);
-		$description = $this->get_topic_description($field_types, $topic_data['FIELDS']['all']);
+		$image_url = $this->get_topic_image_url($field_types, (array) $topic_data['FIELDS']['all']);
+		$description = $this->get_topic_description($field_types, (array) $topic_data['FIELDS']['all']);
 
 		$meta = "<meta name=\"description\" content=\"$description\" />\n";
 		$meta .= "<meta name=\"twitter:card\" value=\"summary\">\n";

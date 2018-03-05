@@ -14,7 +14,7 @@ namespace blitze\content\services\template;
  *
  * @package blitze\content\services
  */
-class loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface, \Twig_SourceContextLoaderInterface
+class loader implements \Twig_LoaderInterface
 {
 	/* @var array */
 	protected $blocks_data = array();
@@ -135,20 +135,11 @@ class loader implements \Twig_LoaderInterface, \Twig_ExistsLoaderInterface, \Twi
 		preg_match('/(.*)_(summary|detail|block)$/is', $name, $match);
 		list(, $id, $view) = $match;
 
-		if ($view === 'block')
-		{
-			$data = $this->blocks_data[$id];
-			$column_name = 'block_tpl';
-		}
-		else
-		{
-			$data = $this->content_types[$id];
-			$column_name = $view . '_tpl';
-		}
+		$data = ($view === 'block') ? $this->blocks_data[$id] : $this->content_types[$id];
 
 		$return = array(
 			'name'			=> $name,
-			'source'		=> $data[$column_name],
+			'source'		=> $data[$view . '_tpl'],
 			'last_modified'	=> $data['last_modified'],
 		);
 

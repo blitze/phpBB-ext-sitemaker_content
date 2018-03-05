@@ -206,7 +206,7 @@ class comments extends form implements comments_interface
 			$this->check_requested_post_id($topic_data, $base_url);
 
 			$prev_posts = $this->get_next_posts_count($topic_data, $sort_dir, $post_id);
-			$start = floor($prev_posts / $this->config['posts_per_page']) * $this->config['posts_per_page'];
+			$start = (int) floor($prev_posts / $this->config['posts_per_page']) * $this->config['posts_per_page'];
 		}
 
 		$start = $this->pagination->validate_start($start, (int) $this->config['posts_per_page'], $topic_data['total_comments']);
