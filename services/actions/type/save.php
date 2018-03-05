@@ -187,7 +187,7 @@ class save extends action_utils implements action_interface
 			'index_show_desc'		=> $this->request->variable('index_show_desc', 0),
 			'items_per_page'		=> $this->request->variable('items_per_page', 1),
 			'summary_tpl'			=> $this->request->variable('summary_tpl', '', true),
-			'content_name'			=> $this->request->variable('content_name', ''),
+			'detail_tpl'			=> $this->request->variable('detail_tpl', '', true),
 			'topic_blocks'			=> $this->request->variable('topic_blocks', ''),
 			'last_modified'			=> time(),
 		));
