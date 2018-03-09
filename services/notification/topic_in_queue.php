@@ -9,6 +9,10 @@
 
 namespace blitze\content\services\notification;
 
+/**
+ * @property int $item_parent_id
+ * @property int $item_id
+ */
 class topic_in_queue extends \phpbb\notification\type\topic_in_queue
 {
 	/* @var \blitze\content\services\types */
@@ -36,8 +40,6 @@ class topic_in_queue extends \phpbb\notification\type\topic_in_queue
 	/**
 	* Get the url to this item
 	*
-	* @property int $item_parent_id
-	* @property int $item_id
 	* @return string URL
 	*/
 	public function get_url()

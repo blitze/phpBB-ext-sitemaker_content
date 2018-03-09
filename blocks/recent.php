@@ -109,23 +109,23 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 		$this->settings = $bdata['settings'];
 		$type = $this->settings['content_type'];
 
-		if (($entity = $this->content_types->get_type($type, false)) === false)
+		if (($entity = $this->content_types->get_type($type, false)) !== false)
 		{
-			return array(
-				'title'		=> '',
-				'content'	=> ($edit_mode) ? $this->language->lang('NO_CONTENT_TYPE') : '',
-			);
+			$forum_id = $entity->get_forum_id();
+			$this->build_query($forum_id);
+			$this->forum->build(true, true, false);
+			$this->ptemplate->assign_vars(array(
+				'LAYOUT'		=> $this->settings['layout'],
+				'FIELD_TYPES'	=> $entity->get_field_types(),
+			));
+
+			return $this->show_topics($edit_mode, $bdata['bid'], $forum_id, $type, $entity);
 		}
 
-		$forum_id = $entity->get_forum_id();
-		$this->build_query($forum_id);
-		$this->forum->build(true, true, false);
-		$this->ptemplate->assign_vars(array(
-			'LAYOUT'		=> $this->settings['layout'],
-			'FIELD_TYPES'	=> $entity->get_field_types(),
-		));
-
-		return $this->show_topics($edit_mode, $bdata['bid'], $forum_id, $type, $entity);
+		return array(
+			'title'		=> '',
+			'content'	=> ($edit_mode) ? $this->language->lang('NO_CONTENT_TYPE') : '',
+		);
 	}
 
 	/**
