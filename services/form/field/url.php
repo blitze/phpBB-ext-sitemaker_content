@@ -22,6 +22,21 @@ class url extends base
 	/**
 	 * @inheritdoc
 	 */
+	public function get_validation_rules(array $data)
+	{
+		return array(
+			'filter'	=> FILTER_VALIDATE_REGEXP,
+			'options'	=> array(
+				'options'	=> array(
+					'regexp'	=> '#^' . get_preg_expression('url_http') . '$#iu',
+				),
+			),
+		);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function get_name()
 	{
 		return 'url';

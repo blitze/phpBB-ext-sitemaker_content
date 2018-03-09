@@ -121,4 +121,45 @@ class text_test extends base_form_field
 
 		$this->assertEquals($expected, str_replace(array("\n", "\t"), '', $field->show_form_field($name, $data)));
 	}
+
+	/**
+	 * @return array
+	 */
+	public function test_field_validation_data()
+	{
+		return array(
+			array(
+				array(
+					'field_value'	=> 'some random statement',
+					'field_label'	=> 'Foo',
+					'field_props'	=> array(
+						'maxlength'		=> 5,
+					),
+				),
+				'FIELD_TOO_LONG Foo 5',
+			),
+			array(
+				array(
+					'field_value'	=> 'some random statement',
+					'field_label'	=> 'Foo',
+					'field_props'	=> array(
+						'maxlength'		=> 55,
+					),
+				),
+				'',
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider test_field_validation_data
+	 * @param array $data
+	 * @param string $expected
+	 * @return void
+	 */
+	public function test_field_validation(array $data, $expected)
+	{
+		$field = $this->get_form_field('text');
+		$this->assertEquals($expected, $field->validate_field($data));
+	}
 }

@@ -77,6 +77,8 @@ abstract class base implements field_interface
 	 */
 	public function save_field($value, array $field_data, array $topic_data)
 	{
+		// we do nothing here as field data is stored in phpbb post
+		// for fields that store their own data, this would be used to persist data to a database
 	}
 
 	/**
@@ -92,75 +94,32 @@ abstract class base implements field_interface
 	 */
 	public function validate_field(array $data)
 	{
-		$options = $this->get_filter_options($data);
+		$rules = $this->get_validation_rules($data);
 
 		$message = '';
-		if (isset($data['validation_filter']) && !filter_var($data['field_value'], $data['validation_filter'], $options))
+		if ($rules['filter'] && filter_var($data['field_value'], $rules['filter'], $rules['options']) === false)
 		{
 			$message = $this->get_error_message($data);
 		}
-
 		return $message;
 	}
 
 	/**
-	 * @param array $data
-	 * @return array|false
+	 * @inheritdoc
 	 */
-	protected function get_filter_options(array &$data)
+	public function get_validation_rules(array $data)
 	{
-		if (isset($data['field_minlength']))
-		{
-			$data['validation_options'] += array('min_range' => $data['field_minlength']);
-		}
-
-		if (isset($data['field_maxlength']))
-		{
-			$data['validation_options'] += array('max_range' => $data['field_maxlength']);
-		}
-
-		return (isset($data['validation_options'])) ? array('options' => $data['validation_options']) : false;
+		return array(
+			'filter'	=> '',
+			'options'	=> array(),
+		);
 	}
 
 	/**
-	 * @param array $data
-	 * @return string
+	 * @inheritdoc
 	 */
-	protected function get_error_message(array $data)
+	public function get_error_message(array $data)
 	{
-		$length = utf8_strlen($data['field_value']);
-
-		if ($this->is_too_short($data, $length))
-		{
-			return $this->language->lang('FIELD_TOO_SHORT', $data['field_label'], $data['field_minlength']);
-		}
-		else if ($this->is_too_long($data, $length))
-		{
-			return $this->language->lang('FIELD_TOO_LONG', $data['field_label'], $data['field_maxlength']);
-		}
-		else
-		{
-			return $this->language->lang('FIELD_INVALID', $data['field_label']);
-		}
-	}
-
-	/**
-	 * @param array $data
-	 * @param $length
-	 * @return bool
-	 */
-	protected function is_too_short(array $data, $length)
-	{
-		return (isset($data['field_minlength']) && $length < $data['field_minlength']) ? true : false;
-	}
-
-	/**
-	 * @param array $data
-	 * @param $length
-	 * @return bool
-	 */
-	protected function is_too_long(array $data, $length)
-	{
-		return (isset($data['field_maxlength']) && $length > $data['field_maxlength']) ? true : false;
+		return $this->language->lang('FIELD_INVALID', $data['field_label']);
 	}
 }

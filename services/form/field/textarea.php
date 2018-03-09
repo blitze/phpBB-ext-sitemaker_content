@@ -11,7 +11,7 @@ namespace blitze\content\services\form\field;
 
 use Urodoz\Truncate\TruncateService;
 
-class textarea extends base
+class textarea extends text
 {
 	/** @var \phpbb\auth\auth */
 	protected $auth;
@@ -76,8 +76,8 @@ class textarea extends base
 	{
 		return array(
 			'size'		=> 'large',
-			'maxlength'	=> '',
-			'max_chars'	=> 200,
+			'maxlength'	=> '',			// input characters
+			'max_chars'	=> 200,			// display characters
 			'editor'	=> true,
 		);
 	}

@@ -112,4 +112,53 @@ class url_test extends base_form_field
 
 		$this->assertEquals($expected, $field->show_form_field($name, $data));
 	}
+
+	/**
+	 * @return array
+	 */
+	public function test_field_validation_data()
+	{
+		return array(
+			array(
+				array(
+					'field_value'	=> 'invalid',
+					'field_label'	=> 'Foo',
+				),
+				'FIELD_INVALID Foo',
+			),
+			array(
+				array(
+					'field_value'	=> './foo.php',
+					'field_label'	=> 'Boo',
+				),
+				'FIELD_INVALID Boo',
+			),
+			array(
+				array(
+					'field_value'	=> 'www.foo.com',
+					'field_label'	=> 'Bar',
+				),
+				'FIELD_INVALID Bar',
+			),
+			array(
+				array(
+					'field_value'	=> 'http://www.foo.com',
+					'field_label'	=> 'Baz',
+				),
+				'',
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider test_field_validation_data
+	 * @param array $data
+	 * @param string $expected
+	 * @return void
+	 */
+	public function test_field_validation(array $data, $expected)
+	{
+		$field = $this->get_form_field('url');
+		$this->assertEquals($expected, $field->validate_field($data));
+	}
 }

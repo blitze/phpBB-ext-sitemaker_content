@@ -81,4 +81,16 @@ interface field_interface
 	 * @return string
 	 */
 	public function validate_field(array $field_data);
+
+	/**
+	 * @param array $data
+	 * @return array
+	 */
+	public function get_validation_rules(array $data);
+
+	/**
+	 * @param array $data
+	 * @return string
+	 */
+	public function get_error_message(array $data);
 }

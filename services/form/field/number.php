@@ -14,9 +14,9 @@ class number extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function get_field_value(array $data)
+	public function get_name()
 	{
-		return $this->request->variable($data['field_name'], (int) $data['field_value']);
+		return 'number';
 	}
 
 	/**
@@ -35,8 +35,40 @@ class number extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function get_name()
+	public function get_validation_rules(array $data)
 	{
-		return 'number';
+		return array(
+			'filter'	=> (is_float($data['field_props']['step'])) ? FILTER_VALIDATE_FLOAT : FILTER_VALIDATE_INT,
+			'options'	=> array(
+				'options'	=> array_filter(array(
+					'min_range'	=> $data['field_props']['min'],
+					'max_range'	=> $data['field_props']['max'],
+					'decimal'	=> '.',
+				)),
+				'flags'	=> FILTER_FLAG_ALLOW_THOUSAND,
+			),
+		);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function get_error_message(array $data)
+	{
+		$props = $data['field_props'];
+		$lang_keys = array('FIELD_INVALID');
+
+		$lang_keys[] = ($props['min']) ? 'MIN' : '';
+		$lang_keys[] = ($props['max']) ? 'MAX' : '';
+
+		return $this->language->lang(join('_', array_filter($lang_keys)), $data['field_label'], $props['min'], $props['max']);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function get_field_value(array $data)
+	{
+		return $this->request->variable($data['field_name'], (int) $data['field_value']);
 	}
 }

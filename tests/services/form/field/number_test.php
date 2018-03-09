@@ -125,4 +125,111 @@ class number_test extends base_form_field
 
 		$this->assertEquals($expected, str_replace(array("\n", "\t", "\r"), '', $field->show_form_field($name, $data)));
 	}
+
+	/**
+	 * @return array
+	 */
+	public function test_field_validation_data()
+	{
+		return array(
+			array(
+				array(
+					'field_value'	=> 1,
+					'field_label'	=> 'Foo',
+					'field_props'	=> array(
+						'min'		=> 5,
+						'max'		=> 10,
+						'step'		=> 1,
+					),
+				),
+				'FIELD_INVALID_MIN_MAX Foo 5 10',
+			),
+			array(
+				array(
+					'field_value'	=> 15,
+					'field_label'	=> 'Boo',
+					'field_props'	=> array(
+						'min'		=> 1,
+						'max'		=> 5,
+						'step'		=> 1,
+					),
+				),
+				'FIELD_INVALID_MIN_MAX Boo 1 5',
+			),
+			array(
+				array(
+					'field_value'	=> 5,
+					'field_label'	=> 'Boo',
+					'field_props'	=> array(
+						'min'		=> 10,
+						'max'		=> 0,
+						'step'		=> 1,
+					),
+				),
+				'FIELD_INVALID_MIN Boo 10 0',
+			),
+			array(
+				array(
+					'field_value'	=> 15,
+					'field_label'	=> 'Boo',
+					'field_props'	=> array(
+						'min'		=> 0,
+						'max'		=> 10,
+						'step'		=> 1,
+					),
+				),
+				'FIELD_INVALID_MAX Boo 0 10',
+			),
+			array(
+				array(
+					'field_value'	=> 1.5,
+					'field_label'	=> 'Boo',
+					'field_props'	=> array(
+						'min'		=> 0,
+						'max'		=> 10,
+						'step'		=> 1,
+					),
+				),
+				'FIELD_INVALID_MAX Boo 0 10',
+			),
+			array(
+				array(
+					'field_value'	=> 8,
+					'field_label'	=> 'Boo',
+					'field_props'	=> array(
+						'min'		=> 1,
+						'max'		=> 10,
+						'step'		=> 1,
+					),
+				),
+				'',
+			),
+			array(
+				array(
+					'field_value'	=> 1.5,
+					'field_label'	=> 'Boo',
+					'field_props'	=> array(
+						'min'		=> 0,
+						'max'		=> 10,
+						'step'		=> 0.1,
+					),
+				),
+				'',
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider test_field_validation_data
+	 * @param array $data
+	 * @param string $expected
+	 * @return void
+	 */
+	public function test_field_validation(array $data, $expected)
+	{
+		$field = $this->get_form_field('number');
+		$message = $field->validate_field($data);
+
+		$this->assertEquals($expected, $message);
+	}
 }
