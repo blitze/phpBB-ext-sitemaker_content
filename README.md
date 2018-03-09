@@ -2,7 +2,13 @@
 
 phpBB Sitemaker Content is an Extension for [phpBB 3.2](https://www.phpbb.com/)
 
-[![Travis branch](https://img.shields.io/travis/blitze/phpBB-ext-sitemaker_content/develop.svg?style=flat)](https://travis-ci.org/blitze/phpBB-ext-sitemaker_content) [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/blitze/phpBB-ext-sitemaker_content/develop.svg?style=flat)](https://scrutinizer-ci.com/g/blitze/phpBB-ext-sitemaker_content/?branch=develop) [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/blitze/phpBB-ext-sitemaker_content/develop.svg?style=flat)](https://scrutinizer-ci.com/g/blitze/phpBB-ext-sitemaker_content/?branch=develop)
+[![Travis branch](https://img.shields.io/travis/blitze/phpBB-ext-sitemaker_content/develop.svg?style=flat)](https://travis-ci.org/blitze/phpBB-ext-sitemaker_content)
+[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/blitze/phpBB-ext-sitemaker_content/develop.svg?style=flat)](https://scrutinizer-ci.com/g/blitze/phpBB-ext-sitemaker_content/?branch=develop)
+[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/blitze/phpBB-ext-sitemaker_content/develop.svg?style=flat)](https://scrutinizer-ci.com/g/blitze/phpBB-ext-sitemaker_content/?branch=develop)
+[![Maintainability](https://api.codeclimate.com/v1/badges/a9a8d4b2441ad10c9aad/maintainability)](https://codeclimate.com/github/blitze/phpBB-ext-sitemaker_content/maintainability)  
+[![Latest Stable Version](https://poser.pugx.org/blitze/content/v/stable?format=flat)](https://www.phpbb.com/customise/db/extension/sitemaker_content/)
+[![Latest Unstable Version](https://poser.pugx.org/blitze/content/v/unstable?format=flat)](https://packagist.org/packages/blitze/content)
+[![License](https://poser.pugx.org/blitze/content/license?format=flat)](https://packagist.org/packages/blitze/content)
 
 ## Description
 
@@ -16,12 +22,14 @@ Create and manage content types for phpBB Sitemaker Extension
 * Manage view settings in ACP
 * Create custom views in ACP
 * Other extensions can provide new or extend or replace existing content views
-* Other extensions can provide new or extend it replace existing fields
+* Other extensions can provide new or extend or replace existing fields
 * Schedule articles to be posted on some future date
+* Ability to mark fields as required
 * Choose who can input a field: poster or moderator
 * Force-require approval before publishing
 * Use permission system to restrict access to a particular content type
 * Uses phpBB forum to store content so they are searchable
+* Adds minimum meta tags for social sharing
 
 ### Available Blocks
 * Recent Content
