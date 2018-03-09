@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "6e8bc59f6b388d602ac24c3ede34221b",
+    "content-hash": "9e03c284972b6b3caa1a351a27585a05",
     "packages": [
         {
             "name": "blitze/sitemaker",
-            "version": "dev-develop",
+            "version": "3.1.0-RC1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/blitze/phpBB-ext-sitemaker.git",
-                "reference": "4edad46a2b6c95281cfdc08899864d14ba211758"
+                "reference": "c1dd92ff83d51bf703d83e9759e2de41b507bdec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/blitze/phpBB-ext-sitemaker/zipball/4edad46a2b6c95281cfdc08899864d14ba211758",
-                "reference": "4edad46a2b6c95281cfdc08899864d14ba211758",
+                "url": "https://api.github.com/repos/blitze/phpBB-ext-sitemaker/zipball/c1dd92ff83d51bf703d83e9759e2de41b507bdec",
+                "reference": "c1dd92ff83d51bf703d83e9759e2de41b507bdec",
                 "shasum": ""
             },
             "require": {
@@ -40,6 +40,7 @@
                     "filename": "sitemaker.json"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-2.0"
             ],
@@ -59,11 +60,7 @@
                 "phpbb",
                 "portal"
             ],
-            "support": {
-                "source": "https://github.com/blitze/phpBB-ext-sitemaker/tree/develop",
-                "issues": "https://github.com/blitze/phpBB-ext-sitemaker/issues"
-            },
-            "time": "2018-02-14T04:29:58+00:00"
+            "time": "2018-03-09T05:44:07+00:00"
         },
         {
             "name": "cocur/slugify",
@@ -303,8 +300,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "blitze/sitemaker": 20,
-        "urodoz/truncate-html": 0
+        "blitze/sitemaker": 5
     },
     "prefer-stable": false,
     "prefer-lowest": false,
