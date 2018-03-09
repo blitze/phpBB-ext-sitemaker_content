@@ -22,16 +22,6 @@ class url extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function get_default_props()
-	{
-		return array(
-			'max'	=> 255,
-		);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	public function get_name()
 	{
 		return 'url';

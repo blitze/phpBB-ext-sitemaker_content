@@ -28,9 +28,7 @@ class url_test extends base_form_field
 	public function test_default_props()
 	{
 		$field = $this->get_form_field('url');
-		$this->assertEquals(array(
-			'max'	=> 255,
-		), $field->get_default_props());
+		$this->assertEquals(array(), $field->get_default_props());
 	}
 
 	/**
@@ -72,7 +70,7 @@ class url_test extends base_form_field
 				array(
 					array('foo', '', true, request_interface::REQUEST, ''),
 				),
-				'<input type="url" class="inputbox autowidth" id="smc-foo" name="foo" maxlength="255" size="40" value="" />',
+				'<input type="url" class="inputbox autowidth" id="smc-foo" name="foo" size="40" value="" />',
 			),
 			array(
 				'foo',
@@ -83,7 +81,7 @@ class url_test extends base_form_field
 				array(
 					array('foo', 'bar', true, request_interface::REQUEST, 'bar'),
 				),
-				'<input type="url" class="inputbox autowidth" id="smc-foo" name="foo" maxlength="255" size="40" value="bar" />',
+				'<input type="url" class="inputbox autowidth" id="smc-foo" name="foo" size="40" value="bar" />',
 			),
 			array(
 				'foo2',
@@ -94,7 +92,7 @@ class url_test extends base_form_field
 				array(
 					array('foo2', 'bar', true, request_interface::REQUEST, 'foo_bar'),
 				),
-				'<input type="url" class="inputbox autowidth" id="smc-foo2" name="foo2" maxlength="255" size="40" value="foo_bar" />',
+				'<input type="url" class="inputbox autowidth" id="smc-foo2" name="foo2" size="40" value="foo_bar" />',
 			),
 		);
 	}
