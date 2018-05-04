@@ -38,14 +38,20 @@ class m3_initial_module extends \phpbb\db\migration\migration
 					'modes'				=> array('content'),
 				),
 			)),
-			array('module.add', array('mcp', '', 'MCP_SITEMAKER_CONTENT')),
+			array('if', array(
+				!array('module.exists', array('mcp', false, 'MCP_SITEMAKER_CONTENT')),
+				array('module.add', array('mcp', '', 'MCP_SITEMAKER_CONTENT')),
+			)),
 			array('module.add', array(
 				'mcp', 'MCP_SITEMAKER_CONTENT', array(
 					'module_basename'	=> '\blitze\content\mcp\content_module',
 					'modes'				=> array('content'),
 				),
 			)),
-			array('module.add', array('ucp', '', 'UCP_SITEMAKER_CONTENT')),
+			array('if', array(
+				!array('module.exists', array('mcp', false, 'UCP_SITEMAKER_CONTENT')),
+				array('module.add', array('mcp', '', 'UCP_SITEMAKER_CONTENT')),
+			)),
 			array('module.add', array(
 				'ucp', 'UCP_SITEMAKER_CONTENT', array(
 					'module_basename'	=> '\blitze\content\ucp\content_module',
