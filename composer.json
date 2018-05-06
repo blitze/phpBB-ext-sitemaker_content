@@ -3,7 +3,7 @@
     "type": "phpbb-extension",
 	"description": "Create and manage content types for phpBB SiteMaker",
 	"homepage": "https://github.com/blitze/phpBB-ext-sitemaker_content",
-	"version": "3.0.0-dev",
+	"version": "3.0.0-RC1",
 	"time": "2014-06-21 01:01:01",
 	"license": "GPL-2.0-only",
 	"authors": [{
