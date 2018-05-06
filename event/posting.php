@@ -75,8 +75,7 @@ class posting implements EventSubscriberInterface
 	{
 		list($this->content_type, $this->content_langname) = $this->builder->init($event['forum_id'], $event['topic_id'], $event['mode'], $event['save']);
 
-		$topic_first_post_id = $event['post_data']['topic_first_post_id'];
-		if (!$topic_first_post_id || $topic_first_post_id == $event['post_id'])
+		if (empty($event['post_data']['topic_first_post_id']) || $event['post_data']['topic_first_post_id'] == $event['post_id'])
 		{
 			$this->build_content = ($this->content_type !== false && $event['mode'] !== 'reply') ? true : false;
 		}
