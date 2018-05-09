@@ -40,9 +40,6 @@ class add implements action_interface
 	/** @var \blitze\content\services\views\views_factory */
 	protected $views_factory;
 
-	/** @var array */
-	protected $available_fields = array();
-
 	/** @var int */
 	protected $forum_id = 0;
 
@@ -79,8 +76,6 @@ class add implements action_interface
 	{
 		$this->auto_lang->add('form_fields');
 
-		$this->available_fields = $this->fields_factory->get_all();
-
 		$this->template->assign_vars(array(
 			'CONTENT_VIEWS'		=> $this->views_factory->get_all_views(),
 			'POST_AUTHOR'		=> $this->user->data['username'],
@@ -103,7 +98,7 @@ class add implements action_interface
 	 */
 	protected function get_field_options()
 	{
-		$fields = $this->available_fields;
+		$fields = $this->fields_factory->get_all();
 		unset($fields['hidden']);
 
 		$options = '';

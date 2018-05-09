@@ -50,6 +50,11 @@ class share extends base
 	 */
 	public function display_field(array $data, array $topic_data, $view_mode)
 	{
+		if ($this->request->is_set_post('cp'))
+		{
+			return '';
+		}
+
 		$props = $data['field_props'];
 
 		$this->util->add_assets(array(

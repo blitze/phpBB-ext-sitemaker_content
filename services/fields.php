@@ -117,7 +117,7 @@ class fields extends topic
 	 * @param string $mode	ucp/mcp
 	 * @return array
 	 */
-	public function show($type, array $topic_data, array $post_data, array $users_cache, array &$attachments, array &$update_count, array $topic_tracking_info, array $topic_data_overwrite = array(), $mode = '')
+	public function show($type, array &$topic_data, array $post_data, array $users_cache, array &$attachments, array &$update_count, array $topic_tracking_info, array $topic_data_overwrite = array(), $mode = '')
 	{
 		$callable = 'get_' . $this->view_mode . '_template_data';
 		$tpl_data = array_merge(array(
@@ -127,8 +127,6 @@ class fields extends topic
 			$this->{$callable}($type, $topic_data, $post_data, $users_cache, $attachments, $topic_tracking_info, $update_count, $mode),
 			$topic_data_overwrite
 		);
-
-		$tpl_data['PERMA_LINK'] = $this->board_url . parse_url($tpl_data['TOPIC_URL'], PHP_URL_PATH);
 
 		return $this->build_content($tpl_data);
 	}
@@ -212,6 +210,7 @@ class fields extends topic
 	{
 		$field_values = $this->get_field_values($tpl_data);
 		$display_data = array_fill_keys(array('all', 'above', 'body', 'inline', 'footer'), array());
+		$tpl_data['PERMA_LINK'] = $this->board_url . parse_url($tpl_data['TOPIC_URL'], PHP_URL_PATH);
 
 		foreach ($this->content_fields as $field_name => $field_data)
 		{
@@ -266,7 +265,7 @@ class fields extends topic
 		unset($tpl_data['MESSAGE']);
 
 		return array_merge(
-			$this->db_fields[$tpl_data['TOPIC_ID']] ?: array(),
+			isset($this->db_fields[$tpl_data['TOPIC_ID']]) ? $this->db_fields[$tpl_data['TOPIC_ID']] : array(),
 			$this->get_fields_data_from_post($message)
 		);
 	}

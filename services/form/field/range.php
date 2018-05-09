@@ -143,7 +143,7 @@ class range extends base
 	 */
 	protected function set_range(array &$data)
 	{
-		list($from, $to) = $this->get_range($data['field_value']);
+		list($from, $to) = $this->get_range($data['field_value']) + array('', '');
 
 		if ($data['field_props']['values'])
 		{

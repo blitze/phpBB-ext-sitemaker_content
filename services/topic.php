@@ -100,7 +100,7 @@ class topic
 
 				'S_TOPIC_TYPE'			=> $topic_data['topic_type'],
 				'S_HAS_ATTACHMENTS'		=> $topic_data['topic_attachment'],
-				'S_HAS_POLL'			=> (bool) $post_data['poll_start'],
+				'S_HAS_POLL'			=> (bool) $topic_data['poll_start'],
 			),
 			$this->get_topic_status_data($type, $topic_data, $post_data),
 			array_change_key_case($users_cache[$post_data['poster_id']], CASE_UPPER)

@@ -235,9 +235,9 @@ class posting implements EventSubscriberInterface
 		if ($this->content_type)
 		{
 			// remove 'Forum' nav added by Sitemaker when a startpage is specified
-			if ($this->template->find_key_index('navlinks', 0))
+			if ($this->template->find_key_index('navlinks', 1))
 			{
-				$this->template->alter_block_array('navlinks', array(), 0, 'delete');
+				$this->template->alter_block_array('navlinks', array(), 1, 'delete');
 			}
 
 			// update label & url that currently points to the forum to now point to the content type

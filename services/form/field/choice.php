@@ -29,7 +29,11 @@ abstract class choice extends base
 	 */
 	protected function get_default_value(array $data)
 	{
-		$default = $data['field_value'] ?: ($data['field_props']['defaults'] ?: array(0 => ''));
+		$data['field_props'] += array(
+			'defaults' => array(0 => ''),
+		);
+
+		$default = $data['field_value'] ?: $data['field_props']['defaults'];
 		$default = is_array($default) ? $default : explode("\n", $default);
 
 		return ($data['field_props']['multi_select']) ? $default : array_shift($default);

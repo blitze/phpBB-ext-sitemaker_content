@@ -45,7 +45,7 @@ class blocks_factory
 	 */
 	public function get($service_name)
 	{
-		return $this->blocks[$service_name] ?: null;
+		return isset($this->blocks[$service_name]) ? $this->blocks[$service_name] : null;
 	}
 
 	/**

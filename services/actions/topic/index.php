@@ -109,7 +109,7 @@ class index extends filter implements action_interface
 			$this->base_url = $u_action . (sizeof($this->params) ? '&amp;' : '');
 			$this->$callable($content_types, $sql_where_array);
 
-			$this->forum->query(true, false)
+			$this->forum->query()
 				->fetch_forum(array_keys($this->content_forums))
 				->set_sorting('t.topic_time')
 				->fetch_custom(array('WHERE' => $sql_where_array))
@@ -151,7 +151,7 @@ class index extends filter implements action_interface
 				$this->get_topic_type_info($tpl_data['S_UNREAD_POST'], $tpl_data['TOPIC_COMMENTS'], $topic_row),
 				$this->get_topic_status_info($tpl_data['S_POST_UNAPPROVED'], $tpl_data['S_TOPIC_DELETED'], $base_url, $topic_row),
 				$this->get_topic_info($content_type, $u_action, $topic_row),
-				$this->get_moderator_info($mode, $topic_id, $tpl_data['S_TOPIC_UNAPPROVED'], false, $tpl_data['S_TOPIC_DELETED'])
+				$this->get_moderator_info($mode, $topic_id, $tpl_data['S_POST_UNAPPROVED'], false, $tpl_data['S_TOPIC_DELETED'])
 			));
 		}
 	}

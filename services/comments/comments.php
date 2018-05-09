@@ -147,8 +147,6 @@ class comments extends form implements comments_interface
 					'POSTER_WARNINGS'			=> $this->get_poster_warnings($users_cache[$poster_id]),
 					'S_POST_REPORTED'			=> $this->get_report_status($row),
 					'S_TOPIC_POSTER'			=> ($topic_data['topic_poster'] == $poster_id) ? true : false,
-					'S_POST_HIDDEN'				=> $row['hide_post'],
-					'L_POST_DISPLAY'			=> $this->get_post_display_lang($row, $topic_data['topic_url']),
 				)
 			));
 
@@ -203,16 +201,17 @@ class comments extends form implements comments_interface
 	{
 		if ($post_id)
 		{
-			$this->check_requested_post_id($topic_data, $base_url);
+			$post_info = $this->get_post_info($post_id);
+			$this->check_requested_post_id($post_info, $topic_data, $base_url);
 
-			$prev_posts = $this->get_next_posts_count($topic_data, $sort_dir, $post_id);
+			$prev_posts = $this->get_next_posts_count($post_info, $topic_data, $sort_dir, $post_id);
 			$start = (int) floor($prev_posts / $this->config['posts_per_page']) * $this->config['posts_per_page'];
 		}
 
 		$start = $this->pagination->validate_start($start, (int) $this->config['posts_per_page'], $topic_data['total_comments']);
 		$this->pagination->generate_template_pagination($base_url, 'pagination', 'start', $topic_data['total_comments'], (int) $this->config['posts_per_page'], $start);
 
-		$data = (array) $this->template_context->get_data_ref()['pagination'];
+		$data = (isset($this->template_context->get_data_ref()['pagination'])) ? $this->template_context->get_data_ref()['pagination'] : array();
 		foreach ($data as &$row)
 		{
 			$row['PAGE_URL'] .= '#comments';
@@ -220,14 +219,15 @@ class comments extends form implements comments_interface
 	}
 
 	/**
+	 * @param array $post_info
 	 * @param array $topic_data
 	 * @param string $base_url
 	 * @return void
 	 */
-	protected function check_requested_post_id(array $topic_data, $base_url)
+	protected function check_requested_post_id(array $post_info, array $topic_data, $base_url)
 	{
 		// are we where we are supposed to be?
-		if (($topic_data['post_visibility'] == ITEM_UNAPPROVED || $topic_data['post_visibility'] == ITEM_REAPPROVE) && !$this->auth->acl_get('m_approve', $topic_data['forum_id']))
+		if (($post_info['post_visibility'] == ITEM_UNAPPROVED || $post_info['post_visibility'] == ITEM_REAPPROVE) && !$this->auth->acl_get('m_approve', $topic_data['forum_id']))
 		{
 			// If post_id was submitted, we try at least to display the topic as a last resort...
 			if ($topic_data['topic_id'])
@@ -240,12 +240,13 @@ class comments extends form implements comments_interface
 	}
 
 	/**
+	 * @param array $post_info
 	 * @param array $topic_data
 	 * @param string $sort_dir
 	 * @param int $post_id
 	 * @return int
 	 */
-	protected function get_next_posts_count(array $topic_data, $sort_dir, $post_id)
+	protected function get_next_posts_count(array $post_info, array $topic_data, $sort_dir, $post_id)
 	{
 		if ($post_id == $topic_data['topic_first_post_id'] || $post_id == $topic_data['topic_last_post_id'])
 		{
@@ -260,27 +261,20 @@ class comments extends form implements comments_interface
 		}
 		else
 		{
-			return $this->get_prev_posts_count($topic_data['forum_id'], $topic_data['topic_id'], $post_id, $sort_dir) - 1;
+			return $this->get_prev_posts_count($post_info, $topic_data['forum_id'], $topic_data['topic_id'], $post_id, $sort_dir) - 1;
 		}
 	}
 
 	/**
+	 * @param array $row
 	 * @param int $forum_id
 	 * @param int $topic_id
 	 * @param int $post_id
 	 * @param string $sort_dir
 	 * @return int
 	 */
-	protected function get_prev_posts_count($forum_id, $topic_id, $post_id, $sort_dir)
+	protected function get_prev_posts_count(array $row, $forum_id, $topic_id, $post_id, $sort_dir)
 	{
-		$sql = 'SELECT post_id, post_time, post_visibility
-			FROM ' . POSTS_TABLE . " p
-			WHERE p.topic_id = $topic_id
-				AND p.post_id = $post_id";
-		$result = $this->db->sql_query($sql);
-		$row = $this->db->sql_fetchrow($result);
-		$this->db->sql_freeresult($result);
-
 		$sql = 'SELECT COUNT(p.post_id) AS prev_posts
 			FROM ' . POSTS_TABLE . " p
 			WHERE p.topic_id = $topic_id
@@ -300,6 +294,22 @@ class comments extends form implements comments_interface
 		$this->db->sql_freeresult($result);
 
 		return $row['prev_posts'];
+	}
+
+	/**
+	 * @param int $post_id
+	 * @return array
+	 */
+	protected function get_post_info($post_id)
+	{
+		$sql = 'SELECT post_id, post_time, post_visibility
+			FROM ' . POSTS_TABLE . ' p
+			WHERE post_id = ' . (int) $post_id;
+		$result = $this->db->sql_query($sql);
+		$row = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		return $row;
 	}
 
 	/**
@@ -354,11 +364,11 @@ class comments extends form implements comments_interface
 
 	/**
 	 * @param array $poster_info
-	 * @return string
+	 * @return int
 	 */
 	protected function get_poster_warnings(array $poster_info)
 	{
-		return $this->auth->acl_get('m_warn') ? $poster_info['warnings'] : '';
+		return ($this->auth->acl_get('m_warn') && !empty($poster_info['warnings'])) ? $poster_info['warnings'] : 0;
 	}
 
 	/**
@@ -368,16 +378,6 @@ class comments extends form implements comments_interface
 	protected function get_report_status(array $row)
 	{
 		return ($row['post_reported'] && $this->auth->acl_get('m_report', $row['forum_id'])) ? true : false;
-	}
-
-	/**
-	 * @param array $row
-	 * @param string $topic_url
-	 * @return string
-	 */
-	protected function get_post_display_lang(array $row, $topic_url)
-	{
-		return ($row['hide_post']) ? $this->language->lang('POST_DISPLAY', '<a class="display_post" data-post-id="' . $row['post_id'] . '" href="' . append_sid($topic_url, "p={$row['post_id']}&amp;view=show") . "#p{$row['post_id']}" . '">', '</a>') : '';
 	}
 
 	/**

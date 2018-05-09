@@ -327,7 +327,7 @@ class save extends action_utils implements action_interface
 		{
 			/** @var \blitze\content\model\entity\field $entity */
 			$entity = $mapper->create_entity($fields_data[$field]);
-			$entity->set_field_id($field_ids[$field] ?: ++$max_id)
+			$entity->set_field_id(isset($field_ids[$field]) ? $field_ids[$field] : ++$max_id)
 				->set_content_id($content_id)
 				->set_field_order($i)
 				->set_field_explain($fields_data[$field]['field_explain'], 'storage')

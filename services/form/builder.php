@@ -208,7 +208,7 @@ class builder
 			$this->fields->prepare_to_show($entity, array($post_data['topic_id']), $entity->$fields_accessor(), $entity->$template_accessor(), $view);
 			$content = $this->fields->build_content(array_change_key_case($post_data, CASE_UPPER));
 
-			$text =  $content['CUSTOM_DISPLAY'] ?: join('', $content['FIELDS']['all']);
+			$text =  isset($content['CUSTOM_DISPLAY']) ? $content['CUSTOM_DISPLAY'] : join('', $content['FIELDS']['all']);
 		}
 		return $text;
 	}

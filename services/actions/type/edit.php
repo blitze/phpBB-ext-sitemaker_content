@@ -79,7 +79,7 @@ class edit extends add
 		foreach ($collection as $entity)
 		{
 			/** @var \blitze\content\services\form\field\field_interface $field_instance */
-			if (!($field_instance = $this->available_fields[$entity->get_field_type()]))
+			if (!($field_instance = $this->fields_factory->get($entity->get_field_type())))
 			{
 				continue;
 			}

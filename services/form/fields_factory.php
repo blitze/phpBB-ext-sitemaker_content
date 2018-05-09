@@ -57,11 +57,11 @@ class fields_factory
 	 * Get field object
 	 *
 	 * @param string $service_name
-	 * @return \blitze\content\services\form\field\field_interface
+	 * @return null|\blitze\content\services\form\field\field_interface
 	 */
 	public function get($service_name)
 	{
-		return $this->fields[$service_name];
+		return $this->exists($service_name) ? $this->fields[$service_name] : null;
 	}
 
 	/**

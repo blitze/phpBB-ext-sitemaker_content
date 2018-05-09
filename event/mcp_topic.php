@@ -82,11 +82,17 @@ class mcp_topic implements EventSubscriberInterface
 		if ($event['row']['post_id'] === $event['topic_info']['topic_first_post_id'] && $this->type && ($entity = $this->content_types->get_type($this->type)) !== false)
 		{
 			$this->fields->prepare_to_show($entity, array($event['topic_info']['topic_id']), $entity->get_summary_fields(), $entity->get_summary_tpl(), 'summary');
+			$users_cache = $attachments = $topic_tracking_info = $update_count = array();
 
 			$post_row = (array) $event['post_row'];
-			$content = $this->fields->build_content($post_row);
-			$post_row['MESSAGE'] = $content['CUSTOM_DISPLAY'] ?: join('', $content['FIELDS']['all']);
+			$topic_data = $event['topic_info'];
+			$post_data = array_merge($post_row, $event['row']);
+			$users_cache[$post_data['poster_id']] = array();
 
+			$tpl_data = $this->fields->get_summary_template_data($this->type, $topic_data, $post_data, $users_cache, $attachments, $topic_tracking_info, $update_count);
+			$content = $this->fields->build_content($tpl_data);
+
+			$post_row['MESSAGE'] = isset($content['CUSTOM_DISPLAY']) ? $content['CUSTOM_DISPLAY'] : join('', $content['FIELDS']['all']);
 			$event['post_row'] = $post_row;
 		}
 	}

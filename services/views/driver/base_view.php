@@ -333,18 +333,21 @@ abstract class base_view implements views_interface
 	 */
 	protected function set_meta_tags(array $field_types, array $topic_data)
 	{
-		$image_url = $this->get_topic_image_url($field_types, (array) $topic_data['FIELDS']['all']);
-		$description = $this->get_topic_description($field_types, (array) $topic_data['FIELDS']['all']);
+		if (isset($topic_data['FIELDS']))
+		{
+			$image_url = $this->get_topic_image_url($field_types, (array) $topic_data['FIELDS']['all']);
+			$description = $this->get_topic_description($field_types, (array) $topic_data['FIELDS']['all']);
 
-		$meta = "<meta name=\"description\" content=\"$description\" />\n";
-		$meta .= "<meta name=\"twitter:card\" value=\"summary\">\n";
-		$meta .= "<meta property=\"og:title\" content=\"{$topic_data['TOPIC_TITLE']}\" />\n";
-		$meta .= "<meta property=\"og:type\" content=\"article\" />\n";
-		$meta .= "<meta property=\"og:url\" content=\"{$topic_data['PERMA_LINK']}\" />\n";
-		$meta .= "<meta property=\"og:image\" content=\"$image_url\" />\n";
-		$meta .= "<meta property=\"og:description\" content=\"$description\" />";
+			$meta = "<meta name=\"description\" content=\"$description\" />\n";
+			$meta .= "<meta name=\"twitter:card\" value=\"summary\">\n";
+			$meta .= "<meta property=\"og:title\" content=\"{$topic_data['TOPIC_TITLE']}\" />\n";
+			$meta .= "<meta property=\"og:type\" content=\"article\" />\n";
+			$meta .= "<meta property=\"og:url\" content=\"{$topic_data['PERMA_LINK']}\" />\n";
+			$meta .= "<meta property=\"og:image\" content=\"$image_url\" />\n";
+			$meta .= "<meta property=\"og:description\" content=\"$description\" />";
 
-		$this->template->assign_var('META', $meta);
+			$this->template->assign_var('META', $meta);
+		}
 	}
 
 	/**

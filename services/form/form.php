@@ -109,7 +109,10 @@ class form
 			$field_data['field_label'] = $this->language->lang($field_data['field_label']);
 			$field_data['field_view'] = $obj->show_form_field($name, $field_data);
 
-			$this->data[$name] = $field_data;
+			if ($field_data['field_view'])
+			{
+				$this->data[$name] = $field_data;
+			}
 		}
 
 		return $this;
@@ -228,14 +231,32 @@ class form
 	 */
 	protected function get_submitted_field_data(array &$row, &$req_mod_input, $cp_class)
 	{
-		$obj = $this->fields_factory->get($row['field_type']);
-		$row['field_props'] += $obj->get_default_props();
-		$row['field_value'] = $row['field_value'] ?: '';
-		$field_value = $obj->get_field_value($row);
+		$field_value = '';
+		if ($field = $this->fields_factory->get($row['field_type']))
+		{
+			$row['field_props'] += $field->get_default_props();
+			$row['field_value'] = (isset($row['field_value'])) ? $row['field_value'] : '';
+			$field_value = $field->get_field_value($row);
 
+			$this->validate_field($field, $field_value, $row, $req_mod_input, $cp_class);
+		}
+
+		return $field_value;
+	}
+
+	/**
+	 * @param \blitze\content\services\form\field\field_interface $field
+	 * @param mixed $field_value
+	 * @param array $row
+	 * @param bool $req_mod_input
+	 * @param string $cp_class
+	 * @return mixed
+	 */
+	protected function validate_field(\blitze\content\services\form\field\field_interface $field, $field_value, $row, &$req_mod_input, $cp_class)
+	{
 		if (!empty($field_value))
 		{
-			$this->errors[] = $obj->validate_field($row);
+			$this->errors[] = $field->validate_field($row);
 		}
 		else if ($row['field_required'])
 		{
