@@ -369,7 +369,7 @@ class topic
 	 */
 	protected function get_bookmark_status_data(array $topic_data)
 	{
-		$bookmarked = (bool) $topic_data['bookmarked'];
+		$bookmarked = (bool) (isset($topic_data['bookmarked']) ? $topic_data['bookmarked'] : false);
 		$state_key = (int) $bookmarked;
 		$lang_keys = array(
 			'toggle'	=> array('BOOKMARK_TOPIC_REMOVE', 'BOOKMARK_TOPIC'),

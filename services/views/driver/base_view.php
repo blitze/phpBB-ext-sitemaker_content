@@ -361,8 +361,8 @@ abstract class base_view implements views_interface
 	{
 		$image_url = '';
 
-		$image_field = $this->get_field_name($field_types, 'image');
-		if (null !== ($figure = $fields_data[$image_field]) && preg_match('/src="(.*?)"/i', $figure, $matches))
+		$figure = $this->get_field_value_by_type($fields_data, $field_types, 'image');
+		if ($figure && preg_match('/src="(.*?)"/i', $figure, $matches))
 		{
 			$image_url = $matches[1];
 		}
@@ -377,9 +377,7 @@ abstract class base_view implements views_interface
 	 */
 	protected function get_topic_description(array $field_types, array $fields_data)
 	{
-		$desc_field = $this->get_field_name($field_types, 'textarea');
-
-		if (null !== ($description = $fields_data[$desc_field]))
+		if (null !== ($description = $this->get_field_value_by_type($fields_data, $field_types, 'textarea')))
 		{
 			$description = implode(' ', array_slice(explode(' ', strip_tags($description)), 1, 20));
 		}
@@ -388,13 +386,16 @@ abstract class base_view implements views_interface
 	}
 
 	/**
+	 * @param array $fields_data
 	 * @param array $field_types
 	 * @param string $search_field
-	 * @return string
+	 * @return string|null
 	 */
-	protected function get_field_name(array $field_types, $search_field)
+	protected function get_field_value_by_type(array $fields_data, array $field_types, $search_field)
 	{
 		$results = array_keys($field_types, $search_field);
-		return array_shift($results);
+		$field = array_shift($results);
+		
+		return isset($fields_data[$field]) ? $fields_data[$field] : null;
 	}
 }

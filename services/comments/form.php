@@ -72,9 +72,13 @@ class form
 
 			$this->set_smilies($topic_data['forum_id'], $qr_hidden_fields);
 			$this->set_bbcode($topic_data['forum_id'], $qr_hidden_fields);
-			$this->set_notification($topic_data['notify_status'], $qr_hidden_fields);
 			$this->set_topic_lock($topic_data['topic_status'], $qr_hidden_fields);
 			$this->set_magic_urls($qr_hidden_fields);
+
+			if (isset($topic_data['notify_status']))
+			{
+				$this->set_notification($topic_data['notify_status'], $qr_hidden_fields);
+			}
 
 			$this->template->assign_vars(array(
 				'S_QUICK_REPLY'			=> true,
