@@ -235,18 +235,17 @@ class builder
 		$sql_data['topic_slug'] = $slugify->slugify($sql_data['topic_title']);
 		$sql_data['req_mod_input'] = $this->req_mod_input;
 
-		$this->topic_time = (int) $sql_data['topic_time'];
+		$this->topic_time = $this->request->variable('topic_time', 0);
 
 		if ($this->mode === 'mcp')
 		{
-			$topic_time = $this->request->variable('topic_time', 0);
 			$publish_on = $this->request->variable('publish_on', '');
-
-			$posted_on = $this->user->format_date($topic_time, 'm/d/Y H:i');
+			$posted_on = $this->user->format_date($this->topic_time, 'm/d/Y H:i');
 
 			if ($publish_on !== $posted_on)
 			{
-				$sql_data['topic_time'] = strtotime($publish_on);
+				$this->topic_time = strtotime($publish_on);
+				$sql_data['topic_time'] = $this->topic_time;
 			}
 		}
 	}

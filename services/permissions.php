@@ -178,7 +178,7 @@ class permissions
 	 */
 	protected function cannot_modify_time(array $post_data, $mode)
 	{
-		$mode += '_time';
+		$mode .= '_time';
 		return $this->config[$mode] && $post_data['post_time'] <= time() - ($this->config[$mode] * 60);
 	}
 
