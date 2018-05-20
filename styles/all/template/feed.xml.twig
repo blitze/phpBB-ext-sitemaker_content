@@ -21,7 +21,7 @@
 
 		<updated>{{ row.UPDATED|date("c") }}</updated>
 
-		{% if not row.TOPIC_DATE is empty %}<published>{{ row.TOPIC_DATE|date("c") }}</published>{% endif %}
+		{% if not row.TOPIC_TIME is empty %}<published>{{ row.TOPIC_TIME|date("c") }}</published>{% endif %}
 
 		<id>{{ link }}</id>
 		<link href="{{ link }}"/>

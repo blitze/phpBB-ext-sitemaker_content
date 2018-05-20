@@ -2,11 +2,13 @@
 {% INCLUDECSS '@blitze_content/assets/view/blog/content_blog.min.css' %}
 {% INCLUDE 'parts/content_type.html' %}
 
+{%- set months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May_short', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ] -%}
 <div class="panel post sm-block-spacing">
 	<div class="inner">
 {% for topicrow in loops.topicrow %}
+	{%- set monthIndex = topicrow.TOPIC_TIME|date('n') - 1 -%}
 		<div class="postbody sm-postbody">
-			<div class="calendar sm-responsive-hide">{{ topicrow.TOPIC_DATE|date('d') }} <em>{{ topicrow.TOPIC_DATE|date('M') }}</em></div>
+			<div class="calendar sm-responsive-hide">{{ topicrow.TOPIC_TIME|date('d') }} <em>{{ lang(['datetime', months[monthIndex]]) }}</em></div>
 			<div class="sm-fill-space">
 				{% if not topicrow.CUSTOM_DISPLAY %}
 					{% INCLUDE 'parts/summary_title.html' %}

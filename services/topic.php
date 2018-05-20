@@ -32,6 +32,12 @@ class topic
 	/* @var \blitze\content\services\helper */
 	protected $helper;
 
+	/* @var string */
+	protected $short_date_format;
+
+	/* @var string */
+	protected $long_date_format;
+
 	/**
 	 * Construct
 	 *
@@ -52,6 +58,9 @@ class topic
 		$this->template = $template;
 		$this->user = $user;
 		$this->helper = $helper;
+
+		$this->short_date_format = $this->language->lang('CONTENT_SHORT_DATE_FORMAT');
+		$this->long_date_format = $this->language->lang('CONTENT_LONG_DATE_FORMAT');
 	}
 
 	/**
@@ -70,7 +79,8 @@ class topic
 			'TOPIC_ID'			=> $topic_data['topic_id'],
 			'TOPIC_VIEWS'		=> $topic_data['topic_views'],
 			'TOPIC_TITLE'		=> censor_text($topic_data['topic_title']),
-			'TOPIC_DATE'		=> $this->user->format_date($topic_data['topic_time']),
+			'TOPIC_DATE'		=> $this->user->format_date($topic_data['topic_time'], $this->short_date_format),
+			'TOPIC_DATE_LONG'	=> $this->user->format_date($topic_data['topic_time'], $this->long_date_format),
 			'TOPIC_URL'			=> $topic_data['topic_url'],
 			'MINI_POST'			=> ($post_unread) ? $this->user->img('icon_post_target_unread', 'UNREAD_POST') : $this->user->img('icon_post_target', 'POST'),
 			'S_REQ_MOD_INPUT'	=> $topic_data['req_mod_input'],

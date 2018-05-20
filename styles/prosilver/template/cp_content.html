@@ -148,8 +148,8 @@
 										{% if topicrow.S_HAS_POLL %}<i class="icon fa-bar-chart fa-fw" aria-hidden="true"></i>{% endif %}
 										{% if topicrow.ATTACH_ICON_IMG %}<i class="icon fa-paperclip fa-fw" aria-hidden="true"></i>{% endif %}
 										{% if MODE == 'mcp' %}<strong>{{ topicrow.USERNAME_FULL }}</strong> | {% endif %}
-										<i class="fa fa-calendar-o"></i><strong>{{ topicrow.TOPIC_TIME|date("m/d/Y") }}</strong> |
-										<i class="fa fa-calendar"></i><strong>{{ topicrow.TOPIC_DATE|date("m/d/Y") }}</strong> |
+										<i class="fa fa-calendar-o"></i><strong>{{ topicrow.POST_DATE }}</strong> |
+										<i class="fa fa-calendar"></i><strong>{{ topicrow.TOPIC_DATE }}</strong> |
 										<i class="fa fa-eye"></i><strong>{{ topicrow.TOPIC_VIEWS }}</strong> |
 										<i class="fa fa-comment-o"></i><strong>{{ topicrow.TOPIC_COMMENTS }}</strong>
 									</div>
@@ -159,8 +159,8 @@
 										{% if topicrow.S_HAS_POLL %}<i class="icon fa-bar-chart fa-fw" aria-hidden="true"></i>{% endif %}
 										{% if topicrow.ATTACH_ICON_IMG %}<i class="icon fa-paperclip fa-fw" aria-hidden="true"></i>{% endif %}
 										{% if MODE == 'mcp' %}<i class="fa fa-user"></i><strong>{{ topicrow.USERNAME_FULL }}</strong> | {% endif %}
-										<i class="fa fa-calendar-o"></i>{{ lang('POSTED') }}{{ lang('COLON') }} <strong>{{ topicrow.TOPIC_TIME|date("m/d/Y") }}</strong> |
-										<i class="fa fa-calendar"></i>{{ lang('CONTENT_PUBLISHED') }}{{ lang('COLON') }} <strong>{{ topicrow.TOPIC_DATE|date("m/d/Y") }}</strong> |
+										<i class="fa fa-calendar-o"></i>{{ lang('POSTED') }}{{ lang('COLON') }} <strong>{{ topicrow.POST_DATE }}</strong> |
+										<i class="fa fa-calendar"></i>{{ lang('CONTENT_PUBLISHED') }}{{ lang('COLON') }} <strong>{{ topicrow.TOPIC_DATE }}</strong> |
 										<i class="fa fa-eye"></i><strong>{{ topicrow.TOPIC_VIEWS }}</strong> |
 										<i class="fa fa-comment-o"></i><strong>{{ topicrow.TOPIC_COMMENTS }}</strong>
 									</div>
@@ -169,8 +169,8 @@
 							<dd class="posts"><a href="{{ topicrow.U_TOPIC_STATUS }}" title="{{ topicrow.FIRST_POST_TIME }}">{{ topicrow.TOPIC_STATUS }}</a> <dfn>{{ lang('STATUS') }}</dfn></dd>
 							<dd class="lastpost align-center"><a href="{{ topicrow.U_CONTENT_TYPE }}"><span class="badge" style="background-color: #{{ topicrow.CONTENT_TYPE_COLOR }}; color: #fff">{{ topicrow.CONTENT_TYPE }}</span></a><dfn>{{ lang('LAST_POST') }}</dfn></dd>
 							<dd class="mark align-right">
-								{% if topicrow.U_EDIT %}<a href="{{ topicrow.U_EDIT }}" title="{{ lang('EDIT') }}"><i class="fa fa-pencil fa-fw fa-lg fa-green" aria-hidden="true"></i></a>{% else %}<i class="fa fa-pencil fa-fw fa-lg" aria-hidden="true"></i>{% endif %}
-								{% if topicrow.U_DELETE %}<a href="{{ topicrow.U_DELETE }}" title="{{ lang('DELETE') }}"><i class="fa fa-trash-o fa-fw fa-lg fa-red" aria-hidden="true"></i></a>{% endif %}
+								{% if topicrow.U_EDIT %}<a href="{{ topicrow.U_EDIT }}" title="{{ lang('EDIT_POST') }}"><i class="fa fa-pencil fa-fw fa-lg fa-green" aria-hidden="true"></i></a>{% else %}<i class="fa fa-pencil fa-fw fa-lg" aria-hidden="true"></i>{% endif %}
+								{% if topicrow.U_DELETE %}<a href="{{ topicrow.U_DELETE }}" title="{{ lang('DELETE_POST') }}"><i class="fa fa-trash-o fa-fw fa-lg fa-red" aria-hidden="true"></i></a>{% endif %}
 								{% if MODE == 'mcp' %}<input type="checkbox" name="topic_id_list[]" value="{{ topicrow.TOPIC_ID }}"{% if topicrow.S_REQ_MOD_INPUT %} disabled="disabled" title="{{ lang('REQ_MOD_INPUT') }}"{% endif %}>{% endif %}
 							</dd>
 						</dl>
