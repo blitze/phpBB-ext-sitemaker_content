@@ -25,8 +25,8 @@ class posting implements EventSubscriberInterface
 	/** @var string */
 	protected $content_langname = '';
 
-	/** @var string|false */
-	protected $content_type = false;
+	/** @var string */
+	protected $content_type = '';
 
 	/** @var bool */
 	protected $build_content = false;
@@ -73,11 +73,14 @@ class posting implements EventSubscriberInterface
 	 */
 	public function init_builder(\phpbb\event\data $event)
 	{
-		list($this->content_type, $this->content_langname) = $this->builder->init($event['forum_id'], $event['topic_id'], $event['mode'], $event['save']);
+		$type_info = $this->builder->init($event['forum_id'], $event['topic_id'], $event['mode'], $event['save']);
+
+		$this->content_type = (string) $type_info[0];
+		$this->content_langname = $type_info[1];
 
 		if (empty($event['post_data']['topic_first_post_id']) || $event['post_data']['topic_first_post_id'] == $event['post_id'])
 		{
-			$this->build_content = ($this->content_type !== false && $event['mode'] !== 'reply') ? true : false;
+			$this->build_content = ($this->content_type && $event['mode'] !== 'reply') ? true : false;
 		}
 	}
 

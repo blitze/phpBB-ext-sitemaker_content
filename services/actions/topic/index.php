@@ -147,7 +147,7 @@ class index extends filter implements action_interface
 			$tpl_data = $this->fields->show($content_type, $topic_row, $post_row, $users_cache, $attachments, $update_count, $topic_tracking_info, array(), $mode);
 			$tpl_data['POST_DATE'] = $this->user->format_date($post_row['post_time'], 'm/d/Y');
 
-			$this->template->assign_block_vars('topicrow', array_merge($tpl_data, 
+			$this->template->assign_block_vars('topicrow', array_merge($tpl_data,
 				$this->get_content_type_info($content_type, $base_url),
 				$this->get_topic_type_info($tpl_data['S_UNREAD_POST'], $tpl_data['TOPIC_COMMENTS'], $topic_row),
 				$this->get_topic_status_info($tpl_data['S_POST_UNAPPROVED'], $tpl_data['S_TOPIC_DELETED'], $base_url, $topic_row),

@@ -28,9 +28,6 @@ class mcp_post implements EventSubscriberInterface
 	/** @var string */
 	protected $php_ext;
 
-	/** @var string|false */
-	private $type;
-
 	/**
 	 * Constructor
 	 *
@@ -65,18 +62,15 @@ class mcp_post implements EventSubscriberInterface
 	 */
 	public function modify_post_data(\phpbb\event\data $event)
 	{
-		if (
-			($type = $this->content_types->get_forum_type($event['post_info']['forum_id'])) !== false
-			&& $event['post_info']['post_id'] === $event['post_info']['topic_first_post_id']
-		)
+		$type = (string) $this->content_types->get_forum_type($event['post_info']['forum_id']);
+		if ($type && $event['post_info']['post_id'] === $event['post_info']['topic_first_post_id'])
 		{
 			$entity = $this->content_types->get_type($type);
 
 			$this->fields->prepare_to_show($entity, array($event['post_info']['topic_id']), $entity->get_summary_fields(), $entity->get_summary_tpl(), 'summary');
 			$users_cache = $attachments = $topic_tracking_info = $update_count = array();
 
-			$post_data = $event['post_info'];
-			$topic_data = $event['post_info'];
+			$post_data = $topic_data = (array) $event['post_info'];
 			$users_cache[$post_data['poster_id']] = array();
 
 			$tpl_data = $this->fields->get_summary_template_data($type, $topic_data, $post_data, $users_cache, $attachments, $topic_tracking_info, $update_count);

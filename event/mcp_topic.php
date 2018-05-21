@@ -28,7 +28,7 @@ class mcp_topic implements EventSubscriberInterface
 	/** @var string */
 	protected $php_ext;
 
-	/** @var string|false */
+	/** @var string */
 	private $type;
 
 	/**
@@ -70,7 +70,8 @@ class mcp_topic implements EventSubscriberInterface
 	 */
 	public function modify_post_data(\phpbb\event\data $event)
 	{
-		$this->type = $this->content_types->get_forum_type($event['rowset'][0]['forum_id']);
+		$forum_type = $this->content_types->get_forum_type($event['rowset'][0]['forum_id']);
+		$this->type = $forum_type ?: '';
 	}
 
 	/**
@@ -79,7 +80,7 @@ class mcp_topic implements EventSubscriberInterface
 	 */
 	public function modify_review_row(\phpbb\event\data $event)
 	{
-		if ($event['row']['post_id'] === $event['topic_info']['topic_first_post_id'] && $this->type && ($entity = $this->content_types->get_type($this->type)) !== false)
+		if ($this->type && $event['row']['post_id'] === $event['topic_info']['topic_first_post_id'] && ($entity = $this->content_types->get_type($this->type)) !== false)
 		{
 			$this->fields->prepare_to_show($entity, array($event['topic_info']['topic_id']), $entity->get_summary_fields(), $entity->get_summary_tpl(), 'summary');
 			$users_cache = $attachments = $topic_tracking_info = $update_count = array();

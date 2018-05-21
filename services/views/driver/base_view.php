@@ -395,7 +395,7 @@ abstract class base_view implements views_interface
 	{
 		$results = array_keys($field_types, $search_field);
 		$field = array_shift($results);
-		
+
 		return isset($fields_data[$field]) ? $fields_data[$field] : null;
 	}
 }

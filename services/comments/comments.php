@@ -261,7 +261,7 @@ class comments extends form implements comments_interface
 		}
 		else
 		{
-			return $this->get_prev_posts_count($post_info, $topic_data['forum_id'], $topic_data['topic_id'], $post_id, $sort_dir) - 1;
+			return $this->get_prev_posts_count($post_info, $topic_data['forum_id'], $topic_data['topic_id'], $sort_dir) - 1;
 		}
 	}
 
@@ -269,11 +269,10 @@ class comments extends form implements comments_interface
 	 * @param array $row
 	 * @param int $forum_id
 	 * @param int $topic_id
-	 * @param int $post_id
 	 * @param string $sort_dir
 	 * @return int
 	 */
-	protected function get_prev_posts_count(array $row, $forum_id, $topic_id, $post_id, $sort_dir)
+	protected function get_prev_posts_count(array $row, $forum_id, $topic_id, $sort_dir)
 	{
 		$sql = 'SELECT COUNT(p.post_id) AS prev_posts
 			FROM ' . POSTS_TABLE . " p
