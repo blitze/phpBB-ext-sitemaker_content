@@ -158,7 +158,7 @@ class posting implements EventSubscriberInterface
 	 */
 	public function modify_topic_review(\phpbb\event\data $event)
 	{
-		if ($this->content_type !== false && $event['row']['post_id'] == $this->content_post_id)
+		if ($this->content_type && $event['row']['post_id'] == $this->content_post_id)
 		{
 			$post_row = (array) $event['post_row'];
 			$post_row['MESSAGE'] = $this->builder->get_content_view($this->content_type, $post_row, 'summary');
@@ -173,7 +173,7 @@ class posting implements EventSubscriberInterface
 	 */
 	public function set_redirect_url(\phpbb\event\data $event)
 	{
-		if ($this->content_type !== false)
+		if ($this->content_type)
 		{
 			if ($this->build_content)
 			{
@@ -222,7 +222,7 @@ class posting implements EventSubscriberInterface
 
 			if ($event['preview'] && $this->content_type)
 			{
-				$page_data['PREVIEW_MESSAGE'] = $this->builder->generate_preview((string) $this->content_type, $post_data);
+				$page_data['PREVIEW_MESSAGE'] = $this->builder->generate_preview($this->content_type, $post_data);
 			}
 
 			$event['page_data'] = $page_data;
