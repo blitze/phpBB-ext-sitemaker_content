@@ -55,7 +55,7 @@ class swiper extends recent
 				'theme'				=> array('lang' => 'SWIPER_THEME', 'validate' => 'string', 'type' => 'select', 'options' => $theme_options, 'default' => ''),
 				'pagination'		=> array('lang' => 'SWIPER_PAGINATION', 'validate' => 'string', 'type' => 'select', 'options' => $pagination_options, 'default' => 1),
 				'effect'			=> array('lang' => 'SWIPER_EFFECT', 'validate' => 'string', 'type' => 'select', 'options' => $effect_options, 'default' => 'slide'),
-				'parallax'			=> array('lang' => 'SWIPER_PARALLAX_IMAGE_URL', 'validate' => 'string', 'type' => 'text', 'default' => ''),
+				'parallax'			=> array('lang' => 'SWIPER_PARALLAX_IMAGE_URL', 'validate' => 'string', 'type' => 'text::255', 'default' => ''),
 				'direction'			=> array('lang' => 'SWIPER_DIRECTION', 'validate' => 'string', 'type' => 'select:1:0:direction', 'options' => $direction_options, 'default' => 'horizontal', 'append' => '<div id="direction-vertical" class="error small">' . $this->language->lang('SWIPER_HEIGHT_REQUIRED') . '</div>'),
 				'height'			=> array('lang' => 'SWIPER_HEIGHT', 'validate' => 'int:0', 'type' => 'number:0', 'default' => 0, 'append' => 'PIXEL'),
 				'thumbs'			=> array('lang' => 'SWIPER_THUMBNAILS', 'validate' => 'bool', 'type' => 'radio:yes_no', 'default' => 0),
@@ -88,6 +88,7 @@ class swiper extends recent
 			)
 		));
 
+		$bdata['settings']['layout'] = ''; // key 'layout' is needed by parent
 		$this->ptemplate->assign_vars(array(
 			'ID'			=> $bdata['bid'],
 			'SETTINGS'		=> $bdata['settings'],
