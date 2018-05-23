@@ -84,7 +84,7 @@ class range extends base
 			return '';
 		}
 
-		$callable = 'display_field_' . $data['field_props']['display'];
+		$callable = 'display_field_' . (($view_mode === 'print') ? 'text' : $data['field_props']['display']);
 		return $this->$callable($data);
 	}
 
