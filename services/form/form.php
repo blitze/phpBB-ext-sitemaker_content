@@ -104,6 +104,7 @@ class form
 		{
 			$obj = $this->fields_factory->get($type);
 
+			$field_data['field_name'] = $name;
 			$field_data['field_type'] = $type;
 			$field_data['field_props'] += $obj->get_default_props();
 			$field_data['field_label'] = $this->language->lang($field_data['field_label']);
