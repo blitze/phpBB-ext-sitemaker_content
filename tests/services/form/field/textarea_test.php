@@ -34,10 +34,11 @@ class textarea_test extends base_form_field
 	/**
 	 * Create the form field service
 	 *
+	 * @param string $field
 	 * @param array $variable_map
 	 * @return \blitze\content\services\form\field\field_interface
 	 */
-	protected function get_form_field($field, array $variable_map = array(), $previewing = false)
+	protected function get_form_field($field, array $variable_map = array())
 	{
 		global $db, $phpbb_dispatcher, $phpbb_path_helper, $template, $phpbb_root_path, $phpEx;
 
@@ -97,11 +98,6 @@ class textarea_test extends base_form_field
 			->method('variable')
 			->with($this->anything())
 			->will($this->returnValueMap($variable_map));
-
-		$this->request->expects($this->any())
-			->method('is_set')
-			->with('preview')
-			->willReturn($previewing);
 
 		$filesystem = new \phpbb\filesystem\filesystem();
 		$phpbb_path_helper = new \phpbb\path_helper(
@@ -348,7 +344,7 @@ class textarea_test extends base_form_field
 
 		// Form submitted and we are previewing
 			array(
-				'detail',
+				'preview',
 				array(
 					'field_value'	=> $pages_toc_string,
 				),
@@ -357,7 +353,6 @@ class textarea_test extends base_form_field
 				'<h4>Title 2</h4>Page 2 content<p><hr class="dashed"></p>' .
 				'Page 3 content',
 				array(),
-				true,
 			),
 		);
 	}
@@ -371,7 +366,7 @@ class textarea_test extends base_form_field
 	 * @param array $expected_toc
 	 * @return void
 	 */
-	public function test_display_textarea_field($view, array $data, $page, $expected_content, $expected_toc, $previewing = false)
+	public function test_display_textarea_field($view, array $data, $page, $expected_content, $expected_toc)
 	{
 		$variable_map = array(array('page', 0, false, request_interface::REQUEST, $page - 1));
 		$data['field_name'] = 'foo';

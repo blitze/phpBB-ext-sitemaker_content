@@ -89,7 +89,7 @@ class textarea extends text
 	{
 		$toc_pattern = '(<h4>(.*?)</h4>)?';
 		$pages_pattern = '<p><!-- pagebreak --></p>';
-		$split_pattern = $pages_pattern . (($view_mode !== 'detail') ? $toc_pattern : '');
+		$split_pattern = $pages_pattern . (($view_mode === 'summary') ? $toc_pattern : '');
 
 		$pages = array_filter((array) preg_split('#' . $split_pattern . '#s', $data['field_value']));
 
