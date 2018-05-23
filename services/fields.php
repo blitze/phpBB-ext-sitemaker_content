@@ -165,7 +165,7 @@ class fields extends topic
 	}
 
 	/**
-	 * @param string $view_mode		summary|detail|block
+	 * @param string $view_mode		summary|detail|print|block|preview
 	 * @return $this
 	 */
 	public function set_view_mode($view_mode)

@@ -93,7 +93,7 @@ class textarea extends text
 
 		$pages = array_filter((array) preg_split('#' . $split_pattern . '#s', $data['field_value']));
 
-		if ($view_mode !== 'detail')
+		if ($view_mode === 'summary')
 		{
 			return $this->get_summary_value(trim($pages[0]), $data['field_props']['max_chars']);
 		}
@@ -101,7 +101,7 @@ class textarea extends text
 		// get page titles to generate TOC
 		preg_match_all('#' . $pages_pattern . $toc_pattern . '#s', $data['field_value'], $matches);
 
-		return $this->get_detail_value($pages, $matches[2], $data);
+		return $this->get_detail_value($pages, $matches[2], $data, $view_mode);
 	}
 
 	/**
@@ -169,9 +169,9 @@ class textarea extends text
 	 * @param array $data
 	 * @return mixed
 	 */
-	protected function get_detail_value(array $pages, array $titles, array $data)
+	protected function get_detail_value(array $pages, array $titles, array $data, $view_mode)
 	{
-		if ($this->request->is_set('preview') || $this->request->variable('view', '') === 'print')
+		if ($view_mode === 'preview' || $view_mode === 'print')
 		{
 			return join('<p><hr class="dashed"></p>', $pages);
 		}

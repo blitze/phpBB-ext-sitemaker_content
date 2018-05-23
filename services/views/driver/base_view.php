@@ -195,6 +195,7 @@ abstract class base_view implements views_interface
 		}
 
 		$this->fields->prepare_to_show($entity, array_keys($topics_data), $entity->get_detail_fields(), $entity->get_detail_tpl(), 'detail');
+		$this->fields->set_view_mode($cp_mode);
 
 		$topic_data = array_shift($topics_data);
 		$post_data = array_shift($post_data[$topic_id]);

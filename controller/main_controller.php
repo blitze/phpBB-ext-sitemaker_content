@@ -101,27 +101,27 @@ class main_controller
 	 */
 	public function show($type, $topic_id)
 	{
-		$view = $this->request->variable('view', '');
+		$view = $this->request->variable('view', 'detail');
 		$entity = $this->get_type_entity($type);
 
 		$update_count = array();
 		$view_handler = $this->views_factory->get($entity->get_content_view());
-		$topic_data = $view_handler->render_detail($entity, $topic_id, $update_count);
+		$topic_data = $view_handler->render_detail($entity, $topic_id, $update_count, array(), $view);
 
 		$this->add_navlink($topic_data['topic_title'], $topic_data['topic_url']);
 		$this->template->assign_var('TOPIC_POLL', $this->poll->display($topic_data));
 		$this->template->assign_vars($entity->to_array());
 
-		if ($entity->get_allow_comments())
-		{
-			$this->comments->show_comments($type, $topic_data, $update_count);
-			$this->comments->show_form($topic_data);
-		}
-
 		if ($view !== 'print')
 		{
 			$this->update_views($topic_id, $update_count);
 			$template_file = $view_handler->get_detail_template();
+
+			if ($entity->get_allow_comments())
+			{
+				$this->comments->show_comments($type, $topic_data, $update_count);
+				$this->comments->show_form($topic_data);
+			}
 		}
 		else
 		{
