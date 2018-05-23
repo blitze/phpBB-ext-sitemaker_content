@@ -97,7 +97,7 @@ class comments extends form implements comments_interface
 			$sort_key = $sort_dir = $u_sort_param = '';
 			$this->set_sorting_options($sort_days, $sort_key, $sort_dir, $u_sort_param);
 
-			$base_url = append_sid(build_url(array('start', 'p')), (strlen($u_sort_param)) ? $u_sort_param : '');
+			$base_url = append_sid(trim(build_url(array('start', 'p')), '?'), (strlen($u_sort_param)) ? $u_sort_param : '');
 			$this->build_pagination($start, $post_id, $topic_data, $sort_dir, $base_url);
 
 			$this->forum->query()
@@ -211,7 +211,7 @@ class comments extends form implements comments_interface
 		$start = $this->pagination->validate_start($start, (int) $this->config['posts_per_page'], $topic_data['total_comments']);
 		$this->pagination->generate_template_pagination($base_url, 'pagination', 'start', $topic_data['total_comments'], (int) $this->config['posts_per_page'], $start);
 
-		$data = (isset($this->template_context->get_data_ref()['pagination'])) ? $this->template_context->get_data_ref()['pagination'] : array();
+		$data =& $this->template_context->get_data_ref()['pagination'];
 		foreach ($data as &$row)
 		{
 			$row['PAGE_URL'] .= '#comments';
