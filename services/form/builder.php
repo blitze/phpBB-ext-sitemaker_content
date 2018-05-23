@@ -156,16 +156,6 @@ class builder
 	}
 
 	/**
-	 * @param array $topic_data
-	 * @return void
-	 */
-	public function save_db_fields(array $topic_data)
-	{
-		$topic_data['topic_time'] = $topic_data['topic_time'] ?: $this->topic_time;
-		$this->form->save_db_fields($topic_data, $this->content_fields);
-	}
-
-	/**
 	 * @return array
 	 */
 	public function get_errors()
@@ -205,6 +195,9 @@ class builder
 			$fields_accessor = 'get_' . $view . '_fields';
 			$template_accessor = 'get_' . $view . '_tpl';
 
+			// we do this to ensure topic_id keys exists when previewing a new topic
+			$post_data += array('topic_id' => 0);
+
 			$this->fields->prepare_to_show($entity, array($post_data['topic_id']), $entity->$fields_accessor(), $entity->$template_accessor(), $view);
 			$content = $this->fields->build_content(array_change_key_case($post_data, CASE_UPPER));
 
@@ -226,16 +219,26 @@ class builder
 	}
 
 	/**
+	 * @param array $data
+	 * @return void
+	 */
+	public function modify_posting_data(array &$data)
+	{
+		$this->topic_time = time();
+		$data['post_time'] = $this->topic_time;
+	}
+
+	/**
 	 * @param array $sql_data
 	 * @return void
 	 */
-	public function modify_posting_data(array &$sql_data)
+	public function modify_sql_data(array &$sql_data)
 	{
 		$slugify = new Slugify();
 		$sql_data['topic_slug'] = $slugify->slugify($sql_data['topic_title']);
 		$sql_data['req_mod_input'] = $this->req_mod_input;
 
-		$this->topic_time = $this->request->variable('topic_time', 0);
+		$this->topic_time = $this->request->variable('topic_time', $this->topic_time);
 
 		if ($this->mode === 'mcp')
 		{
@@ -248,6 +251,16 @@ class builder
 				$sql_data['topic_time'] = $this->topic_time;
 			}
 		}
+	}
+
+	/**
+	 * @param array $topic_data
+	 * @return void
+	 */
+	public function save_db_fields(array $topic_data)
+	{
+		$topic_data['topic_time'] = (!empty($topic_data['topic_time'])) ? $topic_data['topic_time'] : $this->topic_time;
+		$this->form->save_db_fields($topic_data, $this->content_fields);
 	}
 
 	/**

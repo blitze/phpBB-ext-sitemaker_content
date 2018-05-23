@@ -57,6 +57,7 @@ class posting implements EventSubscriberInterface
 			'core.modify_posting_auth'					=> 'init_builder',
 			'core.posting_modify_message_text'			=> 'build_message',
 			'core.posting_modify_submission_errors'		=> 'show_errors',
+			'core.modify_submit_post_data'				=> 'modify_posting_data',
 			'core.submit_post_modify_sql_data'			=> 'modify_sql_data',
 			'core.posting_modify_submit_post_after'		=> array(array('save_fields'), array('set_redirect_url')),
 			'core.topic_review_modify_post_list'		=> 'set_content_post_id',
@@ -129,12 +130,26 @@ class posting implements EventSubscriberInterface
 	 * @param \phpbb\event\data $event
 	 * @return void
 	 */
+	public function modify_posting_data(\phpbb\event\data $event)
+	{
+		if ($this->build_content && $event['mode'] === 'post')
+		{
+			$data = $event['data'];
+			$this->builder->modify_posting_data($data);
+			$event['data'] = $data;
+		}
+	}
+
+	/**
+	 * @param \phpbb\event\data $event
+	 * @return void
+	 */
 	public function modify_sql_data(\phpbb\event\data $event)
 	{
 		if ($this->build_content)
 		{
 			$sql_data = $event['sql_data'];
-			$this->builder->modify_posting_data($sql_data[TOPICS_TABLE]['sql']);
+			$this->builder->modify_sql_data($sql_data[TOPICS_TABLE]['sql']);
 			$event['sql_data'] = $sql_data;
 		}
 	}
@@ -183,8 +198,8 @@ class posting implements EventSubscriberInterface
 			{
 				$topic_url = $this->builder->get_post_url($this->content_type, (array) $event['post_data']);
 
-				$post_id = $event['post_id'];
-				if ($post_id != $event['post_data']['topic_first_post_id'])
+				$post_id = $event['data']['post_id'];
+				if ($post_id && $post_id != $event['post_data']['topic_first_post_id'])
 				{
 					$topic_url .= "?p=$post_id#p$post_id";
 				}
