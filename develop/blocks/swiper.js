@@ -8,6 +8,10 @@
 		var $element = $(elementId);
 		var options = $element.data();
 
+		if (!options) {
+			return;
+		}
+
 		if (options.autoplay) {
 			options.autoplay = {
 				delay: options.autoplay
