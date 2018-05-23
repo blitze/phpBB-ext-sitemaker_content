@@ -56,7 +56,12 @@ class moderate implements action_interface
 	 */
 	public function execute($u_action, $mode = '')
 	{
-		$this->language->add_lang('manager', 'blitze/content');
+		$this->language->add_lang('cp', 'blitze/content');
+
+		include($this->phpbb_root_path . 'includes/mcp/mcp_main.' . $this->php_ext);
+		include($this->phpbb_root_path . 'includes/mcp/mcp_forum.' . $this->php_ext);
+		include($this->phpbb_root_path . 'includes/mcp/mcp_queue.' . $this->php_ext);
+		include($this->phpbb_root_path . 'includes/functions_messenger.' . $this->php_ext);
 
 		$action = $this->request->variable('action', '');
 		$topic_ids = array_filter($this->request->variable('topic_id_list', array(0)));
@@ -86,9 +91,6 @@ class moderate implements action_interface
 	 */
 	protected function approve(array $topic_ids, array $forum_ids, $execute = true)
 	{
-		include($this->phpbb_root_path . 'includes/mcp/mcp_queue.' . $this->php_ext);
-		include($this->phpbb_root_path . 'includes/functions_messenger.' . $this->php_ext);
-
 		if (!(sizeof(array_intersect_key($forum_ids, $this->auth->acl_getf('m_approve', true)))))
 		{
 			trigger_error('NOT_AUTHORISED');
@@ -149,8 +151,6 @@ class moderate implements action_interface
 	 */
 	protected function resync(array $topic_ids)
 	{
-		include($this->phpbb_root_path . 'includes/mcp/mcp_forum.' . $this->php_ext);
-
 		mcp_resync_topics($topic_ids);
 	}
 
