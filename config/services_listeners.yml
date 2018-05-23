@@ -81,6 +81,7 @@ services:
         class: blitze\content\event\viewtopic
         arguments:
             - '@controller.helper'
+            - '@request'
             - '@blitze.content.types'
         tags:
             - { name: event.listener }

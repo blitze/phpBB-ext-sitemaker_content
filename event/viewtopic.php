@@ -16,6 +16,9 @@ class viewtopic implements EventSubscriberInterface
 	/* @var \phpbb\controller\helper */
 	protected $helper;
 
+	/** @var \phpbb\request\request_interface */
+	protected $request;
+
 	/* @var \blitze\content\services\types */
 	protected $content_types;
 
@@ -23,11 +26,13 @@ class viewtopic implements EventSubscriberInterface
 	 * Constructor
 	 *
 	 * @param \phpbb\controller\helper				$helper				Helper object
+	 * @param \phpbb\request\request_interface		$request			Request object
 	 * @param \blitze\content\services\types		$content_types		Content types object
 	*/
-	public function __construct(\phpbb\controller\helper $helper, \blitze\content\services\types $content_types)
+	public function __construct(\phpbb\controller\helper $helper, \phpbb\request\request_interface $request, \blitze\content\services\types $content_types)
 	{
 		$this->helper = $helper;
+		$this->request = $request;
 		$this->content_types = $content_types;
 	}
 
@@ -62,7 +67,7 @@ class viewtopic implements EventSubscriberInterface
 	 */
 	public function viewtopic_redirect(\phpbb\event\data $event)
 	{
-		if ($type = $this->content_types->get_forum_type($event['forum_id']))
+		if (($type = $this->content_types->get_forum_type($event['forum_id'])) && !$this->request->is_set_post('update'))
 		{
 			$topic_url = $this->helper->route('blitze_content_show', array(
 				'type'		=> $type,
@@ -71,7 +76,7 @@ class viewtopic implements EventSubscriberInterface
 			));
 
 			$post_id = $event['post_id'];
-			if ($event['topic_data']['topic_first_post_id'] != $event['post_id'])
+			if ($post_id && $post_id != $event['topic_data']['topic_first_post_id'])
 			{
 				$topic_url .= "?p=$post_id#p$post_id";
 			}
