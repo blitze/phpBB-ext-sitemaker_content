@@ -11,7 +11,7 @@
 <style type="text/css">
 	.field-label {
 		font-weight: bold;
-		margin-top: 5px;
+		margin-top: 10px;
 		margin-right: 4px;
 	}
 	.label-hidden {
@@ -45,7 +45,7 @@
 	</div>
 
 	<div id="page-body" class="page-body">
-		{% if CUSTOM_DISPLAY %}{{ CUSTOM_DISPLAY }}{% else %}{{ FIELDS.all|join }}{% endif %}
+		{{ FIELDS.all|join('<br />') }}
 	</div>
 	<hr />
 
