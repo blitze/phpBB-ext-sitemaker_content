@@ -24,6 +24,8 @@ $lang = array_merge($lang, array(
 	'CONTENT_TYPE'						=> 'Content Type',
 	'CONTENT_TYPE_ANY'					=> 'Any',
 
+	'DISPLAY_LAYOUT'					=> 'Layout',
+
 	'FIELD_MAX_CHARS'					=> 'Max Characters to display',
 
 	'LIMIT_POST_TIME'					=> 'Limit by post time',
