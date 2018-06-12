@@ -157,6 +157,8 @@ class image extends base
 	{
 		if ($this->filemanager->is_enabled())
 		{
+			$this->filemanager->ensure_config_is_ready();
+
 			$data['filemanager_path'] = append_sid("{$this->phpbb_root_path}ResponsiveFilemanager/filemanager/dialog.$this->php_ext", array(
 				'type'			=> 1,
 				'field_id'		=> 'smc-' . $data['field_name'],
