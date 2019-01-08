@@ -210,8 +210,17 @@ class comments extends form implements comments_interface
 
 		$start = $this->pagination->validate_start($start, (int) $this->config['posts_per_page'], $topic_data['total_comments']);
 		$this->pagination->generate_template_pagination($base_url, 'pagination', 'start', $topic_data['total_comments'], (int) $this->config['posts_per_page'], $start);
+		$this->add_comment_anchor_to_pages();
+	}
 
+	/**
+	 * @return void
+	 */
+	protected function add_comment_anchor_to_pages()
+	{
 		$data =& $this->template_context->get_data_ref()['pagination'];
+		$data = (array) $data;
+
 		foreach ($data as &$row)
 		{
 			$row['PAGE_URL'] .= '#comments';
