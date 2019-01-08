@@ -125,7 +125,7 @@ class archive extends \blitze\sitemaker\services\blocks\driver\block
 	{
 		$sql_array = array(
 			'SELECT'	=> array('YEAR(FROM_UNIXTIME(t.topic_time)) AS year, MONTH(FROM_UNIXTIME(t.topic_time)) AS month, COUNT(t.topic_id) AS total'),
-			'WHERE'		=> array($this->db->sql_in_set('t.forum_id', $forum_ids)),
+			'WHERE'		=> sizeof($forum_ids) ? array($this->db->sql_in_set('t.forum_id', $forum_ids)) : '',
 			'GROUP_BY'	=> 'year, month',
 			'ORDER_BY'	=> 'year DESC',
 		);
