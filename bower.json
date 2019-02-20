@@ -3,12 +3,15 @@
   "dependencies": {
     "air-datepicker": "^2.2.3",
     "awesome-grid": "^2.0.2",
-    "fancybox": "^3.3.5",
+    "fancybox": "^3.5.6",
     "imagesloaded": "^4.1.4",
-    "ion.rangeSlider": "ionrangeslider#^2.1.7",
+    "ion.rangeSlider": "ionrangeslider#^2.3.0",
     "jssocials": "^1.5.0",
     "spectrum": "^1.8.0",
-    "swiper": "^4.3.3"
+    "swiper": "^4.4.6",
+    "jquery-ui": "^1.12.1",
+    "codemirror": "^5.42.2",
+    "twig.js": "https://raw.githubusercontent.com/philsbury/twigjs-bower/master/twig/twig.min.js"
   },
   "overrides": {
     "air-datepicker": {
@@ -16,6 +19,14 @@
     },
     "awesome-grid": {
       "dependencies": null
+    },
+    "codemirror": {
+      "main": [
+        "addon/display/autorefresh.js",
+        "lib/*",
+        "mode/twig/*",
+        "theme/monokai.css"
+      ]
     },
     "fancybox": {
       "dependencies": null
@@ -31,6 +42,13 @@
         "./css/ion.rangeSlider.*",
         "./img/*"
       ]
+    },
+    "jquery-ui": {
+      "main": [
+        "jquery-ui.min.js",
+        "./themes/smoothness/**/*"
+      ],
+      "dependencies": null
     },
     "jssocials": {
       "main": "dist/jssocials.min.js",

@@ -60,16 +60,16 @@
 			var bid = $(this).attr('id').substring(7);
 			initSwiper(bid);
 		});
-		$('body')
-			.on('blitze_sitemaker_renderBlock_before', function(e, data) {
-				if (swipers[data.bid]) {
-					swipers[data.bid].top.destroy();
-					swipers[data.bid].bottom ? swipers[data.bid].bottom.destroy() : '';
+		$(document)
+			.on('blitze_sitemaker_render_block_before', function(e) {
+				if (swipers[e.block.bid]) {
+					swipers[e.block.bid].top.destroy();
+					swipers[e.block.bid].bottom ? swipers[e.block.bid].bottom.destroy() : '';
 				}
 			})
-			.on('blitze_sitemaker_renderBlock_after', function(e, data) {
-				if (data.name === "blitze.content.block.swiper") {
-					initSwiper(data.bid);
+			.on('blitze_sitemaker_render_block_after', function(e) {
+				if (e.block.name === "blitze.content.block.swiper") {
+					initSwiper(e.block.bid);
 				}
 			});
 	});

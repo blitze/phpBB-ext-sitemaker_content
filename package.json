@@ -22,5 +22,8 @@
     "jshint-stylish": "^2.2.1",
     "main-bower-files": "^2.13.1",
     "yargs": "^11.0.0"
+  },
+  "dependencies": {
+    "natives": "^1.1.6"
   }
 }

@@ -1,15 +1,15 @@
 {% include('overall_header.html') %}
 
 {% if S_EDIT %}
-	{% INCLUDEJS '@blitze_sitemaker/vendor/jquery-ui/jquery-ui.min.js' %}
-	{% INCLUDEJS '@blitze_sitemaker/vendor/codemirror/lib/codemirror.js' %}
-	{% INCLUDEJS '@blitze_sitemaker/vendor/codemirror/addon/display/autorefresh.js' %}
-	{% INCLUDEJS '@blitze_sitemaker/vendor/twig.js/index.js' %}
+	{% INCLUDEJS '@blitze_content/vendor/jquery-ui/jquery-ui.min.js' %}
+	{% INCLUDEJS '@blitze_content/vendor/codemirror/lib/codemirror.min.js' %}
+	{% INCLUDEJS '@blitze_content/vendor/codemirror/addon/display/autorefresh.min.js' %}
+	{% INCLUDEJS '@blitze_content/vendor/twig.js/index.min.js' %}
 	{% INCLUDEJS '@blitze_content/assets/acp/content_admin.min.js' %}
 
-	{% INCLUDECSS '@blitze_sitemaker/vendor/jquery-ui/themes/smoothness/jquery-ui.min.css' %}
-	{% INCLUDECSS '@blitze_sitemaker/vendor/codemirror/lib/codemirror.css' %}
-	{% INCLUDECSS '@blitze_sitemaker/vendor/codemirror/theme/monokai.css' %}
+	{% INCLUDECSS '@blitze_content/vendor/jquery-ui/themes/smoothness/jquery-ui.min.css' %}
+	{% INCLUDECSS '@blitze_content/vendor/codemirror/lib/codemirror.min.css' %}
+	{% INCLUDECSS '@blitze_content/vendor/codemirror/theme/monokai.min.css' %}
 	{% INCLUDECSS '@blitze_content/assets/acp/content_admin.min.css' %}
 
 	{% if CONTENT_LANGNAME %}{{ lang('CONTENT_TYPE') ~ lang('COLON') }} <strong>{{ CONTENT_LANGNAME }}</strong>{% endif %}
