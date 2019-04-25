@@ -29,10 +29,6 @@ abstract class choice extends base
 	 */
 	protected function get_default_value(array $data)
 	{
-		$data['field_props'] += array(
-			'defaults' => array(0 => ''),
-		);
-
 		$default = $data['field_value'] ?: $data['field_props']['defaults'];
 		$default = is_array($default) ? $default : explode("\n", $default);
 
@@ -44,6 +40,8 @@ abstract class choice extends base
 	 */
 	public function get_field_value(array $data)
 	{
+		$data['field_props']['defaults'] = $data['field_props']['defaults'] ?: array(0 => '');
+
 		$value = $this->get_default_value($data);
 
 		// form has been submitted so get value from request object
