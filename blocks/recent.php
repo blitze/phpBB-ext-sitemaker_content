@@ -80,23 +80,24 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 	{
 		$content_type_options = $field_options = array();
 		$default_type = $this->get_content_type_options($content_type_options, $field_options);
+		$editor_attributes = [];
 
 		return array(
 			'legend1'			=> 'DISPLAY',
-				'content_type'		=> array('lang' => 'CONTENT_TYPE', 'validate' => 'string', 'type' => 'select:1:toggable', 'object' => $this, 'method' => 'select_content_type', 'options' => $content_type_options, 'default' => $default_type, 'explain' => false),
+				'content_type'		=> array('lang' => 'CONTENT_TYPE', 'validate' => 'string', 'type' => 'select:1:toggable', 'object' => $this, 'method' => 'select_content_type', 'options' => $content_type_options, 'default' => $default_type),
 				'fields'			=> array('lang' => 'SELECT_FIELDS', 'validate' => 'string', 'type' => 'checkbox', 'options' => $field_options, 'default' => array(), 'explain' => true),
-				'block_tpl'			=> array('lang' => 'TEMPLATE', 'validate' => 'string', 'type' => 'textarea:5:50', 'maxlength' => 255, 'explain' => false, 'default' => ''),
-				'layout'			=> array('lang' => 'DISPLAY_LAYOUT', 'validate' => 'string', 'type' => 'select', 'options' => $this->get_display_layouts(), 'default' => 'layout0', 'explain' => false),
+				'block_tpl'			=> array('lang' => '', 'validate' => 'string', 'type' => 'code_editor', 'params' => [$editor_attributes, 'TEMPLATE'], 'default' => ''),
+				'layout'			=> array('lang' => 'DISPLAY_LAYOUT', 'validate' => 'string', 'type' => 'select', 'options' => $this->get_display_layouts(), 'default' => 'layout0'),
 
 			'legend2'			=> 'SETTINGS',
-				'topic_type'		=> array('lang' => 'TOPIC_TYPE', 'validate' => 'string', 'type' => 'select', 'options' => $this->get_topic_type_options(), 'default' => POST_NORMAL, 'explain' => false),
-				'max_topics'		=> array('lang' => 'MAX_TOPICS', 'validate' => 'int:0:20', 'type' => 'number:0:20', 'maxlength' => 2, 'explain' => false, 'default' => 5),
-				'offset_start'		=> array('lang' => 'OFFSET_START', 'validate' => 'int:0:20', 'type' => 'number:0:20', 'maxlength' => 2, 'explain' => false, 'default' => 0),
-				'topic_title_limit'	=> array('lang' => 'TOPIC_TITLE_LIMIT', 'validate' => 'int:0:255', 'type' => 'number:0:255', 'maxlength' => 3, 'explain' => false, 'default' => 25),
-				'max_chars'			=> array('lang' => 'FIELD_MAX_CHARS', 'validate' => 'int:0:255', 'type' => 'number:0:255', 'maxlength' => 3, 'explain' => false, 'default' => 125),
-				'date_range'		=> array('lang' => 'LIMIT_POST_TIME', 'validate' => 'string', 'type' => 'select', 'options' => $this->get_range_options(), 'default' => '', 'explain' => false),
-				'sort_key'			=> array('lang' => 'SORT_BY', 'validate' => 'string', 'type' => 'select', 'options' => $this->sort_options, 'default' => self::SORT_TOPIC_TIME, 'explain' => false),
-				'enable_tracking'	=> array('lang' => 'ENABLE_TOPIC_TRACKING', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => false, 'default' => 1),
+				'topic_type'		=> array('lang' => 'TOPIC_TYPE', 'validate' => 'string', 'type' => 'select', 'options' => $this->get_topic_type_options(), 'default' => POST_NORMAL),
+				'max_topics'		=> array('lang' => 'MAX_TOPICS', 'validate' => 'int:0:20', 'type' => 'number:0:20', 'maxlength' => 2, 'default' => 5),
+				'offset_start'		=> array('lang' => 'OFFSET_START', 'validate' => 'int:0:20', 'type' => 'number:0:20', 'maxlength' => 2, 'default' => 0),
+				'topic_title_limit'	=> array('lang' => 'TOPIC_TITLE_LIMIT', 'validate' => 'int:0:255', 'type' => 'number:0:255', 'maxlength' => 3, 'default' => 25),
+				'max_chars'			=> array('lang' => 'FIELD_MAX_CHARS', 'validate' => 'int:0:255', 'type' => 'number:0:255', 'maxlength' => 3, 'default' => 125),
+				'date_range'		=> array('lang' => 'LIMIT_POST_TIME', 'validate' => 'string', 'type' => 'select', 'options' => $this->get_range_options(), 'default' => ''),
+				'sort_key'			=> array('lang' => 'SORT_BY', 'validate' => 'string', 'type' => 'select', 'options' => $this->sort_options, 'default' => self::SORT_TOPIC_TIME),
+				'enable_tracking'	=> array('lang' => 'ENABLE_TOPIC_TRACKING', 'validate' => 'bool', 'type' => 'radio:yes_no', 'default' => 1),
 				'last_modified'		=> array('type' => 'hidden', 'default' => time()),
 		);
 	}
