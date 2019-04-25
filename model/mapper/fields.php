@@ -23,7 +23,7 @@ class fields extends base_mapper
 	 * @param array $sql_where
 	 * @return string
 	 */
-	protected function _find_sql(array $sql_where)
+	protected function find_sql(array $sql_where)
 	{
 		return 'SELECT * FROM ' . $this->entity_table .
 			((sizeof($sql_where)) ? ' WHERE ' . join(' AND ', $sql_where) : '') . '
