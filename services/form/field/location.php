@@ -73,7 +73,11 @@ class location extends base
 			return array_filter($this->request->variable($data['field_name'], array('' => ''), true));
 		}
 
-		return json_decode(htmlspecialchars_decode($data['field_value']), true);
+		$fields = ['map_type', 'place', 'address', 'zoom', 'latitude', 'longitude'];
+		$field_value = array_filter(preg_split("/(\n|<br>)/", $data['field_value']));
+		$field_value = array_pad(array_map('trim', $field_value), count($fields), 0);
+
+		return array_combine($fields, $field_value);
 	}
 
 	/**
@@ -87,6 +91,7 @@ class location extends base
 				101 => '//maps.googleapis.com/maps/api/js?key=' . $this->google_api_key . '&libraries=places&callback=initMap&language=' . $this->language->get_used_language() . '" async defer charset="UTF-8',
 			)
 		));
+
 		$data['show_input'] = true;
 
 		return parent::show_form_field($name, $data);
@@ -162,7 +167,7 @@ class location extends base
 		$params = array(
 			'center'	=> $coordinates,
 			'zoom'		=> $settings['map_zoom'] ?: $info['zoom'],
-			'size'		=> $settings['map_width'] . 'x' . $settings['map_height'],
+			'size'		=> (int) $settings['map_width'] . 'x' . (int) $settings['map_height'],
 			'maptype'	=> $info['map_type'] ?: $map_types[0],
 			'markers'	=> $coordinates,
 			'key'		=> $this->google_api_key,
