@@ -9,12 +9,12 @@
 {% if loops.topicrow|length %}
 	{%- set desktopCols = content_view_settings.desktop_cols|default(3) -%}
 	{%- set desktopCols = (topicrow|length < desktopCols) ? topicrow|length : desktopCols -%}
-	<div id="sitemaker-content-tiles" class="grid" data-desktop-columns="{{ desktopCols }}" data-tablet-columns="{{ content_view_settings.tablet_cols|default(2) }}" data-mobile-columns="{{ content_view_settings.mobile_cols|default(1) }}" data-edit-mode="{{ S_EDIT_MODE }}">
+	<div id="sitemaker-content-tiles" class="tiles-container" data-ag-gutters="10" data-desktop-columns="{{ desktopCols }}" data-tablet-columns="{{ content_view_settings.tablet_cols|default(2) }}" data-mobile-columns="{{ content_view_settings.mobile_cols|default(1) }}" data-edit-mode="{{ S_EDIT_MODE }}">
 		{% for topicrow in loops.topicrow %}
-		<div class="grid__col--1-of-3 grid-item">
-			<div class="panel post tile sm-block-spacing">
+		<div class="tile">
+			<div class="panel post">
 				<div class="inner">
-					<div class="postbody sm-postbody">
+					<div class="postbody sm-full-width">
 					{% if not topicrow.CUSTOM_DISPLAY %}
 						{% INCLUDE 'parts/summary_title.html' %}
 					{% endif %}
@@ -38,15 +38,15 @@
 		</div>
 		{% endfor %}
 	</div>
-	{% if loops.pagination|length %}
-	<div class="panel bg2 load_more align-center">
 	{% for pagination in loops.pagination %}
 		{% if pagination.S_IS_NEXT %}
-		<a id="tile-load-more" href="{{ pagination.PAGE_URL }}" data-ajax="blitze.content.load_more" rel="next"><i class="fa fa-refresh fa-spin fa-2x fa-fw"></i>{{ lang('LOAD_MORE') }}</a>
+		<div class="panel bg2 load_more align-center">
+			<a id="tile-load-more" href="{{ pagination.PAGE_URL }}" data-ajax="blitze.content.load_more" rel="next">
+				<i class="fa fa-refresh fa-spin fa-fw"></i>{{ lang('LOAD_MORE') }}
+			</a>
+		</div>
 		{% endif %}
 	{% endfor %}
-	</div>
-	{% endif %}
 {% else %}
 <div class="panel post sm-block-spacing">
 	<div class="inner">

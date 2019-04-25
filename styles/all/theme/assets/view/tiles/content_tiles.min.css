@@ -1,2 +1,2 @@
-.tile{margin-left:10px}@media screen and (max-width:480px){.tile{margin-left:0}}.load_more{font-weight:700;clear:both;padding:10px}
+.tiles-container{width:100%;margin-bottom:-10px}.tile{margin:0;padding:0}.tile .post{margin-bottom:0}.load_more{font-size:1rem;font-weight:700;margin-top:10px;padding:10px}.load_more a{text-decoration:none}.load_more a:hover{opacity:.7}
 /*# sourceMappingURL=content_tiles.min.css.map */

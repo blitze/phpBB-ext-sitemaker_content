@@ -300,8 +300,6 @@
 			}
 		});
 
-		var stop = false;
-
 		containerObj.accordion({
 				header: '> div > h3',
 				active: false,
@@ -319,7 +317,6 @@
 					// IE doesn't register the blur when sorting
 					// so trigger focusout handlers to remove .ui-state-focus
 					ui.item.children('h3').triggerHandler('focusout');
-					stop = true;
 					setAvailableFields();
 				}
 			});
