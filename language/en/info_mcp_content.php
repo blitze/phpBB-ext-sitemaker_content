@@ -38,4 +38,20 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'MCP_CONTENT'	=> 'Moderate Content',
+	'MCP_MAKE_ANNOUNCEMENT'				=> 'Modify to “Recommended”',
+	'MCP_MAKE_ANNOUNCEMENTS'			=> 'Modify to “Recommended”',
+	'MCP_MAKE_ANNOUNCEMENTS_CONFIRM'	=> 'Are you sure you want to change the selected topics to “Recommended”?',
+	'MCP_MAKE_ANNOUNCEMENT_CONFIRM'		=> 'Are you sure you want to change this topic to “Recommended”?',
+	'MCP_MAKE_GLOBAL'					=> 'Modify to “Must Read”',
+	'MCP_MAKE_GLOBALS'					=> 'Modify to “Must Read”',
+	'MCP_MAKE_GLOBALS_CONFIRM'			=> 'Are you sure you want to change the selected topics to a “Must Read”?',
+	'MCP_MAKE_GLOBAL_CONFIRM'			=> 'Are you sure you want to change this topic to a “Must Read”?',
+	'MCP_MAKE_NORMAL'					=> 'Modify to “Standard Topic”',
+	'MCP_MAKE_NORMALS'					=> 'Modify to “Standard Topics”',
+	'MCP_MAKE_NORMALS_CONFIRM'			=> 'Are you sure you want to change the selected topics to “Standard Topics”?',
+	'MCP_MAKE_NORMAL_CONFIRM'			=> 'Are you sure you want to change this topic to a “Standard Topic”?',
+	'MCP_MAKE_STICKIES'					=> 'Modify to “Featured”',
+	'MCP_MAKE_STICKIES_CONFIRM'			=> 'Are you sure you want to change the selected topics to “Featured”?',
+	'MCP_MAKE_STICKY'					=> 'Modify to “Featured”',
+	'MCP_MAKE_STICKY_CONFIRM'			=> 'Are you sure you want to change this topic to “Featured”?',
 ));
