@@ -193,6 +193,20 @@ class fields extends topic
 	}
 
 	/**
+	 * @param string $field
+	 * @param array $prop
+	 * @return $this
+	 */
+	public function overwrite_field_data($field, array $data)
+	{
+		if (isset($this->content_fields[$field]))
+		{
+			$this->content_fields[$field] = array_replace_recursive($this->content_fields[$field], $data);
+		}
+		return $this;
+	}
+
+	/**
 	 * @param array $view_mode_fields	array of form array([field_name] => [field_type])
 	 * @return $this
 	 */

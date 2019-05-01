@@ -145,7 +145,7 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 
 		$this->forum->query($this->settings['enable_tracking'])
 			->fetch_forum($forum_id)
-			->fetch_topic_type(array($this->settings['topic_type']))
+			->fetch_topic_type(array((int) $this->settings['topic_type']))
 			->fetch_date_range($range_info['start'], $range_info['stop'])
 			->set_sorting($sort_keys[$this->settings['sort_key']]);
 	}
@@ -173,6 +173,7 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 			$block_fields = $this->get_block_fields($entity->get_field_types());
 
 			$this->fields->prepare_to_show($entity, array_keys($topics_data), $block_fields, $this->settings['block_tpl'], 'block', $block_id . '_block');
+			$this->set_max_chars($block_fields);
 
 			$update_count = array();
 			foreach ($topics_data as $topic_id => $topic_data)
@@ -218,19 +219,20 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 
 	/**
 	 * @param array $fields
-	 * @param array $fields_data
-	 * @return array
+	 * @return void
 	 */
-	protected function get_block_fields_data(array $fields, array $fields_data)
+	protected function set_max_chars(array $fields)
 	{
 		$textarea_fields = array_keys($fields, 'textarea');
 
 		foreach ($textarea_fields as $field)
 		{
-			$fields_data[$field]['field_props']['max_chars'] = $this->settings['max_chars'];
+			$this->fields->overwrite_field_data($field, array(
+				'field_props' => array(
+					'max_chars' => $this->settings['max_chars'],
+				),
+			));
 		}
-
-		return $fields_data;
 	}
 
 	/**

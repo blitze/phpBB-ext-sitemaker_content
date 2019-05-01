@@ -93,7 +93,7 @@ class textarea extends text
 
 		$pages = array_filter((array) preg_split('#' . $split_pattern . '#s', $data['field_value']));
 
-		if ($view_mode === 'summary')
+		if ($view_mode === 'summary' || $view_mode === 'block')
 		{
 			return $this->get_summary_value(trim($pages[0]), $data['field_props']['max_chars']);
 		}
