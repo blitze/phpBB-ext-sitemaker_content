@@ -18,7 +18,7 @@
 			<div class="swiper-slide img-responsive-16by9">
 				<div class="txt-pos-{{ SETTINGS.text_position !== 'random' ? SETTINGS.text_position : random(['top', 'left', 'center', 'right', 'bottom']) }}">
 					{{ topicrow.FIELDS.all[image_field] }}
-					<div class="postbody sm-postbody sm-inner">
+					<div class="postbody sm-full-width sm-inner">
 						<div class="content">
 							<h3 class="topic-title"><a href="{{ topicrow.TOPIC_URL }}">{{ topicrow.TOPIC_TITLE }}</a></h3>
 						{%- for field, content in topicrow.FIELDS.all if field !== image_field -%}

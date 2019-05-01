@@ -1,5 +1,5 @@
 {%- macro show_summary(topicrow) -%}
-	<div class="postbody sm-postbody sm-inner">
+	<div class="postbody sm-full-width sm-inner">
 	{% INCLUDE 'parts/moderator_info.html' %}
 	{% if not topicrow.CUSTOM_DISPLAY %}
 		{{ topicrow.FIELDS.above|join }}
