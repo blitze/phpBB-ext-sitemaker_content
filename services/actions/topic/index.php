@@ -49,6 +49,9 @@ class index extends filter implements action_interface
 	/** @var string */
 	protected $base_url;
 
+	/** @var string */
+	protected $redirect_url;
+
 	/**
 	 * Constructor
 	 *
@@ -97,6 +100,7 @@ class index extends filter implements action_interface
 
 		$content_types = $this->content_types->get_all_types();
 		$this->content_forums = $this->content_types->get_forum_types();
+		$this->redirect_url = build_url();
 
 		if (sizeof($content_types))
 		{
@@ -144,7 +148,7 @@ class index extends filter implements action_interface
 		{
 			$post_row = array_shift($posts_data[$topic_id]);
 			$content_type = $this->content_forums[$topic_row['forum_id']];
-			$tpl_data = $this->fields->show($content_type, $topic_row, $post_row, $users_cache, $attachments, $update_count, $topic_tracking_info, array(), $mode);
+			$tpl_data = $this->fields->show($content_type, $topic_row, $post_row, $users_cache, $attachments, $update_count, $topic_tracking_info, array(), $this->redirect_url);
 			$tpl_data['POST_DATE'] = $this->user->format_date($post_row['post_time'], 'm/d/Y');
 
 			$this->template->assign_block_vars('topicrow', array_merge($tpl_data,
@@ -207,6 +211,7 @@ class index extends filter implements action_interface
 		// list all content types that the user can post in
 		$postable_forums = array_intersect_key($this->content_forums, $this->auth->acl_getf('f_post', true));
 		$postable_types = array_intersect_key($content_types, array_flip($postable_forums));
+		$redirect = '&amp;redirect=' . urlencode($this->redirect_url);
 
 		/** @var \blitze\content\model\entity\type $entity */
 		foreach ($postable_types as $type => $entity)
@@ -214,7 +219,7 @@ class index extends filter implements action_interface
 			$this->template->assign_block_vars('postable', array(
 				'TYPE'		=> $entity->get_content_langname(),
 				'COLOUR'	=> $entity->get_content_colour(),
-				'U_POST'	=> append_sid("{$this->phpbb_root_path}posting." . $this->php_ext, 'mode=post&amp;f=' . $entity->get_forum_id()),
+				'U_POST'	=> append_sid("{$this->phpbb_root_path}posting." . $this->php_ext, 'mode=post&amp;f=' . $entity->get_forum_id() . $redirect),
 			));
 		}
 	}

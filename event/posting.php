@@ -79,6 +79,7 @@ class posting implements EventSubscriberInterface
 		$this->content_type = (string) $type_info[0];
 		$this->content_langname = $type_info[1];
 
+		// are we adding/editing a content type post?
 		if (empty($event['post_data']['topic_first_post_id']) || $event['post_data']['topic_first_post_id'] == $event['post_id'])
 		{
 			$this->build_content = ($this->content_type && $event['mode'] !== 'reply') ? true : false;
@@ -150,6 +151,7 @@ class posting implements EventSubscriberInterface
 		{
 			$sql_data = $event['sql_data'];
 			$this->builder->modify_sql_data($sql_data[TOPICS_TABLE]['sql']);
+
 			$event['sql_data'] = $sql_data;
 		}
 	}
@@ -188,24 +190,10 @@ class posting implements EventSubscriberInterface
 	 */
 	public function set_redirect_url(\phpbb\event\data $event)
 	{
-		if ($this->content_type)
+		// are we posting/editing a content type post?
+		if ($this->build_content && ($redirect_url = $this->builder->get_redirect_url()) !== '')
 		{
-			if ($this->build_content)
-			{
-				$event['redirect_url'] = $this->builder->get_cp_url();
-			}
-			else
-			{
-				$topic_url = $this->builder->get_post_url($this->content_type, (array) $event['post_data']);
-
-				$post_id = $event['data']['post_id'];
-				if ($post_id && $post_id != $event['post_data']['topic_first_post_id'])
-				{
-					$topic_url .= "?p=$post_id#p$post_id";
-				}
-
-				$event['redirect_url'] = $topic_url;
-			}
+			$event['redirect_url'] = str_replace('&amp;', '&', urldecode($redirect_url));
 		}
 	}
 

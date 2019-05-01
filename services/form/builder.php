@@ -166,9 +166,9 @@ class builder
 	/**
 	 * @return string
 	 */
-	public function get_cp_url()
+	public function get_redirect_url()
 	{
-		return append_sid("{$this->phpbb_root_path}{$this->mode}.$this->php_ext", "i=-blitze-content-{$this->mode}-content_module&mode=content");
+		return $this->request->variable('redirect', '');
 	}
 
 	/**
@@ -276,7 +276,8 @@ class builder
 		$this->set_field_values($post_data['post_text']);
 
 		$this->form->create('postform', 'posting')
-			->add('cp', 'hidden', array('field_value' => $this->mode));
+			->add('cp', 'hidden', array('field_value' => $this->mode))
+			->add('redirect', 'hidden', array('field_value' => $this->get_redirect_url()));
 
 		foreach ($this->content_fields as $field => $field_data)
 		{

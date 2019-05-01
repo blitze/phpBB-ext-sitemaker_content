@@ -114,17 +114,17 @@ class fields extends topic
 	 * @param array $update_count
 	 * @param array $topic_tracking_info
 	 * @param array $topic_data_overwrite
-	 * @param string $mode	ucp/mcp
+	 * @param string $redirect_url
 	 * @return array
 	 */
-	public function show($type, array &$topic_data, array $post_data, array $users_cache, array &$attachments, array &$update_count, array $topic_tracking_info, array $topic_data_overwrite = array(), $mode = '')
+	public function show($type, array &$topic_data, array $post_data, array $users_cache, array &$attachments, array &$update_count, array $topic_tracking_info, array $topic_data_overwrite = array(), $redirect_url = '')
 	{
 		$callable = 'get_' . $this->view_mode . '_template_data';
 		$tpl_data = array_merge(array(
 				'TOPIC_COMMENTS'	=> $this->comments->count($topic_data),
 				'S_USER_LOGGED_IN'	=> $this->user->data['is_registered'],
 			),
-			$this->{$callable}($type, $topic_data, $post_data, $users_cache, $attachments, $topic_tracking_info, $update_count, $mode),
+			$this->{$callable}($type, $topic_data, $post_data, $users_cache, $attachments, $topic_tracking_info, $update_count, $redirect_url),
 			$topic_data_overwrite
 		);
 

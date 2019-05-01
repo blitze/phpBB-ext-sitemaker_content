@@ -90,7 +90,7 @@ abstract class base_view implements views_interface
 	/**
 	 * {@inheritdoc}
 	 */
-	public function render_index(\blitze\content\model\entity\type $entity, $page, array $filters, array $topic_data_overwrite = array(), $cp_mode = '')
+	public function render_index(\blitze\content\model\entity\type $entity, $page, array $filters, array $topic_data_overwrite = array())
 	{
 		$content_type = $entity->get_content_name();
 		$items_per_page = $entity->get_items_per_page();
@@ -112,7 +112,7 @@ abstract class base_view implements views_interface
 			));
 		}
 
-		return $this->display_topics($entity, $items_per_page, $start, $topic_data_overwrite, $cp_mode);
+		return $this->display_topics($entity, $items_per_page, $start, $topic_data_overwrite);
 	}
 
 	/**
@@ -120,10 +120,9 @@ abstract class base_view implements views_interface
 	 * @param int $items_per_page
 	 * @param int $start
 	 * @param array $topic_data_overwrite
-	 * @param string $cp_mode	ucp/mcp
 	 * @return int
 	 */
-	protected function display_topics(\blitze\content\model\entity\type $entity, $items_per_page, $start, array $topic_data_overwrite, $cp_mode)
+	protected function display_topics(\blitze\content\model\entity\type $entity, $items_per_page, $start, array $topic_data_overwrite)
 	{
 		$content_type = $entity->get_content_name();
 		$topics_data = $this->forum->get_topic_data($items_per_page, $start);
@@ -141,7 +140,7 @@ abstract class base_view implements views_interface
 		{
 			$post_data	= array_shift($posts);
 			$topic_data	= $topics_data[$topic_id];
-			$topic_data = $this->fields->show($content_type, $topic_data, $post_data, $users_cache, $attachments, $update_count, $topic_tracking_info, $topic_data_overwrite, $cp_mode);
+			$topic_data = $this->fields->show($content_type, $topic_data, $post_data, $users_cache, $attachments, $update_count, $topic_tracking_info, $topic_data_overwrite);
 
 			$this->template->assign_block_vars('topicrow', $topic_data);
 			$max_update_time = max($max_update_time, $topic_data['UPDATED']);
@@ -154,7 +153,7 @@ abstract class base_view implements views_interface
 	/**
 	 * {@inheritdoc}
 	 */
-	public function render_detail(\blitze\content\model\entity\type $entity, $topic_id, array &$update_count, array $topic_data_overwrite = array(), $cp_mode = '')
+	public function render_detail(\blitze\content\model\entity\type $entity, $topic_id, $view, $redirect_url, array &$update_count, array $topic_data_overwrite = array())
 	{
 		$this->language->add_lang('viewtopic');
 		$this->language->add_lang('content', 'blitze/content');
@@ -166,19 +165,20 @@ abstract class base_view implements views_interface
 			->fetch_bookmark_status()
 			->build(true, true, false);
 
-		return $this->display_topic($topic_id, $entity, $update_count, $topic_data_overwrite, $cp_mode);
+		return $this->display_topic($topic_id, $entity, $view, $redirect_url, $update_count, $topic_data_overwrite);
 	}
 
 	/**
 	 * @param int $topic_id
 	 * @param \blitze\content\model\entity\type $entity
+	 * @param string $view	detail|print
+	 * @param string $redirect_url
 	 * @param array $update_count
 	 * @param array $topic_data_overwrite
-	 * @param string $cp_mode	ucp/mcp
 	 * @return array
 	 * @throws \Exception
 	 */
-	protected function display_topic($topic_id, \blitze\content\model\entity\type $entity, array &$update_count, array $topic_data_overwrite, $cp_mode)
+	protected function display_topic($topic_id, \blitze\content\model\entity\type $entity, $view, $redirect_url, array &$update_count, array $topic_data_overwrite)
 	{
 		$forum_id = $entity->get_forum_id();
 		$content_type = $entity->get_content_name();
@@ -195,12 +195,12 @@ abstract class base_view implements views_interface
 		}
 
 		$this->fields->prepare_to_show($entity, array_keys($topics_data), $entity->get_detail_fields(), $entity->get_detail_tpl(), 'detail');
-		$this->fields->set_view_mode($cp_mode);
+		$this->fields->set_view_mode($view);
 
 		$topic_data = array_shift($topics_data);
 		$post_data = array_shift($post_data[$topic_id]);
 		$tpl_data = array_merge($topic_data,
-			$this->fields->show($content_type, $topic_data, $post_data, $users_cache, $attachments, $update_count, $topic_tracking_info, $topic_data_overwrite, $cp_mode),
+			$this->fields->show($content_type, $topic_data, $post_data, $users_cache, $attachments, $update_count, $topic_tracking_info, $topic_data_overwrite, $redirect_url),
 			$this->fields->get_topic_tools_data($topic_data)
 		);
 

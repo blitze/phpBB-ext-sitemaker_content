@@ -136,10 +136,10 @@ class topic
 	 * @param array $attachments
 	 * @param array $topic_tracking_info
 	 * @param array $update_count
-	 * @param string $mode	ucp/mcp
+	 * @param string $redirect_url
 	 * @return array
 	 */
-	public function get_detail_template_data($type, array &$topic_data, array $post_data, array $users_cache, array &$attachments, array $topic_tracking_info, array &$update_count, $mode = '')
+	public function get_detail_template_data($type, array &$topic_data, array $post_data, array $users_cache, array &$attachments, array $topic_tracking_info, array &$update_count, $redirect_url = '')
 	{
 		return array_merge(
 			$this->get_summary_template_data($type, $topic_data, $post_data, $users_cache, $attachments, $topic_tracking_info, $update_count),
@@ -150,13 +150,13 @@ class topic
 				'S_DELETE_PERMANENT'	=> $this->helper->permanent_delete_allowed($post_data),
 				'S_IS_LOCKED'			=> $this->helper->topic_is_locked($topic_data),
 
-				'U_EDIT'			=> $this->helper->get_edit_url($post_data, $topic_data, $mode),
+				'U_EDIT'			=> $this->helper->get_edit_url($post_data, $topic_data, $redirect_url),
 				'U_QUOTE'			=> $this->helper->get_quote_url($post_data, $topic_data),
 				'U_INFO'			=> $this->helper->get_info_url($post_data),
-				'U_DELETE'			=> $this->helper->get_delete_url($post_data, $topic_data, $mode),
+				'U_DELETE'			=> $this->helper->get_delete_url($post_data, $topic_data, $redirect_url),
 				'U_REPORT'			=> $this->helper->can_report_post($post_data['forum_id']) ? $this->controller_helper->route('phpbb_report_post_controller', array('id' => $post_data['post_id'])) : '',
 				'U_APPROVE_ACTION'	=> $this->helper->get_approve_url($post_data, $topic_data['topic_url']),
-				'U_MCP_EDIT'		=> $this->helper->get_mcp_edit_url($post_data, $topic_data),
+				'U_MCP_EDIT'		=> $this->helper->get_mcp_edit_url($post_data, $topic_data, $redirect_url),
 				'U_MCP_RESTORE'		=> $this->helper->get_mcp_restore_url($post_data, $topic_data),
 				'U_NOTES'			=> $this->helper->get_notes_url($post_data),
 				'U_WARN'			=> $this->helper->get_warning_url($post_data),

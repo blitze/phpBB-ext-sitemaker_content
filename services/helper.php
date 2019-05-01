@@ -37,25 +37,27 @@ class helper extends permissions
 	/**
 	 * @param array $post_data
 	 * @param array $topic_data
-	 * @param string $cp_mode
+	 * @param string $redirect_url
 	 * @return string
 	 */
-	public function get_edit_url(array $post_data, array $topic_data, $cp_mode = '')
+	public function get_edit_url(array $post_data, array $topic_data, $redirect_url)
 	{
-		$cp_param = $this->get_cp_param($post_data, $topic_data, $cp_mode);
-		return ($this->edit_allowed($post_data, $topic_data)) ? append_sid("{$this->phpbb_root_path}posting.$this->php_ext", "mode=edit&amp;f={$topic_data['forum_id']}&amp;p={$post_data['post_id']}" . $cp_param) : '';
+		return ($this->edit_allowed($post_data, $topic_data))
+			? append_sid("{$this->phpbb_root_path}posting.$this->php_ext", "mode=edit&amp;f={$topic_data['forum_id']}&amp;p={$post_data['post_id']}" . $this->get_redirect_url($redirect_url))
+			: '';
 	}
 
 	/**
 	 * @param array $post_data
 	 * @param array $topic_data
-	 * @param string $cp_mode
+	 * @param string $redirect_url
 	 * @return string
 	 */
-	public function get_delete_url(array $post_data, array $topic_data, $cp_mode = '')
+	public function get_delete_url(array $post_data, array $topic_data, $redirect_url)
 	{
-		$cp_param = $this->get_cp_param($post_data, $topic_data, $cp_mode);
-		return ($this->delete_allowed($post_data, $topic_data)) ? append_sid("{$this->phpbb_root_path}posting.$this->php_ext", 'mode=' . (($this->softdelete_allowed($post_data)) ? 'soft_delete' : 'delete') . "&amp;f={$post_data['forum_id']}&amp;p={$post_data['post_id']}" . $cp_param) : '';
+		return ($this->delete_allowed($post_data, $topic_data))
+			? append_sid("{$this->phpbb_root_path}posting.$this->php_ext", 'mode=' . (($this->softdelete_allowed($post_data)) ? 'soft_delete' : 'delete') . "&amp;f={$post_data['forum_id']}&amp;p={$post_data['post_id']}" . $this->get_redirect_url($redirect_url))
+			: '';
 	}
 
 	/**
@@ -65,7 +67,9 @@ class helper extends permissions
 	 */
 	public function get_quote_url(array $post_data, array $topic_data)
 	{
-		return ($this->post_is_quotable($post_data, $topic_data) && $this->quote_allowed($topic_data)) ? append_sid("{$this->phpbb_root_path}posting.$this->php_ext", "mode=quote&amp;f={$topic_data['forum_id']}&amp;p={$post_data['post_id']}") : '';
+		return ($this->post_is_quotable($post_data, $topic_data) && $this->quote_allowed($topic_data))
+			? append_sid("{$this->phpbb_root_path}posting.$this->php_ext", "mode=quote&amp;f={$topic_data['forum_id']}&amp;p={$post_data['post_id']}")
+			: '';
 	}
 
 	/**
@@ -92,7 +96,9 @@ class helper extends permissions
 	 */
 	public function get_email_topic_url(array $topic_data)
 	{
-		return ($this->auth->acl_get('f_email', $topic_data['forum_id']) && $this->config['email_enable']) ? append_sid("{$this->phpbb_root_path}memberlist.{$this->php_ext}", 'mode=email&amp;t=' . $topic_data['topic_id']) : '';
+		return ($this->auth->acl_get('f_email', $topic_data['forum_id']) && $this->config['email_enable'])
+			? append_sid("{$this->phpbb_root_path}memberlist.{$this->php_ext}", 'mode=email&amp;t=' . $topic_data['topic_id'])
+			: '';
 	}
 
 	/**
@@ -112,7 +118,9 @@ class helper extends permissions
 	public function get_info_url(array $post_data)
 	{
 		$forum_id = $post_data['forum_id'];
-		return ($this->auth->acl_get('m_info', $forum_id)) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", "i=main&amp;mode=post_details&amp;f=$forum_id&amp;p=" . $post_data['post_id'], true, $this->user->session_id) : '';
+		return ($this->auth->acl_get('m_info', $forum_id))
+			? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", "i=main&amp;mode=post_details&amp;f=$forum_id&amp;p=" . $post_data['post_id'], true, $this->user->session_id)
+			: '';
 	}
 
 	/**
@@ -128,11 +136,12 @@ class helper extends permissions
 	/**
 	 * @param array $post_data
 	 * @param array $topic_data
+	 * @param string $redirect_url
 	 * @return string
 	 */
-	public function get_mcp_edit_url(array $post_data, array $topic_data)
+	public function get_mcp_edit_url(array $post_data, array $topic_data, $redirect_url)
 	{
-		return append_sid("{$this->phpbb_root_path}posting.$this->php_ext", "mode=edit&amp;f={$topic_data['forum_id']}&amp;p={$post_data['post_id']}&amp;cp=mcp");
+		return append_sid("{$this->phpbb_root_path}posting.$this->php_ext", "mode=edit&amp;f={$topic_data['forum_id']}&amp;p={$post_data['post_id']}" . $this->get_redirect_url($redirect_url));
 	}
 
 	/**
@@ -141,7 +150,9 @@ class helper extends permissions
 	 */
 	public function get_mcp_report_url(array $post_data)
 	{
-		return ($this->auth->acl_get('m_report', $post_data['forum_id'])) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=reports&amp;mode=report_details&amp;f=' . $post_data['forum_id'] . '&amp;p=' . $post_data['post_id'], true, $this->user->session_id) : '';
+		return ($this->auth->acl_get('m_report', $post_data['forum_id']))
+			? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=reports&amp;mode=report_details&amp;f=' . $post_data['forum_id'] . '&amp;p=' . $post_data['post_id'], true, $this->user->session_id)
+			: '';
 	}
 
 	/**
@@ -151,7 +162,9 @@ class helper extends permissions
 	 */
 	public function get_mcp_restore_url(array $post_data, array $topic_data)
 	{
-		return ($this->auth->acl_get('m_approve', $post_data['forum_id'])) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=queue&amp;mode=' . (($topic_data['topic_visibility'] != ITEM_DELETED) ? 'deleted_posts' : 'deleted_topics') . '&amp;f=' . $post_data['forum_id'] . '&amp;p=' . $post_data['post_id'], true, $this->user->session_id) : '';
+		return ($this->auth->acl_get('m_approve', $post_data['forum_id']))
+			? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=queue&amp;mode=' . (($topic_data['topic_visibility'] != ITEM_DELETED) ? 'deleted_posts' : 'deleted_topics') . '&amp;f=' . $post_data['forum_id'] . '&amp;p=' . $post_data['post_id'], true, $this->user->session_id)
+			: '';
 	}
 
 	/**
@@ -160,7 +173,9 @@ class helper extends permissions
 	 */
 	public function get_notes_url(array $post_data)
 	{
-		return ($this->auth->acl_getf_global('m_')) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=notes&amp;mode=user_notes&amp;u=' . $post_data['poster_id'], true, $this->user->session_id) : '';
+		return ($this->auth->acl_getf_global('m_'))
+			? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=notes&amp;mode=user_notes&amp;u=' . $post_data['poster_id'], true, $this->user->session_id)
+			: '';
 	}
 
 	/**
@@ -169,7 +184,9 @@ class helper extends permissions
 	 */
 	public function get_warning_url(array $post_data)
 	{
-		return ($this->auth->acl_get('m_warn') && !$this->user_is_poster($post_data['poster_id']) && $post_data['poster_id'] != ANONYMOUS) ? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=warn&amp;mode=warn_post&amp;f=' . $post_data['forum_id'] . '&amp;p=' . $post_data['post_id'], true, $this->user->session_id) : '';
+		return ($this->auth->acl_get('m_warn') && !$this->user_is_poster($post_data['poster_id']) && $post_data['poster_id'] != ANONYMOUS)
+			? append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'i=warn&amp;mode=warn_post&amp;f=' . $post_data['forum_id'] . '&amp;p=' . $post_data['post_id'], true, $this->user->session_id)
+			: '';
 	}
 
 	/**
@@ -214,18 +231,11 @@ class helper extends permissions
 	}
 
 	/**
-	 * @param array $post_data
-	 * @param array $topic_data
-	 * @param string $cp_mode
+	 * @param string $url
 	 * @return string
 	 */
-	protected function get_cp_param(array $post_data, array $topic_data, $cp_mode)
+	protected function get_redirect_url($url)
 	{
-		$cp_param = '';
-		if ($topic_data['topic_first_post_id'] == $post_data['post_id'])
-		{
-			$cp_param = '&amp;cp=' . ((!$cp_mode) ? (($this->user_is_poster($post_data['poster_id'])) ? 'ucp' : 'mcp') : $cp_mode);
-		}
-		return $cp_param;
+		return ($url) ? '&amp;redirect=' . urlencode($url) : '';
 	}
 }

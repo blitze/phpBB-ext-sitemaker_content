@@ -46,6 +46,8 @@ $lang = array_merge($lang, array(
 	'CONTENT_STATUS_DISAPPROVE'		=> 'Yes - Disapprove',
 	'CONTENT_STATUS_REAPPROVE'		=> 'Yes - Reapprove',
 
+	'FIELD_INVALID'			=> 'Invalid field: %s',
+
 	// Overwrite phpBB post types
 	'POST_STICKY'			=> 'Featured',
 	'POST_GLOBAL'			=> 'Must Read',

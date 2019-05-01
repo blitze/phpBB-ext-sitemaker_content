@@ -102,11 +102,14 @@ class main_controller
 	public function show($type, $topic_id)
 	{
 		$view = $this->request->variable('view', 'detail');
-		$entity = $this->get_type_entity($type);
+		$view = 'detail';
 
 		$update_count = array();
+		$entity = $this->get_type_entity($type);
+		$redirect = $this->get_referrer();
+
 		$view_handler = $this->views_factory->get($entity->get_content_view());
-		$topic_data = $view_handler->render_detail($entity, $topic_id, $update_count, array(), $view);
+		$topic_data = $view_handler->render_detail($entity, $topic_id, $view, $redirect, $update_count);
 
 		$this->add_navlink($topic_data['topic_title'], $topic_data['topic_url']);
 		$this->template->assign_var('TOPIC_POLL', $this->poll->display($topic_data));
@@ -269,5 +272,15 @@ class main_controller
 		}
 
 		return $this->helper->render($view_template, $page_title);
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function get_referrer()
+	{
+		$referrer = $this->request->get_super_global(\phpbb\request\request_interface::SERVER)['HTTP_REFERER'];
+		$referrer = parse_url($referrer, PHP_URL_PATH);
+		return urlencode(str_replace(array('&amp;', $this->user->page['root_script_path']), array('&', ''), $referrer));
 	}
 }
