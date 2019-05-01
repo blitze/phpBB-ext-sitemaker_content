@@ -154,9 +154,9 @@ class permissions
 	protected function user_cannot_modify_post(array $post_data, array $topic_data, $mode)
 	{
 		$callable = 'cannot_' . $mode;
-		return $this->$callable($post_data) &&
-			!$this->cannot_modify_time($post_data, $mode) &&
-			!$this->cannot_modify_locked($post_data, $topic_data);
+		return $this->$callable($post_data)
+			|| $this->cannot_modify_time($post_data, $mode)
+			|| $this->cannot_modify_locked($post_data, $topic_data);
 	}
 
 	/**
@@ -221,7 +221,7 @@ class permissions
 	 */
 	protected function cannot_delete_lastpost(array $post_data, array $topic_data)
 	{
-		return $topic_data['topic_last_post_id'] == $post_data['post_id'];
+		return $topic_data['topic_last_post_id'] != $post_data['post_id'];
 	}
 
 	/**
