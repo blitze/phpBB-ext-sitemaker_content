@@ -3,14 +3,14 @@
   "dependencies": {
     "air-datepicker": "^2.2.3",
     "awesome-grid": "^2.0.2",
-    "fancybox": "^3.5.6",
+    "fancybox": "^3.5.7",
     "imagesloaded": "^4.1.4",
     "ion.rangeSlider": "ionrangeslider#^2.3.0",
     "jssocials": "^1.5.0",
     "spectrum": "^1.8.0",
-    "swiper": "^4.4.6",
+    "swiper": "^4.5.0",
     "jquery-ui": "^1.12.1",
-    "codemirror": "^5.42.2",
+    "codemirror": "^5.46.0",
     "twig.js": "https://raw.githubusercontent.com/philsbury/twigjs-bower/master/twig/twig.min.js"
   },
   "overrides": {

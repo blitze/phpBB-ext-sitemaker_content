@@ -47,7 +47,7 @@ gulp.task('js', function() {
 
 // SASS
 gulp.task('sass', function() {
-	gulp.src(paths.dev.scripts + '**/*.scss')
+	return gulp.src(paths.dev.scripts + '**/*.scss')
 		.pipe(plugins.changed(paths.prod.scripts))
 		.pipe(plugins.sourcemaps.init())
 			.pipe(plugins.sass(sassOptions).on('error', plugins.sass.logError))
@@ -95,16 +95,15 @@ gulp.task('vendor', function() {
 });
 
 // Clean up
-gulp.task('clean', function() {
-	return plugins.del([
+gulp.task('clean', function(done) {
+	plugins.del.sync([
 		paths.prod.scripts + '**',
 		paths.prod.vendor + '**'
 	]);
+	done();
 });
 
-gulp.task('rebuild_vendors', ['bower'], function() {
-	gulp.start('vendor');
-});
+gulp.task('rebuild_vendors', gulp.series('bower', gulp.parallel('vendor')));
 
 gulp.task('watch', function() {
 	// Watch js files
@@ -117,6 +116,4 @@ gulp.task('watch', function() {
 	gulp.watch('./bower.json', ['rebuild_vendors']);
 });
 
-gulp.task('build', ['clean'], function() {
-	gulp.start('js', 'sass', 'vendor');
-});
+gulp.task('build', gulp.series('clean', gulp.parallel('js', 'sass', 'vendor')));
