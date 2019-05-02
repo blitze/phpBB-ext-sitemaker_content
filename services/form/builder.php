@@ -173,16 +173,6 @@ class builder
 
 	/**
 	 * @param string $content_type
-	 * @param array $topic_data
-	 * @return string
-	 */
-	public function get_post_url($content_type, array $topic_data)
-	{
-		return $this->fields->get_topic_url($content_type, $topic_data);
-	}
-
-	/**
-	 * @param string $content_type
 	 * @param array $post_data
 	 * @param string $view
 	 * @return string
