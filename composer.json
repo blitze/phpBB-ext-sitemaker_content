@@ -29,5 +29,8 @@
 			"directory": "/customise/db/extension/sitemaker_content",
 			"filename": "version_check"
 		}
+	},
+	"require-dev": {
+		"phing/phing": "^2.16"
 	}
 }
