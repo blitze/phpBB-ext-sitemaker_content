@@ -1,5 +1,6 @@
 {{ macro.show_summary(loops.topicrow[0]) }}
 
+{% if loops.topicrow|length > 1 %}
 <ul class="sm-list">
 {% for topicrow in loops.topicrow[1:] %}
 	<li>
@@ -10,3 +11,4 @@
 	</li>
 {% endfor %}
 </ul>
+{% endif %}
