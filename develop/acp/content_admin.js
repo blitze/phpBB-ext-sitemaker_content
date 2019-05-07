@@ -45,6 +45,20 @@
 			.find('.field-defaults')
 				.attr('type', type);
 	};
+	
+	var makeOptionsTogglable = function($element) {
+		console.log($element);
+		$element
+			.find('select[data-togglable-settings]')
+			.each(function() {
+				var $this = $(this);
+
+				$this.change(function() {
+					window.phpbb.toggleSelectSettings($this);
+				});
+				window.phpbb.toggleSelectSettings($this);
+			});
+	};
 
 	var addField = function(fieldType, fieldName, fieldLabel) {
 		var items = containerObj.children().length;
@@ -59,9 +73,11 @@
 		};
 
 		$.getJSON(window.ajaxUrl + '&type=' + fieldType, data, function(row) {
-			containerObj.append(row).accordion('refresh').accordion('option', 'active', items);
-			$('html,body').animate({ scrollTop: $('#cfield-' + fieldName).offset().top }, 500, 'swing');
+			var $field = $(row);
+			containerObj.append($field).accordion('refresh').accordion('option', 'active', items);
+			$('html,body').animate({ scrollTop: $field.offset().top }, 500, 'swing');
 			makeOptionsSortable(containerObj.find('#' + fieldName + '-options-container'));
+			makeOptionsTogglable($field);
 			setAvailableFields();
 		});
 	};
