@@ -107,13 +107,13 @@ gulp.task('rebuild_vendors', gulp.series('bower', gulp.parallel('vendor')));
 
 gulp.task('watch', function() {
 	// Watch js files
-	gulp.watch(paths.dev.scripts + '**/*.js', ['js']);
+	gulp.watch(paths.dev.scripts + '**/*.js', gulp.parallel('js'));
 
 	// Watch sass files
-	gulp.watch(paths.dev.scripts + '**/*.scss', ['sass']);
+	gulp.watch(paths.dev.scripts + '**/*.scss', gulp.parallel('sass'));
 
 	// Watch bower.json
-	gulp.watch('./bower.json', ['rebuild_vendors']);
+	gulp.watch('./bower.json', gulp.parallel('rebuild_vendors'));
 });
 
 gulp.task('build', gulp.series('clean', gulp.parallel('js', 'sass', 'vendor')));
