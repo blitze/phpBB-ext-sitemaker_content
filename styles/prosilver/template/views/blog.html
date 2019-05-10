@@ -6,9 +6,9 @@
 <div class="panel post sm-block-spacing">
 	<div class="inner">
 {% for topicrow in loops.topicrow %}
-	{%- set monthIndex = topicrow.TOPIC_TIME|date('n') - 1 -%}
+	{%- set monthIndex = topicrow.TOPIC_UNIX_TIME|date('n') - 1 -%}
 		<div class="postbody sm-full-width">
-			<div class="calendar sm-responsive-hide">{{ topicrow.TOPIC_TIME|date('d') }} <em>{{ lang(['datetime', months[monthIndex]]) }}</em></div>
+			<div class="calendar sm-responsive-hide">{{ topicrow.TOPIC_UNIX_TIME|date('d') }} <em>{{ lang(['datetime', months[monthIndex]]) }}</em></div>
 			<div class="sm-fill-space">
 				{% if not topicrow.CUSTOM_DISPLAY %}
 					{% INCLUDE 'parts/summary_title.html' %}

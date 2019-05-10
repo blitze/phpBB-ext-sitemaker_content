@@ -81,6 +81,7 @@ class topic
 			'TOPIC_TITLE'		=> censor_text($topic_data['topic_title']),
 			'TOPIC_DATE'		=> $this->user->format_date($topic_data['topic_time'], $this->short_date_format),
 			'TOPIC_DATE_LONG'	=> $this->user->format_date($topic_data['topic_time'], $this->long_date_format),
+			'TOPIC_UNIX_TIME'	=> $topic_data['topic_time'],
 			'TOPIC_URL'			=> $topic_data['topic_url'],
 			'MINI_POST'			=> ($post_unread) ? $this->user->img('icon_post_target_unread', 'UNREAD_POST') : $this->user->img('icon_post_target', 'POST'),
 			'S_REQ_MOD_INPUT'	=> $topic_data['req_mod_input'],
