@@ -142,28 +142,18 @@
 									</a>
 									{% endif %}
 								{% endif %}
-									<br />
-
-									<div class="responsive-show" style="display: none;">
+									<div>
 										{% if topicrow.S_HAS_POLL %}<i class="icon fa-bar-chart fa-fw" aria-hidden="true"></i>{% endif %}
 										{% if topicrow.ATTACH_ICON_IMG %}<i class="icon fa-paperclip fa-fw" aria-hidden="true"></i>{% endif %}
-										{% if MODE == 'mcp' %}<strong>{{ topicrow.USERNAME_FULL }}</strong> | {% endif %}
-										<i class="fa fa-calendar-o"></i><strong>{{ topicrow.POST_DATE }}</strong> |
-										<i class="fa fa-calendar"></i><strong>{{ topicrow.TOPIC_DATE }}</strong> |
-										<i class="fa fa-eye"></i><strong>{{ topicrow.TOPIC_VIEWS }}</strong> |
-										<i class="fa fa-comment-o"></i><strong>{{ topicrow.TOPIC_COMMENTS }}</strong>
+										{% if MODE == 'mcp' %}<strong>{{ topicrow.USERNAME_FULL }}</strong> {% endif %}
+										<span title="{{ lang('POSTED') }}"><i class="fa fa-calendar-o"></i><strong>{{ topicrow.POST_DATE }}</strong> </span>
+										<span title="{{ lang('CONTENT_PUBLISHED') }}"><i class="fa fa-calendar"></i><strong>{{ topicrow.TOPIC_DATE }}</strong> </span>
+										<span title="{{ lang('VIEWS') }}"><i class="fa fa-eye"></i><strong>{{ topicrow.TOPIC_VIEWS }}</strong> </span>
+										{%- if topicrow.S_COMMENTS %}
+										<span title="{{ lang('COMMENTS') }}"><i class="fa fa-comment-o"></i><strong>{{ topicrow.TOPIC_COMMENTS }}</strong> </span>
+										{%- endif %}
 									</div>
 									<span class="responsive-show left-box" style="display: none;">{{ lang('TYPE') }}{{ lang('COLON') }} <strong>{{ topicrow.CONTENT_TYPE }}</strong></span>
-
-									<div class="responsive-hide">
-										{% if topicrow.S_HAS_POLL %}<i class="icon fa-bar-chart fa-fw" aria-hidden="true"></i>{% endif %}
-										{% if topicrow.ATTACH_ICON_IMG %}<i class="icon fa-paperclip fa-fw" aria-hidden="true"></i>{% endif %}
-										{% if MODE == 'mcp' %}<i class="fa fa-user"></i><strong>{{ topicrow.USERNAME_FULL }}</strong> | {% endif %}
-										<i class="fa fa-calendar-o"></i>{{ lang('POSTED') }}{{ lang('COLON') }} <strong>{{ topicrow.POST_DATE }}</strong> |
-										<i class="fa fa-calendar"></i>{{ lang('CONTENT_PUBLISHED') }}{{ lang('COLON') }} <strong>{{ topicrow.TOPIC_DATE }}</strong> |
-										<i class="fa fa-eye"></i><strong>{{ topicrow.TOPIC_VIEWS }}</strong> |
-										<i class="fa fa-comment-o"></i><strong>{{ topicrow.TOPIC_COMMENTS }}</strong>
-									</div>
 								</div>
 							</dt>
 							<dd class="posts"><a href="{{ topicrow.U_TOPIC_STATUS }}" title="{{ topicrow.FIRST_POST_TIME }}">{{ topicrow.TOPIC_STATUS }}</a> <dfn>{{ lang('STATUS') }}</dfn></dd>

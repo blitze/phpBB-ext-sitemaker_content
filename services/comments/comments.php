@@ -75,15 +75,29 @@ class comments extends form implements comments_interface
 	/**
 	 * @inheritdoc
 	 */
+	public function get_langname()
+	{
+		return 'COMMENTS';
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function count(array $topic_data)
 	{
 		return $this->content_visibility->get_count('topic_posts', $topic_data, $topic_data['forum_id']) - 1;
 	}
 
 	/**
-	 * @inheritdoc
+	 * Show comments for topic
+	 *
+	 * @param string $content_type
+	 * @param array $topic_data
+	 * @param array $update_count
+	 * @param array $settings
+	 * @return void
 	 */
-	public function show_comments($content_type, array $topic_data, array &$update_count)
+	public function show_comments($content_type, array $topic_data, array &$update_count, array $settings = array())
 	{
 		if ($topic_data['total_comments'])
 		{
@@ -98,12 +112,12 @@ class comments extends form implements comments_interface
 			$this->set_sorting_options($sort_days, $sort_key, $sort_dir, $u_sort_param);
 
 			$base_url = append_sid(trim(build_url(array('start', 'p')), '?'), (strlen($u_sort_param)) ? $u_sort_param : '');
-			$this->build_pagination($start, $post_id, $topic_data, $sort_dir, $base_url);
+			$this->build_pagination($start, (int) $settings['per_page'], $post_id, $topic_data, $sort_dir, $base_url);
 
 			$this->forum->query()
 				->fetch_date_range(time(), $sort_days * 86400, 'post')
 				->build();
-			$posts_data = $this->forum->get_post_data(false, array(), (int) $this->config['posts_per_page'], $start, array(
+			$posts_data = $this->forum->get_post_data(false, array(), $settings['per_page'], $start, array(
 				'WHERE'		=> array(
 					'p.topic_id = ' . (int) $topic_data['topic_id'],
 					'p.post_id <> ' . (int) $topic_data['topic_first_post_id'],
@@ -191,13 +205,14 @@ class comments extends form implements comments_interface
 	/**
 	 * This is for determining where we are (page)
 	 * @param int $start
+	 * @param int $posts_per_page
 	 * @param int $post_id
 	 * @param array $topic_data
 	 * @param string $sort_dir
 	 * @param string $base_url
 	 * @return void
 	 */
-	protected function build_pagination(&$start, $post_id, array $topic_data, $sort_dir, $base_url)
+	protected function build_pagination(&$start, $posts_per_page, $post_id, array $topic_data, $sort_dir, $base_url)
 	{
 		if ($post_id)
 		{
@@ -205,11 +220,11 @@ class comments extends form implements comments_interface
 			$this->check_requested_post_id($post_info, $topic_data, $base_url);
 
 			$prev_posts = $this->get_next_posts_count($post_info, $topic_data, $sort_dir, $post_id);
-			$start = (int) floor($prev_posts / $this->config['posts_per_page']) * $this->config['posts_per_page'];
+			$start = (int) floor($prev_posts / $posts_per_page) * $posts_per_page;
 		}
 
-		$start = $this->pagination->validate_start($start, (int) $this->config['posts_per_page'], $topic_data['total_comments']);
-		$this->pagination->generate_template_pagination($base_url, 'pagination', 'start', $topic_data['total_comments'], (int) $this->config['posts_per_page'], $start);
+		$start = $this->pagination->validate_start($start, $posts_per_page, $topic_data['total_comments']);
+		$this->pagination->generate_template_pagination($base_url, 'pagination', 'start', $topic_data['total_comments'], $posts_per_page, $start);
 		$this->add_comment_anchor_to_pages();
 	}
 

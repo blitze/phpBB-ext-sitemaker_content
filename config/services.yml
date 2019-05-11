@@ -19,6 +19,18 @@ services:
         arguments:
             - '@service_container'
 
+    blitze.content.comment_types_collection:
+        class: phpbb\di\service_collection
+        arguments:
+            - '@service_container'
+        tags:
+            - { name: service_collection, tag: sitemaker.content.comment_type }
+
+    blitze.content.comments.factory:
+        class: blitze\content\services\comments\factory
+        arguments:
+            - '@blitze.content.comment_types_collection'
+
     blitze.content.comments:
         class: blitze\content\services\comments\comments
         arguments:
@@ -36,6 +48,8 @@ services:
             - '@blitze.content.topic'
             - '%core.root_path%'
             - '%core.php_ext%'
+        tags:
+            - { name: sitemaker.content.comment_type }
 
     blitze.content.feed:
         class: blitze\content\services\feed
@@ -52,7 +66,7 @@ services:
         class: blitze\content\services\fields
         parent: blitze.content.topic
         arguments:
-            - '@blitze.content.comments'
+            - '@blitze.content.comments.factory'
             - '@blitze.content.form.fields.factory'
 
     blitze.content.form:

@@ -172,7 +172,9 @@ class save extends action_utils implements action_interface
 	{
 		$content_desc = $this->request->variable('content_desc', '', true);
 		$content_view = $this->request->variable('content_view', '');
+		$comments = $this->request->variable('comments', '');
 		$view_settings = $this->request->variable(array('view_settings', $content_view), array('' => ''));
+		$comments_settings = $this->request->variable(array('comments_settings', $comments), array('' => ''));
 
 		$entity = $mapper->create_entity(array(
 			'content_name'			=> $this->request->variable('content_name', ''),
@@ -180,8 +182,9 @@ class save extends action_utils implements action_interface
 			'content_enabled'		=> $this->request->variable('content_enabled', true),
 			'content_view'			=> $content_view,
 			'content_view_settings'	=> $view_settings,
+			'comments'				=> $comments,
+			'comments_settings'		=> $comments_settings,
 			'req_approval'			=> $this->request->variable('req_approval', 1),
-			'allow_comments'		=> $this->request->variable('allow_comments', 0),
 			'allow_views'			=> $this->request->variable('allow_views', 0),
 			'show_pagination'		=> $this->request->variable('show_pagination', 0),
 			'index_show_desc'		=> $this->request->variable('index_show_desc', 0),

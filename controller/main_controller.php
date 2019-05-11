@@ -26,9 +26,6 @@ class main_controller
 	/** @var \phpbb\user */
 	protected $user;
 
-	/* @var \blitze\content\services\comments\comments_interface */
-	protected $comments;
-
 	/** @var \blitze\content\services\types */
 	protected $content_types;
 
@@ -41,6 +38,9 @@ class main_controller
 	/** @var \blitze\content\services\views\views_factory */
 	protected $views_factory;
 
+	/** @var \blitze\content\services\comments\factory */
+	protected $comments_factory;
+
 	/**
 	 * Constructor
 	 *
@@ -49,24 +49,24 @@ class main_controller
 	 * @param \phpbb\request\request_interface						$request			Request object
 	 * @param \phpbb\template\template								$template			Template object
 	 * @param \phpbb\user											$user				User object
-	 * @param \blitze\content\services\comments\comments_interface	$comments			Comments object
 	 * @param \blitze\content\services\types						$content_types		Content types object
 	 * @param \blitze\content\services\feed							$feed				Feed object
 	 * @param \blitze\content\services\poll							$poll				Poll object
 	 * @param \blitze\content\services\views\views_factory			$views_factory		Views handlers
+	 * @param \blitze\content\services\comments\factory				$comments_factory	Comments factory
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\comments\comments_interface $comments, \blitze\content\services\types $content_types, \blitze\content\services\feed $feed, \blitze\content\services\poll $poll, \blitze\content\services\views\views_factory $views_factory)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\types $content_types, \blitze\content\services\feed $feed, \blitze\content\services\poll $poll, \blitze\content\services\views\views_factory $views_factory, \blitze\content\services\comments\factory $comments_factory)
 	{
 		$this->db = $db;
 		$this->helper = $helper;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
-		$this->comments = $comments;
 		$this->content_types = $content_types;
 		$this->feed = $feed;
 		$this->poll = $poll;
 		$this->views_factory = $views_factory;
+		$this->comments_factory = $comments_factory;
 	}
 
 	/**
@@ -120,10 +120,10 @@ class main_controller
 			$this->update_views($topic_id, $update_count);
 			$template_file = $view_handler->get_detail_template();
 
-			if ($entity->get_allow_comments())
+			if (($comments = $this->comments_factory->get($entity->get_comments())) !== null)
 			{
-				$this->comments->show_comments($type, $topic_data, $update_count);
-				$this->comments->show_form($topic_data);
+				$comments->show_comments($type, $topic_data, $update_count, $entity->get_comments_settings());
+				$comments->show_form($topic_data);
 			}
 		}
 		else

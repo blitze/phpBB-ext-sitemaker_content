@@ -91,6 +91,12 @@ final class type extends base_entity
 	/** @var string */
 	protected $content_view_settings = '';
 
+	/** @var string */
+	protected $comments = '';
+
+	/** @var string */
+	protected $comments_settings = '';
+
 	/** @var boolean */
 	protected $req_approval = false;
 
@@ -149,8 +155,9 @@ final class type extends base_entity
 		'content_desc_uid',
 		'content_view',
 		'content_view_settings',
+		'comments',
+		'comments_settings',
 		'req_approval',
-		'allow_comments',
 		'allow_views',
 		'show_pagination',
 		'index_show_desc',
@@ -258,6 +265,34 @@ final class type extends base_entity
 	public function get_content_view_settings()
 	{
 		return ($this->content_view_settings) ? json_decode($this->content_view_settings, true) : array();
+	}
+
+	/**
+	 * Set comment settings
+	 * @param array|string $settings
+	 * @return $this
+	 */
+	public function set_comments_settings($settings)
+	{
+		$this->comments_settings = '';
+		if (!is_array($settings))
+		{
+			$this->comments_settings = $settings;
+		}
+		else if (sizeof($settings))
+		{
+			$this->comments_settings = json_encode($settings);
+		}
+		return $this;
+	}
+
+	/**
+	 * Get comment type settings
+	 * @return array
+	 */
+	public function get_comments_settings()
+	{
+		return ($this->comments_settings) ? json_decode($this->comments_settings, true) : array();
 	}
 
 	/**

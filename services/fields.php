@@ -11,14 +11,17 @@ namespace blitze\content\services;
 
 class fields extends topic
 {
-	/** @var \blitze\content\services\comments\comments_interface */
-	protected $comments;
+	/** @var \blitze\content\services\comments\factory */
+	protected $comments_factory;
 
 	/** @var \blitze\content\services\form\fields_factory */
 	protected $fields_factory;
 
 	/** @var string */
 	protected $content_type;
+
+	/** @var \blitze\content\services\comments\comments_inferface */
+	protected $comments;
 
 	/** @var string */
 	protected $board_url = '';
@@ -54,14 +57,14 @@ class fields extends topic
 	 * @param \phpbb\template\template								$template				Template object
 	 * @param \phpbb\user											$user					User object
 	 * @param \blitze\content\services\helper						$helper					Content helper object
-	 * @param \blitze\content\services\comments\comments_interface	$comments				Comments object
+	 * @param \blitze\content\services\comments\factory				$comments_factory		Comments Factory
 	 * @param \blitze\content\services\form\fields_factory			$fields_factory			Form fields factory
 	 */
-	public function __construct(\phpbb\config\db $config, \phpbb\controller\helper $controller_helper, \phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\language\language $language, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\helper $helper, \blitze\content\services\comments\comments_interface $comments, \blitze\content\services\form\fields_factory $fields_factory)
+	public function __construct(\phpbb\config\db $config, \phpbb\controller\helper $controller_helper, \phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\language\language $language, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\helper $helper, \blitze\content\services\comments\factory $comments_factory, \blitze\content\services\form\fields_factory $fields_factory)
 	{
 		parent::__construct($config, $controller_helper, $phpbb_dispatcher, $language, $template, $user, $helper);
 
-		$this->comments = $comments;
+		$this->comments_factory = $comments_factory;
 		$this->fields_factory = $fields_factory;
 	}
 
@@ -99,6 +102,7 @@ class fields extends topic
 		$this->set_view_mode($view_mode);
 		$this->set_form_fields($view_mode_fields);
 		$this->set_content_fields($view_mode_fields, $entity->get_content_fields());
+		$this->set_comments_type($entity->get_comments());
 
 		$this->board_url = generate_board_url(true);
 		$this->tpl_name	= ($custom_tpl) ? ($tpl_name ?: $this->content_type . '_' . $view_mode) : '';
@@ -121,7 +125,7 @@ class fields extends topic
 	{
 		$callable = 'get_' . $this->view_mode . '_template_data';
 		$tpl_data = array_merge(array(
-				'TOPIC_COMMENTS'	=> $this->comments->count($topic_data),
+				'TOPIC_COMMENTS'	=> !empty($this->comments) ? $this->comments->count($topic_data) : 0,
 				'S_USER_LOGGED_IN'	=> $this->user->data['is_registered'],
 			),
 			$this->{$callable}($type, $topic_data, $post_data, $users_cache, $attachments, $topic_tracking_info, $update_count, $redirect_url),
@@ -172,6 +176,16 @@ class fields extends topic
 	{
 		$this->display_mode = $view_mode;
 		$this->view_mode = (in_array($view_mode, array('summary', 'detail'))) ? $view_mode : 'summary';
+		return $this;
+	}
+
+	/**
+	 * @param string $service
+	 * @return $this
+	 */
+	public function set_comments_type($service)
+	{
+		$this->comments = $this->comments_factory->get($service);
 		return $this;
 	}
 

@@ -232,11 +232,14 @@ class index extends filter implements action_interface
 	protected function get_content_type_info($type, $base_url)
 	{
 		$entity = $this->content_types->get_type($type);
+		$comments_type = $entity->get_comments();
+
+		$this->fields->set_comments_type($comments_type);
 
 		return array(
 			'CONTENT_TYPE'			=> $entity->get_content_langname(),
 			'CONTENT_TYPE_COLOR'	=> $entity->get_content_colour(),
-			'S_COMMENTS'			=> $entity->get_allow_comments(),
+			'S_COMMENTS'			=> (bool) $comments_type,
 			'U_CONTENT_TYPE'		=> $base_url . "&amp;type=$type",
 		);
 	}

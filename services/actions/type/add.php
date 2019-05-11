@@ -31,6 +31,9 @@ class add implements action_interface
 	/** @var \blitze\sitemaker\services\auto_lang */
 	protected $auto_lang;
 
+	/** @var \blitze\content\services\comments\factory */
+	protected $comments_factory;
+
 	/** @var \blitze\content\services\form\fields_factory */
 	protected $fields_factory;
 
@@ -52,11 +55,12 @@ class add implements action_interface
 	 * @param \phpbb\template\template							$template				Template object
 	 * @param \phpbb\user										$user					User object
 	 * @param \blitze\sitemaker\services\auto_lang				$auto_lang				Auto add lang file
+	 * @param \blitze\content\services\comments\factory			$comments_factory		Comments factory
 	 * @param \blitze\content\services\form\fields_factory		$fields_factory			Fields factory  object
 	 * @param \blitze\content\services\topic\blocks_factory		$topic_blocks_factory	Topic blocks factory object
 	 * @param \blitze\content\services\views\views_factory		$views_factory			Views factory object
 	*/
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\controller\helper $controller_helper, \phpbb\language\language $language, \phpbb\template\template $template, \phpbb\user $user, \blitze\sitemaker\services\auto_lang $auto_lang, \blitze\content\services\form\fields_factory $fields_factory, \blitze\content\services\topic\blocks_factory $topic_blocks_factory, \blitze\content\services\views\views_factory $views_factory)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\controller\helper $controller_helper, \phpbb\language\language $language, \phpbb\template\template $template, \phpbb\user $user, \blitze\sitemaker\services\auto_lang $auto_lang, \blitze\content\services\comments\factory $comments_factory, \blitze\content\services\form\fields_factory $fields_factory, \blitze\content\services\topic\blocks_factory $topic_blocks_factory, \blitze\content\services\views\views_factory $views_factory)
 	{
 		$this->auth = $auth;
 		$this->controller_helper = $controller_helper;
@@ -64,6 +68,7 @@ class add implements action_interface
 		$this->template = $template;
 		$this->user = $user;
 		$this->auto_lang = $auto_lang;
+		$this->comments_factory = $comments_factory;
 		$this->fields_factory = $fields_factory;
 		$this->topic_blocks_factory = $topic_blocks_factory;
 		$this->views_factory = $views_factory;
@@ -78,6 +83,8 @@ class add implements action_interface
 
 		$this->template->assign_vars(array(
 			'CONTENT_VIEWS'		=> $this->views_factory->get_all_views(),
+			'COMMENT_TYPES'		=> $this->comments_factory->get_all_types(),
+			'COMMENTS'			=> 'blitze.content.comments',	// default comment system
 			'POST_AUTHOR'		=> $this->user->data['username'],
 			'POST_DATE'			=> $this->user->format_date(time()),
 			'TOPIC_BLOCK_OPS'	=> $this->topic_blocks_factory->get_all(),

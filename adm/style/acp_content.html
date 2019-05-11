@@ -169,13 +169,6 @@
 							</dd>
 						</dl>
 						<dl>
-							<dt><label for="allow-comments">{{ lang('ALLOW_COMMENTS') ~ lang('COLON') }}</label></dt>
-							<dd>
-								<label><input type="radio" class="radio" id="allow-comments" name="allow_comments" value="1"{% if ALLOW_COMMENTS !== false %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-								<label><input type="radio" class="radio" name="allow_comments" value="0"{% if ALLOW_COMMENTS === false %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
-							</dd>
-						</dl>
-						<dl>
 							<dt><label for="allow-views">{{ lang('DISPLAY_VIEWS') ~ lang('COLON') }}</label><br /><span>{{ lang('DISPLAY_VIEWS_EXPLAIN') }}</span></dt>
 							<dd>
 								<label><input type="radio" class="radio" id="allow-views" name="allow_views" value="1"{% if ALLOW_VIEWS !== false %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
@@ -192,6 +185,27 @@
 						<dl>
 							<dt><label for="items-per-page">{{ lang('ITEMS_PER_PAGE') ~ lang('COLON') }}</label></dt>
 							<dd><input type="number" id="items-per-page" class="small" size="5" name="items_per_page" value="{{ ITEMS_PER_PAGE }}" /></dd>
+						</dl>
+						<dl>
+							<dt><label for="comments_type">{{ lang('COMMENTS_TYPE') ~ lang('COLON') }}</label><br /><span>{{ lang('COMMENTS_TYPE_EXPLAIN') }}</span></dt>
+							<dd>
+								<select id="comments-type" name="comments" data-togglable-settings="true">
+									<option value=""{% if !service %} selected="selected"{% endif %}>{{ lang('NONE') }}</option>
+								{% for service, label in COMMENT_TYPES %}
+									<option value="{{ service }}"{% if service === COMMENTS %} selected="selected"{% endif %} data-toggle-setting="#comment-type-{{ service|replace({'.': '\\.'}) }}">{{ lang(label) }}</option>
+								{% endfor %}
+								</select><br /><br />
+
+								<div id="comment-type-blitze.content.comments">
+									<dl>
+										<dt><label for="comments-per-page">{{ lang('COMMENTS_PER_PAGE') ~ lang('COLON') }}</label></dt>
+										<dd>
+											<input id="comments-per-page" name="comments_settings[blitze.content.comments][per_page]" type="number" size="2" min="1" step="1" value="{{ COMMENTS_SETTINGS.my_setting|default(10) }}" />
+										</dd>
+									</dl>
+								</div>
+								{% EVENT blitze_content_comment_type_settings %}
+							</dd>
 						</dl>
 						<dl>
 							<dt><label for="items-per-page">{{ lang('TOPIC_BLOCKS') ~ lang('COLON') }}</label><br /><span>{{ lang('TOPIC_BLOCKS_EXPLAIN') }}</span></dt>

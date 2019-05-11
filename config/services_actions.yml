@@ -59,6 +59,7 @@ services:
             - '@template'
             - '@user'
             - '@blitze.sitemaker.auto_lang'
+            - '@blitze.content.comments.factory'
             - '@blitze.content.form.fields.factory'
             - '@blitze.content.topic_blocks.factory'
             - '@blitze.content.views.factory'

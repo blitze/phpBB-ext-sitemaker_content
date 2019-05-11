@@ -12,6 +12,12 @@ namespace blitze\content\services\comments;
 interface comments_interface
 {
 	/**
+	 * Lang name of comment type
+	 * @return string
+	 */
+	public function get_langname();
+
+	/**
 	 * Get comments count for topic
 	 * @param array $topic_data
 	 * @return
