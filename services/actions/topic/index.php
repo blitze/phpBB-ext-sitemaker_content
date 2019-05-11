@@ -148,11 +148,11 @@ class index extends filter implements action_interface
 		{
 			$post_row = array_shift($posts_data[$topic_id]);
 			$content_type = $this->content_forums[$topic_row['forum_id']];
+			$content_type_info = $this->get_content_type_info($content_type, $base_url);
 			$tpl_data = $this->fields->show($content_type, $topic_row, $post_row, $users_cache, $attachments, $update_count, $topic_tracking_info, array(), $this->redirect_url);
 			$tpl_data['POST_DATE'] = $this->user->format_date($post_row['post_time'], 'm/d/Y');
 
-			$this->template->assign_block_vars('topicrow', array_merge($tpl_data,
-				$this->get_content_type_info($content_type, $base_url),
+			$this->template->assign_block_vars('topicrow', array_merge($tpl_data, $content_type_info,
 				$this->get_topic_type_info($tpl_data['S_UNREAD_POST'], $tpl_data['TOPIC_COMMENTS'], $topic_row),
 				$this->get_topic_status_info($tpl_data['S_POST_UNAPPROVED'], $tpl_data['S_TOPIC_DELETED'], $base_url, $topic_row),
 				$this->get_topic_info($content_type, $u_action, $topic_row),
@@ -171,7 +171,7 @@ class index extends filter implements action_interface
 	{
 		return array(
 			'ATTACH_ICON_IMG'	=> $this->get_attachment_icon($row),
-			'U_REVIEW_TOPIC'	=> $u_action . "&amp;do=view&amp;type=$content_type&amp;t=" . $row['topic_id'],
+			'U_REVIEW_TOPIC'	=> $u_action . "&amp;do=view&amp;type=$content_type&amp;t={$row['topic_id']}&amp;redirect=" . $this->redirect_url,
 		);
 	}
 
