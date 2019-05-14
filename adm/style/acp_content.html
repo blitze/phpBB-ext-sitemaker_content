@@ -137,12 +137,16 @@
 							</div>
 						</div>
 						<div class="tpl-fields-container">
-							<div id="available-fields">
+							<br clear="both" />
+							<fieldset id="available-fields" class="row2">
+								<legend>{{ lang('FIELDS') }}</legend>
 							{% for field in CONTENT_FIELDS %}
 								<a class="button" href="#" data-tag="{{ field.FIELD_NAME }}" data-ftype="{{ field.FIELD_TYPE }}">{{ field.FIELD_LABEL }}</a>
 							{% endfor %}
-							</div>
-							<div id="post-info">
+							</fieldset>
+							<fieldset id="post-info" class="row2">
+								<legend>{{ lang('TOPIC_DATA') }}</legend>
+								<a class="button" href="#" data-tag="TOPIC_ID">{{ lang('TOPIC_ID') }}</a>
 								<a class="button" href="#" data-tag="TOPIC_TITLE">{{ lang('TOPIC_TITLE') }}</a>
 								<a class="button" href="#" data-tag="TOPIC_URL">{{ lang('TOPIC_URL') }}</a>
 								<a class="button" href="#" data-tag="TOPIC_AUTHOR">{{ lang('TOPIC_AUTHOR') }}</a>
@@ -151,9 +155,10 @@
 								<a class="button" href="#" data-tag="TOPIC_AUTHOR_AVATAR">{{ lang('TOPIC_AUTHOR_AVATAR') }}</a>
 								<a class="button" href="#" data-tag="TOPIC_AUTHOR_URL">{{ lang('TOPIC_AUTHOR_URL') }}</a>
 								<a class="button" href="#" data-tag="TOPIC_DATE">{{ lang('TOPIC_DATE') }}</a>
+								<a class="button" href="#" data-tag="TOPIC_UNIX_TIME">{{ lang('TOPIC_UNIX_TIME') }}</a>
 								<a class="button" href="#" data-tag="TOPIC_COMMENTS">{{ lang('TOPIC_COMMENTS') }}</a>
 								<a class="button" href="#" data-tag="TOPIC_VIEWS">{{ lang('TOPIC_VIEWS') }}</a>
-							</div>
+							</fieldset>
 						</div>
 					</fieldset>
 				<span class="corners-bottom"><span></span></span>
