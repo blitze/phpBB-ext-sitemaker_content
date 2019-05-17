@@ -106,7 +106,7 @@ class index extends filter implements action_interface
 		{
 			$sql_where_array = array();
 			$this->apply_keyword_filter($sql_where_array);
-			$filter_topic_status = $this->apply_status_filter($sql_where_array);
+			$filter_topic_status = $this->apply_topic_status_filter($sql_where_array);
 			$filter_content_type = $this->apply_content_type_filter();
 
 			$callable = 'init_' . $mode . '_mode';
@@ -286,7 +286,7 @@ class index extends filter implements action_interface
 		}
 		else
 		{
-			$topic_status = $this->filter_topic_types_ary[$row['topic_type']];
+			$topic_status = $this->get_topic_types_filters()[$row['topic_type']];
 		}
 
 		return array(

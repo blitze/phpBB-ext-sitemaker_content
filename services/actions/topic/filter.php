@@ -29,22 +29,6 @@ class filter
 	/** @var array */
 	protected $params = array();
 
-	/** @var array */
-	protected $filter_topic_status_ary = array(
-		'-1'				=> 'scheduled',
-		ITEM_UNAPPROVED		=> 'unapproved',
-		ITEM_APPROVED		=> 'published',
-		ITEM_DELETED		=> 'deleted',
-	);
-
-	/** @var array */
-	protected $filter_topic_types_ary = array(
-		POST_NORMAL		=> 'published',
-		POST_STICKY		=> 'featured',
-		POST_ANNOUNCE	=> 'recommended',
-		POST_GLOBAL		=> 'must_read',
-	);
-
 	/**
 	 * Constructor
 	 *
@@ -59,23 +43,6 @@ class filter
 		$this->language = $language;
 		$this->request = $request;
 		$this->template = $template;
-	}
-
-	/**
-	 * @return string
-	 */
-	protected function apply_content_type_filter()
-	{
-		$content_type = $this->request->variable('type', '');
-
-		if ($content_type && in_array($content_type, $this->content_forums))
-		{
-			$this->params['type'] = $content_type;
-			$this->content_forums = array_intersect($this->content_forums, array($content_type));
-			$this->template->assign_vars(array('S_CONTENT_FILTER' => true));
-		}
-
-		return $content_type;
 	}
 
 	/**
@@ -110,22 +77,6 @@ class filter
 	}
 
 	/**
-	 * @param array $sql_where_array
-	 * @return string
-	 */
-	protected function apply_status_filter(array &$sql_where_array)
-	{
-		if ($topic_status = $this->request->variable('status', ''))
-		{
-			$this->template->assign_vars(array('S_STATUS_FILTER' => true));
-			$this->params['status'] = $topic_status;
-			$this->get_filter_status_sql($topic_status, $sql_where_array);
-		}
-
-		return $topic_status;
-	}
-
-	/**
 	 * @param string $topic_status
 	 * @param string $u_action
 	 * @return void
@@ -142,7 +93,7 @@ class filter
 			'U_VIEW'		=> $view_url,
 		));
 
-		$topic_status_ary = array_unique(array_merge($this->filter_topic_status_ary, $this->filter_topic_types_ary));
+		$topic_status_ary = array_unique(array_merge($this->get_topic_status_filters(), $this->get_topic_types_filters()));
 		foreach ($topic_status_ary as $status)
 		{
 			$this->template->assign_block_vars('status', array(
@@ -154,29 +105,20 @@ class filter
 	}
 
 	/**
-	 * @param string $topic_status
-	 * @param array $sql_where_array
-	 * @return void
+	 * @return string
 	 */
-	protected function get_filter_status_sql($topic_status, array &$sql_where_array)
+	protected function apply_content_type_filter()
 	{
-		switch ($topic_status)
+		$content_type = $this->request->variable('type', '');
+
+		if ($content_type && in_array($content_type, $this->content_forums))
 		{
-			case 'scheduled':
-				$sql_where_array[] = 't.topic_time > ' . time();
-			break;
-			case 'unapproved':
-			case 'published':
-			case 'deleted':
-				$sql_where_array[] = 't.topic_visibility = ' . (int) array_search($topic_status, $this->filter_topic_status_ary);
-			break;
-			case 'recommended':
-			case 'featured':
-			case 'must_read':
-				$sql_where_array[] = 't.topic_type = ' . (int) array_search($topic_status, $this->filter_topic_types_ary);
-				$sql_where_array[] = 't.topic_visibility = ' . ITEM_APPROVED;
-			break;
+			$this->params['type'] = $content_type;
+			$this->content_forums = array_intersect($this->content_forums, array($content_type));
+			$this->template->assign_vars(array('S_CONTENT_FILTER' => true));
 		}
+
+		return $content_type;
 	}
 
 	/**
@@ -190,5 +132,108 @@ class filter
 			$this->params['keyword'] = $keyword;
 			$sql_where_array[] = 't.topic_title ' . $this->db->sql_like_expression($this->db->get_any_char() . $keyword . $this->db->get_any_char());
 		}
+	}
+
+	/**
+	 * @param array $sql_where_array
+	 * @return string
+	 */
+	protected function apply_topic_status_filter(array &$sql_where_array)
+	{
+		if ($topic_status = $this->request->variable('status', ''))
+		{
+			$this->template->assign_vars(array('S_STATUS_FILTER' => true));
+			$this->params['status'] = $topic_status;
+
+			call_user_func_array(array($this, 'get_' . $topic_status . '_topics_sql'), array($topic_status, &$sql_where_array));
+		}
+
+		return $topic_status;
+	}
+
+	/**
+	 * @param string $topic_status
+	 * @param array $sql_where_array
+	 * @return void
+	 */
+	protected function get_published_topics_sql($topic_status, array &$sql_where_array)
+	{
+		$sql_where_array[] = 't.topic_visibility = ' . (int) array_search($topic_status, $this->get_topic_status_filters());
+	}
+
+	/**
+	 * @param string $topic_status
+	 * @param array $sql_where_array
+	 * @return void
+	 */
+	protected function get_deleted_topics_sql($topic_status, array &$sql_where_array)
+	{
+		$this->get_published_topics_sql($topic_status, $sql_where_array);
+	}
+
+	/**
+	 * @param string $topic_status
+	 * @param array $sql_where_array
+	 * @return void
+	 */
+	protected function get_unapproved_topics_sql($topic_status, array &$sql_where_array)
+	{
+		$this->get_published_topics_sql($topic_status, $sql_where_array);
+	}
+
+	/**
+	 * @param string $topic_status
+	 * @param array $sql_where_array
+	 * @return void
+	 */
+	protected function get_featured_topics_sql($topic_status, array &$sql_where_array)
+	{
+		$sql_where_array[] = 't.topic_type = ' . (int) array_search($topic_status, $this->get_topic_types_filters());
+		$sql_where_array[] = 't.topic_visibility = ' . ITEM_APPROVED;
+	}
+
+	/**
+	 * @param string $topic_status
+	 * @param array $sql_where_array
+	 * @return void
+	 */
+	protected function get_must_read_topics_sql($topic_status, array &$sql_where_array)
+	{
+		$this->get_featured_topics_sql($topic_status, $sql_where_array);
+	}
+
+	/**
+	 * @param string $topic_status
+	 * @param array $sql_where_array
+	 * @return void
+	 */
+	protected function get_recommended_topics_sql($topic_status, array &$sql_where_array)
+	{
+		$this->get_featured_topics_sql($topic_status, $sql_where_array);
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function get_topic_status_filters()
+	{
+		return array(
+			ITEM_UNAPPROVED		=> 'unapproved',
+			ITEM_APPROVED		=> 'published',
+			ITEM_DELETED		=> 'deleted',
+		);
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function get_topic_types_filters()
+	{
+		return array(
+			POST_NORMAL		=> 'published',
+			POST_STICKY		=> 'featured',
+			POST_ANNOUNCE	=> 'recommended',
+			POST_GLOBAL		=> 'must_read',
+		);
 	}
 }

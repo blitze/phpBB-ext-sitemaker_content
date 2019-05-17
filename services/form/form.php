@@ -86,6 +86,11 @@ class form
 
 		return $this;
 	}
+	
+	public function is_created()
+	{
+		return (bool) count($this->form);
+	}
 
 	/**
 	 * @param string $name

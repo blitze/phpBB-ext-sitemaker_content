@@ -57,13 +57,12 @@ class posting implements EventSubscriberInterface
 			'core.modify_posting_auth'					=> 'init_builder',
 			'core.posting_modify_message_text'			=> 'build_message',
 			'core.posting_modify_submission_errors'		=> 'show_errors',
-			'core.modify_submit_post_data'				=> 'modify_posting_data',
 			'core.submit_post_modify_sql_data'			=> 'modify_sql_data',
 			'core.posting_modify_submit_post_after'		=> array(array('save_fields'), array('set_redirect_url')),
 			'core.topic_review_modify_post_list'		=> 'set_content_post_id',
 			'core.topic_review_modify_row'				=> 'modify_topic_review',
 			'core.posting_modify_submit_post_before'	=> 'force_visibility',
-			'core.posting_modify_template_vars'			=> 'build_form',
+			'core.posting_modify_template_vars'			=> array(array('build_form'), array('get_form', -100)),
 			'core.page_footer'							=> 'update_navbar',
 		);
 	}
@@ -123,20 +122,6 @@ class posting implements EventSubscriberInterface
 			$data = (array) $event['data'];
 			$this->builder->force_visibility($event['mode'], $data);
 
-			$event['data'] = $data;
-		}
-	}
-
-	/**
-	 * @param \phpbb\event\data $event
-	 * @return void
-	 */
-	public function modify_posting_data(\phpbb\event\data $event)
-	{
-		if ($this->build_content && $event['mode'] === 'post')
-		{
-			$data = $event['data'];
-			$this->builder->modify_posting_data($data);
 			$event['data'] = $data;
 		}
 	}
@@ -219,9 +204,23 @@ class posting implements EventSubscriberInterface
 		{
 			$post_data = (array) $event['post_data'];
 			$page_data = (array) $event['page_data'];
+			$this->builder->generate_form((int) $event['topic_id'], $post_data, $page_data);
+		}
+	}
+
+	/**
+	 * @param \phpbb\event\data $event
+	 * @return void
+	 */
+	public function get_form(\phpbb\event\data $event)
+	{
+		if ($this->build_content)
+		{
+			$post_data = (array) $event['post_data'];
+			$page_data = (array) $event['page_data'];
 
 			$post_data['TOPIC_URL'] = './';
-			$page_data['SITEMAKER_FORM'] = $this->builder->generate_form((int) $event['topic_id'], $post_data, $page_data);
+			$page_data['SITEMAKER_FORM'] = $this->builder->get_form();
 
 			if ($event['preview'] && $this->content_type)
 			{

@@ -211,16 +211,6 @@ class builder
 	}
 
 	/**
-	 * @param array $data
-	 * @return void
-	 */
-	public function modify_posting_data(array &$data)
-	{
-		$this->topic_time = time();
-		$data['post_time'] = $this->topic_time;
-	}
-
-	/**
 	 * @param array $sql_data
 	 * @return void
 	 */
@@ -229,20 +219,6 @@ class builder
 		$slugify = new Slugify();
 		$sql_data['topic_slug'] = $slugify->slugify($sql_data['topic_title']);
 		$sql_data['req_mod_input'] = $this->req_mod_input;
-
-		$this->topic_time = $this->request->variable('topic_time', $this->topic_time);
-
-		if ($this->mode === 'mcp')
-		{
-			$publish_on = $this->request->variable('publish_on', '');
-			$posted_on = $this->user->format_date($this->topic_time, 'm/d/Y H:i');
-
-			if ($publish_on !== $posted_on)
-			{
-				$this->topic_time = strtotime($publish_on);
-				$sql_data['topic_time'] = $this->topic_time;
-			}
-		}
 	}
 
 	/**
@@ -251,7 +227,6 @@ class builder
 	 */
 	public function save_db_fields(array $topic_data)
 	{
-		$topic_data['topic_time'] = (!empty($topic_data['topic_time'])) ? $topic_data['topic_time'] : $this->topic_time;
 		$this->form->save_db_fields($topic_data, $this->content_fields);
 	}
 
@@ -259,9 +234,9 @@ class builder
 	 * @param int $topic_id
 	 * @param array $post_data
 	 * @param array $page_data
-	 * @return string
+	 * @return void
 	 */
-	public function generate_form($topic_id, array &$post_data, array $page_data = array())
+	public function generate_form($topic_id, array $post_data, array $page_data = array())
 	{
 		$this->set_field_values($post_data['post_text']);
 
@@ -277,8 +252,13 @@ class builder
 			}
 			$this->add_field($field, $field_data, $topic_id);
 		}
-		$this->add_moderator_fields($post_data);
+	}
 
+	/**
+	 * @return string
+	 */
+	public function get_form()
+	{
 		return $this->form->get_form(false);
 	}
 
@@ -304,29 +284,29 @@ class builder
 	 * @param array $post_data
 	 * @return void
 	 */
-	protected function add_moderator_fields(array $post_data)
-	{
-		if ($this->mode === 'mcp')
-		{
-			$this->form->add('topic_time', 'hidden', array('field_value' => $post_data['topic_time']))
-				->add('publish_on', 'datetime', array(
-					'field_label'	=> $this->language->lang('CONTENT_PUBLISH_DATE'),
-					'field_value'	=> $this->user->format_date($post_data['topic_time'], 'm/d/Y H:i'),
-					'field_props'	=> array(
-						'min_date'	=> 0,
-					),
-				))
-				->add('force_status', 'radio', array(
-					'field_label'	=> 'CONTENT_FORCE_STATUS',
-					'field_value'	=> '-1',
-					'field_props'	=> array(
-						'vertical'		=> true,
-						'options' 		=> $this->get_moderator_options($post_data['topic_visibility']),
-					)
-				)
-			);
-		}
-	}
+	// protected function add_moderator_fields(array $post_data)
+	// {
+	// 	if ($this->mode === 'mcp')
+	// 	{
+	// 		$this->form->add('topic_time', 'hidden', array('field_value' => $post_data['topic_time']))
+	// 			->add('publish_on', 'datetime', array(
+	// 				'field_label'	=> $this->language->lang('CONTENT_PUBLISH_DATE'),
+	// 				'field_value'	=> $this->user->format_date($post_data['topic_time'], 'm/d/Y H:i'),
+	// 				'field_props'	=> array(
+	// 					'min_date'	=> 0,
+	// 				),
+	// 			))
+	// 			->add('force_status', 'radio', array(
+	// 				'field_label'	=> 'CONTENT_FORCE_STATUS',
+	// 				'field_value'	=> '-1',
+	// 				'field_props'	=> array(
+	// 					'vertical'		=> true,
+	// 					'options' 		=> $this->get_moderator_options($post_data['topic_visibility']),
+	// 				)
+	// 			)
+	// 		);
+	// 	}
+	// }
 
 	/**
 	 * @param string $mode

@@ -23,7 +23,6 @@ Create and manage content types for phpBB Sitemaker Extension
 * Create custom views in ACP
 * Other extensions can provide new or extend or replace existing content views
 * Other extensions can provide new or extend or replace existing fields
-* Schedule articles to be posted on some future date
 * Ability to mark fields as required
 * Choose who can input a field: poster or moderator
 * Force-require approval before publishing
