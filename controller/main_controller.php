@@ -102,7 +102,7 @@ class main_controller
 	public function show($type, $topic_id)
 	{
 		$view = $this->request->variable('view', 'detail');
-		$view = 'detail';
+		$view = (!in_array($view, ['detail', 'print'])) ? 'detail' : $view;
 
 		$update_count = array();
 		$entity = $this->get_type_entity($type);
@@ -268,7 +268,8 @@ class main_controller
 	{
 		if ($_format === 'xml')
 		{
-			return $this->feed->render($max_update_time);
+			
+			return $this->feed->render($max_update_time ?: time());
 		}
 
 		return $this->helper->render($view_template, $page_title);

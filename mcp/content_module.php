@@ -26,8 +26,15 @@ class content_module
 
 		$action = $request->variable('do', 'index');
 
-		$controller = $phpbb_container->get('blitze.content.mcp.controller');
-		$controller->handle($action, $this->u_action);
+		try
+		{
+			$controller = $phpbb_container->get('blitze.content.mcp.controller');
+			$controller->handle($action, $this->u_action);
+		}
+		catch (\Exception $e)
+		{
+			trigger_error($e->getMessage());
+		}
 
 		$this->tpl_name = 'cp_content';
 		$this->page_title = 'CONTENT_TYPES';

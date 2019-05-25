@@ -143,7 +143,7 @@ abstract class base_view implements views_interface
 			$topic_data = $this->fields->show($content_type, $topic_data, $post_data, $users_cache, $attachments, $update_count, $topic_tracking_info, $topic_data_overwrite);
 
 			$this->template->assign_block_vars('topicrow', $topic_data);
-			$max_update_time = max($max_update_time, $topic_data['UPDATED']);
+			$max_update_time = max($max_update_time, (int) $topic_data['UPDATED']);
 		}
 		unset($topics_data, $posts_data, $users_cache, $attachments, $topic_tracking_info);
 
@@ -189,9 +189,9 @@ abstract class base_view implements views_interface
 		$users_cache = $this->forum->get_posters_info();
 		$attachments = $this->forum->get_attachments($forum_id);
 
-		if (!sizeof($post_data))
+		if (!sizeof($topics_data))
 		{
-			throw new \Exception($this->language->lang('CONTENT_NO_EXIST'));
+			throw new \phpbb\exception\http_exception(404, 'NO_TOPIC');
 		}
 
 		$this->fields->prepare_to_show($entity, array_keys($topics_data), $entity->get_detail_fields(), $entity->get_detail_tpl(), 'detail');
