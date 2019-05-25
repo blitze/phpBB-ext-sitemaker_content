@@ -1,14 +1,21 @@
 .tiles-container {
-	width: 100%;
-	margin-bottom: -10px;
-}
+	position: relative;
+	margin-bottom: 25px;
+	padding-right: -5px !important;
 
-.tile {
-	margin: 0;
-	padding: 0;
+	.tile {
+		padding: 0 5px 10px 5px !important;
 
-	.post {
-		margin-bottom: 0;
+		.post {
+			margin-bottom: 0;
+		}
+	}
+
+	.ias-btn {
+		position: absolute;
+		bottom: -20px;
+		width: 100%;
+		cursor: pointer;
 	}
 }
 

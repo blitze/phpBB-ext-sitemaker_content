@@ -76,11 +76,20 @@
 									<p>&nbsp;</p>
 									<div id="content-view-blitze.content.view.tiles">
 										<dl>
-											<dt><label for="tiles-per_row-0">{{ lang('TILES_PER_ROW') ~ lang('COLON') }}</label></dt>
+											<dt><label for="tiles-per-row">{{ lang('TILES_PER_ROW') ~ lang('COLON') }}</label></dt>
 											<dd>
-												<input id="tiles-per_row-0" name="view_settings[blitze.content.view.tiles][desktop_cols]" type="number" size="2" min="2" step="1" value="{{ CONTENT_VIEW_SETTINGS.desktop_cols|default(4) }}" /> {{ lang('TILES_PER_ROW_DESKTOP') }}<br />
-												<input id="tiles-per_row-1" name="view_settings[blitze.content.view.tiles][tablet_cols]" type="number" size="2" min="1" step="1" value="{{ CONTENT_VIEW_SETTINGS.tablet_cols|default(2) }}" /> {{ lang('TILES_PER_ROW_TABLET') }}<br />
-												<input id="tiles-per_row-2" name="view_settings[blitze.content.view.tiles][mobile_cols]" type="number" size="2" min="1" step="1" value="{{ CONTENT_VIEW_SETTINGS.mobile_cols|default(1) }}" /> {{ lang('TILES_PER_ROW_MOBILE') }}<br />
+												{%- set tiles_per_row = CONTENT_VIEW_SETTINGS.tiles_per_row|default(3) -%}
+												<select id="tiles-per-row" name="view_settings[blitze.content.view.tiles][tiles_per_row]">
+												{%- for cols in [1, 2, 3, 4, 6] %}
+													<option value="{{ cols }}"{% if cols == tiles_per_row %} selected="selected"{% endif %}>{{ cols }}</option>
+												{% endfor -%}
+												</select>
+											</dd>
+										</dl>
+										<dl>
+											<dt><label for="tiles-offset">{{ lang('TILES_OFFSET') ~ lang('COLON') }}</label><br /><span>{{ lang('TILES_OFFSET_EXPLAIN') }}</span></dt>
+											<dd>
+												<input id="tiles-offset" name="view_settings[blitze.content.view.tiles][offset]" type="number" size="2" min="0" step="1" value="{{ CONTENT_VIEW_SETTINGS.offset|default(0) }}" />
 											</dd>
 										</dl>
 									</div>
@@ -139,7 +148,7 @@
 						<div class="tpl-fields-container">
 							<br clear="both" />
 							<fieldset id="available-fields" class="row2">
-								<legend>{{ lang('FIELDS') }}</legend>
+								<legend>{{ lang('CONTENT_FIELDS') }}</legend>
 							{% for field in CONTENT_FIELDS %}
 								<a class="button" href="#" data-tag="{{ field.FIELD_NAME }}" data-ftype="{{ field.FIELD_TYPE }}">{{ field.FIELD_LABEL }}</a>
 							{% endfor %}

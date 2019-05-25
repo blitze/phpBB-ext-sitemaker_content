@@ -11,7 +11,9 @@
     "swiper": "^4.5.0",
     "jquery-ui": "^1.12.1",
     "codemirror": "^5.46.0",
-    "twig.js": "https://raw.githubusercontent.com/philsbury/twigjs-bower/master/twig/twig.min.js"
+    "twig.js": "https://raw.githubusercontent.com/philsbury/twigjs-bower/master/twig/twig.min.js",
+    "jquery-ias": "^2.3.1",
+    "masonry-layout": "^4.2.2"
   },
   "overrides": {
     "air-datepicker": {
@@ -43,6 +45,10 @@
         "./img/*"
       ]
     },
+    "jquery-ias": {
+      "main": [],
+      "dependencies": null
+    },
     "jquery-ui": {
       "main": [
         "jquery-ui.min.js",
@@ -52,6 +58,10 @@
     },
     "jssocials": {
       "main": "dist/jssocials.min.js",
+      "dependencies": null
+    },
+    "masonry-layout": {
+      "main": "dist/masonry.pkgd.min.js",
       "dependencies": null
     },
     "spectrum": {

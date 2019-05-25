@@ -25,6 +25,15 @@ var gulp = require('gulp'),
 		}
 	};
 
+// Clean up
+gulp.task('clean', function(done) {
+	plugins.del.sync([
+		paths.prod.scripts + '**',
+		paths.prod.vendor + '**'
+	]);
+	done();
+});
+
 // Bower
 gulp.task('bower', function() {
 	return plugins.bower()
@@ -68,7 +77,7 @@ gulp.task('sass', function() {
 });
 
 // Vendor
-gulp.task('vendor', function() {
+gulp.task('get_vendors', function() {
 	var mainFiles = plugins.mainBowerFiles();
 
 	if (!mainFiles.length) {
@@ -94,14 +103,18 @@ gulp.task('vendor', function() {
 			.pipe(gulp.dest(paths.prod.vendor));
 });
 
-// Clean up
-gulp.task('clean', function(done) {
-	plugins.del.sync([
-		paths.prod.scripts + '**',
-		paths.prod.vendor + '**'
-	]);
-	done();
-});
+gulp.task('vendor', gulp.series('get_vendors', function build_jquery_ias() {
+	return gulp.src([
+			paths.dev.vendor + 'jquery-ias/src/jquery-ias.js',
+			paths.dev.vendor + 'jquery-ias/src/callbacks.js',
+			paths.dev.vendor + 'jquery-ias/src/extension/noneleft.js',
+			paths.dev.vendor + 'jquery-ias/src/extension/spinner.js',
+			paths.dev.vendor + 'jquery-ias/src/extension/trigger.js',
+		])
+	    .pipe(plugins.concat('jquery-ias/jquery-ias.min.js'))
+		.pipe(plugins.uglify())
+		.pipe(gulp.dest(paths.prod.vendor));
+}));
 
 gulp.task('rebuild_vendors', gulp.series('bower', gulp.parallel('vendor')));
 

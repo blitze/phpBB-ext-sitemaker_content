@@ -2,48 +2,49 @@
 	"use strict";
 
 	$(document).ready(function() {
-		var phpbb = window.phpbb || {};
-		var Grid;
-
-		var $container = $("#sitemaker-content-tiles");
-		var $loadAnchor = $("#tile-load-more").on("click", function() {
-			$loadAnchor.children("i").show();
+		var $grid = $('#sitemaker-content-tiles').masonry({
+			itemSelector: '.grid-item',
+			columnWidth: '.tile',
+			stamp: '.stamp',
+			stagger: 30,
+			negativeMargin: 100,
+			percentPosition: true,
+			containerStyle: null
 		});
 
-		// layout grid after each image loads
-		$container
-			.imagesLoaded(function() {
-			/* global AwesomeGrid */
-			var options = $container.data("editMode") ? { context: "self" } : {};
-			Grid = new AwesomeGrid("#sitemaker-content-tiles", options)
-				.grid(1)
-				.mobile($container.data("mobile-columns"))
-				.tablet($container.data("tablet-columns"))
-				.desktop($container.data("desktop-columns"));
-			})
-			.always(function() {
-				$loadAnchor.children("i").hide();
+		var $ias = $.ias({
+			container: '#sitemaker-content-tiles',
+			item: ".grid-item",
+			pagination: "#pagination",
+			next: ".next a",
+			delay: 1200,
+		});
+
+		$ias.on('render', function(items) {
+			$(items).css({ opacity: 0 });
+		});
+
+		$ias.on('rendered', function(items) {
+			var $items = $(items).imagesLoaded(function() {
+				$grid.masonry('appended', $items);
 			});
-
-		phpbb.addAjaxCallback("blitze.content.load_more", function(response) {
-			var $respObj = $(response);
-			var $items = $respObj.find(".tile");
-			var nextUrl = $respObj.find("#tile-load-more").attr("href");
-
-			$items
-				.imagesLoaded(function() {
-					$container.append($items);
-					Grid.apply();
-	
-					if (nextUrl !== undefined) {
-						$loadAnchor.attr("href", nextUrl);
-					} else {
-						$loadAnchor.parent().hide();
-					}
-				})
-				.always(function() {
-					$loadAnchor.children("i").hide();
-				});
 		});
+
+		$ias.extension(new window.IASSpinnerExtension({
+			html: '<div class="ias-btn align-center"><i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i></div>'
+		}));
+
+		if ($grid.data('offset') > 0) {
+			$ias.extension(new window.IASTriggerExtension({
+				offset: $grid.data('offset'),
+				text: $grid.data('load-more-lang'),
+				html: '<div class="ias-btn align-center sm-badge primary-color"><a class="info">{text}</a></div>'
+			}));
+		}
+
+		$ias.extension(new window.IASNoneLeftExtension({
+			text: $grid.data('no-more-lang'),
+			html: '<div class="ias-btn align-center"><strong>{text}</strong></div>'
+		}));
 	});
 })(jQuery, window, document);

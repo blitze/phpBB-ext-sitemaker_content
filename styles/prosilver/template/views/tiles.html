@@ -2,16 +2,21 @@
 {% INCLUDE 'parts/content_type.html' %}
 
 {% INCLUDECSS '@blitze_content/assets/view/tiles/content_tiles.min.css' %}
+{% INCLUDEJS '@blitze_content/vendor/jquery-ias/jquery-ias.min.js' %}
 {% INCLUDEJS '@blitze_content/vendor/imagesloaded/imagesloaded.pkgd.min.js' %}
-{% INCLUDEJS '@blitze_content/vendor/awesome-grid/awesome-grid.min.js' %}
+{% INCLUDEJS '@blitze_content/vendor/masonry-layout/dist/masonry.pkgd.min.js' %}
 {% INCLUDEJS '@blitze_content/assets/view/tiles/content_tiles.min.js' %}
 
-{% if loops.topicrow|length %}
-	{%- set desktopCols = content_view_settings.desktop_cols|default(3) -%}
-	{%- set desktopCols = (topicrow|length < desktopCols) ? topicrow|length : desktopCols -%}
-	<div id="sitemaker-content-tiles" class="tiles-container" data-ag-gutters="10" data-desktop-columns="{{ desktopCols }}" data-tablet-columns="{{ content_view_settings.tablet_cols|default(2) }}" data-mobile-columns="{{ content_view_settings.mobile_cols|default(1) }}" data-edit-mode="{{ S_EDIT_MODE }}">
+{%- set numTopics = topicrow|length -%}
+{% if numTopics %}
+	{%- set topicTypeRatios = [0, 0.5, 0.75, 1] -%}
+	{%- set colSize = 12 / content_view_settings.tiles_per_row|default(3) -%}
+
+	<div id="sitemaker-content-tiles" class="grid tiles-container" data-offset="{{ content_view_settings.offset|default(0) }}" data-load-more-lang="{{ lang('LOAD_MORE') }}" data-no-more-lang="{{ lang('NO_MORE_TOPICS') }}">
+		<div class="{{ 'col-' ~ colSize ~ '_sm-12' }} tile"></div>
 		{% for topicrow in loops.topicrow %}
-		<div class="tile">
+			{%- set ratio = topicTypeRatios[topicrow.S_TOPIC_TYPE] -%}
+		<div class="grid-item {{ 'col-' ~ ((ratio) ? colSize * (ratio * colSize)|round(0, 'floor') : colSize) ~ '_sm-12' }} tile sm-block-spacing">
 			<div class="panel post">
 				<div class="inner">
 					<div class="postbody sm-full-width">
@@ -23,9 +28,8 @@
 							{{ topicrow.CUSTOM_DISPLAY }}
 						{% else %}
 							{{ topicrow.FIELDS.body|join }}
-							<p>&nbsp;</p>
-							<div class="align-right">
-								<a href="{{ topicrow.TOPIC_URL }}" class="button">{{ lang('READ_MORE') }}</a>
+							<div class="align-right sm-badge grayscale-color">
+								<a href="{{ topicrow.TOPIC_URL }}" class="info">{{ lang('READ_MORE') }} ></a>
 							</div>
 						{% endif %}
 						</div>
@@ -38,15 +42,24 @@
 		</div>
 		{% endfor %}
 	</div>
-	{% for pagination in loops.pagination %}
-		{% if pagination.S_IS_NEXT %}
-		<div class="panel bg2 load_more align-center">
-			<a id="tile-load-more" href="{{ pagination.PAGE_URL }}" data-ajax="blitze.content.load_more" rel="next">
-				<i class="fa fa-refresh fa-spin fa-fw"></i>{{ lang('LOAD_MORE') }}
-			</a>
-		</div>
+
+	{% if loops.pagination|length or TOTAL_POSTS %}
+	<div id="pagination" class="pagination">
+		{% if loops.pagination|length %}
+		<ul style="width: 100%">
+		{% for pagination in loops.pagination %}
+			{% if pagination.S_IS_PREV %}
+			<li class="arrow previous left-box"><a class="button button-icon-only" href="{pagination.PAGE_URL}" rel="prev" role="button"><i class="icon fa-chevron-{S_CONTENT_FLOW_BEGIN} fa-fw" aria-hidden="true"></i><span class="sr-only1">{L_PREVIOUS}</span></a></li>
+			{% endif %}
+			{% if pagination.S_IS_NEXT %}
+			<li class="arrow next right-box"><a class="button button-icon-only" href="{pagination.PAGE_URL}" rel="next" role="button"><i class="icon fa-chevron-{S_CONTENT_FLOW_END} fa-fw" aria-hidden="true"></i><span class="sr-only1">{L_NEXT}</span></a></li>
+			{% endif %}
+		{% endfor %}
+		</ul>
 		{% endif %}
-	{% endfor %}
+	</div>
+	<div class="clear"></div>
+	{% endif %}
 {% else %}
 <div class="panel post sm-block-spacing">
 	<div class="inner">

@@ -44,7 +44,6 @@ $lang = array_merge($lang, array(
 	'COMMENT_POSTED'		=> 'Your comment has been successfully posted',
 	'CONTACT_AUTHOR'		=> 'Contact Author',
 	'CONTENT_EDIT'			=> 'Edit Content',
-	'CONTENT_NO_EXIST'		=> 'Sorry! The requested topic does not exist',
 	'CONTENT_REPORTED'		=> 'This content has been reported',
 	'CONTENT_TOC'			=> 'Table of Contents',
 	'CONTENT_TOC_OVERVIEW'	=> 'Overview',

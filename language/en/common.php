@@ -52,6 +52,7 @@ $lang = array_merge($lang, array(
 	'CONTENT_TOPIC_VIEWS'			=> 'Most Read %s',
 
 	'LOAD_MORE'						=> 'Load more content',
+	'NO_MORE_TOPICS'				=> 'There is nothing else to display',
 
 	'POST_NEW'						=> 'Post New',
 
