@@ -52,6 +52,9 @@ class index extends filter implements action_interface
 	/** @var string */
 	protected $redirect_url;
 
+	/** @var int */
+	protected $topics_per_page;
+
 	/**
 	 * Constructor
 	 *
@@ -59,7 +62,6 @@ class index extends filter implements action_interface
 	 * @param \phpbb\config\config							$config					Config object
 	 * @param \phpbb\db\driver\driver_interface				$db						Database connection
 	 * @param \phpbb\controller\helper						$controller_helper		Controller Helper object
-	 * @param \phpbb\language\language						$language				Language object
 	 * @param \phpbb\pagination								$pagination				Pagination object
 	 * @param \phpbb\request\request_interface				$request				Request object
 	 * @param \phpbb\template\template						$template				Template object
@@ -71,9 +73,9 @@ class index extends filter implements action_interface
 	 * @param string										$phpbb_root_path		Path to the phpbb includes directory.
 	 * @param string										$php_ext				php file extension
 	 */
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $controller_helper, \phpbb\language\language $language, \phpbb\pagination $pagination, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\types $content_types, \blitze\content\services\fields $fields, \blitze\sitemaker\services\forum\data $forum, \blitze\content\services\helper $helper, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $controller_helper, \phpbb\pagination $pagination, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\types $content_types, \blitze\content\services\fields $fields, \blitze\sitemaker\services\forum\data $forum, \blitze\content\services\helper $helper, $phpbb_root_path, $php_ext)
 	{
-		parent::__construct($db, $language, $request, $template);
+		parent::__construct($db, $request, $template);
 
 		$this->auth = $auth;
 		$this->config = $config;
@@ -95,84 +97,37 @@ class index extends filter implements action_interface
 	{
 		include($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
 
-		$this->language->add_lang('viewforum');
+		$this->user->add_lang('viewforum');
 		$this->template->assign_var('MODE', $mode);
 
 		$content_types = $this->content_types->get_all_types();
 		$this->content_forums = $this->content_types->get_forum_types();
+		$this->topics_per_page = (int) $this->config['topics_per_page'];
 		$this->redirect_url = build_url();
 
 		if (sizeof($content_types))
 		{
 			$sql_where_array = array();
-			$this->apply_keyword_filter($sql_where_array);
+			$search_info = $this->apply_search_filter($sql_where_array);
 			$filter_topic_status = $this->apply_topic_status_filter($sql_where_array);
 			$filter_content_type = $this->apply_content_type_filter();
 
-			$callable = 'init_' . $mode . '_mode';
-			$this->base_url = $u_action . (sizeof($this->params) ? '&amp;' : '');
-			$this->$callable($content_types, $sql_where_array);
+			$this->generate_search_filter($search_info, $u_action);
+			$this->generate_content_type_filter($filter_content_type, $content_types, $u_action);
+			$this->generate_topic_status_filter($filter_topic_status, $u_action);
 
 			$this->forum->query()
 				->fetch_forum(array_keys($this->content_forums))
 				->set_sorting('t.topic_time')
-				->fetch_custom(array('WHERE' => $sql_where_array))
-				->build(true, false, false);
+				->fetch_custom(array('WHERE' => $sql_where_array));
 
-			$start = $this->generate_pagination($this->base_url);
+			$this->base_url = $u_action;
+			$callable = 'init_' . $mode . '_mode';
+			$this->$callable($content_types);
+
+			$start = $this->generate_pagination($u_action);
 			$this->show_topics($mode, $u_action, $start);
-
-			$this->generate_content_type_filter($filter_content_type, $content_types, $this->base_url);
-			$this->generate_topic_status_filter($filter_topic_status, $this->base_url);
 		}
-	}
-
-	/**
-	 * @param string $mode
-	 * @param string $u_action
-	 * @param int $start
-	 * @return void
-	 */
-	protected function show_topics($mode, $u_action, $start)
-	{
-		$topics_data = $this->forum->get_topic_data((int) $this->config['topics_per_page'], $start);
-		$posts_data = $this->forum->get_post_data('first');
-		$users_cache = $this->forum->get_posters_info();
-		$topic_tracking_info = $this->forum->get_topic_tracking_info();
-
-		unset($this->params['type']);
-		$base_url = join('&amp;', array($u_action, http_build_query($this->params)));
-
-		$attachments = $update_count = array();
-		foreach ($topics_data as $topic_id => $topic_row)
-		{
-			$post_row = array_shift($posts_data[$topic_id]);
-			$content_type = $this->content_forums[$topic_row['forum_id']];
-			$content_type_info = $this->get_content_type_info($content_type, $base_url);
-			$tpl_data = $this->fields->show($content_type, $topic_row, $post_row, $users_cache, $attachments, $update_count, $topic_tracking_info, array(), $this->redirect_url);
-			$tpl_data['POST_DATE'] = $this->user->format_date($post_row['post_time'], 'm/d/Y');
-
-			$this->template->assign_block_vars('topicrow', array_merge($tpl_data, $content_type_info,
-				$this->get_topic_type_info($tpl_data['S_UNREAD_POST'], $tpl_data['TOPIC_COMMENTS'], $topic_row),
-				$this->get_topic_status_info($tpl_data['S_POST_UNAPPROVED'], $tpl_data['S_TOPIC_DELETED'], $base_url, $topic_row),
-				$this->get_topic_info($content_type, $u_action, $topic_row),
-				$this->get_moderator_info($mode, $topic_id, $tpl_data['S_POST_UNAPPROVED'], false, $tpl_data['S_TOPIC_DELETED'])
-			));
-		}
-	}
-
-	/**
-	 * @param string $content_type
-	 * @param string $u_action
-	 * @param array $row
-	 * @return array
-	 */
-	protected function get_topic_info($content_type, $u_action, array $row)
-	{
-		return array(
-			'ATTACH_ICON_IMG'	=> $this->get_attachment_icon($row),
-			'U_REVIEW_TOPIC'	=> $u_action . "&amp;do=view&amp;type=$content_type&amp;t={$row['topic_id']}&amp;redirect=" . $this->redirect_url,
-		);
 	}
 
 	/**
@@ -180,6 +135,8 @@ class index extends filter implements action_interface
 	 */
 	protected function init_mcp_mode()
 	{
+		$this->forum->build(true, false, false);
+
 		$s_can_approve = (bool) sizeof(array_intersect_key($this->content_forums, $this->auth->acl_getf('m_approve', true)));
 		$s_can_make_sticky = (bool) sizeof(array_intersect_key($this->content_forums, $this->auth->acl_getf('f_sticky', true)));
 		$s_can_make_announce = (bool) sizeof(array_intersect_key($this->content_forums, $this->auth->acl_getf('f_announce', true)));
@@ -202,11 +159,12 @@ class index extends filter implements action_interface
 
 	/**
 	 * @param array $content_types
-	 * @param array $sql_where_array
 	 */
-	protected function init_ucp_mode(array $content_types, array &$sql_where_array)
+	protected function init_ucp_mode(array $content_types)
 	{
-		$sql_where_array[] =  't.topic_poster = ' . (int) $this->user->data['user_id'];
+		$sql_where_array['WHERE'] = 't.topic_poster = ' . (int) $this->user->data['user_id'];
+		$this->forum->fetch_custom($sql_where_array)
+			->build(false, false, false);
 
 		// list all content types that the user can post in
 		$postable_forums = array_intersect_key($this->content_forums, $this->auth->acl_getf('f_post', true));
@@ -225,11 +183,54 @@ class index extends filter implements action_interface
 	}
 
 	/**
-	 * @param string $type
-	 * @param string $base_url
+	 * @param string $mode
+	 * @param string $u_action
+	 * @param int $start
+	 * @return void
+	 */
+	protected function show_topics($mode, $u_action, $start)
+	{
+		$topics_data = $this->forum->get_topic_data($this->topics_per_page, $start);
+		$posts_data = $this->forum->get_post_data('first');
+		$users_cache = $this->forum->get_posters_info();
+		$topic_tracking_info = $this->forum->get_topic_tracking_info();
+
+		$attachments = $update_count = array();
+		foreach ($topics_data as $topic_id => $topic_row)
+		{
+			$post_row = array_shift($posts_data[$topic_id]);
+			$content_type = $this->content_forums[$topic_row['forum_id']];
+			$tpl_data = $this->fields->show($content_type, $topic_row, $post_row, $users_cache, $attachments, $update_count, $topic_tracking_info, array(), $this->redirect_url);
+
+			$this->template->assign_block_vars('topicrow', array_merge($tpl_data,
+				$this->get_content_type_info($content_type),
+				$this->get_topic_type_info($tpl_data['S_UNREAD_POST'], $tpl_data['TOPIC_COMMENTS'], $topic_row),
+				$this->get_topic_status_info($topic_row),
+				$this->get_topic_info($content_type, $u_action, $topic_row),
+				$this->get_moderator_info($mode, $topic_id, $tpl_data['S_POST_UNAPPROVED'], false, $tpl_data['S_TOPIC_DELETED'])
+			));
+		}
+	}
+
+	/**
+	 * @param string $content_type
+	 * @param string $u_action
+	 * @param array $row
 	 * @return array
 	 */
-	protected function get_content_type_info($type, $base_url)
+	protected function get_topic_info($content_type, $u_action, array $row)
+	{
+		return array(
+			'ATTACH_ICON_IMG'	=> $this->get_attachment_icon($row),
+			'U_REVIEW_TOPIC'	=> $u_action . "&amp;do=view&amp;type=$content_type&amp;t={$row['topic_id']}&amp;redirect=" . $this->redirect_url,
+		);
+	}
+
+	/**
+	 * @param string $type
+	 * @return array
+	 */
+	protected function get_content_type_info($type)
 	{
 		$entity = $this->content_types->get_type($type);
 		$comments_type = $entity->get_comments();
@@ -240,7 +241,7 @@ class index extends filter implements action_interface
 			'CONTENT_TYPE'			=> $entity->get_content_langname(),
 			'CONTENT_TYPE_COLOR'	=> $entity->get_content_colour(),
 			'S_COMMENTS'			=> (bool) $comments_type,
-			'U_CONTENT_TYPE'		=> $base_url . "&amp;type=$type",
+			'U_CONTENT_TYPE'		=> $this->content_type_base_url . "&amp;type=$type",
 		);
 	}
 
@@ -264,35 +265,34 @@ class index extends filter implements action_interface
 	}
 
 	/**
-	 * @param bool $topic_unapproved
-	 * @param bool $topic_deleted
-	 * @param string $base_url
 	 * @param array $row
 	 * @return array
 	 */
-	protected function get_topic_status_info($topic_unapproved, $topic_deleted, $base_url, array $row)
+	protected function get_topic_status_info(array $row)
 	{
-		if ($topic_deleted)
+		$unapproved = true;
+		$topic_status = $this->get_topic_status_filters()[$row['topic_visibility']];
+
+		if ($row['topic_visibility'] == ITEM_APPROVED)
 		{
-			$topic_status = 'deleted';
-		}
-		else if ($topic_unapproved)
-		{
-			$topic_status = 'unapproved';
-		}
-		else if ($row['topic_time'] > time())
-		{
-			$topic_status = 'scheduled';
-		}
-		else
-		{
-			$topic_status = $this->get_topic_types_filters()[$row['topic_type']];
+			$unapproved = false;
+			$topic_status = $this->get_topic_type($row);
 		}
 
 		return array(
-			'TOPIC_STATUS'		=> $this->language->lang('TOPIC_' . strtoupper($topic_status)),
-			'U_TOPIC_STATUS'	=> $base_url . "&amp;status=$topic_status",
+			'TOPIC_STATUS'		=> $topic_status,
+			'S_POST_UNAPPROVED'	=> $unapproved,
+			'U_TOPIC_STATUS'	=> $this->topic_status_base_url . '&amp;status=' . $topic_status,
 		);
+	}
+
+	/**
+	 * @param array $row
+	 * @return string
+	 */
+	protected function get_topic_type(array $row)
+	{
+		return $this->get_topic_types_filters()[$row['topic_type']];
 	}
 
 	/**
@@ -356,14 +356,14 @@ class index extends filter implements action_interface
 		$start = $this->request->variable('start', 0);
 
 		$topics_count = $this->forum->get_topics_count();
-		$u_action .= http_build_query($this->params);
+		$page_url = $this->get_filter_type_base_url($u_action);
 
 		$this->template->assign_vars(array(
-			'TOTAL_TOPICS'		=> $this->language->lang('VIEW_FORUM_TOPICS', $topics_count),
+			'TOTAL_TOPICS'		=> $this->user->lang('VIEW_FORUM_TOPICS', $topics_count),
 		));
 
-		$start = $this->pagination->validate_start($start, (int) $this->config['topics_per_page'], $topics_count);
-		$this->pagination->generate_template_pagination($u_action, 'pagination', 'start', $topics_count, (int) $this->config['topics_per_page'], $start);
+		$start = $this->pagination->validate_start($start, $this->topics_per_page, $topics_count);
+		$this->pagination->generate_template_pagination($page_url, 'pagination', 'start', $topics_count, $this->topics_per_page, $start);
 
 		return $start;
 	}

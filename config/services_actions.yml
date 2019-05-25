@@ -7,7 +7,6 @@ services:
             - '@config'
             - '@dbal.conn'
             - '@controller.helper'
-            - '@language'
             - '@pagination'
             - '@request'
             - '@template'

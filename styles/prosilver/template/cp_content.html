@@ -1,5 +1,4 @@
 {% INCLUDE ''~ MODE ~'_header.html' %}
-
 	{% if S_ACTION %}
 	<div class="pull-right responsive-center">
 		<form method="post" action="{{ S_ACTION }}">
@@ -29,32 +28,48 @@
 	</div>
 
 {% else %}
-	{% if MODE == 'mcp' %}<form method="post" id="mcp" action="{{ U_MCP_ACTION }}">{% endif %}
 	<div class="panel">
 		<div class="inner">
-			{% if MODE == 'mcp' && NUM_PENDING %}<span class="error">{{ lang('PENDING_TOPICS') }}{{ lang('COLON') }} <a href="{{ U_PENDING }}"><strong>[{{ NUM_PENDING }}]</strong></a></span>{% endif %}
-
-			{% if loops.postable|length %}
-			<div class="pull-left">
-				<div class="action-bar top responsive-center">
-					<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
-						<span title="{{ lang('CONTENT_NEW') }}" class="button dropdown-trigger dropdown-select"><i class="fa fa-plus fa-green"></i> {{ lang('CONTENT_NEW') }}</span>
-						<div class="dropdown hidden">
-							<div class="pointer"><div class="pointer-inner"></div></div>
-							<ul class="dropdown-contents dropdown-nonscroll">
-								{% for postable in loops.postable %}
-								<li><a href="{{ postable.U_POST }}"><i class="fa fa-square" style="color: #{{ postable.COLOUR }}"></i>{{ postable.TYPE }}</a></li>
-								{% endfor %}
-							</ul>
-						</div>
+			<div class="action-bar top responsive-center">
+				{% if loops.postable|length %}
+				<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
+					<span title="{{ lang('CONTENT_NEW') }}" class="button dropdown-trigger dropdown-select">{{ lang('CONTENT_NEW') }} <i class="icon fa-pencil fa-fw" aria-hidden="true"></i></span>
+					<div class="dropdown hidden">
+						<div class="pointer"><div class="pointer-inner"></div></div>
+						<ul class="dropdown-contents dropdown-nonscroll">
+							{% for postable in loops.postable %}
+							<li><a href="{{ postable.U_POST }}"><i class="fa fa-square" style="color: #{{ postable.COLOUR }}"></i>{{ postable.TYPE }}</a></li>
+							{% endfor %}
+						</ul>
 					</div>
 				</div>
-			</div>
-			{% endif %}
+				{% endif %}
+				<div class="search-box responsive-center" role="search">
+					<form method="post" action="{{ search_url }}">
+						<fieldset>
+							<input class="inputbox search tiny" type="search" name="search" size="20" placeholder="{{ lang('SEARCH_MINI') }}" value="{{ search_info.search }}">
+							<button class="button button-search" type="submit" title="{{ lang('SEARCH') }}">
+								<i class="icon fa-search fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('SEARCH') }}</span>
+							</button>
+							{% if MODE == 'mcp' %}
+							<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
+								<span class="button dropdown-trigger dropdown-select button-search-end"><i class="icon fa-cog fa-fw" aria-hidden="true"></i></span>
+								<div class="dropdown hidden">
+									<div class="pointer"><div class="pointer-inner"></div></div>
+									<ul class="dropdown-contents dropdown-nonscroll">
+										{% for type, label in search_types %}
+										<li><label><input type="radio" name="search_type" value="{{ type }}"{% if search_info.type === type %} checked="checked"{% endif %} /> {{ lang(label) }}</label></li>
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+							{% endif %}
+						</fieldset>
+					</form>
+				</div>
 
-			{% if loops.status|length %}
-			<div class="pull-right responsive-center">
-				<div class="action-bar top pull-right responsive-center">
+				<div class="pull-right responsive-hide">
+					{% if loops.status|length %}
 					<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
 						<span title="{{ lang('TOPIC_STATUS') }}" class="button dropdown-trigger dropdown-select"><i class="fa {% if S_STATUS_FILTER %}fa-filter fa-green{% else %}fa-square-o{% endif %}"></i> {{ lang('TOPIC_STATUS') }}</span>
 						<div class="dropdown hidden">
@@ -62,19 +77,17 @@
 							<ul class="dropdown-contents dropdown-nonscroll">
 							{% for status in loops.status %}
 								{% if status.S_SELECTED %}
-								<li><i class="fa fa-caret-right"></i><strong>{{ status.TITLE }}</strong></li>
+								<li><i class="fa fa-caret-right"></i><strong>{{ lang(status.TITLE) }}</strong></li>
 								{% else %}
-								<li><a href="{{ status.U_VIEW }}"><i class="fa fa-angle-right"></i>{{ status.TITLE }}</a></li>
+								<li><a href="{{ status.U_VIEW }}"><i class="fa fa-angle-right"></i>{{ lang(status.TITLE) }}</a></li>
 								{% endif %}
 							{% endfor %}
 							</ul>
 						</div>
 					</div>
-				</div>
-				{% endif %}
+					{% endif %}
 
-				{% if loops.content|length > 1 %}
-				<div class="action-bar top right-box responsive-center">
+					{% if loops.content|length > 1 %}
 					<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
 						<span title="{{ lang('CONTENT_TYPE') }}" class="button dropdown-trigger dropdown-select"><i class="fa {% if S_CONTENT_FILTER %}fa-filter fa-green{% else %}fa-square-o{% endif %}"></i> {{ lang('CONTENT_TYPE') }}</span>
 						<div class="dropdown hidden">
@@ -82,23 +95,22 @@
 							<ul class="dropdown-contents dropdown-nonscroll">
 							{% for content in loops.content %}
 								{% if content.S_SELECTED %}
-								<li><i class="fa fa-square" style="color: #{{ content.COLOUR }}"></i><strong>{{ content.TITLE }}</strong></li>
+								<li><i class="fa fa-square" style="color: #{{ content.COLOUR }}"></i><strong>{{ lang(content.TITLE) }}</strong></li>
 								{% else %}
-								<li><a href="{{ content.U_VIEW }}"><i class="fa fa-square" style="color: #{{ content.COLOUR }}"></i>{{ content.TITLE }}</a></li>
+								<li><a href="{{ content.U_VIEW }}"><i class="fa fa-square" style="color: #{{ content.COLOUR }}"></i>{{ lang(content.TITLE) }}</a></li>
 								{% endif %}
 							{% endfor %}
 							</ul>
 						</div>
 					</div>
+					{% endif %}
 				</div>
-				{% endif %}
 			</div>
-			<div class="clear"></div><br />
 
+			{% if MODE == 'mcp' %}<form method="post" id="mcp" action="{{ U_MCP_ACTION }}">{% endif %}
 			{% if loops.topicrow|length %}
-
 				{% if PAGINATION or TOTAL_TOPICS %}
-				<div class="action-bar top">
+				<div class="action-bar top pull-right">
 					<div class="pagination">
 						{{ TOTAL_TOPICS }}
 						{% if loops.pagination|length %}
@@ -108,6 +120,7 @@
 						{% endif %}
 					</div>
 				</div>
+				<div class="clear"></div>
 				{% endif %}
 
 				<ul class="topiclist">
@@ -122,15 +135,27 @@
 				</ul>
 				<ul class="topiclist cplist">
 					{% for topicrow in loops.topicrow %}
+						{% set action_buttons %}
+							{% if topicrow.S_POST_UNAPPROVED && MODE == 'ucp' %}
+								<i class="fa fa-ban fa-fw fa-lg" aria-hidden="true"></i>
+							{% else %}
+								{% if topicrow.U_EDIT %}<a href="{{ topicrow.U_EDIT }}" title="{{ lang('EDIT_POST') }}"><i class="fa fa-pencil fa-fw fa-lg fa-green" aria-hidden="true"></i></a>{% else %}<i class="fa fa-pencil fa-fw fa-lg" aria-hidden="true"></i>{% endif %}
+								{% if topicrow.U_DELETE %}<a href="{{ topicrow.U_DELETE }}" title="{{ lang('DELETE_POST') }}"><i class="fa fa-trash-o fa-fw fa-lg fa-red" aria-hidden="true"></i></a>{% endif %}
+								{% if MODE == 'mcp' %}<input type="checkbox" name="topic_id_list[]" value="{{ topicrow.TOPIC_ID }}"{% if topicrow.S_REQ_MOD_INPUT %} disabled="disabled" title="{{ lang('REQ_MOD_INPUT') }}"{% endif %}>{% endif %}
+							{% endif %}
+						{% endset %}
 					<li class="row{% if topicrow.S_ROW_COUNT is odd %} bg1{% else %} bg2{% endif %}{% if topicrow.S_TOPIC_REPORTED %} reported{% endif %}">
 						<dl class="row-item {{ topicrow.TOPIC_IMG_STYLE }}">
 							<dt {% if topicrow.TOPIC_ICON_IMG %}style="background-image: url({{ T_ICONS_PATH }}{{ topicrow.TOPIC_ICON_IMG }}); background-repeat: no-repeat;"{% endif %}>
 								<div class="list-inner">
+								{% if topicrow.S_POST_UNAPPROVED && MODE == 'ucp' %}
+									<p class="topictitle">{{ topicrow.TOPIC_TITLE }}</p>
+								{% else %}
 									<a class="unread" href="{{ topicrow.U_MINI_POST }}" title="{{ lang('GOTO_TOPIC') }}">
 										<i class="icon fa-file fa-fw {% if topicrow.S_UNREAD_POST %}icon-red{% else %}icon-lightgray{% endif %} icon-md" aria-hidden="true"></i>
 									</a>
 									<a href="{{ topicrow.U_REVIEW_TOPIC }}" class="topictitle">{{ topicrow.TOPIC_TITLE }}</a>
-								{% if MODE == 'mcp' %}
+									{% if MODE == 'mcp' %}
 									{% if topicrow.S_TOPIC_DELETED or topicrow.S_POSTS_DELETED %}
 									<a href="{{ topicrow.U_MCP_QUEUE }}" title="{{ lang('TOPIC_DELETED') }}">
 										<i class="icon fa-recycle fa-fw icon-green" aria-hidden="true"></i><span class="sr-only">{{ lang('TOPIC_DELETED') }}</span>
@@ -141,27 +166,29 @@
 										<i class="icon fa-exclamation fa-fw icon-red" aria-hidden="true"></i><span class="sr-only">{{ lang('TOPIC_REPORTED') }}</span>
 									</a>
 									{% endif %}
-								{% endif %}
+									{% endif %}
 									<div>
 										{% if topicrow.S_HAS_POLL %}<i class="icon fa-bar-chart fa-fw" aria-hidden="true"></i>{% endif %}
 										{% if topicrow.ATTACH_ICON_IMG %}<i class="icon fa-paperclip fa-fw" aria-hidden="true"></i>{% endif %}
-										{% if MODE == 'mcp' %}<strong>{{ topicrow.USERNAME_FULL }}</strong> {% endif %}
-										<span title="{{ lang('POSTED') }}"><i class="fa fa-calendar-o"></i><strong>{{ topicrow.POST_DATE }}</strong> </span>
-										<span title="{{ lang('CONTENT_PUBLISHED') }}"><i class="fa fa-calendar"></i><strong>{{ topicrow.TOPIC_DATE }}</strong> </span>
-										<span title="{{ lang('VIEWS') }}"><i class="fa fa-eye"></i><strong>{{ topicrow.TOPIC_VIEWS }}</strong> </span>
+										{% if MODE == 'mcp' %}<span><i class="icon fa-user-o fa-fw"></i><strong>{{ topicrow.USERNAME_FULL }}</strong> </span>{% endif %}
+										<span title="{{ lang('PUBLISH_DATE') }}"><i class="icon fa-calendar fa-fw"></i><strong>{{ topicrow.TOPIC_DATE }}</strong> </span>
+										<span title="{{ lang('VIEWS') }}"><i class="icon fa-eye fa-fw"></i><strong>{{ topicrow.TOPIC_VIEWS }}</strong> </span>
 										{%- if topicrow.S_COMMENTS %}
-										<span title="{{ lang('COMMENTS') }}"><i class="fa fa-comment-o"></i><strong>{{ topicrow.TOPIC_COMMENTS }}</strong> </span>
+										<span title="{{ lang('COMMENTS') }}"><i class="icon fa-comment-o fa-fw"></i><strong>{{ topicrow.TOPIC_COMMENTS }}</strong> </span>
 										{%- endif %}
 									</div>
-									<span class="responsive-show left-box" style="display: none;">{{ lang('TYPE') }}{{ lang('COLON') }} <strong>{{ topicrow.CONTENT_TYPE }}</strong></span>
+									<div class="action-bar bottom responsive-show left-box sm-full-width" style="display: none;">
+										<div class="clear"></div>
+										<div class="pull-right">{{ action_buttons }}</div>
+										<div class="pull-left">{{ lang('TYPE') ~ lang('COLON') }} <a href="{{ topicrow.U_CONTENT_TYPE }}"><strong>{{ topicrow.CONTENT_TYPE }}</strong></a></div>
+									</div>
+								{% endif %}
 								</div>
 							</dt>
-							<dd class="posts"><a href="{{ topicrow.U_TOPIC_STATUS }}" title="{{ topicrow.FIRST_POST_TIME }}">{{ topicrow.TOPIC_STATUS }}</a> <dfn>{{ lang('STATUS') }}</dfn></dd>
+							<dd class="posts"><a href="{{ topicrow.U_TOPIC_STATUS }}" title="{{ topicrow.FIRST_POST_TIME }}">{{ lang('TOPIC_' ~ topicrow.TOPIC_STATUS|upper) }}</a> <dfn>{{ lang('STATUS') }}</dfn></dd>
 							<dd class="lastpost align-center"><a href="{{ topicrow.U_CONTENT_TYPE }}"><span class="badge" style="background-color: #{{ topicrow.CONTENT_TYPE_COLOR }}; color: #fff">{{ topicrow.CONTENT_TYPE }}</span></a><dfn>{{ lang('LAST_POST') }}</dfn></dd>
-							<dd class="mark align-right">
-								{% if topicrow.U_EDIT %}<a href="{{ topicrow.U_EDIT }}" title="{{ lang('EDIT_POST') }}"><i class="fa fa-pencil fa-fw fa-lg fa-green" aria-hidden="true"></i></a>{% else %}<i class="fa fa-pencil fa-fw fa-lg" aria-hidden="true"></i>{% endif %}
-								{% if topicrow.U_DELETE %}<a href="{{ topicrow.U_DELETE }}" title="{{ lang('DELETE_POST') }}"><i class="fa fa-trash-o fa-fw fa-lg fa-red" aria-hidden="true"></i></a>{% endif %}
-								{% if MODE == 'mcp' %}<input type="checkbox" name="topic_id_list[]" value="{{ topicrow.TOPIC_ID }}"{% if topicrow.S_REQ_MOD_INPUT %} disabled="disabled" title="{{ lang('REQ_MOD_INPUT') }}"{% endif %}>{% endif %}
+							<dd class="mark align-center responsive-hide">
+								{{ action_buttons }}
 							</dd>
 						</dl>
 					</li>
@@ -179,30 +206,33 @@
 				</div>
 				{% endif %}
 			{% else %}
-				<p style="text-align: center">{{ lang('NO_CONTENT_TOPICS') }}</p>
+				<p>&nbsp;</p>
+				<p class="align-center">{{ lang('NO_CONTENT_TOPICS') }}</p>
 			{% endif %}
 		</div>
+
+		{% if MODE == 'mcp' %}
+		<p>&nbsp;</p>
+		<fieldset class="display-actions">
+			<select name="action">
+				<option value="" selected="selected">{{ lang('SELECT_ACTION') }}</option>
+				{% if S_CAN_DELETE %}<option value="delete_topic">{{ lang('DELETE') }}</option>{% endif %}
+				{% if S_CAN_RESTORE %}<option value="restore_topic">{{ lang('RESTORE') }}</option>{% endif %}
+				{% if S_CAN_LOCK %}<option value="lock">{{ lang('LOCK') }}</option><option value="unlock">{{ lang('UNLOCK') }}</option>{% endif %}
+				{% if S_CAN_SYNC %}<option value="resync">{{ lang('RESYNC') }}</option>{% endif %}
+				{% if S_CAN_MAKE_NORMAL %}<option value="make_normal">{{ lang('MCP_MAKE_NORMAL') }}</option>{% endif %}
+				{% if S_CAN_MAKE_STICKY %}<option value="make_sticky">{{ lang('MCP_MAKE_STICKY') }}</option>{% endif %}
+				{% if S_CAN_MAKE_ANNOUNCE %}
+				<option value="make_announce">{{ lang('MCP_MAKE_ANNOUNCEMENT') }}</option>
+				<option value="make_global">{{ lang('MCP_MAKE_GLOBAL') }}</option>
+				{% endif %}
+			</select>
+			<input class="button2" type="submit" value="{{ lang('SUBMIT') }}" />
+			<div><a href="#" onclick="marklist('mcp', 'topic_id_list', true); return false;">{{ lang('MARK_ALL') }}</a> :: <a href="#" onclick="marklist('mcp', 'topic_id_list', false); return false;">{{ lang('UNMARK_ALL') }}</a></div>
+		</fieldset>
+		</form>
+		{% endif %}
 	</div>
-	{% if MODE == 'mcp' %}
-	<fieldset class="display-actions">
-		<select name="action">
-			<option value="" selected="selected">{{ lang('SELECT_ACTION') }}</option>
-			{% if S_CAN_DELETE %}<option value="delete_topic">{{ lang('DELETE') }}</option>{% endif %}
-			{% if S_CAN_RESTORE %}<option value="restore_topic">{{ lang('RESTORE') }}</option>{% endif %}
-			{% if S_CAN_LOCK %}<option value="lock">{{ lang('LOCK') }}</option><option value="unlock">{{ lang('UNLOCK') }}</option>{% endif %}
-			{% if S_CAN_SYNC %}<option value="resync">{{ lang('RESYNC') }}</option>{% endif %}
-			{% if S_CAN_MAKE_NORMAL %}<option value="make_normal">{{ lang('MCP_MAKE_NORMAL') }}</option>{% endif %}
-			{% if S_CAN_MAKE_STICKY %}<option value="make_sticky">{{ lang('MCP_MAKE_STICKY') }}</option>{% endif %}
-			{% if S_CAN_MAKE_ANNOUNCE %}
-			<option value="make_announce">{{ lang('MCP_MAKE_ANNOUNCEMENT') }}</option>
-			<option value="make_global">{{ lang('MCP_MAKE_GLOBAL') }}</option>
-			{% endif %}
-		</select>
-		<input class="button2" type="submit" value="{{ lang('SUBMIT') }}" />
-		<div><a href="#" onclick="marklist('mcp', 'topic_id_list', true); return false;">{{ lang('MARK_ALL') }}</a> :: <a href="#" onclick="marklist('mcp', 'topic_id_list', false); return false;">{{ lang('UNMARK_ALL') }}</a></div>
-	</fieldset>
-	</form>
-	{% endif %}
 {% endif %}
 
 {% INCLUDE ''~ MODE ~'_footer.html' %}

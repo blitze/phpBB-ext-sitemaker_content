@@ -14,9 +14,6 @@ class filter
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
-	/** @var \phpbb\language\language */
-	protected $language;
-
 	/** @var \phpbb\request\request_interface */
 	protected $request;
 
@@ -29,20 +26,66 @@ class filter
 	/** @var array */
 	protected $params = array();
 
+	/** @var string */
+	protected $content_type_base_url = '';
+
+	/** @var string */
+	protected $topic_status_base_url = '';
+
 	/**
 	 * Constructor
 	 *
 	 * @param \phpbb\db\driver\driver_interface				$db						Database connection
-	 * @param \phpbb\language\language						$language				Language object
 	 * @param \phpbb\request\request_interface				$request				Request object
 	 * @param \phpbb\template\template						$template				Template object
 	 */
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\language\language $language, \phpbb\request\request_interface $request, \phpbb\template\template $template)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\request\request_interface $request, \phpbb\template\template $template)
 	{
 		$this->db = $db;
-		$this->language = $language;
 		$this->request = $request;
 		$this->template = $template;
+	}
+
+	/**
+	 * @param array $search_info
+	 * @param string $u_action
+	 * @return void
+	 */
+	protected function generate_search_filter(array $search_info, $u_action)
+	{
+		$this->template->assign_vars(array(
+			'search_info'	=> $search_info,
+			'search_url'	=> $u_action,
+			'search_types'	=> array(
+				'topic_title'				=> 'TOPIC_TITLE',
+				'topic_first_poster_name'	=> 'AUTHOR',
+			),
+		));
+	}
+
+	/**
+	 * @param array $sql_where_array
+	 * @return void
+	 */
+	protected function apply_search_filter(array &$sql_where_array)
+	{
+		if ($search = $this->request->variable('search', '', true))
+		{
+			$default_type = 'topic_title';
+			$table_field = $this->request->variable('search_type', $default_type);
+			$table_field = (in_array($table_field, ['topic_title', 'topic_first_poster_name'])) ? $table_field : $default_type;
+
+			$sql_where_array[] = 't.' . $table_field . ' ' . $this->db->sql_like_expression($this->db->get_any_char() . $search . $this->db->get_any_char());
+
+			$this->params = array(
+				'search'		=> $search,
+				'search_type'	=> $table_field,
+			);
+		}
+		return array(
+			'search'	=> $search,
+			'type'		=> $table_field ?: 'topic_title',
+		);
 	}
 
 	/**
@@ -53,15 +96,12 @@ class filter
 	 */
 	protected function generate_content_type_filter($type, array $content_types, $u_action)
 	{
-		$copy_params = $this->params;
-		unset($copy_params['type']);
-		$view_url = $u_action . http_build_query($copy_params);
+		$this->content_type_base_url = $this->get_filter_type_base_url($u_action, 'type');
 
 		$this->template->assign_block_vars('content', array(
-			'TITLE'			=> $this->language->lang('TOPIC_ALL'),
-			'COLOUR'		=> '',
+			'TITLE'			=> 'TOPIC_ALL',
 			'S_SELECTED'	=> (!$type) ? true : false,
-			'U_VIEW'		=> $view_url
+			'U_VIEW'		=> $this->content_type_base_url,
 		));
 
 		foreach ($content_types as $entity)
@@ -71,35 +111,7 @@ class filter
 				'TITLE'			=> $entity->get_content_langname(),
 				'COLOUR'		=> $entity->get_content_colour(),
 				'S_SELECTED'	=> ($type === $content_name) ? true : false,
-				'U_VIEW'		=> $view_url . '&amp;type=' . $content_name
-			));
-		}
-	}
-
-	/**
-	 * @param string $topic_status
-	 * @param string $u_action
-	 * @return void
-	 */
-	protected function generate_topic_status_filter($topic_status, $u_action)
-	{
-		$copy_params = $this->params;
-		unset($copy_params['status']);
-		$view_url = $u_action . http_build_query($copy_params);
-
-		$this->template->assign_block_vars('status', array(
-			'TITLE'			=> $this->language->lang('TOPIC_ALL'),
-			'S_SELECTED'	=> (!$topic_status) ? true : false,
-			'U_VIEW'		=> $view_url,
-		));
-
-		$topic_status_ary = array_unique(array_merge($this->get_topic_status_filters(), $this->get_topic_types_filters()));
-		foreach ($topic_status_ary as $status)
-		{
-			$this->template->assign_block_vars('status', array(
-				'TITLE'			=> $this->language->lang('TOPIC_' . strtoupper($status)),
-				'S_SELECTED'	=> ($status === $topic_status) ? true : false,
-				'U_VIEW'		=> $view_url . '&amp;status=' . $status
+				'U_VIEW'		=> $this->content_type_base_url . '&amp;type=' . $content_name,
 			));
 		}
 	}
@@ -122,15 +134,28 @@ class filter
 	}
 
 	/**
-	 * @param array $sql_where_array
+	 * @param string $topic_status
+	 * @param string $u_action
 	 * @return void
 	 */
-	protected function apply_keyword_filter(array &$sql_where_array)
+	protected function generate_topic_status_filter($topic_status, $u_action)
 	{
-		if ($keyword = $this->request->variable('keyword', '', true))
+		$this->topic_status_base_url = $this->get_filter_type_base_url($u_action, 'status');
+
+		$this->template->assign_block_vars('status', array(
+			'TITLE'			=> 'TOPIC_ALL',
+			'S_SELECTED'	=> (!$topic_status) ? true : false,
+			'U_VIEW'		=> $this->topic_status_base_url,
+		));
+
+		$topic_status_ary = array_unique(array_merge($this->get_topic_status_filters(), $this->get_topic_types_filters()));
+		foreach ($topic_status_ary as $status)
 		{
-			$this->params['keyword'] = $keyword;
-			$sql_where_array[] = 't.topic_title ' . $this->db->sql_like_expression($this->db->get_any_char() . $keyword . $this->db->get_any_char());
+			$this->template->assign_block_vars('status', array(
+				'TITLE'			=> 'TOPIC_' . strtoupper($status),
+				'S_SELECTED'	=> ($status === $topic_status) ? true : false,
+				'U_VIEW'		=> $this->topic_status_base_url . '&amp;status=' . $status
+			));
 		}
 	}
 
@@ -145,7 +170,25 @@ class filter
 			$this->template->assign_vars(array('S_STATUS_FILTER' => true));
 			$this->params['status'] = $topic_status;
 
-			call_user_func_array(array($this, 'get_' . $topic_status . '_topics_sql'), array($topic_status, &$sql_where_array));
+			$filter_types = array(
+				$topic_status . '_topics' => [$topic_status],
+				'visibility'	=> ['published', 'deleted', 'unapproved'],
+				'topic_type'	=> ['featured', 'must_read', 'recommended'],
+			);
+
+			do
+			{
+				$filter = key($filter_types);
+				$type = array_shift($filter_types);
+				$method = 'set_' . $filter . '_sql';
+
+				if ($this->is_callable($topic_status, $type, $method))
+				{
+					call_user_func_array(array($this, $method), array($topic_status, &$sql_where_array));
+					break;
+				}
+			}
+			while (sizeof($filter_types));
 		}
 
 		return $topic_status;
@@ -156,7 +199,7 @@ class filter
 	 * @param array $sql_where_array
 	 * @return void
 	 */
-	protected function get_published_topics_sql($topic_status, array &$sql_where_array)
+	protected function set_visibility_sql($topic_status, array &$sql_where_array)
 	{
 		$sql_where_array[] = 't.topic_visibility = ' . (int) array_search($topic_status, $this->get_topic_status_filters());
 	}
@@ -166,50 +209,32 @@ class filter
 	 * @param array $sql_where_array
 	 * @return void
 	 */
-	protected function get_deleted_topics_sql($topic_status, array &$sql_where_array)
-	{
-		$this->get_published_topics_sql($topic_status, $sql_where_array);
-	}
-
-	/**
-	 * @param string $topic_status
-	 * @param array $sql_where_array
-	 * @return void
-	 */
-	protected function get_unapproved_topics_sql($topic_status, array &$sql_where_array)
-	{
-		$this->get_published_topics_sql($topic_status, $sql_where_array);
-	}
-
-	/**
-	 * @param string $topic_status
-	 * @param array $sql_where_array
-	 * @return void
-	 */
-	protected function get_featured_topics_sql($topic_status, array &$sql_where_array)
+	protected function set_topic_type_sql($topic_status, array &$sql_where_array)
 	{
 		$sql_where_array[] = 't.topic_type = ' . (int) array_search($topic_status, $this->get_topic_types_filters());
-		$sql_where_array[] = 't.topic_visibility = ' . ITEM_APPROVED;
 	}
 
 	/**
 	 * @param string $topic_status
-	 * @param array $sql_where_array
-	 * @return void
+	 * @param string $filter_type
+	 * @param string $method
+	 * @return bool
 	 */
-	protected function get_must_read_topics_sql($topic_status, array &$sql_where_array)
+	protected function is_callable($topic_status, $filter_type, $method)
 	{
-		$this->get_featured_topics_sql($topic_status, $sql_where_array);
+		return (in_array($topic_status, $filter_type) && is_callable(array($this, $method))) ? true : false;
 	}
 
 	/**
-	 * @param string $topic_status
-	 * @param array $sql_where_array
-	 * @return void
+	 * @param string $u_action
+	 * @param string $type
+	 * @return string
 	 */
-	protected function get_recommended_topics_sql($topic_status, array &$sql_where_array)
+	protected function get_filter_type_base_url($u_action, $type = '')
 	{
-		$this->get_featured_topics_sql($topic_status, $sql_where_array);
+		$copy_params = $this->params;
+		unset($copy_params[$type]);
+		return $u_action . '&amp;' . http_build_query($copy_params);
 	}
 
 	/**
@@ -221,6 +246,7 @@ class filter
 			ITEM_UNAPPROVED		=> 'unapproved',
 			ITEM_APPROVED		=> 'published',
 			ITEM_DELETED		=> 'deleted',
+			ITEM_REAPPROVE		=> 'unapproved',
 		);
 	}
 

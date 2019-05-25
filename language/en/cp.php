@@ -37,27 +37,21 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'CONTENT_NEW'						=> 'New Content',
-	'CONTENT_PUBLISHED'					=> 'Published',
-	'CONTENT_TITLE'						=> 'Title',
-	'CONTENT_TYPE'						=> 'Content Type',
-	'CONTENT_UPDATED'					=> 'The topic was successfully saved',
+	'CONTENT_NEW'			=> 'New Content',
+	'CONTENT_TITLE'			=> 'Title',
+	'CONTENT_TYPE'			=> 'Content Type',
+	'CONTENT_UPDATED'		=> 'The topic was successfully saved',
 
-	'GOTO_TOPIC'						=> 'Go to topic',
+	'GOTO_TOPIC'			=> 'Go to topic',
 
-	'INVALID_REQUEST'					=> 'Invalid request: %s',
+	'INVALID_REQUEST'		=> 'Invalid request: %s',
 
-	'MAKE_NORMAL'						=> 'Approve',
-	'MANAGE_CONTENT'					=> 'Manage Content',
+	'MAKE_NORMAL'			=> 'Approve',
+	'MANAGE_CONTENT'		=> 'Manage Content',
 
-	'NO_TOPICS_ALL'			=> 'There are no topics to display',
-	'NO_TOPICS_DELETED'		=> 'There are no deleted topics to display',
-	'NO_TOPICS_FEATURED'	=> 'There are no featured topics to display',
-	'NO_TOPICS_MUST_READ'	=> 'Thera are no must-read topics to display',
-	'NO_TOPICS_PUBLISHED'	=> 'There are no published topics to display',
-	'NO_TOPICS_RECOMMENDED'	=> 'There are no recommended topics to display',
-	'NO_TOPICS_SCHEDULED'	=> 'There are no scheduled topics to display',
-	'NO_TOPICS_UNAPPROVED'	=> 'There are no unapproved topics to display',
+	'NO_CONTENT_TOPICS'		=> 'There are no topics to display',
+
+	'PUBLISH_DATE'			=> 'Publish Date',
 
 	'TOPIC_ALL'				=> 'All',
 	'TOPIC_DELETED'			=> 'Deleted',
@@ -65,8 +59,8 @@ $lang = array_merge($lang, array(
 	'TOPIC_MUST_READ'		=> 'Must Read',
 	'TOPIC_PUBLISHED'		=> 'Published',
 	'TOPIC_RECOMMENDED'		=> 'Recommended',
-	'TOPIC_SCHEDULED'		=> 'Scheduled',
 	'TOPIC_STATUS'			=> 'Topic Status',
 	'TOPIC_TITLE'			=> 'Topic Title',
 	'TOPIC_UNAPPROVED'		=> 'Unapproved',
+	'TYPE'					=> 'Type',
 ));
