@@ -175,9 +175,10 @@
 		{% INCLUDE 'author_contact.html' %}
 	{% endif %}
 
+	{% if S_TOOLS %}
 		<div class="action-bar bar-bottom">
 			<!-- INCLUDE viewtopic_topic_tools.html -->
-			{% if S_TOOLS && loops.quickmod|length %}
+			{% if loops.quickmod|length %}
 			<div class="quickmod dropdown-container dropdown-container-left dropdown-up dropdown-{{ S_CONTENT_FLOW_END }} dropdown-button-control" id="quickmod">
 				<span title="{{ lang('QUICK_MOD') }}" class="button button-secondary dropdown-trigger dropdown-select">
 					<i class="icon fa-gavel fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('QUICK_MOD') }}</span>
@@ -195,6 +196,7 @@
 			</div>
 			{% endif %}
 		</div>
+	{% endif %}
 
 		<div class="back2top">
 			<a href="#top" class="top" title="{{ lang('BACK_TO_TOP') }}">
