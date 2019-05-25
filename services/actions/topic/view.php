@@ -67,7 +67,7 @@ class view implements action_interface
 			$entity->set_allow_comments(false);
 
 			$update_count = array();
-			$overwrite = $this->get_data_overwrite($mode, $u_action, $type, $redirect_url, $topic_id);
+			$overwrite = $this->get_data_overwrite($mode, $redirect_url, $topic_id);
 
 			/** @var \blitze\content\services\views\driver\views_interface $view_handler */
 			$view_handler = $this->views->get($entity->get_content_view());
@@ -78,6 +78,7 @@ class view implements action_interface
 		$this->template->assign_vars(array(
 			'MODE'				=> $mode,
 			'S_HIDE_HEADERS'	=> true,
+			'S_IS_BOT'			=> false,
 			'S_VIEWING'			=> $view_tpl,
 		));
 	}
@@ -86,22 +87,22 @@ class view implements action_interface
 	 * Overwrite template data
 	 *
 	 * @param string $mode
-	 * @param string $u_action
-	 * @param string $type
 	 * @param string $redirect_url
 	 * @param int $topic_id
 	 * @return string[]
 	 */
-	protected function get_data_overwrite($mode, $u_action, $type, $redirect_url, $topic_id)
+	protected function get_data_overwrite($mode, $redirect_url, $topic_id)
 	{
-		$overwrite = array(
-			'TOPIC_URL'	=> $u_action . "&amp;do=view&amp;type=$type&amp;t=$topic_id&amp;redirect=$redirect_url",
-			'U_INFO'	=> '',
-		);
+		$overwrite = [];
 
 		if ($mode === 'mcp')
 		{
 			$overwrite['U_DELETE'] = append_sid("{$this->phpbb_root_path}mcp.$this->php_ext", 'quickmod=1&amp;action=delete_topic&amp;t=' . $topic_id . '&amp;redirect=' . $redirect_url);
+		}
+		else
+		{
+			$overwrite['U_REPORT'] = false;
+			$overwrite['U_INFO'] = false;
 		}
 
 		return $overwrite;
