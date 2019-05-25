@@ -237,30 +237,27 @@ class form
 	 */
 	protected function get_submitted_field_data(array &$row, &$req_mod_input, $cp_class)
 	{
-		$field_value = '';
 		if ($field = $this->fields_factory->get($row['field_type']))
 		{
 			$row['field_props'] += $field->get_default_props();
-			$row['field_value'] = (isset($row['field_value'])) ? $row['field_value'] : '';
-			$field_value = $field->get_field_value($row);
+			$row['field_value'] = $field->get_field_value($row);
 
-			$this->validate_field($field, $field_value, $row, $req_mod_input, $cp_class);
+			$this->validate_field($field, $row, $req_mod_input, $cp_class);
 		}
 
-		return $field_value;
+		return $row['field_value'];
 	}
 
 	/**
 	 * @param \blitze\content\services\form\field\field_interface $field
-	 * @param mixed $field_value
 	 * @param array $row
 	 * @param bool $req_mod_input
 	 * @param string $cp_class
-	 * @return mixed
+	 * @return void
 	 */
-	protected function validate_field(\blitze\content\services\form\field\field_interface $field, $field_value, $row, &$req_mod_input, $cp_class)
+	protected function validate_field(\blitze\content\services\form\field\field_interface $field, $row, &$req_mod_input, $cp_class)
 	{
-		if (!empty($field_value))
+		if (!empty($row['field_value']))
 		{
 			$this->errors[] = $field->validate_field($row);
 		}
@@ -275,8 +272,6 @@ class form
 				$req_mod_input = true;
 			}
 		}
-
-		return $field_value;
 	}
 
 	/**

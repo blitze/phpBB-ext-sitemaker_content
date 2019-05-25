@@ -96,6 +96,11 @@ abstract class base implements field_interface
 	{
 		$rules = $this->get_validation_rules($data);
 
+		if (isset($rules['sanitize']))
+		{
+			$data['field_value'] = filter_var($data['field_value'], $rules['sanitize']);
+		}
+
 		$message = '';
 		if ($rules['filter'] && filter_var($data['field_value'], $rules['filter'], $rules['options']) === false)
 		{

@@ -281,34 +281,6 @@ class builder
 	}
 
 	/**
-	 * @param array $post_data
-	 * @return void
-	 */
-	// protected function add_moderator_fields(array $post_data)
-	// {
-	// 	if ($this->mode === 'mcp')
-	// 	{
-	// 		$this->form->add('topic_time', 'hidden', array('field_value' => $post_data['topic_time']))
-	// 			->add('publish_on', 'datetime', array(
-	// 				'field_label'	=> $this->language->lang('CONTENT_PUBLISH_DATE'),
-	// 				'field_value'	=> $this->user->format_date($post_data['topic_time'], 'm/d/Y H:i'),
-	// 				'field_props'	=> array(
-	// 					'min_date'	=> 0,
-	// 				),
-	// 			))
-	// 			->add('force_status', 'radio', array(
-	// 				'field_label'	=> 'CONTENT_FORCE_STATUS',
-	// 				'field_value'	=> '-1',
-	// 				'field_props'	=> array(
-	// 					'vertical'		=> true,
-	// 					'options' 		=> $this->get_moderator_options($post_data['topic_visibility']),
-	// 				)
-	// 			)
-	// 		);
-	// 	}
-	// }
-
-	/**
 	 * @param string $mode
 	 * @param array $data
 	 * @return void

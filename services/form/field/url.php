@@ -26,6 +26,7 @@ class url extends base
 	{
 		return array(
 			'filter'	=> FILTER_VALIDATE_REGEXP,
+			'sanitize'	=> FILTER_SANITIZE_URL,
 			'options'	=> array(
 				'options'	=> array(
 					'regexp'	=> '#^' . get_preg_expression('url_http') . '$#iu',

@@ -37,8 +37,18 @@ class number extends base
 	 */
 	public function get_validation_rules(array $data)
 	{
+		$filter = FILTER_VALIDATE_INT;
+		$sanitize = FILTER_SANITIZE_NUMBER_INT;
+
+		if (is_float($data['field_props']['step']))
+		{
+			$filter = FILTER_VALIDATE_FLOAT;
+			$sanitize = FILTER_SANITIZE_NUMBER_FLOAT;
+		}
+
 		return array(
-			'filter'	=> (is_float($data['field_props']['step'])) ? FILTER_VALIDATE_FLOAT : FILTER_VALIDATE_INT,
+			'filter'	=> $filter,
+			'sanitize'	=> $sanitize,
 			'options'	=> array(
 				'options'	=> array_filter(array(
 					'min_range'	=> $data['field_props']['min'],
