@@ -63,7 +63,7 @@ class feed implements EventSubscriberInterface
 		$sql_ary = $event['sql_ary'];
 
 		$forum_ids = array_keys($this->content_types->get_forum_types());
-		$sql_ary['WHERE'] .= ' AND ' . $this->db->sql_in_set('f.forum_id', array_map('intval', $forum_ids), true);
+		$sql_ary['WHERE'] .= ' AND ' . $this->db->sql_in_set('p.forum_id', array_map('intval', $forum_ids), true);
 
 		$event['sql_ary'] = $sql_ary;
 	}
