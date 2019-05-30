@@ -24,33 +24,18 @@ abstract class choice extends base
 	}
 
 	/**
-	 * @param array $data
-	 * @return mixed
-	 */
-	protected function get_default_value(array $data)
-	{
-		$default = $data['field_value'] ?: $data['field_props']['defaults'];
-		$default = is_array($default) ? $default : explode("\n", $default);
-
-		return ($data['field_props']['multi_select']) ? $default : array_shift($default);
-	}
-
-	/**
 	 * @inheritdoc
 	 */
 	public function get_field_value(array $data)
 	{
-		$data['field_props']['defaults'] = $data['field_props']['defaults'] ?: array(0 => '');
+		$value = $data['field_value'] ?: $data['field_props']['defaults'] ?: array(0 => '');
 
-		$value = $this->get_default_value($data);
-
-		// form has been submitted so get value from request object
-		if ($this->request->is_set_post('cp'))
+		if (!is_array($value))
 		{
-			$value = $this->request->variable($data['field_name'], $value, true);
+			$value = array_filter(preg_split("/(\n|<br>)/", $value));
 		}
 
-		return $value;
+		return ($data['field_props']['multi_select']) ? $value : array_shift($value);
 	}
 
 	/**
@@ -58,8 +43,16 @@ abstract class choice extends base
 	 */
 	public function display_field(array $data, array $topic_data, $view_mode)
 	{
-		$field_value = array_filter(explode('<br>', $data['field_value']));
-		return sizeof($field_value) ? join($this->language->lang('COMMA_SEPARATOR'), $field_value) : '';
+		return sizeof($data['field_value']) ? join($this->language->lang('COMMA_SEPARATOR'), $data['field_value']) : '';
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function get_submitted_value(array $data)
+	{
+		$value = $this->request->variable($data['field_name'], array(0 => ''), true);
+		return $value ?: $this->get_field_value($data);
 	}
 
 	/**
@@ -67,7 +60,7 @@ abstract class choice extends base
 	 */
 	public function show_form_field($name, array &$data)
 	{
-		$selected = (array) $this->get_field_value($data);
+		$selected = (array) $this->get_submitted_value($data);
 
 		$data['field_name'] = $name;
 		$data['field_value'] = join("\n", $selected);

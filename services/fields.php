@@ -235,7 +235,7 @@ class fields extends topic
 	protected function get_fields_data_for_display(array &$tpl_data)
 	{
 		$field_values = $this->get_field_values($tpl_data);
-		$display_data = array_fill_keys(array('all', 'above', 'body', 'inline', 'footer'), array());
+		$display_data = array_fill_keys(array('all', 'above', 'body', 'inline', 'footer', 'raw'), array());
 		$tpl_data['PERMA_LINK'] = $this->board_url . parse_url($tpl_data['TOPIC_URL'], PHP_URL_PATH);
 
 		foreach ($this->content_fields as $field_name => $field_data)
@@ -244,8 +244,10 @@ class fields extends topic
 			$field_data['content_type'] = $this->content_type;
 			$field_data['field_props'] = array_replace_recursive($this->form_fields[$field_type]->get_default_props(), $field_data['field_props']);
 			$field_data['field_value'] = &$field_values[$field_name];
+			$field_data['field_value'] = $this->form_fields[$field_type]->get_field_value($field_data);
 
 			$field_contents	= $this->form_fields[$field_type]->display_field($field_data, $tpl_data, $this->display_mode);
+			$display_data['raw'][$field_name] = $field_data['field_value'];
 
 			// this essentially hides other fields if the field returns an array
 			if (is_array($field_contents))

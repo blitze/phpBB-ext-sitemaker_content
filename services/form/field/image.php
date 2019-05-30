@@ -49,9 +49,37 @@ class image extends base
 	 */
 	public function get_field_value(array $data)
 	{
-		$value = $this->request->variable($data['field_name'], $data['field_value']);
-		$value = $this->get_image_src($value);
+		if ($data['field_value'])
+		{
+			preg_match('/src="(.*?)"/i', $data['field_value'], $match);
+			return (!empty($match[1])) ? $match[1] : '';
+		}
 
+		return $data['field_props']['default'];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function display_field(array $data, array $topic_data, $view_mode)
+	{
+		if ($data['field_value'])
+		{
+			return $this->get_image_html($data['field_value'], $view_mode, $data['field_label'], $data['field_props']);
+		}
+		return '';
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function get_submitted_value(array $data)
+	{
+		$value = $this->request->variable($data['field_name'], $data['field_value']);
+
+		// we wrap this in image bbcode so that images will still work even if this extension is uninstalled
+		// this complicates things for us as we have to remove the bbcode when showing the form field
+		// and match the image source (url) from the image html when displaying the field
 		return ($value) ? '[img]' . $value . '[/img]' : '';
 	}
 
@@ -60,10 +88,10 @@ class image extends base
 	 */
 	public function show_form_field($name, array &$data)
 	{
-		$bbcode_value = $this->get_field_value($data);
+		$data['field_value'] = $this->get_submitted_value($data);
+		$data['field_value'] = $this->strip_image_bbcode($data['field_value']);
 
 		$field = $this->get_name();
-		$data['field_value'] = $this->get_image_src($bbcode_value);
 
 		$this->util->add_assets(array(
 			'js'	=> array(
@@ -79,22 +107,7 @@ class image extends base
 		$this->ptemplate->assign_vars($data);
 		$field = $this->ptemplate->render_view('blitze/content', "fields/image.html", $field . '_field');
 
-		$data['field_value'] = $bbcode_value;
-
 		return $field;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function display_field(array $data, array $topic_data, $view_mode)
-	{
-		$image = '';
-		if ($data['field_value'] || $data['field_props']['default'])
-		{
-			$image = $this->get_image_html($data['field_value'], $view_mode, $data['field_label'], $data['field_props']);
-		}
-		return $image;
 	}
 
 	/**
@@ -123,7 +136,7 @@ class image extends base
 	 * @param string $bbcode_string
 	 * @return string
 	 */
-	private function get_image_src($bbcode_string)
+	private function strip_image_bbcode($bbcode_string)
 	{
 		return str_replace(array('[img]', '[/img]'), '', $bbcode_string);
 	}
@@ -137,7 +150,7 @@ class image extends base
 	 */
 	private function get_image_html($image, $mode, $title, array $field_props)
 	{
-		$image = $image ?: '<img src="' . $field_props['default'] . '" class="postimage" alt="' . $title . '" />';
+		$image = '<img src="' . $image . '" class="postimage" alt="' . $title . '" />';
 
 		$html = '<figure class="img-ui">' . $image . '</figure>';
 		if ($mode !== 'block')

@@ -67,17 +67,37 @@ class location extends base
 	 */
 	public function get_field_value(array $data)
 	{
-		// form has been submitted so get value from request object
-		if ($this->request->is_set_post('cp'))
-		{
-			return array_filter($this->request->variable($data['field_name'], array('' => ''), true));
-		}
-
 		$fields = ['map_type', 'place', 'address', 'zoom', 'latitude', 'longitude'];
 		$field_value = array_filter(preg_split("/(\n|<br>)/", $data['field_value']));
 		$field_value = array_pad(array_map('trim', $field_value), count($fields), 0);
 
 		return array_combine($fields, $field_value);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function display_field(array $data, array $topic_data, $view_mode)
+	{
+		$callable = 'display_' . $data['field_props']['disp_type'];
+
+		if (!$data['field_value'])
+		{
+			return '';
+		}
+
+		return $this->$callable($data);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function get_submitted_value(array $data)
+	{
+		$value = $this->get_field_value($data);
+		$value = $this->request->variable($data['field_name'], $value, true);
+
+		return array_filter($value);
 	}
 
 	/**
@@ -95,22 +115,6 @@ class location extends base
 		$data['show_input'] = true;
 
 		return parent::show_form_field($name, $data);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function display_field(array $data, array $topic_data, $view_mode)
-	{
-		if (!$data['field_value'])
-		{
-			return '';
-		}
-
-		$data['field_value'] = $this->get_field_value($data);
-		$callable = 'display_' . $data['field_props']['disp_type'];
-
-		return $this->$callable($data);
 	}
 
 	/**

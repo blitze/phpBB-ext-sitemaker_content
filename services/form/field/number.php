@@ -79,6 +79,15 @@ class number extends base
 	 */
 	public function get_field_value(array $data)
 	{
-		return $this->request->variable($data['field_name'], (int) $data['field_value']);
+		return (int) $data['field_value'];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function get_submitted_value(array $data)
+	{
+		$value = $this->get_field_value($data);
+		return $this->request->variable($data['field_name'], $value);
 	}
 }

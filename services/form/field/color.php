@@ -55,9 +55,7 @@ class color extends base
 	 */
 	public function get_field_value(array $data)
 	{
-		$default = is_array($data['field_value']) ? $data['field_value'] : explode("\n", $data['field_value']);
-		$value =  $this->request->variable($data['field_name'], array(0 => ''));
-		return $value ?: $default;
+		return array_filter(preg_split("/(\n|<br>)/", $data['field_value']));
 	}
 
 	/**
@@ -66,7 +64,7 @@ class color extends base
 	public function display_field(array $data, array $topic_data, $view_mode)
 	{
 		$sep = $this->language->lang('COMMA_SEPARATOR');
-		$field_value = array_filter(explode('<br>', $data['field_value']));
+		$field_value = $data['field_value'];
 
 		if ($data['field_props']['display'] === 'box')
 		{
@@ -75,6 +73,15 @@ class color extends base
 		}
 
 		return join($sep, $field_value);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function get_submitted_value(array $data)
+	{
+		$value = $this->get_field_value($data);
+		return $this->request->variable($data['field_name'], $value);
 	}
 
 	/**

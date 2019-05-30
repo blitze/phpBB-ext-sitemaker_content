@@ -240,7 +240,7 @@ class form
 		if ($field = $this->fields_factory->get($row['field_type']))
 		{
 			$row['field_props'] += $field->get_default_props();
-			$row['field_value'] = $field->get_field_value($row);
+			$row['field_value'] = $field->get_submitted_value($row);
 
 			$this->validate_field($field, $row, $req_mod_input, $cp_class);
 		}
