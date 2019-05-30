@@ -143,15 +143,13 @@ class fields extends topic
 	{
 		$fields_data = $this->get_fields_data_for_display($tpl_data);
 
+		$tpl_data['FIELDS'] = $fields_data;
+
 		if ($this->tpl_name)
 		{
 			$this->template->assign_vars(array_change_key_case(array_merge($tpl_data, (array) $fields_data['all']), CASE_UPPER));
 			$this->template->set_filenames(array('content' => $this->tpl_name));
 			$tpl_data['CUSTOM_DISPLAY'] = $this->template->assign_display('content');
-		}
-		else
-		{
-			$tpl_data['FIELDS'] = $fields_data;
 		}
 		unset($fields_data);
 

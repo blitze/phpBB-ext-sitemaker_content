@@ -1,4 +1,27 @@
 services:
+    blitze.content.template.extensions.filters:
+        class: blitze\content\services\template\extensions\filters
+        tags:
+            - { name: twig.extension }
+
+    blitze.content.template:
+        class: phpbb\template\twig\twig
+        arguments:
+            - '@path_helper'
+            - '@config'
+            - '@template_context'
+            - '@blitze.content.template.twig.environment'
+            - '%core.template.cache_path%'
+            - '@user'
+            - '@template.twig.extensions.collection'
+            - '@ext.manager'
+
+    blitze.content.template.loader:
+        class: blitze\content\services\template\loader
+        arguments:
+            - '@blitze.content.types'
+            - '@blitze.sitemaker.mapper.factory'
+
     blitze.content.template.twig.environment:
         class: phpbb\template\twig\environment
         arguments:
@@ -12,21 +35,3 @@ services:
             - []
         calls:
             - [setLexer, ['@template.twig.lexer']]
-
-    blitze.content.template.loader:
-        class: blitze\content\services\template\loader
-        arguments:
-            - '@blitze.content.types'
-            - '@blitze.sitemaker.mapper.factory'
-
-    blitze.content.template:
-        class: phpbb\template\twig\twig
-        arguments:
-            - '@path_helper'
-            - '@config'
-            - '@template_context'
-            - '@blitze.content.template.twig.environment'
-            - '%core.template.cache_path%'
-            - '@user'
-            - '@template.twig.extensions.collection'
-            - '@ext.manager'

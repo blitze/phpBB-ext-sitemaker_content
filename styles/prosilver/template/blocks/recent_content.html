@@ -1,9 +1,4 @@
 {% if loops.topicrow|length %}
-	{% set image_field = '' %}
-	{% for field_name, field_type in FIELD_TYPES if field_type == 'image' %}
-		{% set image_field = field_name %}
-	{% endfor %}
-
 	{% import 'blocks/_macros.html' as macro %}
 	{% include 'blocks/layouts/' ~ LAYOUT ~ '.html' %}
 {% endif %}

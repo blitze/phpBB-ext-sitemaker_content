@@ -194,6 +194,7 @@ class main_controller
 			'S_COMMENTS'	=> $entity->get_allow_comments(),
 			'S_VIEWS'		=> $entity->get_allow_views(),
 			'S_TOOLS'		=> true,
+			'FIELD_TYPES'	=> $entity->get_field_types(),
 		));
 
 		return $entity;

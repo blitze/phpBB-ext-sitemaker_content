@@ -229,7 +229,7 @@ abstract class base_view implements views_interface
 			foreach ($attachments[$post_id] as $attachment)
 			{
 				$this->template->assign_block_vars('attachment', array(
-						'DISPLAY_ATTACHMENT'	=> $attachment)
+					'DISPLAY_ATTACHMENT'	=> $attachment)
 				);
 			}
 		}

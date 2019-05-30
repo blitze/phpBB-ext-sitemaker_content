@@ -5,7 +5,7 @@
 {% for topicrow in loops.topicrow[1:] %}
 	<li>
 		<div class="small-img img-align-left">
-			{{ topicrow.FIELDS.all[image_field] }}
+			{{ topicrow.FIELDS.all|field('image', 'topicrow') }}
 			{{ macro.show_title(topicrow) }}
 		</div>
 	</li>

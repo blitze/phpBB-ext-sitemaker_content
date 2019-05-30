@@ -1,0 +1,7 @@
+{{ FIELDS.body|field('image') }}
+{{ FIELDS.body|keys|join(', ') }}
+
+{% for row in topicrow %}
+{{ row.FIELDS.body|field('image', loop.index0) }}
+{{ row.FIELDS.body|keys|join(', ') }}
+{% endfor %}
