@@ -31,6 +31,6 @@
 		}
 	},
 	"require-dev": {
-		"phing/phing": "^2.16"
+        "phing/phing": "2.4.*"
 	}
 }
