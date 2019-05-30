@@ -18,22 +18,15 @@
 	{%- set link = BOARD_URL ~ row.TOPIC_URL -%}
 	<entry>
 		{% if not row.USERNAME is empty %}<author><name><![CDATA[{{ row.USERNAME }}]]></name></author>{% endif %}
-
 		<updated>{{ row.UPDATED|date("c") }}</updated>
-
 		{% if not row.TOPIC_UNIX_TIME is empty %}<published>{{ row.TOPIC_UNIX_TIME|date("c") }}</published>{% endif %}
-
 		<id>{{ link }}</id>
 		<link href="{{ link }}"/>
 		<title type="html"><![CDATA[{{ row.TOPIC_TITLE }}]]></title>
-
-		{% if not row.category is empty and row.category_name is defined and row.category_name != '' %}
-			<category term="{{ row.category_name }}" scheme="{{ row.category }}" label="{{ row.category_name }}"/>
-		{% endif %}
-
+		{% EVENT blitze_content_feed_xml_tag %}
 		<content type="html" xml:base="{{ link }}"><![CDATA[
-{{ row.FIELDS.all|join }}
-]]></content>
+			{{ row.FIELDS.all|join }}
+		]]></content>
 	</entry>
 	{% endfor %}
 </feed>
