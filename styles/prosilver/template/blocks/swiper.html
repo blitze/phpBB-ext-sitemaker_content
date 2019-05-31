@@ -14,7 +14,7 @@
 					{{ topicrow.FIELDS.all|field('image', 'topicrow') }}
 					<div class="postbody sm-full-width sm-inner">
 						<div class="content">
-							<p class="topic-title"><a href="{{ topicrow.TOPIC_URL }}">{{ topicrow.TOPIC_TITLE }}</a></p>
+							<p class="topic-title"><a href="{{ topicrow.TOPIC_URL }}" title="{{ topicrow.TOPIC_TITLE }}">{{ topicrow.TOPIC_TITLE|truncate(TITLE_LIMIT) }}</a></p>
 							{{ topicrow.FIELDS.all|join }}
 						</div>
 					</div>

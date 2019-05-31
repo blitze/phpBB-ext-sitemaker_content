@@ -117,6 +117,7 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 			$this->forum->build(true, true, false);
 			$this->ptemplate->assign_vars(array(
 				'LAYOUT'		=> $this->settings['layout'],
+				'TITLE_LIMIT'	=> $this->settings['topic_title_limit'],
 				'FIELD_TYPES'	=> $entity->get_field_types(),
 			));
 

@@ -3,7 +3,7 @@
 	{% INCLUDE 'parts/moderator_info.html' %}
 	{% if not topicrow.CUSTOM_DISPLAY %}
 		{{ topicrow.FIELDS.above|join }}
-		<p class="topic-title"><a href="{{ topicrow.TOPIC_URL }}">{{ topicrow.TOPIC_TITLE }}</a></p>
+		<p class="topic-title"><a href="{{ topicrow.TOPIC_URL }}" title="{{ topicrow.TOPIC_TITLE }}">{{ topicrow.TOPIC_TITLE|truncate(TITLE_LIMIT) }}</a></p>
 		<p class="author">
 		{% if not S_IS_BOT %}
 			<a class="unread" href="{{ topicrow.U_MINI_POST }}">
@@ -34,6 +34,6 @@
 			<i class="icon fa-file fa-fw {% if postrow.S_UNREAD_POST %}icon-red{% else %}icon-lightgray{% endif %} icon-md" aria-hidden="true"></i><span class="sr-only">{{ postrow.MINI_POST }}</span>
 		</a>
 	{% endif %}
-		<a class="topic-title" href="{{ topicrow.TOPIC_URL }}">{{ topicrow.TOPIC_TITLE }}</a>
+		<a class="topic-title" href="{{ topicrow.TOPIC_URL }}" title="{{ topicrow.TOPIC_TITLE }}">{{ topicrow.TOPIC_TITLE|truncate(TITLE_LIMIT) }}</a>
 	</p>
 {%- endmacro -%}

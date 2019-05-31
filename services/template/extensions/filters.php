@@ -9,6 +9,8 @@
 
 namespace blitze\content\services\template\extensions;
 
+use Urodoz\Truncate\TruncateService;
+
 class filters extends \Twig\Extension\AbstractExtension
 {
 	/**
@@ -18,6 +20,7 @@ class filters extends \Twig\Extension\AbstractExtension
 	{
 		return [
 			new \Twig\TwigFilter('field', [$this, 'field_filter'], ['needs_context' => true]),
+			new \Twig\TwigFilter('truncate', [$this, 'truncate_filter']),
 		];
 	}
 
@@ -48,6 +51,23 @@ class filters extends \Twig\Extension\AbstractExtension
 		}
 
 		return $content;
+	}
+
+	/**
+	* @param string $content
+	* @param int $max_chars
+	* @param string $loop_variable
+	* @return string
+	*/
+	public function truncate_filter($content, $max_chars = 60, $type = '')
+	{
+		if ($type === 'html')
+		{
+			$truncator = new TruncateService();
+			return $truncator->truncate($content, $max_chars);
+		}
+
+		return truncate_string($content, $max_chars, 255, false, '...');
 	}
 
 	/**
