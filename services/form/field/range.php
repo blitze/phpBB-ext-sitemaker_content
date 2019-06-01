@@ -182,7 +182,6 @@ class range extends base
 			),
 			'css'   => array(
 				'@blitze_content/vendor/ion.rangeSlider/css/ion.rangeSlider.min.css',
-				'@blitze_content/vendor/ion.rangeSlider/css/ion.rangeSlider.' . $theme . '.min.css',
 			)
 		));
 	}

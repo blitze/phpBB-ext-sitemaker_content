@@ -272,16 +272,17 @@
 		</dd>
 	</dl>
 	<dl>
-		<dt><label for="{{ data.FIELD_NAME ~ '-theme' }}">{{ lang('RANGE_THEME') ~ lang('COLON') }}</label></dt>
+		<dt><label for="{{ data.FIELD_NAME ~ '-skin' }}">{{ lang('RANGE_SKIN') ~ lang('COLON') }}</label></dt>
 		<dd>
-			{%- set range_themes = [
-				{ value: 'skinFlat', label: 'skinFlat' },
-				{ value: 'skinHTML5', label: 'skinHTML5' },
-				{ value: 'skinModern', label: 'skinModern' },
-				{ value: 'skinNice', label: 'skinNice' },
-				{ value: 'skinSimple', label: 'skinSimple' },
+			{%- set range_skins = [
+				{ value: 'flat', label: 'RANGE_SKIN_FLAT' },
+				{ value: 'big', label: 'RANGE_SKIN_BIG' },
+				{ value: 'modern', label: 'RANGE_SKIN_MODERN' },
+				{ value: 'sharp', label: 'RANGE_SKIN_SHARP' },
+				{ value: 'round', label: 'RANGE_SKIN_ROUND' },
+				{ value: 'square', label: 'RANGE_SKIN_SQUARE' },
 			] -%}
-			{{ forms.dropdown(data.FIELD_NAME ~ '-theme', 'field_props[' ~ data.FIELD_NAME ~ '][theme]', data.FIELD_PROPS.theme, range_themes) }}
+			{{ forms.dropdown(data.FIELD_NAME ~ '-skin', 'field_props[' ~ data.FIELD_NAME ~ '][skin]', data.FIELD_PROPS.skin, range_skins) }}
 		</dd>
 	</dl>
 	<dl>
