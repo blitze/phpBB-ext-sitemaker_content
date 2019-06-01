@@ -60,6 +60,9 @@ class checkbox_test extends base_form_field
 		$field = $this->get_form_field('checkbox');
 
 		$data = array('field_value' => $field_value);
+		$data['field_props'] = $field->get_default_props();
+		$data['field_value'] = $field->get_field_value($data);
+
 		$this->assertEquals($expected, $field->display_field($data, array(), 'summary'));
 	}
 
@@ -70,7 +73,6 @@ class checkbox_test extends base_form_field
 	{
 		return array(
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> '',
@@ -84,15 +86,12 @@ class checkbox_test extends base_form_field
 						'vertical'		=> false,
 					),
 				),
-				array(
-					array('foo', array(0 => ''), true, request_interface::REQUEST, array('')),
-				),
+				array(),
 				'<label for="smc-foo-0"><input type="checkbox" id="smc-foo-0" name="foo[]" value="option1" /> option1</label>' .
 				'<label for="smc-foo-1"><input type="checkbox" id="smc-foo-1" name="foo[]" value="option2" /> option2</label>' .
 				'<label for="smc-foo-2"><input type="checkbox" id="smc-foo-2" name="foo[]" value="option3" /> option3</label>',
 			),
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> 2,
@@ -114,7 +113,6 @@ class checkbox_test extends base_form_field
 				'<label for="smc-foo-2"><input type="checkbox" id="smc-foo-2" name="foo[]" value="3" /> option3</label>',
 			),
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> "option2\noption3",
@@ -136,7 +134,6 @@ class checkbox_test extends base_form_field
 				'<label for="smc-foo-2"><input type="checkbox" id="smc-foo-2" name="foo[]" value="option3" /> option3</label>',
 			),
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> '',
@@ -157,7 +154,28 @@ class checkbox_test extends base_form_field
 				'</div>',
 			),
 			array(
-				'bar',
+				array(
+					'field_name'	=> 'foo',
+					'field_value'	=> '',
+					'field_props'	=> array(
+						'options'		=> array(
+							'option1' => 'option1',
+							'option2' => 'option2',
+							'option3' => 'option3',
+						),
+						'defaults'		=> array('option1', 'option3'),
+					),
+				),
+				array(
+					array('foo', array(0 => ''), true, request_interface::REQUEST, array('')),
+				),
+				'<div class="left-box" style="margin-right: 1em">' .
+					'<label for="smc-foo-0"><input type="checkbox" id="smc-foo-0" name="foo[]" value="option1" /> option1</label><br />' .
+					'<label for="smc-foo-1"><input type="checkbox" id="smc-foo-1" name="foo[]" value="option2" /> option2</label><br />' .
+					'<label for="smc-foo-2"><input type="checkbox" id="smc-foo-2" name="foo[]" value="option3" /> option3</label><br />' .
+				'</div>',
+			),
+			array(
 				array(
 					'field_name'	=> 'bar',
 					'field_value'	=> array('option1'),
@@ -193,17 +211,18 @@ class checkbox_test extends base_form_field
 
 	/**
 	 * @dataProvider show_form_field_test_data
-	 * @param string $name
 	 * @param array $data
 	 * @param array $variable_map
 	 * @param string $expected
 	 * @return void
 	 */
-	public function test_show_checkbox_field($name, array $data, array $variable_map, $expected)
+	public function test_show_checkbox_field(array $data, array $variable_map, $expected)
 	{
 		$field = $this->get_form_field('checkbox', $variable_map);
-		$data = $this->get_data('checkbox', $name, $data, $field->get_default_props());
 
-		$this->assertEquals($expected, str_replace(array("\n", "\t"), '', $field->show_form_field($name, $data)));
+		$data = $this->get_data('checkbox', $data, $field->get_default_props());
+		$data['field_value'] = $field->get_submitted_value($data, sizeof($variable_map));
+
+		$this->assertEquals($expected, str_replace(array("\n", "\t"), '', $field->show_form_field($data)));
 	}
 }

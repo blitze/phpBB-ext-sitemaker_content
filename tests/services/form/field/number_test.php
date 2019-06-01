@@ -42,8 +42,8 @@ class number_test extends base_form_field
 	public function display_field_test_data()
 	{
 		return array(
-			array('', ''),
-			array('foo', 'foo'),
+			array('', 0),
+			array(33, 33),
 		);
 	}
 
@@ -56,7 +56,10 @@ class number_test extends base_form_field
 	public function test_display_field($field_value, $expected)
 	{
 		$field = $this->get_form_field('number');
+
 		$data = array('field_value' => $field_value);
+		$data['field_value'] = $field->get_field_value($data);
+
 		$this->assertEquals($expected, $field->display_field($data, array(), 'summary'));
 	}
 
@@ -67,7 +70,6 @@ class number_test extends base_form_field
 	{
 		return array(
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> '',
@@ -78,7 +80,6 @@ class number_test extends base_form_field
 				'<div style="width: 10%"><input type="number" class="inputbox" id="smc-foo" name="foo" step="1" value="" /></div>',
 			),
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> 10,
@@ -95,7 +96,6 @@ class number_test extends base_form_field
 				'</div>',
 			),
 			array(
-				'bar',
 				array(
 					'field_name'	=> 'bar',
 					'field_value'	=> 20,
@@ -112,18 +112,19 @@ class number_test extends base_form_field
 
 	/**
 	 * @dataProvider show_number_field_test_data
-	 * @param string $name
 	 * @param array $data
 	 * @param array $variable_map
 	 * @param string $expected
 	 * @return void
 	 */
-	public function test_show_number_field($name, array $data, array $variable_map, $expected)
+	public function test_show_number_field(array $data, array $variable_map, $expected)
 	{
 		$field = $this->get_form_field('number', $variable_map);
-		$data = $this->get_data('number', $name, $data, $field->get_default_props());
 
-		$this->assertEquals($expected, str_replace(array("\n", "\t", "\r"), '', $field->show_form_field($name, $data)));
+		$data = $this->get_data('number', $data, $field->get_default_props());
+		$data['field_value'] = $field->get_submitted_value($data);
+
+		$this->assertEquals($expected, str_replace(array("\n", "\t", "\r"), '', $field->show_form_field($data)));
 	}
 
 	/**

@@ -60,7 +60,6 @@ interface field_interface
 	/**
 	 * Render content field as form element
 	 *
-	 * @param string $field_name
 	 * @param array $field_data  Ex. array(
 	 * 								'field_type'	=> 'foo',		// string
 	 *								'field_value'	=> '',			// string/array
@@ -71,17 +70,16 @@ interface field_interface
 	 *							)
 	 * @return string
 	 */
-	public function show_form_field($field_name, array &$field_data);
+	public function show_form_field(array &$field_data);
 
 	/**
 	 * Save content field
 	 *
-	 * @param mixed $field_value
 	 * @param array $field_data
 	 * @param array $topic_data
 	 * @return void
 	 */
-	public function save_field($field_value, array $field_data, array $topic_data);
+	public function save_field(array $field_data, array $topic_data);
 
 	/**
 	 * Validate content field

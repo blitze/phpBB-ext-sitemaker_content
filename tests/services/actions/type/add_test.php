@@ -21,7 +21,7 @@ class add_test extends add_edit_base
 	{
 		parent::get_command($call_count);
 
-		return new add($this->auth, $this->controller_helper, $this->language, $this->template, $this->user, $this->auto_lang, $this->fields_factory, $this->topic_blocks_factory,  $this->views_factory);
+		return new add($this->auth, $this->controller_helper, $this->language, $this->template, $this->user, $this->auto_lang, $this->comments_factory, $this->fields_factory, $this->topic_blocks_factory,  $this->views_factory);
 	}
 
 	public function test_add_type()
@@ -51,6 +51,10 @@ class add_test extends add_edit_base
 				'bar'	=> 'TOPIC_BLOCK_BAR',
 				'foo'	=> 'TOPIC_BLOCK_FOO',
 			),
+			'COMMENT_TYPES'		=> array(
+				'blitze.content.comments' => 'COMMENTS',
+			),
+			'COMMENTS'			=> 'blitze.content.comments',
 		);
 
 		$this->assertEquals($expected, $this->template->assign_display('test'));

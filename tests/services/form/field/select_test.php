@@ -57,7 +57,10 @@ class select_test extends base_form_field
 	public function test_display_field($field_value, $expected)
 	{
 		$field = $this->get_form_field('select');
+
 		$data = array('field_value' => $field_value);
+		$data['field_value'] = $field->get_field_value($data);
+
 		$this->assertEquals($expected, $field->display_field($data, array(), 'summary'));
 	}
 
@@ -68,7 +71,6 @@ class select_test extends base_form_field
 	{
 		return array(
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> '',
@@ -92,7 +94,6 @@ class select_test extends base_form_field
 				'</select>',
 			),
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> '',
@@ -114,7 +115,6 @@ class select_test extends base_form_field
 				'</select>',
 			),
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> 'option2',
@@ -138,7 +138,6 @@ class select_test extends base_form_field
 				'</select>',
 			),
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> "option1\noption2",
@@ -160,7 +159,6 @@ class select_test extends base_form_field
 				'</select>',
 			),
 			array(
-				'bar',
 				array(
 					'field_name'	=> 'bar',
 					'field_value'	=> array('option2'),
@@ -188,17 +186,18 @@ class select_test extends base_form_field
 
 	/**
 	 * @dataProvider show_select_field_test_data
-	 * @param string $name
 	 * @param array $data
 	 * @param array $variable_map
 	 * @param string $expected
 	 * @return void
 	 */
-	public function test_show_select_field($name, array $data, array $variable_map, $expected)
+	public function test_show_select_field(array $data, array $variable_map, $expected)
 	{
 		$field = $this->get_form_field('select', $variable_map);
-		$data = $this->get_data('select', $name, $data, $field->get_default_props());
 
-		$this->assertEquals($expected, str_replace(array("\n", "\t"), '', $field->show_form_field($name, $data)));
+		$data = $this->get_data('select', $data, $field->get_default_props());
+		$data['field_value'] = $field->get_submitted_value($data, sizeof($variable_map));
+
+		$this->assertEquals($expected, str_replace(array("\n", "\t"), '', $field->show_form_field($data)));
 	}
 }

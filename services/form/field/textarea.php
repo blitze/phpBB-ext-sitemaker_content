@@ -107,7 +107,7 @@ class textarea extends text
 	/**
 	 * @inheritdoc
 	 */
-	public function show_form_field($name, array &$data, $forum_id = 0)
+	public function show_form_field(array &$data, $forum_id = 0)
 	{
 		if ($data['field_props']['editor'])
 		{
@@ -122,7 +122,7 @@ class textarea extends text
 			$data += $this->get_editor($forum_id);
 		}
 
-		return parent::show_form_field($name, $data);
+		return parent::show_form_field($data);
 	}
 
 	/**

@@ -116,6 +116,7 @@ class save_test extends \phpbb_database_test_case
 	{
 		$description = '';
 		$content_view = 'blitze.content.view.blog';
+		$comments = 'blitze.content.comments';
 		$fields_data = array(
 			'field1'	=> array(
 				'field_label'	=> 'Field 1',
@@ -149,6 +150,7 @@ class save_test extends \phpbb_database_test_case
 					array('content_desc', '', true, request_interface::REQUEST, ''),
 					array('content_enabled', true, false, request_interface::REQUEST, true),
 					array('content_view', '', false, request_interface::REQUEST, 'blitze.content.view.blog'),
+					array('comments', '', false, request_interface::REQUEST, ''),
 					array('copy_forum_perm', 0, false, request_interface::REQUEST, 1),
 					array('field_data', array('' => array('' => '')), true, request_interface::REQUEST, array()),
 				),
@@ -165,8 +167,10 @@ class save_test extends \phpbb_database_test_case
 					array('content_desc', '', true, request_interface::REQUEST, ''),
 					array('content_enabled', true, false, request_interface::REQUEST, true),
 					array('content_view', '', false, request_interface::REQUEST, 'blitze.content.view.blog'),
+					array('comments', '', false, request_interface::REQUEST, ''),
 					array('copy_forum_perm', 0, false, request_interface::REQUEST, 1),
-					array('view_settings', array('' => array('' => '')), true, request_interface::REQUEST, array()),
+					array('view_settings', array('' => array('' => '')), false, request_interface::REQUEST, array()),
+					array(array('comments_settings', ''), array('' => ''), false, request_interface::REQUEST, array('' => '')),
 					array('field_data', array('' => array('' => '')), true, request_interface::REQUEST, array()),
 				),
 				'',
@@ -181,8 +185,10 @@ class save_test extends \phpbb_database_test_case
 					array('content_desc', '', true, request_interface::REQUEST, ''),
 					array('content_enabled', true, false, request_interface::REQUEST, true),
 					array('content_view', '', false, request_interface::REQUEST, 'blitze.content.view.blog'),
+					array('comments', '', false, request_interface::REQUEST, ''),
 					array('copy_forum_perm', 0, false, request_interface::REQUEST, 1),
 					array('view_settings', array('' => array('' => '')), true, request_interface::REQUEST, array()),
+					array(array('comments_settings', ''), array('' => ''), false, request_interface::REQUEST, array('' => '')),
 					array('field_data', array('' => array('' => '')), true, request_interface::REQUEST, $fields_data),
 					array('field_props', array('' => array('' => '')), true, request_interface::REQUEST, $fields_settings),
 					array('field_defaults', array('' => array(0 => '')), true, request_interface::REQUEST, $fields_defaults),
@@ -201,9 +207,11 @@ class save_test extends \phpbb_database_test_case
 					array('content_desc', '', true, request_interface::REQUEST, ''),
 					array('content_enabled', true, false, request_interface::REQUEST, true),
 					array('content_view', '', false, request_interface::REQUEST, 'blitze.content.view.blog'),
+					array('comments', '', false, request_interface::REQUEST, ''),
 					array('copy_forum_perm', 0, false, request_interface::REQUEST, 1),
 					array('topic_blocks', '', false, request_interface::REQUEST, 'foo'),
 					array(array('view_settings', $content_view), array('' => ''), false, request_interface::REQUEST, array('' => '')),
+					array(array('comments_settings', ''), array('' => ''), false, request_interface::REQUEST, array('' => '')),
 					array('field_data', array('' => array('' => '')), true, request_interface::REQUEST, $fields_data),
 					array(array('field_props', 'field1'), array('' => ''), false, request_interface::REQUEST, array('' => '')),
 					array(array('field_defaults', 'field1'), array(0 => ''), true, request_interface::REQUEST, $field1_defaults),
@@ -250,10 +258,12 @@ class save_test extends \phpbb_database_test_case
 					array('content_langname', '', true, request_interface::REQUEST, 'Foo'),
 					array('content_desc', '', true, request_interface::REQUEST, ''),
 					array('content_enabled', true, false, request_interface::REQUEST, true),
-					array('content_view', '', false, request_interface::REQUEST, $content_view),
+					array('content_view', '', false, request_interface::REQUEST, 'blitze.content.view.tiles'),
+					array('comments', '', false, request_interface::REQUEST, 'blitze.content.comments'),
 					array('copy_forum_perm', 0, false, request_interface::REQUEST, 2),
 					array('topic_blocks', '', false, request_interface::REQUEST, 'foo,bar'),
-					array(array('view_settings', $content_view), array('' => ''), false, request_interface::REQUEST, array('' => '')),
+					array(array('view_settings', 'blitze.content.view.tiles'), array('' => ''), false, request_interface::REQUEST, array('tiles_per_row' => '3', 'offset' => '1')),
+					array(array('comments_settings', 'blitze.content.comments'), array('' => ''), false, request_interface::REQUEST, array('per_page' => 15)),
 					array('field_data', array('' => array('' => '')), true, request_interface::REQUEST, array_merge($fields_data, array(
 						// here we're updating an existing field, we need to verify that the field_id (in this case, 1) is retained
 						'foo'	=> array(
@@ -275,10 +285,14 @@ class save_test extends \phpbb_database_test_case
 				),
 				1,
 				array(
-					'forum_id'			=> 7,
-					'content_id'		=> 1,
-					'content_name'		=> 'foo',
-					'content_langname'	=> 'Foo',
+					'forum_id'				=> 7,
+					'content_id'			=> 1,
+					'content_name'			=> 'foo',
+					'content_langname'		=> 'Foo',
+					'content_view'			=> 'blitze.content.view.tiles',
+					'content_view_settings'	=> '{"tiles_per_row": "3", "offset": "1"}',
+					'comments'				=> 'blitze.content.comments',
+					'comments_settings'		=> '{"per_page": "15"}',
 					'content_fields'	=> array(
 						'field1'	=> array(
 							'content_id'		=> 1,
@@ -357,7 +371,7 @@ class save_test extends \phpbb_database_test_case
 				unset($expected_data['content_fields']);
 			}
 
-			$this->assertEquals($expected_data, array_intersect_key($result, $expected_data));
+			$this->assertEquals($expected_data, $result);
 		}
 		catch (\blitze\sitemaker\exception\base $e)
 		{

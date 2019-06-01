@@ -117,8 +117,9 @@ class type_test extends \phpbb_test_case
 			array('content_desc_uid', '', 'dd3d', 'dd3d', '', ''),
 			array('content_view', null, 'blog', 'blog', 'portal', 'portal'),
 			array('content_view_settings', array(), '', array(), '{"foo": "bar"}', array('foo' => 'bar')), 
+			array('comments', '', 'blitze.content.comments', 'blitze.content.comments', 'blitze.content.reviews', 'blitze.content.reviews'),
+			array('comments_settings', array(), '', array(), '{"per_page": "20"}', array('per_page' => '20')), 
 			array('req_approval', false, true, true, false, false),
-			array('allow_comments', true, false, false, true, true),
 			array('allow_views', true, false, false, true, true),
 			array('topic_blocks', array(), 'foo.service', array('foo.service'), array('foo.service', 'bar.service'), array('foo.service', 'bar.service')),
 			array('show_pagination', true, false, false, true, true),
@@ -185,6 +186,7 @@ class type_test extends \phpbb_test_case
 			'content_name'		=> 'test',
 			'content_langname'	=> 'test',
 			'content_view'		=> 'blog',
+			'comments'			=> 'blitze.content.comments',
 			'content_fields'	=> array(
 				'image'	=> array(
 					'field_type'			=> 'image',
@@ -220,8 +222,9 @@ class type_test extends \phpbb_test_case
 			'content_desc_uid'		=> '',
 			'content_view'			=> 'blog',
 			'content_view_settings'	=> array(),
+			'comments'				=> 'blitze.content.comments',
+			'comments_settings'		=> array(),
 			'req_approval'			=> false,
-			'allow_comments'		=> true,
 			'allow_views'			=> true,
 			'show_pagination'		=> true,
 			'index_show_desc'		=> false,
@@ -274,8 +277,9 @@ class type_test extends \phpbb_test_case
 			'content_desc_uid'		=> '',
 			'content_view'			=> 'blog',
 			'content_view_settings'	=> '',
+			'comments'				=> 'blitze.content.comments',
+			'comments_settings'		=> '',
 			'req_approval'			=> false,
-			'allow_comments'		=> true,
 			'allow_views'			=> true,
 			'show_pagination'		=> true,
 			'index_show_desc'		=> false,
@@ -286,7 +290,7 @@ class type_test extends \phpbb_test_case
 			'topic_blocks'			=> 'foo,bar',
 		);
 
-		$this->assertSame($to_array_expected, $content_type->to_array());
-		$this->assertSame($to_db_expected, $content_type->to_db());
+		$this->assertEquals($to_array_expected, $content_type->to_array());
+		$this->assertEquals($to_db_expected, $content_type->to_db());
 	}
 }

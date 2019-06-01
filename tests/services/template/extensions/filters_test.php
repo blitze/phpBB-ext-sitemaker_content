@@ -108,8 +108,16 @@ class filters_test extends \phpbb_test_case
 		$template->assign_block_vars_array('topicrow', [$test_data]);
 
 		$result = $template->assign_display('test', '', true);
-		// $expected = 'Thu May 09, 2019 4:02 pm May 09, 2019';
-echo $result;
-		// $this->assertEquals($expected, $result);
+		$expected = '<img src="./foo_image.jpg" />
+bar_category, foo2_image
+
+<img src="./foo_image.jpg" />
+foo_image, bar_category, foo2_image
+
+Seamlessly innovate in...
+
+<p>Seamlessly <a href="foo.php">innovate</a>...</p>';
+
+		$this->assertEquals($expected, $result);
 	}
 }

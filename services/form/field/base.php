@@ -60,20 +60,18 @@ abstract class base implements field_interface
 
 	/**
 	 * @inheritdoc
+	 * @return string
 	 */
 	public function get_submitted_value(array $data)
 	{
-		return $this->request->variable($data['field_name'], $data['field_value'], true);
+		return $this->request->variable($data['field_name'], (string) $data['field_value'], true);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function show_form_field($name, array &$data)
+	public function show_form_field(array &$data)
 	{
-		$data['field_name'] = $name;
-		$data['field_value'] = $this->get_submitted_value($data);
-
 		$this->ptemplate->assign_vars($data);
 
 		$field = $this->get_name();
@@ -83,7 +81,7 @@ abstract class base implements field_interface
 	/**
 	 * @inheritdoc
 	 */
-	public function save_field($value, array $field_data, array $topic_data)
+	public function save_field(array $field_data, array $topic_data)
 	{
 		// we do nothing here as field data is stored in phpbb post
 		// for fields that store their own data, this would be used to persist data to a database
@@ -134,5 +132,19 @@ abstract class base implements field_interface
 	public function get_error_message(array $data)
 	{
 		return $this->language->lang('FIELD_INVALID', $data['field_label']);
+	}
+
+	/**
+	 * @param mixed $value
+	 * @return array
+	 */
+	protected function ensure_is_array($value)
+	{
+		if (!is_array($value))
+		{
+			$value = array_filter(preg_split("/(\n|<br>)/", $value));
+		}
+
+		return $value;
 	}
 }

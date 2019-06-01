@@ -26,46 +26,34 @@ abstract class choice extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function get_field_value(array $data)
-	{
-		$value = $data['field_value'] ?: $data['field_props']['defaults'] ?: array(0 => '');
-
-		if (!is_array($value))
-		{
-			$value = array_filter(preg_split("/(\n|<br>)/", $value));
-		}
-
-		return ($data['field_props']['multi_select']) ? $value : array_shift($value);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	public function display_field(array $data, array $topic_data, $view_mode)
 	{
-		return sizeof($data['field_value']) ? join($this->language->lang('COMMA_SEPARATOR'), $data['field_value']) : '';
+		$value = $this->ensure_is_array($data['field_value']);
+		return sizeof($value) ? join($this->language->lang('COMMA_SEPARATOR'), $value) : '';
+	}
+
+	/**
+	 * @inheritdoc
+	 * @return array
+	 */
+	public function get_submitted_value(array $data, $form_is_submitted = false)
+	{
+		$default = $this->get_default_value($data);
+
+		if ($form_is_submitted)
+		{
+			return $this->request->variable($data['field_name'], $default, true);
+		}
+
+		return $default;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function get_submitted_value(array $data)
+	public function show_form_field(array &$data)
 	{
-		$value = $this->request->variable($data['field_name'], array(0 => ''), true);
-		return $value ?: $this->get_field_value($data);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function show_form_field($name, array &$data)
-	{
-		$selected = (array) $this->get_submitted_value($data);
-
-		$data['field_name'] = $name;
-		$data['field_value'] = join("\n", $selected);
-
-		$this->set_field_options($name, $data, $selected);
+		$this->set_field_options($data);
 		$this->ptemplate->assign_vars($data);
 
 		$tpl_name = ($data['field_type'] === 'select') ? 'select' : 'pickem';
@@ -73,11 +61,21 @@ abstract class choice extends base
 	}
 
 	/**
-	 * @param $name
 	 * @param array $data
-	 * @param array $selected
+	 * @return mixed
 	 */
-	protected function set_field_options($name, array &$data, array $selected)
+	protected function get_default_value(array $data)
+	{
+		$value = $this->ensure_is_array($data['field_value']);
+		$default = $value ?: $data['field_props']['defaults'] ?: array(0 => '');
+		return ($data['field_props']['multi_select']) ? $default : array_shift($default);
+	}
+
+	/**
+	 * @param array $data
+	 * @return void
+	 */
+	protected function set_field_options(array &$data)
 	{
 		if ($data['field_type'] === 'radio' || $data['field_type'] === 'checkbox')
 		{
@@ -92,9 +90,9 @@ abstract class choice extends base
 			foreach ($choices as $value => $option)
 			{
 				$options[] = array(
-					'id'		=> 'smc-'. $name . '-' . $count,
+					'id'		=> 'smc-'. $data['field_name'] . '-' . $count,
 					'label'		=> $this->language->lang($option),
-					'selected'	=> (int) (in_array($value, $selected)),
+					'selected'	=> (int) (in_array($value, (array) $data['field_value'])),
 					'value'		=> $value,
 				);
 				$count++;

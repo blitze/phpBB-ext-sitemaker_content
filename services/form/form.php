@@ -82,11 +82,15 @@ class form
 			'form_legend'	=> $legend,
 			'form_method'	=> $method,
 			'form_key'		=> $this->template_context->get_root_ref()['S_FORM_TOKEN'],
+			'is_submitted'	=> $this->request->is_set_post('form_token'),
 		);
 
 		return $this;
 	}
-	
+
+	/**
+	 * @return bool
+	 */
 	public function is_created()
 	{
 		return (bool) count($this->form);
@@ -105,15 +109,14 @@ class form
 		$field_data += array('field_id' => 'field-' . $name);
 		$field_data += $this->get_default_field_data();
 
-		if ($this->fields_factory->exists($type))
+		if (($field = $this->fields_factory->get($type)) !== null)
 		{
-			$obj = $this->fields_factory->get($type);
-
 			$field_data['field_name'] = $name;
 			$field_data['field_type'] = $type;
-			$field_data['field_props'] += $obj->get_default_props();
+			$field_data['field_props'] += $field->get_default_props();
 			$field_data['field_label'] = $this->language->lang($field_data['field_label']);
-			$field_data['field_view'] = $obj->show_form_field($name, $field_data);
+			$field_data['field_value'] = $field->get_submitted_value($field_data, $this->form['is_submitted']);
+			$field_data['field_view'] = $field->show_form_field($field_data);
 
 			if ($field_data['field_view'])
 			{
@@ -220,12 +223,15 @@ class form
 	 */
 	public function save_db_fields(array $topic_data, array $content_fields)
 	{
-		foreach ($this->db_fields as $field => $value)
+		foreach ($this->db_fields as $field_type => $value)
 		{
-			$field_data = $content_fields[$field];
-			$obj = $this->fields_factory->get($field_data['field_type']);
-			$field_data['field_props'] += $obj->get_default_props();
-			$obj->save_field($value, $field_data, $topic_data);
+			$field = $this->fields_factory->get($field_type);
+
+			$field_data = $content_fields[$field_type];
+			$field_data['field_value'] = $value;
+			$field_data['field_props'] += $field->get_default_props();
+
+			$field->save_field($field_data, $topic_data);
 		}
 	}
 

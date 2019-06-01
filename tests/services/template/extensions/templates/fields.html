@@ -5,3 +5,13 @@
 {{ row.FIELDS.body|field('image', loop.index0) }}
 {{ row.FIELDS.body|keys|join(', ') }}
 {% endfor %}
+
+{% set foo_txt -%}
+Seamlessly innovate intuitive paradigms after client-based technologies.
+{%- endset %}
+{{ foo_txt|truncate(25) }}
+
+{% set foo_html -%}
+<p>Seamlessly <a href="foo.php">innovate</a> intuitive paradigms after client-based technologies.</p>
+{%- endset %}
+{{ foo_html|truncate(25, 'html') }}

@@ -51,7 +51,10 @@ class url_test extends base_form_field
 	public function test_display_field($field_value, $expected)
 	{
 		$field = $this->get_form_field('url');
+
 		$data = array('field_value' => $field_value);
+		$data['field_value'] = $field->get_field_value($data);
+
 		$this->assertEquals($expected, $field->display_field($data, array(), 'summary'));
 	}
 
@@ -62,7 +65,6 @@ class url_test extends base_form_field
 	{
 		return array(
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> '',
@@ -73,7 +75,6 @@ class url_test extends base_form_field
 				'<input type="url" class="inputbox autowidth" id="smc-foo" name="foo" size="40" value="" />',
 			),
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> 'bar',
@@ -84,7 +85,6 @@ class url_test extends base_form_field
 				'<input type="url" class="inputbox autowidth" id="smc-foo" name="foo" size="40" value="bar" />',
 			),
 			array(
-				'foo2',
 				array(
 					'field_name'	=> 'foo2',
 					'field_value'	=> 'bar',
@@ -99,18 +99,19 @@ class url_test extends base_form_field
 
 	/**
 	 * @dataProvider show_url_field_test_data
-	 * @param string $name
 	 * @param array $data
 	 * @param array $variable_map
 	 * @param string $expected
 	 * @return void
 	 */
-	public function test_show_url_field($name, array $data, array $variable_map, $expected)
+	public function test_show_url_field(array $data, array $variable_map, $expected)
 	{
 		$field = $this->get_form_field('url', $variable_map);
-		$data = $this->get_data('url', $name, $data, $field->get_default_props());
 
-		$this->assertEquals($expected, $field->show_form_field($name, $data));
+		$data = $this->get_data('url', $data, $field->get_default_props());
+		$data['field_value'] = $field->get_submitted_value($data);
+
+		$this->assertEquals($expected, $field->show_form_field($data));
 	}
 
 	/**

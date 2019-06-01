@@ -205,7 +205,8 @@ final class field extends base_entity
 
 		if (in_array($this->field_type, array('radio', 'checkbox', 'select')))
 		{
-			$field_props['options'] = array_filter(array_combine($field_props['options'], $field_props['options']), 'strlen');
+			$options = (array) $field_props['options'];
+			$field_props['options'] = array_filter(array_combine($options, $options), 'strlen');
 		}
 
 		return $field_props;

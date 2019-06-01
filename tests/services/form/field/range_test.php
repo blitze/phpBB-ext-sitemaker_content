@@ -61,6 +61,8 @@ class range_test extends base_form_field
 			'postfix'	=> '',
 			'min'		=> '',
 			'max'		=> '',
+			'from'		=> '',
+			'to'		=> '',
 			'step'		=> 1,
 			'grid'		=> false,
 		), $field->get_default_props());
@@ -161,7 +163,9 @@ class range_test extends base_form_field
 	public function test_display_range_field(array $data, $expected)
 	{
 		$field = $this->get_form_field('range');
-		$data = $this->get_data('range', 'foo', $data, $field->get_default_props());
+
+		$data = $this->get_data('range', $data, $field->get_default_props());
+		$data['field_value'] = $field->get_field_value($data);
 
 		$this->util->expects($this->exactly(($data['field_props']['display'] === 'slider') ? 2 : 0))
 			->method('add_assets');
@@ -176,7 +180,6 @@ class range_test extends base_form_field
 	{
 		return array(
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> '',
@@ -190,7 +193,6 @@ class range_test extends base_form_field
 				'</div>',
 			),
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> '15;35',
@@ -215,7 +217,6 @@ class range_test extends base_form_field
 				'</div>',
 			),
 			array(
-				'bar',
 				array(
 					'field_name'	=> 'bar',
 					'field_value'	=> 'test2',
@@ -230,7 +231,7 @@ class range_test extends base_form_field
 					array('bar', 'test2', true, request_interface::REQUEST, 'test3'),
 				),
 				'<div style="width: 75%">' .
-					'<input type="text" class="inputbox autowidth rangepicker" id="smc-bar" name="bar" data-type="single" data-values="test1, test2, test3" data-prefix="" data-postfix="" data-min="0" data-max="" data-step="1" data-grid="1" data-from="1" data-to="" data-force-edges="true" value="test3" />' .
+					'<input type="text" class="inputbox autowidth rangepicker" id="smc-bar" name="bar" data-type="single" data-values="test1, test2, test3" data-prefix="" data-postfix="" data-min="0" data-max="" data-step="1" data-grid="1" data-from="2" data-to="" data-force-edges="true" value="test3" />' .
 				'</div>',
 			),
 		);
@@ -238,20 +239,21 @@ class range_test extends base_form_field
 
 	/**
 	 * @dataProvider show_range_field_test_data
-	 * @param string $name
 	 * @param array $data
 	 * @param array $variable_map
 	 * @param string $expected
 	 * @return void
 	 */
-	public function test_show_range_field($name, array $data, array $variable_map, $expected)
+	public function test_show_range_field(array $data, array $variable_map, $expected)
 	{
 		$field = $this->get_form_field('range', $variable_map);
-		$data = $this->get_data('range', $name, $data, $field->get_default_props());
+
+		$data = $this->get_data('range', $data, $field->get_default_props());
+		$data['field_value'] = $field->get_submitted_value($data);
 
 		$this->util->expects($this->exactly(2))
 			->method('add_assets');
 
-		$this->assertEquals($expected, str_replace(array("\n", "\t"), '', $field->show_form_field($name, $data)));
+		$this->assertEquals($expected, str_replace(array("\n", "\t"), '', $field->show_form_field($data)));
 	}
 }

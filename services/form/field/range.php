@@ -52,6 +52,8 @@ class range extends base
 			'postfix'	=> '',
 			'min'		=> '',
 			'max'		=> '',
+			'from'		=> '',
+			'to'		=> '',
 			'step'		=> 1,
 			'grid'		=> false,
 		);
@@ -60,7 +62,7 @@ class range extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function show_form_field($name, array &$data)
+	public function show_form_field(array &$data)
 	{
 		$this->util->add_assets(array(
 			'js'   => array(
@@ -71,7 +73,7 @@ class range extends base
 		$this->set_assets($data['field_props']['theme']);
 		$this->set_range($data);
 
-		return parent::show_form_field($name, $data);
+		return parent::show_form_field($data);
 	}
 
 	/**

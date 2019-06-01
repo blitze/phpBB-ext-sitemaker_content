@@ -20,6 +20,7 @@ class add_edit_base extends \phpbb_database_test_case
 	protected $template;
 	protected $user;
 	protected $auto_lang;
+	protected $comments_factory;
 	protected $fields_factory;
 	protected $topic_blocks_factory;
 	protected $views_factory;
@@ -119,6 +120,15 @@ class add_edit_base extends \phpbb_database_test_case
 		$ptemplate = $this->getMockBuilder('\blitze\sitemaker\services\template')
 			->disableOriginalConstructor()
 			->getMock();
+
+		$this->comments_factory = $this->getMockBuilder('\blitze\content\services\comments\factory')
+			->disableOriginalConstructor()
+			->getMock();
+		$this->comments_factory->expects($this->exactly($call_count))
+			->method('get_all_types')
+			->willReturn(array(
+				'blitze.content.comments'	=> 'COMMENTS',
+			));
 
 		$text_field = new \blitze\content\services\form\field\text($this->language, $request, $ptemplate);
 		$checkbox_field = new \blitze\content\services\form\field\checkbox($this->language, $request, $ptemplate);

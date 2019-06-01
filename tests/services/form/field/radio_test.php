@@ -58,7 +58,10 @@ class radio_test extends base_form_field
 	public function test_display_field($field_value, $expected)
 	{
 		$field = $this->get_form_field('radio');
+
 		$data = array('field_value' => $field_value);
+		$data['field_value'] = $field->get_field_value($data);
+
 		$this->assertEquals($expected, $field->display_field($data, array(), 'summary'));
 	}
 
@@ -69,7 +72,6 @@ class radio_test extends base_form_field
 	{
 		return array(
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> '',
@@ -90,7 +92,6 @@ class radio_test extends base_form_field
 				'<label for="smc-foo-2"><input type="radio" id="smc-foo-2" name="foo" value="option3" /> option3</label>',
 			),
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> '',
@@ -109,7 +110,6 @@ class radio_test extends base_form_field
 				'<label for="smc-foo-2"><input type="radio" id="smc-foo-2" name="foo" value="option3" /> option3</label>',
 			),
 			array(
-				'bar',
 				array(
 					'field_name'	=> 'bar',
 					'field_value'	=> 'option2',
@@ -130,7 +130,6 @@ class radio_test extends base_form_field
 				'<label for="smc-bar-2"><input type="radio" id="smc-bar-2" name="bar" value="option3" checked="checked" /> option3</label>',
 			),
 			array(
-				'bar',
 				array(
 					'field_name'	=> 'bar',
 					'field_value'	=> 'option2',
@@ -166,17 +165,18 @@ class radio_test extends base_form_field
 
 	/**
 	 * @dataProvider show_radio_field_test_data
-	 * @param string $name
 	 * @param array $data
 	 * @param array $variable_map
 	 * @param string $expected
 	 * @return void
 	 */
-	public function test_show_radio_field($name, array $data, array $variable_map, $expected)
+	public function test_show_radio_field(array $data, array $variable_map, $expected)
 	{
 		$field = $this->get_form_field('radio', $variable_map);
-		$data = $this->get_data('radio', $name, $data, $field->get_default_props());
 
-		$this->assertEquals($expected, str_replace(array("\n", "\t"), '', $field->show_form_field($name, $data)));
+		$data = $this->get_data('radio', $data, $field->get_default_props());
+		$data['field_value'] = $field->get_submitted_value($data, sizeof($variable_map));
+
+		$this->assertEquals($expected, str_replace(array("\n", "\t"), '', $field->show_form_field($data)));
 	}
 }

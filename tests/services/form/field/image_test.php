@@ -140,11 +140,13 @@ class image_test extends base_form_field
 	public function test_display_field($field_value, $view, $field_props, $expected)
 	{
 		$field = $this->get_form_field('image');
+
 		$data = array(
 			'field_label' => 'My Field',
 			'field_value' => $field_value,
 			'field_props' => $field_props + $field->get_default_props()
 		);
+		$data['field_value'] = $field->get_field_value($data);
 
 		$this->assertEquals($expected, $field->display_field($data, array(), $view));
 	}
@@ -156,7 +158,6 @@ class image_test extends base_form_field
 	{
 		return array(
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> '',
@@ -169,7 +170,6 @@ class image_test extends base_form_field
 				'<div class="medium-img"><div id="preview-foo" class="img-ui"></div></div>',
 			),
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> '',
@@ -186,7 +186,6 @@ class image_test extends base_form_field
 				'<div class="medium-img"><div id="preview-foo" class="img-ui"><img src="bar" alt="" /></div></div>',
 			),
 			array(
-				'foo2',
 				array(
 					'field_name'	=> 'foo2',
 					'field_value'	=> 'bar',
@@ -203,14 +202,13 @@ class image_test extends base_form_field
 
 	/**
 	 * @dataProvider show_image_field_test_data
-	 * @param string $name
 	 * @param array $data
 	 * @param array $variable_map
 	 * @param bool $allow_filemanager
 	 * @param string $expected
 	 * @return void
 	 */
-	public function test_show_image_field($name, array $data, array $variable_map, $allow_filemanager, $expected)
+	public function test_show_image_field(array $data, array $variable_map, $allow_filemanager, $expected)
 	{
 		$field = $this->get_form_field('image', $variable_map);
 
@@ -222,8 +220,9 @@ class image_test extends base_form_field
 			->method('get_access_key')
 			->willReturn('foo_key');
 
-		$data = $this->get_data('image', $name, $data, $field->get_default_props());
+		$data = $this->get_data('image', $data, $field->get_default_props());
+		$data['field_value'] = $field->get_submitted_value($data);
 
-		$this->assertEquals($expected, str_replace(array("\n", "\t", "\r"), '', $field->show_form_field($name, $data)));
+		$this->assertEquals($expected, str_replace(array("\n", "\t", "\r"), '', $field->show_form_field($data)));
 	}
 }

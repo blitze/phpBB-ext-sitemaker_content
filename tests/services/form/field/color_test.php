@@ -102,6 +102,8 @@ class color_test extends base_form_field
 	{
 		$field = $this->get_form_field('color');
 
+		$data['field_value'] = $field->get_field_value($data);
+
 		$this->assertEquals($expected, $field->display_field($data, array(), 'summary'));
 	}
 
@@ -112,19 +114,17 @@ class color_test extends base_form_field
 	{
 		return array(
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> '',
 					'field_props'	=> array(),
 				),
 				array(
-					array('foo', '', true, request_interface::REQUEST, ''),
+					array('foo', [], false, request_interface::REQUEST, []),
 				),
 				'<input type="text" class="inputbox autowidth colorpicker" id="smc-foo-1" name="foo[]" value="" data-palette="" data-allow-empty="true" size="7" />',
 			),
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> 'bar',
@@ -135,13 +135,12 @@ class color_test extends base_form_field
 					),
 				),
 				array(
-					array('foo', 'bar', true, request_interface::REQUEST, 'bar'),
+					array('foo', ['bar'], false, request_interface::REQUEST, ['bar']),
 				),
 				'<input type="text" class="inputbox autowidth colorpicker" id="smc-foo-1" name="foo[]" value="bar" data-palette="" data-allow-empty="true" size="7" />' .
 				'<input type="text" class="inputbox autowidth colorpicker" id="smc-foo-2" name="foo[]" value="" data-palette="" data-allow-empty="true" size="7" />',
 			),
 			array(
-				'foo2',
 				array(
 					'field_name'	=> 'foo2',
 					'field_value'	=> 'bar',
@@ -153,29 +152,30 @@ class color_test extends base_form_field
 					),
 				),
 				array(
-					array('foo2', 'bar', true, request_interface::REQUEST, 'foo_bar'),
+					array('foo2', ['bar'], false, request_interface::REQUEST, ['foo_bar']),
 				),
-				'<input type="text" class="inputbox autowidth colorpicker" id="smc-foo2-1" name="foo2[]" value="bar" data-palette="#cc3, #334, #455" data-show-palette-only="1" data-allow-empty="true" size="7" />',
+				'<input type="text" class="inputbox autowidth colorpicker" id="smc-foo2-1" name="foo2[]" value="foo_bar" data-palette="#cc3, #334, #455" data-show-palette-only="1" data-allow-empty="true" size="7" />',
 			),
 		);
 	}
 
 	/**
 	 * @dataProvider show_color_field_test_data
-	 * @param string $name
 	 * @param array $data
 	 * @param array $variable_map
 	 * @param string $expected
 	 * @return void
 	 */
-	public function test_show_color_field($name, array $data, array $variable_map, $expected)
+	public function test_show_color_field(array $data, array $variable_map, $expected)
 	{
 		$field = $this->get_form_field('color', $variable_map);
-		$data = $this->get_data('color', $name, $data, $field->get_default_props());
+
+		$data = $this->get_data('color', $data, $field->get_default_props());
+		$data['field_value'] = $field->get_submitted_value($data);
 
 		$this->util->expects($this->once())
 			->method('add_assets');
 
-		$this->assertEquals($expected, $field->show_form_field($name, $data));
+		$this->assertEquals($expected, $field->show_form_field($data));
 	}
 }

@@ -52,10 +52,11 @@ class color extends base
 
 	/**
 	 * @inheritdoc
+	 * @return array
 	 */
 	public function get_field_value(array $data)
 	{
-		return array_filter(preg_split("/(\n|<br>)/", $data['field_value']));
+		return $this->ensure_is_array($data['field_value']);
 	}
 
 	/**
@@ -87,7 +88,7 @@ class color extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function show_form_field($name, array &$data)
+	public function show_form_field(array &$data)
 	{
 		$this->util->add_assets(array(
 			'js'   => array(
@@ -99,7 +100,7 @@ class color extends base
 			),
 		));
 
-		return parent::show_form_field($name, $data);
+		return parent::show_form_field($data);
 	}
 
 	/**

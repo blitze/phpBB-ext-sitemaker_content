@@ -54,7 +54,10 @@ class text_test extends base_form_field
 	public function test_display_field($field_value, $expected)
 	{
 		$field = $this->get_form_field('text');
+
 		$data = array('field_value' => $field_value);
+		$data['field_value'] = $field->get_field_value($data);
+
 		$this->assertEquals($expected, $field->display_field($data, array(), 'summary'));
 	}
 
@@ -65,7 +68,6 @@ class text_test extends base_form_field
 	{
 		return array(
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> '',
@@ -78,7 +80,6 @@ class text_test extends base_form_field
 				'</div>',
 			),
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> 'bar',
@@ -91,7 +92,6 @@ class text_test extends base_form_field
 				'</div>',
 			),
 			array(
-				'foo2',
 				array(
 					'field_name'	=> 'foo2',
 					'field_value'	=> 'bar',
@@ -114,12 +114,14 @@ class text_test extends base_form_field
 	 * @param string $expected
 	 * @return void
 	 */
-	public function test_show_text_field($name, array $data, array $variable_map, $expected)
+	public function test_show_text_field(array $data, array $variable_map, $expected)
 	{
 		$field = $this->get_form_field('text', $variable_map);
-		$data = $this->get_data('text', $name, $data, $field->get_default_props());
 
-		$this->assertEquals($expected, str_replace(array("\n", "\t"), '', $field->show_form_field($name, $data)));
+		$data = $this->get_data('text', $data, $field->get_default_props());
+		$data['field_value'] = $field->get_submitted_value($data);
+
+		$this->assertEquals($expected, str_replace(array("\n", "\t"), '', $field->show_form_field($data)));
 	}
 
 	/**

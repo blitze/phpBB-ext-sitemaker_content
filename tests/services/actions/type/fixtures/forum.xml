@@ -57,6 +57,8 @@
 		<column>content_desc_uid</column>
 		<column>content_view</column>
 		<column>content_view_settings</column>
+		<column>comments</column>
+		<column>comments_settings</column>
 		<column>summary_tpl</column>
 		<column>detail_tpl</column>
 		<row>
@@ -71,6 +73,8 @@
 			<value></value>
 			<value>my.foo.view</value>
 			<value></value>
+			<value>blitze.content.comments</value>
+			<value>{"per_page": "10"}</value>
 			<value></value>
 			<value></value>
 		</row>

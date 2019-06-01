@@ -64,11 +64,12 @@ class location extends base
 
 	/**
 	 * @inheritdoc
+	 * @return array
 	 */
 	public function get_field_value(array $data)
 	{
 		$fields = ['map_type', 'place', 'address', 'zoom', 'latitude', 'longitude'];
-		$field_value = array_filter(preg_split("/(\n|<br>)/", $data['field_value']));
+		$field_value = $this->ensure_is_array($data['field_value']);
 		$field_value = array_pad(array_map('trim', $field_value), count($fields), 0);
 
 		return array_combine($fields, $field_value);
@@ -91,6 +92,7 @@ class location extends base
 
 	/**
 	 * @inheritdoc
+	 * @return array
 	 */
 	public function get_submitted_value(array $data)
 	{
@@ -103,7 +105,7 @@ class location extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function show_form_field($name, array &$data)
+	public function show_form_field(array &$data)
 	{
 		$this->util->add_assets(array(
 			'js'	=> array(
@@ -114,7 +116,7 @@ class location extends base
 
 		$data['show_input'] = true;
 
-		return parent::show_form_field($name, $data);
+		return parent::show_form_field($data);
 	}
 
 	/**

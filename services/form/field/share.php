@@ -40,7 +40,7 @@ class share extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function show_form_field($name, array &$data)
+	public function show_form_field(array &$data)
 	{
 		return '';
 	}

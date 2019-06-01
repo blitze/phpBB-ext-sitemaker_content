@@ -86,12 +86,9 @@ class image extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function show_form_field($name, array &$data)
+	public function show_form_field(array &$data)
 	{
-		$data['field_value'] = $this->get_submitted_value($data);
 		$data['field_value'] = $this->strip_image_bbcode($data['field_value']);
-
-		$field = $this->get_name();
 
 		$this->util->add_assets(array(
 			'js'	=> array(
@@ -105,9 +102,8 @@ class image extends base
 
 		$this->set_filemanager($data);
 		$this->ptemplate->assign_vars($data);
-		$field = $this->ptemplate->render_view('blitze/content', "fields/image.html", $field . '_field');
 
-		return $field;
+		return $this->ptemplate->render_view('blitze/content', "fields/image.html", $this->get_name() . '_field');
 	}
 
 	/**

@@ -124,15 +124,14 @@ abstract class base_form_field extends \phpbb_test_case
 
 	/**
 	 * @param string $type
-	 * @param string $name
 	 * @param array $data
 	 * @param array $default_data
 	 * @return array
 	 */
-	protected function get_data($type, $name, array $data, array $default_data)
+	protected function get_data($type, array $data, array $default_data)
 	{
 		return array_replace_recursive(array(
-			'field_id'		=> $name,
+			'field_id'		=> $data['field_name'],
 			'field_type'	=> $type,
 			'field_props'	=> $default_data,
 		), $data);

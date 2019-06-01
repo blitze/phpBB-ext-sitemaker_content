@@ -60,7 +60,7 @@ class datetime extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function show_form_field($name, array &$data)
+	public function show_form_field(array &$data)
 	{
 		$this->util->add_assets(array(
 			'js'	=> array(
@@ -72,6 +72,6 @@ class datetime extends base
 			)
 		));
 
-		return parent::show_form_field($name, $data);
+		return parent::show_form_field($data);
 	}
 }

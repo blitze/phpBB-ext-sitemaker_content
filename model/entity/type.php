@@ -101,9 +101,6 @@ final class type extends base_entity
 	protected $req_approval = false;
 
 	/** @var boolean */
-	protected $allow_comments = true;
-
-	/** @var boolean */
 	protected $allow_views = true;
 
 	/** @var boolean */

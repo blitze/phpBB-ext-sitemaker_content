@@ -76,6 +76,7 @@ class number extends base
 
 	/**
 	 * @inheritdoc
+	 * @return int
 	 */
 	public function get_field_value(array $data)
 	{
@@ -84,6 +85,7 @@ class number extends base
 
 	/**
 	 * @inheritdoc
+	 * @return int
 	 */
 	public function get_submitted_value(array $data)
 	{

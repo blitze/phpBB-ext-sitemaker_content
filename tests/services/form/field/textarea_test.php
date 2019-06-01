@@ -369,9 +369,12 @@ class textarea_test extends base_form_field
 	public function test_display_textarea_field($view, array $data, $page, $expected_content, $expected_toc)
 	{
 		$variable_map = array(array('page', 0, false, request_interface::REQUEST, $page - 1));
-		$data['field_name'] = 'foo';
 
 		$field = $this->get_form_field('textarea', $variable_map, $previewing);
+
+		$data['field_name'] = 'foo';
+		$data['field_value'] = $field->get_field_value($data);
+
 		$html = $field->display_field($data, array(), $view);
 
 		$this->assertEquals($expected_content, $html);
@@ -385,7 +388,6 @@ class textarea_test extends base_form_field
 	{
 		return array(
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> '',
@@ -396,7 +398,6 @@ class textarea_test extends base_form_field
 				'<textarea id="smc-foo" class="inputbox" name="foo" rows="15" maxlength="" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" data-bbcode="true"></textarea>',
 			),
 			array(
-				'foo',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> 'bar',
@@ -416,21 +417,22 @@ class textarea_test extends base_form_field
 
 	/**
 	 * @dataProvider show_textarea_field_test_data
-	 * @param string $name
 	 * @param array $data
 	 * @param array $variable_map
 	 * @param string $expected
 	 * @return void
 	 */
-	public function test_show_textarea_field($name, array $data, array $variable_map, $expected)
+	public function test_show_textarea_field(array $data, array $variable_map, $expected)
 	{
 		$field = $this->get_form_field('textarea', $variable_map);
-		$data = $this->get_data('textarea', $name, $data, $field->get_default_props());
+
+		$data = $this->get_data('textarea', $data, $field->get_default_props());
+		$data['field_value'] = $field->get_submitted_value($data);
 
 		$this->util->expects($this->exactly((int) $data['field_props']['editor']))
 			->method('add_assets');
 
-		$this->assertContains($expected, $field->show_form_field($name, $data));
+		$this->assertContains($expected, $field->show_form_field($data));
 	}
 
 	/**

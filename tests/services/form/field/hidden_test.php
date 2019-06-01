@@ -53,6 +53,8 @@ class hidden_test extends base_form_field
 		$field = $this->get_form_field('hidden');
 
 		$data = array('field_value' => $field_value);
+		$data['field_value'] = $field->get_field_value($data);
+
 		$this->assertEquals($expected, $field->display_field($data, array(), 'summary'));
 	}
 
@@ -63,7 +65,6 @@ class hidden_test extends base_form_field
 	{
 		return array(
 			array(
-				'foo1',
 				array(
 					'field_name'	=> 'foo1',
 					'field_value'	=> '',
@@ -74,7 +75,6 @@ class hidden_test extends base_form_field
 				'<input type="hidden" id="smc-foo1" name="foo1" value="" />',
 			),
 			array(
-				'foo2',
 				array(
 					'field_name'	=> 'foo2',
 					'field_value'	=> 'bar',
@@ -85,7 +85,6 @@ class hidden_test extends base_form_field
 				'<input type="hidden" id="smc-foo2" name="foo2" value="bar" />',
 			),
 			array(
-				'foo3',
 				array(
 					'field_name'	=> 'foo3',
 					'field_value'	=> 'bar',
@@ -100,16 +99,18 @@ class hidden_test extends base_form_field
 
 	/**
 	 * @dataProvider show_hidden_field_test_data
-	 * @param string $name
 	 * @param array $data
 	 * @param array $variable_map
 	 * @param string $expected
 	 * @return void
 	 */
-	public function test_show_hidden_field($name, array $data, array $variable_map, $expected)
+	public function test_show_hidden_field(array $data, array $variable_map, $expected)
 	{
 		$field = $this->get_form_field('hidden', $variable_map);
-		$data = $this->get_data('hidden', $name, $data, $field->get_default_props());
-		$this->assertEquals($expected, $field->show_form_field($name, $data));
+
+		$data = $this->get_data('hidden', $data, $field->get_default_props());
+		$data['field_value'] = $field->get_submitted_value($data);
+
+		$this->assertEquals($expected, $field->show_form_field($data));
 	}
 }
