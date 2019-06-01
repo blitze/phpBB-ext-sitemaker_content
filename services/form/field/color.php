@@ -82,7 +82,7 @@ class color extends base
 	public function get_submitted_value(array $data)
 	{
 		$value = $this->get_field_value($data);
-		return $this->request->variable($data['field_name'], $value);
+		return $this->request->variable($data['field_name'], $value ?: array(0 => ''));
 	}
 
 	/**

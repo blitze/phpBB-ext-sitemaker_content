@@ -205,8 +205,11 @@ function initMap() {
 
 				$(this).spectrum($.extend(options, {
 					hideAfterPaletteSelect: true,
-					preferredFormat: 'hex',
-					showButtons: false
+					allowEmpty:true,
+    				showInitial: true,
+    				showInput: true,
+					showButtons: false,
+					preferredFormat: 'hex'
 				}));
 			});
 
