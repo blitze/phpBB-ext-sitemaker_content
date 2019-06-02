@@ -18,7 +18,7 @@
 	<input type="hidden" id="{{ field_name }}-map-type" name="{{ field_name }}[map_type]" value="{{ map_type }}" />
 {% else %}
 	{%- set view = 'loc' -%}
-	{%- set map_type = field_value.map_type in map_types ? field_value.map_type : '' -%}
+	{%- set map_type = field_value.map_type in map_types ? field_value.map_type : map_types[0] -%}
 	{%- set zoom = field_props.map_zoom ? field_props.map_zoom : field_value.zoom|default(15) -%}
 {% endif %}
 <div class="location-map" id="{{ view ~ '-' ~ field_name }}" data-map-type="{{ map_type }}" data-place="{{ place }}" data-address="{{ address }}" data-latitude="{{ latitude }}" data-longitude="{{ longitude }}" data-zoom="{{ zoom }}" data-width="{{ field_props.map_width }}" data-height="{{ field_props.map_height }}" data-map-types="{{ map_types|join(',') }}"{{ autoComplete }}></div>
