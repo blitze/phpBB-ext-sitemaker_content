@@ -80,7 +80,7 @@ class number extends base
 	 */
 	public function get_field_value(array $data)
 	{
-		return (int) $data['field_value'];
+		return $data['field_value'] ? (int) $data['field_value'] : '';
 	}
 
 	/**

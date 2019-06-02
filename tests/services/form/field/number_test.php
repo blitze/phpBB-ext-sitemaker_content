@@ -42,7 +42,7 @@ class number_test extends base_form_field
 	public function display_field_test_data()
 	{
 		return array(
-			array('', 0),
+			array('', ''),
 			array(33, 33),
 		);
 	}
@@ -101,10 +101,10 @@ class number_test extends base_form_field
 					'field_value'	=> 20,
 				),
 				array(
-					array('bar', 20, false, request_interface::REQUEST, 20),
+					array('bar', 20, false, request_interface::REQUEST, 30),
 				),
 				'<div style="width: 10%">' .
-					'<input type="number" class="inputbox" id="smc-bar" name="bar" step="1" value="20" />' .
+					'<input type="number" class="inputbox" id="smc-bar" name="bar" step="1" value="30" />' .
 				'</div>',
 			),
 		);
