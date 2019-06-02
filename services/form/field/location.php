@@ -68,9 +68,9 @@ class location extends base
 	 */
 	public function get_field_value(array $data)
 	{
-		$fields = ['map_type', 'place', 'address', 'zoom', 'latitude', 'longitude'];
+		$fields = ['place', 'address', 'zoom', 'latitude', 'longitude', 'map_type'];
 		$field_value = $this->ensure_is_array($data['field_value']);
-		$field_value = array_pad(array_map('trim', $field_value), count($fields), 0);
+		$field_value = array_pad(array_map('trim', $field_value), count($fields), '');
 
 		return array_combine($fields, $field_value);
 	}
@@ -80,26 +80,27 @@ class location extends base
 	 */
 	public function display_field(array $data, array $topic_data, $view_mode)
 	{
-		$callable = 'display_' . $data['field_props']['disp_type'];
-
 		if (!$data['field_value'])
 		{
 			return '';
 		}
 
-		return $this->$callable($data);
+		$callable = 'display_' . $data['field_props']['disp_type'];
+		return $this->$callable($data, $view_mode);
 	}
 
 	/**
 	 * @inheritdoc
 	 * @return array
 	 */
-	public function get_submitted_value(array $data)
+	public function get_submitted_value(array $data, $form_is_submitted = false)
 	{
-		$value = $this->get_field_value($data);
-		$value = $this->request->variable($data['field_name'], $value, true);
+		if ($form_is_submitted)
+		{
+			return $this->request->variable($data['field_name'], array('' => ''), true);
+		}
 
-		return array_filter($value);
+		return $this->get_field_value($data);
 	}
 
 	/**
@@ -189,6 +190,6 @@ class location extends base
 	 */
 	protected function get_location_title($place, $address)
 	{
-		return (strpos($address, $place) === false) ? '<strong>' . $place . '</strong><br />' : '';
+		return (strpos($address, $place) === false) ? '<strong>' . $place . '</strong><br />' : $address;
 	}
 }

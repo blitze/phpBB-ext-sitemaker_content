@@ -20,10 +20,10 @@ function getInfoWindowContent(title, address) {
 function updateLocationInfo(fieldName, place, infowindow) {
 	'use strict';
 
+	$mapFields[fieldName].place.val(place.name);
 	$mapFields[fieldName].address.val(place.formatted_address);
 	$mapFields[fieldName].latitude.val(place.geometry.location.lat);
 	$mapFields[fieldName].longitude.val(place.geometry.location.lng);
-	$mapFields[fieldName].place.val(place.name);
 
 	infowindow.setContent(getInfoWindowContent(place.name, place.formatted_address));
 }
@@ -102,7 +102,6 @@ function initAutocomplete(fieldName, map, marker, infowindow) {
 					var service = new google.maps.places.PlacesService(map);
 					service.getDetails(request, function(place, status) {
 						if (status === google.maps.places.PlacesServiceStatus.OK) {
-							console.log(place);
 							updateLocationInfo(fieldName, place, infowindow);
 						}
 					});
@@ -125,10 +124,10 @@ function initMap() {
 
 		var latlng = new google.maps.LatLng(data.latitude, data.longitude);
 		var map = new google.maps.Map(this, {
-			zoom: data.zoom || 16,
+			zoom: data.zoom || 0,
 			center: latlng,
 			tilt: 45,
-			mapTypeId: data.mapType,
+			mapTypeId: data.mapType || 'roadmap',
 			mapTypeControl: true,
 			mapTypeControlOptions: {
 				mapTypeIds: data.mapTypes.split(',')
