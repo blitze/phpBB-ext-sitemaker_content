@@ -19,4 +19,4 @@ cd ../../phpBB3
 git clone --depth=1 "git://github.com/blitze/phpBB-ext-sitemaker.git" "phpBB/ext/blitze/sitemaker" --branch=$BRANCH
 
 cd phpBB/ext/blitze/sitemaker
-composer install --no-interaction --prefer-source
+composer install --no-interaction --prefer-source --no-dev --ignore-platform-reqs
