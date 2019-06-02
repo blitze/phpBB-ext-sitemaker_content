@@ -142,7 +142,7 @@ abstract class base implements field_interface
 	{
 		if (!is_array($value))
 		{
-			$value = array_filter(preg_split("/(\n|<br>)/", $value));
+			return array_filter(preg_split("/(\n|<br>)/", $value));
 		}
 
 		return $value;

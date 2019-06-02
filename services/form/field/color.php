@@ -79,10 +79,14 @@ class color extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function get_submitted_value(array $data)
+	public function get_submitted_value(array $data, $form_is_submitted = false)
 	{
-		$value = $this->get_field_value($data);
-		return $this->request->variable($data['field_name'], $value ?: array(0 => ''));
+		if ($form_is_submitted)
+		{
+			return $this->request->variable($data['field_name'], array(0 => ''));
+		}
+
+		return $this->get_field_value($data);
 	}
 
 	/**

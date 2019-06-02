@@ -120,7 +120,7 @@ class color_test extends base_form_field
 					'field_props'	=> array(),
 				),
 				array(
-					array('foo', [], false, request_interface::REQUEST, []),
+					array('foo', array(0 => ''), false, request_interface::REQUEST, []),
 				),
 				'<input type="text" class="inputbox autowidth colorpicker" id="smc-foo-1" name="foo[]" value="" data-palette="" data-allow-empty="true" size="7" />',
 			),
@@ -134,9 +134,7 @@ class color_test extends base_form_field
 						'palette_only'	=> false,
 					),
 				),
-				array(
-					array('foo', ['bar'], false, request_interface::REQUEST, ['bar']),
-				),
+				array(),
 				'<input type="text" class="inputbox autowidth colorpicker" id="smc-foo-1" name="foo[]" value="bar" data-palette="" data-allow-empty="true" size="7" />' .
 				'<input type="text" class="inputbox autowidth colorpicker" id="smc-foo-2" name="foo[]" value="" data-palette="" data-allow-empty="true" size="7" />',
 			),
@@ -152,7 +150,7 @@ class color_test extends base_form_field
 					),
 				),
 				array(
-					array('foo2', ['bar'], false, request_interface::REQUEST, ['foo_bar']),
+					array('foo2', array(0 => ''), false, request_interface::REQUEST, ['foo_bar']),
 				),
 				'<input type="text" class="inputbox autowidth colorpicker" id="smc-foo2-1" name="foo2[]" value="foo_bar" data-palette="#cc3, #334, #455" data-show-palette-only="1" data-allow-empty="true" size="7" />',
 			),
@@ -171,7 +169,7 @@ class color_test extends base_form_field
 		$field = $this->get_form_field('color', $variable_map);
 
 		$data = $this->get_data('color', $data, $field->get_default_props());
-		$data['field_value'] = $field->get_submitted_value($data);
+		$data['field_value'] = $field->get_submitted_value($data, sizeof($variable_map));
 
 		$this->util->expects($this->once())
 			->method('add_assets');
