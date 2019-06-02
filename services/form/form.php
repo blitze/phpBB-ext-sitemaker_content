@@ -201,7 +201,7 @@ class form
 		foreach ($content_fields as $field => $row)
 		{
 			$row += $this->get_default_field_data();
-			$value = $this->get_submitted_field_data($previewing, $row, $req_mod_input, $cp_class);
+			$value = $this->get_submitted_field_data($row, $req_mod_input, $cp_class);
 
 			if ($previewing || empty($row['field_props']['is_db_field']))
 			{
@@ -236,18 +236,17 @@ class form
 	}
 
 	/**
-	 * @param bool $previewing
 	 * @param array $row
 	 * @param bool $req_mod_input
 	 * @param string $cp_class
 	 * @return mixed
 	 */
-	protected function get_submitted_field_data($previewing, array &$row, &$req_mod_input, $cp_class)
+	protected function get_submitted_field_data(array &$row, &$req_mod_input, $cp_class)
 	{
 		if ($field = $this->fields_factory->get($row['field_type']))
 		{
 			$row['field_props'] += $field->get_default_props();
-			$row['field_value'] = $field->get_submitted_value($row, $previewing);
+			$row['field_value'] = $field->get_submitted_value($row, $this->form['is_submitted']);
 
 			$this->validate_field($field, $row, $req_mod_input, $cp_class);
 		}

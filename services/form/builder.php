@@ -129,6 +129,10 @@ class builder
 			$this->req_approval = $entity->get_req_approval();
 			$this->mode = $this->request->variable('cp', ($this->user_is_mod && $mode !== 'post') ? 'mcp' : 'ucp');
 
+			$this->form->create('postform', 'posting')
+				->add('cp', 'hidden', array('field_value' => $this->mode))
+				->add('redirect', 'hidden', array('field_value' => $this->get_redirect_url()));
+
 			if ($save_draft && !$this->request->is_set('message'))
 			{
 				$this->request->overwrite('message', $this->generate_message());
@@ -239,10 +243,6 @@ class builder
 	public function generate_form($topic_id, array $post_data, array $page_data = array())
 	{
 		$this->set_field_values($post_data['post_text']);
-
-		$this->form->create('postform', 'posting')
-			->add('cp', 'hidden', array('field_value' => $this->mode))
-			->add('redirect', 'hidden', array('field_value' => $this->get_redirect_url()));
 
 		foreach ($this->content_fields as $field => $field_data)
 		{
