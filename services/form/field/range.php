@@ -45,7 +45,7 @@ class range extends base
 		return array(
 			'display'	=> 'text',
 			'type'		=> 'single',
-			'theme'		=> 'skinFlat',
+			'skin'		=> 'flat',
 			'size'		=> 100,
 			'values'	=> '',
 			'prefix'	=> '',
