@@ -64,7 +64,7 @@ class view implements action_interface
 		if (($entity = $this->content_types->get_type($type)) !== false)
 		{
 			$entity->set_topic_blocks('');
-			$entity->set_allow_comments(false);
+			$entity->set_comments('');
 
 			$update_count = array();
 			$overwrite = $this->get_data_overwrite($mode, $redirect_url, $topic_id);

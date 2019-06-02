@@ -191,7 +191,7 @@ class main_controller
 		$this->add_navlink($entity->get_content_langname(), $this->helper->route('blitze_content_type', array('type' => $type)));
 
 		$this->template->assign_vars(array(
-			'S_COMMENTS'	=> $entity->get_allow_comments(),
+			'S_COMMENTS'	=> $entity->get_comments(),
 			'S_VIEWS'		=> $entity->get_allow_views(),
 			'S_TOOLS'		=> true,
 			'FIELD_TYPES'	=> $entity->get_field_types(),
