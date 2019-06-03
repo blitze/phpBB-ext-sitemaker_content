@@ -15,7 +15,7 @@ class main_controller
 	protected $db;
 
 	/** @var \phpbb\controller\helper */
-	protected $helper;
+	protected $controller;
 
 	/** @var \phpbb\request\request_interface */
 	protected $request;
@@ -45,7 +45,8 @@ class main_controller
 	 * Constructor
 	 *
 	 * @param \phpbb\db\driver\driver_interface						$db					Database object
-	 * @param \phpbb\controller\helper								$helper				Helper object
+	 * @param \phpbb\controller\helper								$controller			Controller Helper object
+	 * @param \phpbb\path_helper									$path_helper		Path Helper
 	 * @param \phpbb\request\request_interface						$request			Request object
 	 * @param \phpbb\template\template								$template			Template object
 	 * @param \phpbb\user											$user				User object
@@ -55,10 +56,11 @@ class main_controller
 	 * @param \blitze\content\services\views\views_factory			$views_factory		Views handlers
 	 * @param \blitze\content\services\comments\factory				$comments_factory	Comments factory
 	*/
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $helper, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\types $content_types, \blitze\content\services\feed $feed, \blitze\content\services\poll $poll, \blitze\content\services\views\views_factory $views_factory, \blitze\content\services\comments\factory $comments_factory)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $controller, \phpbb\path_helper $path_helper, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\types $content_types, \blitze\content\services\feed $feed, \blitze\content\services\poll $poll, \blitze\content\services\views\views_factory $views_factory, \blitze\content\services\comments\factory $comments_factory)
 	{
 		$this->db = $db;
-		$this->helper = $helper;
+		$this->controller = $controller;
+		$this->path_helper = $path_helper;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
@@ -132,7 +134,7 @@ class main_controller
 			$this->template->assign_var('TOPIC_URL', generate_board_url(true) . $topic_data['topic_url']);
 		}
 
-		return $this->helper->render($template_file, $topic_data['topic_title']);
+		return $this->controller->render($template_file, $topic_data['topic_title']);
 	}
 
 	/**
@@ -151,12 +153,12 @@ class main_controller
 				'name'	=> $type->get_content_langname(),
 				'desc'	=> $type->get_content_desc(),
 				'color'	=> $type->get_content_colour(),
-				'url'	=> $this->helper->route('blitze_content_type', array('type' => $type->get_content_name())),
+				'url'	=> $this->controller->route('blitze_content_type', array('type' => $type->get_content_name())),
 			);
 		}
 		$this->template->assign_var('types', $types);
 
-		return $this->helper->render('content_types.html', '');
+		return $this->controller->render('content_types.html', '');
 	}
 
 	/**
@@ -188,7 +190,7 @@ class main_controller
 		/** @var \blitze\content\model\entity\type $entity */
 		$entity = $this->content_types->get_type($type, true);
 
-		$this->add_navlink($entity->get_content_langname(), $this->helper->route('blitze_content_type', array('type' => $type)));
+		$this->add_navlink($entity->get_content_langname(), $this->controller->route('blitze_content_type', array('type' => $type)));
 
 		$this->template->assign_vars(array(
 			'S_COMMENTS'	=> $entity->get_comments(),
@@ -273,7 +275,7 @@ class main_controller
 			return $this->feed->render($max_update_time ?: time());
 		}
 
-		return $this->helper->render($view_template, $page_title);
+		return $this->controller->render($view_template, $page_title);
 	}
 
 	/**
@@ -282,7 +284,15 @@ class main_controller
 	protected function get_referrer()
 	{
 		$referrer = $this->request->get_super_global(\phpbb\request\request_interface::SERVER)['HTTP_REFERER'];
-		$referrer = parse_url($referrer, PHP_URL_PATH);
-		return urlencode(str_replace(array('&amp;', $this->user->page['root_script_path']), array('&', ''), $referrer));
+
+		if (strpos($referrer, 'posting.' . $this->path_helper->get_php_ext()) !== false)
+		{
+			return '';
+		}
+
+		$referrer = $this->path_helper->strip_url_params($referrer, 'redirect', false);
+		$path_info = parse_url($referrer);
+
+		return urlencode($path_info['path'] . (!empty($path_info['query']) ? '?' . $path_info['query'] : ''));
 	}
 }
