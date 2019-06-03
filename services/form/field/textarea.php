@@ -85,7 +85,7 @@ class textarea extends text
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field(array $data, array $topic_data, $view_mode)
+	public function display_field(array $data, array $topic_data, $display_mode, $view_mode)
 	{
 		$toc_pattern = '(<h4>(.*?)</h4>)?';
 		$pages_pattern = '<p><!-- pagebreak --></p>';
@@ -93,7 +93,7 @@ class textarea extends text
 
 		$pages = array_filter((array) preg_split('#' . $split_pattern . '#s', $data['field_value']));
 
-		if ($view_mode === 'summary' || $view_mode === 'block')
+		if ($view_mode === 'summary')
 		{
 			return $this->get_summary_value(trim($pages[0]), $data['field_props']['max_chars']);
 		}
@@ -101,7 +101,7 @@ class textarea extends text
 		// get page titles to generate TOC
 		preg_match_all('#' . $pages_pattern . $toc_pattern . '#s', $data['field_value'], $matches);
 
-		return $this->get_detail_value($pages, $matches[2], $data, $view_mode);
+		return $this->get_detail_value($pages, $matches[2], $data, $display_mode);
 	}
 
 	/**
@@ -167,11 +167,12 @@ class textarea extends text
 	 * @param array $pages
 	 * @param array $titles
 	 * @param array $data
+	 * @param string $display_mode
 	 * @return mixed
 	 */
-	protected function get_detail_value(array $pages, array $titles, array $data, $view_mode)
+	protected function get_detail_value(array $pages, array $titles, array $data, $display_mode)
 	{
-		if ($view_mode === 'preview' || $view_mode === 'print')
+		if ($display_mode === 'preview' || $display_mode === 'print')
 		{
 			return join('<p><hr class="dashed"></p>', $pages);
 		}

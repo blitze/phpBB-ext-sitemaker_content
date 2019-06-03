@@ -70,7 +70,7 @@ class range extends base
 			),
 		));
 
-		$this->set_assets($data['field_props']['theme']);
+		$this->set_assets();
 		$this->set_range($data);
 
 		return parent::show_form_field($data);
@@ -79,35 +79,34 @@ class range extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field(array $data, array $topic_data, $view_mode)
+	public function display_field(array $data, array $topic_data, $display_mode, $view_mode)
 	{
 		if (!$data['field_value'])
 		{
 			return '';
 		}
 
-		$callable = 'display_field_' . (($view_mode === 'print') ? 'text' : $data['field_props']['display']);
-		return $this->$callable($data);
+		$callable = 'display_field_' . (($display_mode === 'print') ? 'text' : $data['field_props']['display']);
+		return $this->$callable($data, $display_mode);
 	}
 
 	/**
 	 * @param array $data
+	 * @param string $display_mode
 	 * @return string
 	 */
-	protected function display_field_slider(array $data)
+	protected function display_field_slider(array $data, $display_mode)
 	{
 		// do not include assets on preview page as form already handles this
-		if (!$this->request->is_set_post('cp'))
+		if ($display_mode !== 'preview')
 		{
 			$this->util->add_assets(array(
-				'js'   => array(
-					100 => '@blitze_content/assets/fields/display.min.js',
-				),
+				'js' => [100 => '@blitze_content/assets/fields/display.min.js'],
 			));
 		}
 		$data['field_props']['disabled'] = true;
 
-		$this->set_assets($data['field_props']['theme']);
+		$this->set_assets();
 		$this->set_range($data);
 		$this->ptemplate->assign_vars($data);
 
@@ -171,18 +170,13 @@ class range extends base
 	}
 
 	/**
-	 * @param string $theme
 	 * @return void
 	 */
-	protected function set_assets($theme)
+	protected function set_assets()
 	{
 		$this->util->add_assets(array(
-			'js'   => array(
-				'@blitze_content/vendor/ion.rangeSlider/js/ion.rangeSlider.min.js',
-			),
-			'css'   => array(
-				'@blitze_content/vendor/ion.rangeSlider/css/ion.rangeSlider.min.css',
-			)
+			'js'	=> ['@blitze_content/vendor/ion.rangeSlider/js/ion.rangeSlider.min.js'],
+			'css'	=> ['@blitze_content/vendor/ion.rangeSlider/css/ion.rangeSlider.min.css']
 		));
 	}
 }

@@ -194,8 +194,8 @@ abstract class base_view implements views_interface
 			throw new \phpbb\exception\http_exception(404, 'NO_TOPIC');
 		}
 
-		$this->fields->prepare_to_show($entity, array_keys($topics_data), $entity->get_detail_fields(), $entity->get_detail_tpl(), 'detail');
-		$this->fields->set_view_mode($view);
+		$this->fields->prepare_to_show($entity, array_keys($topics_data), $entity->get_detail_fields(), $entity->get_detail_tpl(), 'detail')
+			->set_display_mode($view);
 
 		$topic_data = array_shift($topics_data);
 		$post_data = array_shift($post_data[$topic_id]);

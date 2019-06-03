@@ -34,7 +34,7 @@ class telephone extends number
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field(array $data, array $topic_data, $view_mode)
+	public function display_field(array $data, array $topic_data, $display_mode, $view_mode)
 	{
 		return $data['field_value'] ? '<a href="tel:' . $data['field_value'] . '">' . preg_replace("/^1?(\d{3})(\d{3})(\d{4})$/", "$1-$2-$3", $data['field_value']) . '</a>' : '';
 	}

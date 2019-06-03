@@ -104,7 +104,7 @@ class color_test extends base_form_field
 
 		$data['field_value'] = $field->get_field_value($data);
 
-		$this->assertEquals($expected, $field->display_field($data, array(), 'summary'));
+		$this->assertEquals($expected, $field->display_field($data, array(), 'summary', 'summary'));
 	}
 
 	/**

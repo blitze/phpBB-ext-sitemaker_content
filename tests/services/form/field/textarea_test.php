@@ -157,6 +157,7 @@ class textarea_test extends base_form_field
 
 		// if no content, should display no content
 			array(
+				'block',
 				'summary',
 				array(
 					'field_value'	=> '',
@@ -166,6 +167,17 @@ class textarea_test extends base_form_field
 				array(),
 			),
 			array(
+				'summary',
+				'summary',
+				array(
+					'field_value'	=> '',
+				),
+				0,
+				'',
+				array(),
+			),
+			array(
+				'detail',
 				'detail',
 				array(
 					'field_value'	=> '',
@@ -180,6 +192,7 @@ class textarea_test extends base_form_field
 		// content is truncated if summary view and max_chars is provided
 			array(
 				'summary',
+				'summary',
 				array(
 					'field_value'	=> 'Conveniently incentivize extensive e-commerce vis-a-vis.',
 					'field_props'	=> array(
@@ -192,6 +205,7 @@ class textarea_test extends base_form_field
 			),
 			array(
 				'summary',
+				'summary',
 				array(
 					'field_value'	=> 'Conveniently incentivize extensive e-commerce vis-a-vis.',
 					'field_props'	=> array(
@@ -203,6 +217,20 @@ class textarea_test extends base_form_field
 				array(),
 			),
 			array(
+				'block',
+				'summary',
+				array(
+					'field_value'	=> 'Conveniently incentivize extensive e-commerce vis-a-vis.',
+					'field_props'	=> array(
+						'max_chars'		=> 20,
+					),
+				),
+				0,
+				'Conveniently...',
+				array(),
+			),
+			array(
+				'detail',
 				'detail',
 				array(
 					'field_value'	=> 'Conveniently incentivize extensive e-commerce vis-a-vis.',
@@ -220,6 +248,7 @@ class textarea_test extends base_form_field
 		// summary view should always display first page with no heading
 			array(
 				'summary',
+				'summary',
 				array(
 					'field_value'	=> $pages_string,
 				),
@@ -229,6 +258,17 @@ class textarea_test extends base_form_field
 			),
 			array(
 				'summary',
+				'summary',
+				array(
+					'field_value'	=> $pages_toc_string,
+				),
+				2,
+				'Page 1 content',
+				array(),
+			),
+			array(
+				'block',
+				'summary',
 				array(
 					'field_value'	=> $pages_toc_string,
 				),
@@ -237,8 +277,9 @@ class textarea_test extends base_form_field
 				array(),
 			),
 
-		// detail view should display requested page, if it exists, with heading, if it exists
+		// detail view should display requested page, if it exists, with heading
 			array(
+				'detail',
 				'detail',
 				array(
 					'field_value'	=> $pages_string,
@@ -252,6 +293,7 @@ class textarea_test extends base_form_field
 				),
 			),
 			array(
+				'detail',
 				'detail',
 				array(
 					'field_value'	=> $pages_toc_string,
@@ -283,6 +325,7 @@ class textarea_test extends base_form_field
 			),
 			array(
 				'detail',
+				'detail',
 				array(
 					'field_value'	=> $pages_toc_string,
 				),
@@ -311,9 +354,30 @@ class textarea_test extends base_form_field
 					),
 				),
 			),
+			array(
+				'print',
+				'detail',
+				array(
+					'field_value'	=> $pages_toc_string,
+				),
+				3,
+				'Page 1 content<p><hr class="dashed"></p><h4>Title 2</h4>Page 2 content<p><hr class="dashed"></p>Page 3 content',
+				array(),
+			),
+			array(
+				'preview',
+				'detail',
+				array(
+					'field_value'	=> $pages_string,
+				),
+				0,
+				'Page 1 content<p><hr class="dashed"></p>Page 2 content<p><hr class="dashed"></p>Page 3 content',
+				array(),
+			),
 
 		// if requested page does not exist, display first page
 			array(
+				'detail',
 				'detail',
 				array(
 					'field_value'	=> $pages_toc_string,
@@ -345,6 +409,7 @@ class textarea_test extends base_form_field
 		// Form submitted and we are previewing
 			array(
 				'preview',
+				'detail',
 				array(
 					'field_value'	=> $pages_toc_string,
 				),
@@ -359,23 +424,24 @@ class textarea_test extends base_form_field
 
 	/**
 	 * @dataProvider display_field_test_data
-	 * @param string $view
+	 * @param string $display_mode
+	 * @param string $view_mode
 	 * @param array $data
 	 * @param int $page
 	 * @param string $expected_content
 	 * @param array $expected_toc
 	 * @return void
 	 */
-	public function test_display_textarea_field($view, array $data, $page, $expected_content, $expected_toc)
+	public function test_display_textarea_field($display_mode, $view_mode, array $data, $page, $expected_content, $expected_toc)
 	{
 		$variable_map = array(array('page', 0, false, request_interface::REQUEST, $page - 1));
 
-		$field = $this->get_form_field('textarea', $variable_map, $previewing);
+		$field = $this->get_form_field('textarea', $variable_map);
 
 		$data['field_name'] = 'foo';
 		$data['field_value'] = $field->get_field_value($data);
 
-		$html = $field->display_field($data, array(), $view);
+		$html = $field->display_field($data, array(), $display_mode, $view_mode);
 
 		$this->assertEquals($expected_content, $html);
 		$this->assertEquals($expected_toc, $this->template->assign_display('test'));

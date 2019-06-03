@@ -43,10 +43,11 @@ interface field_interface
 	 * @param array $field_data		This holds field props and field value after bbcode parsing has occurred
 	 *								Which means bbcodes have been converted to html
 	 * @param array $topic_data
-	 * @param string $view_mode		Current view: summary|detail|print|block|preview
+	 * @param string $display_mode	summary|detail|print|block|preview
+	 * @param string $view_mode		Current view: summary|detail
 	 * @return mixed
 	 */
-	public function display_field(array $field_data, array $topic_data, $view_mode);
+	public function display_field(array $field_data, array $topic_data, $display_mode, $view_mode);
 
 	/**
 	 * Returns the value of the field after form has been submitted.

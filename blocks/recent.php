@@ -173,7 +173,8 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 			$topic_tracking_info = $this->forum->get_topic_tracking_info($forum_id);
 			$block_fields = $this->get_block_fields($entity->get_field_types());
 
-			$this->fields->prepare_to_show($entity, array_keys($topics_data), $block_fields, $this->settings['block_tpl'], 'block', $block_id . '_block');
+			$this->fields->prepare_to_show($entity, array_keys($topics_data), $block_fields, $this->settings['block_tpl'], 'summary', $block_id . '_block')
+				->set_display_mode('block');
 			$this->set_max_chars($block_fields);
 
 			$update_count = array();

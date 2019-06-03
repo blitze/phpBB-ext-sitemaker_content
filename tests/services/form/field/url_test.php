@@ -55,7 +55,7 @@ class url_test extends base_form_field
 		$data = array('field_value' => $field_value);
 		$data['field_value'] = $field->get_field_value($data);
 
-		$this->assertEquals($expected, $field->display_field($data, array(), 'summary'));
+		$this->assertEquals($expected, $field->display_field($data, array(), 'summary', 'summary'));
 	}
 
 	/**

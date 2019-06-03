@@ -26,7 +26,7 @@ abstract class choice extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field(array $data, array $topic_data, $view_mode)
+	public function display_field(array $data, array $topic_data, $display_mode, $view_mode)
 	{
 		$value = $this->ensure_is_array($data['field_value']);
 		return sizeof($value) ? join($this->language->lang('COMMA_SEPARATOR'), $value) : '';

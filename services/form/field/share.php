@@ -48,9 +48,9 @@ class share extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field(array $data, array $topic_data, $view_mode)
+	public function display_field(array $data, array $topic_data, $display_mode, $view_mode)
 	{
-		if ($this->request->is_set_post('cp'))
+		if ($display_mode === 'preview' || $display_mode === 'print')
 		{
 			return '';
 		}

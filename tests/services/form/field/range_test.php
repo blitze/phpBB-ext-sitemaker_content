@@ -75,6 +75,7 @@ class range_test extends base_form_field
 	{
 		return array(
 			array(
+				'summary',
 				array(
 					'field_value'	=> '',
 					'field_props'	=> array(),
@@ -82,6 +83,7 @@ class range_test extends base_form_field
 				'',
 			),
 			array(
+				'summary',
 				array(
 					'field_value'	=> '19',
 					'field_props'	=> array(
@@ -94,6 +96,7 @@ class range_test extends base_form_field
 				19,
 			),
 			array(
+				'summary',
 				array(
 					'field_value'	=> '19',
 					'field_props'	=> array(
@@ -106,6 +109,7 @@ class range_test extends base_form_field
 				'$19 per oz',
 			),
 			array(
+				'summary',
 				array(
 					'field_value'	=> '19',
 					'field_props'	=> array(
@@ -118,6 +122,7 @@ class range_test extends base_form_field
 				'$19',
 			),
 			array(
+				'summary',
 				array(
 					'field_value'	=> '25;55',
 					'field_props'	=> array(
@@ -130,6 +135,28 @@ class range_test extends base_form_field
 				'$25 - $55 per oz',
 			),
 			array(
+				'print',
+				array(
+					'field_name'	=> 'foo',
+					'field_value'	=> '15;35',
+					'field_props'	=> array(
+						'display'	=> 'slider',
+						'type'		=> 'double',
+						'skin'		=> 'modern',
+						'size'		=> 50,
+						'values'	=> '',
+						'prefix'	=> '$',
+						'postfix'	=> ' per Ib',
+						'min'		=> '0',
+						'max'		=> '100',
+						'step'		=> 1,
+						'grid'		=> false,
+					),
+				),
+				'$15 - $35 per Ib',
+			),
+			array(
+				'summary',
 				array(
 					'field_name'	=> 'foo',
 					'field_value'	=> '15;35',
@@ -156,21 +183,22 @@ class range_test extends base_form_field
 
 	/**
 	 * @dataProvider display_range_field_test_data
+	 * @param string $display_mode
 	 * @param array $data
 	 * @param string $expected
 	 * @return void
 	 */
-	public function test_display_range_field(array $data, $expected)
+	public function test_display_range_field($display_mode, array $data, $expected)
 	{
 		$field = $this->get_form_field('range');
 
 		$data = $this->get_data('range', $data, $field->get_default_props());
 		$data['field_value'] = $field->get_field_value($data);
 
-		$this->util->expects($this->exactly(($data['field_props']['display'] === 'slider') ? 2 : 0))
+		$this->util->expects($this->exactly(($data['field_props']['display'] === 'slider' && $display_mode !== 'print') ? 2 : 0))
 			->method('add_assets');
 
-		$this->assertEquals($expected, str_replace(array("\n", "\t"), '', $field->display_field($data, array(), 'summary')));
+		$this->assertEquals($expected, str_replace(array("\n", "\t"), '', $field->display_field($data, array(), $display_mode, 'summary')));
 	}
 
 	/**

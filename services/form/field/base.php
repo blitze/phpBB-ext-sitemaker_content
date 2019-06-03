@@ -53,7 +53,7 @@ abstract class base implements field_interface
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field(array $data, array $topic_data, $view_mode)
+	public function display_field(array $data, array $topic_data, $display_mode, $view_mode)
 	{
 		return $data['field_value'];
 	}

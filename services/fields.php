@@ -75,7 +75,7 @@ class fields extends topic
 	 * @param array $topic_ids
 	 * @param array $view_mode_fields	array of form array([field_name] => [field_type])
 	 * @param string $custom_tpl
-	 * @param string $view_mode		summary|detail|block
+	 * @param string $view_mode			summary|detail
 	 * @param string $tpl_name
 	 * @return void
 	 */
@@ -89,7 +89,7 @@ class fields extends topic
 		 * We do this here so that we can get all values with one query instead of multiple queries for each field for each topic
 		 *
 		 * @event blitze.content.fields.set_values
-		 * @var string								view_mode			The current view mode (summary|detail|block)
+		 * @var string								view_mode			The current view mode (summary|detail)
 		 * @var	array								view_mode_fields	Array containing fields for current view_mode
 		 * @var \blitze\content\model\entity\type	entity				Content type entity
 		 * @var array								db_fields			This array allows extensions that provide fields to list field values for current topic ids.
@@ -99,14 +99,17 @@ class fields extends topic
 		extract($this->phpbb_dispatcher->trigger_event('blitze.content.fields.set_values', compact($vars)));
 
 		$this->content_type = $entity->get_content_name();
+
 		$this->set_view_mode($view_mode);
 		$this->set_form_fields($view_mode_fields);
 		$this->set_content_fields($view_mode_fields, $entity->get_content_fields());
 		$this->set_comments_type($entity->get_comments());
 
 		$this->board_url = generate_board_url(true);
-		$this->tpl_name	= ($custom_tpl) ? ($tpl_name ?: $this->content_type . '_' . $view_mode) : '';
+		$this->tpl_name	= ($custom_tpl) ? ($tpl_name ?: $this->content_type . '_' . $this->view_mode) : '';
 		$this->db_fields = $db_fields;
+
+		return $this;
 	}
 
 	/**
@@ -167,13 +170,13 @@ class fields extends topic
 	}
 
 	/**
-	 * @param string $view_mode		summary|detail|print|block|preview
+	 * Sets a display mode that is passed on to the form fields for display
+	 * @param string $mode		print|block|preview
 	 * @return $this
 	 */
-	public function set_view_mode($view_mode)
+	public function set_display_mode($mode)
 	{
-		$this->display_mode = $view_mode;
-		$this->view_mode = (in_array($view_mode, array('summary', 'detail'))) ? $view_mode : 'summary';
+		$this->display_mode = $mode;
 		return $this;
 	}
 
@@ -229,6 +232,16 @@ class fields extends topic
 	}
 
 	/**
+	 * @param string $view_mode
+	 * @return void
+	 */
+	protected function set_view_mode($view_mode)
+	{
+		$this->view_mode = (in_array($view_mode, array('summary', 'detail'))) ? $view_mode : 'summary';
+		$this->display_mode = $this->view_mode;
+	}
+
+	/**
 	 * @param array $tpl_data
 	 * @return array
 	 */
@@ -246,7 +259,7 @@ class fields extends topic
 			$field_data['field_value'] = &$field_values[$field_name];
 			$field_data['field_value'] = $this->form_fields[$field_type]->get_field_value($field_data);
 
-			$field_contents	= $this->form_fields[$field_type]->display_field($field_data, $tpl_data, $this->display_mode);
+			$field_contents	= $this->form_fields[$field_type]->display_field($field_data, $tpl_data, $this->display_mode, $this->view_mode);
 			$display_data['raw'][$field_name] = $field_data['field_value'];
 
 			// this essentially hides other fields if the field returns an array
@@ -323,5 +336,6 @@ class fields extends topic
 		$this->form_fields = array();
 		$this->tpl_name = '';
 		$this->view_mode = '';
+		$this->display_mode = '';
 	}
 }

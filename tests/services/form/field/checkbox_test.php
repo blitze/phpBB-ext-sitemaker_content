@@ -63,7 +63,7 @@ class checkbox_test extends base_form_field
 		$data['field_props'] = $field->get_default_props();
 		$data['field_value'] = $field->get_field_value($data);
 
-		$this->assertEquals($expected, $field->display_field($data, array(), 'summary'));
+		$this->assertEquals($expected, $field->display_field($data, array(), 'summary', 'summary'));
 	}
 
 	/**

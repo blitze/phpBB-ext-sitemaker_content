@@ -78,7 +78,7 @@ class location extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field(array $data, array $topic_data, $view_mode)
+	public function display_field(array $data, array $topic_data, $display_mode, $view_mode)
 	{
 		if (!$data['field_value'])
 		{
@@ -86,7 +86,7 @@ class location extends base
 		}
 
 		$callable = 'display_' . $data['field_props']['disp_type'];
-		return $this->$callable($data, $view_mode);
+		return $this->$callable($data, $display_mode);
 	}
 
 	/**
@@ -141,12 +141,13 @@ class location extends base
 
 	/**
 	 * @param array $data
+	 * @param string $display_mode
 	 * @return string
 	 */
-	protected function display_active_map(array $data)
+	protected function display_active_map(array $data, $display_mode)
 	{
 		// do not include assets on preview page as form already handles this
-		if (!$this->request->is_set_post('cp'))
+		if ($display_mode !== 'preview')
 		{
 			$this->util->add_assets(array(
 				'js'	=> array(

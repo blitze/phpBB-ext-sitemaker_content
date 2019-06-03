@@ -73,21 +73,35 @@ class image_test extends base_form_field
 	public function display_field_test_data()
 	{
 		return array(
-			array('', 'summary', array(), ''),
-			array('', 'detail', array(), ''),
-			array('', 'summary', array('summary_size' => 'medium-img'), ''),
-			array('', 'detail', array('detail_align' => 'img-align-left'), ''),
+			array('block', 'summary', '', array(), ''),
+			array('summary', 'summary', '', array(), ''),
+			array('detail', 'detail', '', array(), ''),
+			array('block', 'summary', '', array('summary_size' => 'medium-img'), ''),
+			array('summary', 'summary', '', array('summary_size' => 'medium-img'), ''),
+			array('detail', 'detail', '', array('detail_align' => 'img-align-left'), ''),
 			array(
-				'',
 				'summary',
+				'summary',
+				'',
 				array(
 					'default'	=> 'bar',
 				),
 				'<div class=""><figure class="img-ui"><img src="bar" class="postimage" alt="My Field" /></figure></div>',
 			),
 			array(
-				'',
+				'block',
 				'summary',
+				'',
+				array(
+					'default'	=> 'bar',
+					'summary_size'	=> 'fullwidth-img',
+				),
+				'<figure class="img-ui"><img src="bar" class="postimage" alt="My Field" /></figure>',
+			),
+			array(
+				'summary',
+				'summary',
+				'',
 				array(
 					'default'	=> 'bar',
 					'summary_size'	=> 'fullwidth-img',
@@ -95,20 +109,23 @@ class image_test extends base_form_field
 				'<div class="fullwidth-img"><figure class="img-ui"><img src="bar" class="postimage" alt="My Field" /></figure></div>',
 			),
 			array(
-				'<img src="foo" class="postimage" alt="My Field" />',
 				'summary',
+				'summary',
+				'<img src="foo" class="postimage" alt="My Field" />',
 				array(),
 				'<div class=""><figure class="img-ui"><img src="foo" class="postimage" alt="My Field" /></figure></div>',
 			),
 			array(
-				'<img src="bar" class="postimage" alt="My Field" />',
 				'detail',
+				'detail',
+				'<img src="bar" class="postimage" alt="My Field" />',
 				array(),
 				'<div class=""><figure class="img-ui"><img src="bar" class="postimage" alt="My Field" /></figure></div>',
 			),
 			array(
-				'<img src="foo" class="postimage" alt="My Field" />',
+				'print',
 				'summary',
+				'<img src="foo" class="postimage" alt="My Field" />',
 				array(
 					'detail_size'	=> 'medium-img',
 					'summary_size'	=> 'fullwidth-img',
@@ -116,8 +133,21 @@ class image_test extends base_form_field
 				'<div class="fullwidth-img"><figure class="img-ui"><img src="foo" class="postimage" alt="My Field" /></figure></div>',
 			),
 			array(
-				'<img src="bar" class="postimage" alt="My Field" />',
 				'detail',
+				'detail',
+				'<img src="bar" class="postimage" alt="My Field" />',
+				array(
+					'detail_align'	=> 'img-align-left',
+					'summary_align'	=> 'img-align-right',
+					'detail_size'	=> 'medium-img',
+					'summary_size'	=> 'fullwidth-img',
+				),
+				'<div class="img-align-left medium-img"><figure class="img-ui"><img src="bar" class="postimage" alt="My Field" /></figure></div>',
+			),
+			array(
+				'print',
+				'detail',
+				'<img src="bar" class="postimage" alt="My Field" />',
 				array(
 					'detail_align'	=> 'img-align-left',
 					'summary_align'	=> 'img-align-right',
@@ -131,13 +161,14 @@ class image_test extends base_form_field
 
 	/**
 	 * @dataProvider display_field_test_data
+	 * @param string $display_mode summary|detail|print|block
+	 * @param string $view_mode summary|detail
 	 * @param string $field_value
-	 * @param string $view summary|detail|block
 	 * @param array $field_props
 	 * @param string $expected
 	 * @return void
 	 */
-	public function test_display_field($field_value, $view, $field_props, $expected)
+	public function test_display_field($display_mode, $view_mode, $field_value, $field_props, $expected)
 	{
 		$field = $this->get_form_field('image');
 
@@ -148,7 +179,7 @@ class image_test extends base_form_field
 		);
 		$data['field_value'] = $field->get_field_value($data);
 
-		$this->assertEquals($expected, $field->display_field($data, array(), $view));
+		$this->assertEquals($expected, $field->display_field($data, array(), $display_mode, $view_mode));
 	}
 
 	/**

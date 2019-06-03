@@ -61,11 +61,20 @@ class image extends base
 	/**
 	 * @inheritdoc
 	 */
-	public function display_field(array $data, array $topic_data, $view_mode)
+	public function display_field(array $data, array $topic_data, $display_mode, $view_mode)
 	{
 		if ($data['field_value'])
 		{
-			return $this->get_image_html($data['field_value'], $view_mode, $data['field_label'], $data['field_props']);
+			$image = '<img src="' . $data['field_value'] . '" class="postimage" alt="' . $data['field_label'] . '" />';
+			$html = '<figure class="img-ui">' . $image . '</figure>';
+
+			if ($display_mode !== 'block')
+			{
+				$view_props = array_fill_keys(array($view_mode . '_size', $view_mode . '_align'), '');
+				$image_props = array_filter(array_intersect_key($data['field_props'], $view_props));
+				$html = '<div class="' . join(' ', $image_props) . '">' . $html . '</div>';
+			}
+			return $html;
 		}
 		return '';
 	}
@@ -135,27 +144,6 @@ class image extends base
 	private function strip_image_bbcode($bbcode_string)
 	{
 		return str_replace(array('[img]', '[/img]'), '', $bbcode_string);
-	}
-
-	/**
-	 * @param string $image
-	 * @param string $mode
-	 * @param string $title
-	 * @param array $field_props
-	 * @return string
-	 */
-	private function get_image_html($image, $mode, $title, array $field_props)
-	{
-		$image = '<img src="' . $image . '" class="postimage" alt="' . $title . '" />';
-
-		$html = '<figure class="img-ui">' . $image . '</figure>';
-		if ($mode !== 'block')
-		{
-			$view_props = array_fill_keys(array($mode . '_size', $mode . '_align'), '');
-			$image_props = array_filter(array_intersect_key($field_props, $view_props));
-			$html = '<div class="' . join(' ', $image_props) . '">' . $html . '</div>';
-		}
-		return $html;
 	}
 
 	/**
