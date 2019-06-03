@@ -80,7 +80,7 @@ class fields_factory_test extends \phpbb_test_case
 	/**
 	 * @return array
 	 */
-	public function test_get_field_data()
+	public function get_field_test_data()
 	{
 		return array(
 			array(
@@ -99,7 +99,7 @@ class fields_factory_test extends \phpbb_test_case
 	}
 
 	/**
-	 * @dataProvider test_get_field_data
+	 * @dataProvider get_field_test_data
 	 * @param string $field_name
 	 * @param string $expected_instance
 	 * @return void

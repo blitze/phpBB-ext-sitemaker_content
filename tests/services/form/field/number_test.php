@@ -130,7 +130,7 @@ class number_test extends base_form_field
 	/**
 	 * @return array
 	 */
-	public function test_field_validation_data()
+	public function field_validation_test_data()
 	{
 		return array(
 			array(
@@ -221,7 +221,7 @@ class number_test extends base_form_field
 	}
 
 	/**
-	 * @dataProvider test_field_validation_data
+	 * @dataProvider field_validation_test_data
 	 * @param array $data
 	 * @param string $expected
 	 * @return void
