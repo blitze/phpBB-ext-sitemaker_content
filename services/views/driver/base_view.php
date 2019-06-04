@@ -338,8 +338,11 @@ abstract class base_view implements views_interface
 	{
 		if (isset($topic_data['FIELDS']))
 		{
-			$image_url = $this->get_topic_image_url($field_types, (array) $topic_data['FIELDS']['all']);
-			$description = $this->get_topic_description($field_types, (array) $topic_data['FIELDS']['all']);
+			$image_url = $this->get_field_value_by_type('image', $field_types, (array) $topic_data['FIELDS']['raw']);
+			$description = $this->get_field_value_by_type('textarea', $field_types, (array) $topic_data['FIELDS']['raw']);
+
+			// reduce to 20 words
+			$description = implode(' ', array_slice(explode(' ', strip_tags($description)), 0, 19));
 
 			$meta = "<meta name=\"description\" content=\"$description\" />\n";
 			$meta .= "<meta name=\"twitter:card\" value=\"summary\">\n";
@@ -354,49 +357,15 @@ abstract class base_view implements views_interface
 	}
 
 	/**
+	 * @param string $field_type
 	 * @param array $field_types
-	 * @param array $fields_data
+	 * @param array $raw_data
 	 * @return string
 	 */
-	protected function get_topic_image_url(array $field_types, array $fields_data)
+	protected function get_field_value_by_type($field_type, array $field_types, array $raw_data)
 	{
-		$image_url = '';
+		$field_name = array_shift(array_keys($field_types, $field_type));
 
-		$figure = $this->get_field_value_by_type($fields_data, $field_types, 'image');
-		if ($figure && preg_match('/src="(.*?)"/i', $figure, $matches))
-		{
-			$image_url = $matches[1];
-		}
-
-		return $image_url;
-	}
-
-	/**
-	 * @param array $field_types
-	 * @param array $fields_data
-	 * @return string
-	 */
-	protected function get_topic_description(array $field_types, array $fields_data)
-	{
-		if (null !== ($description = $this->get_field_value_by_type($fields_data, $field_types, 'textarea')))
-		{
-			$description = implode(' ', array_slice(explode(' ', strip_tags($description)), 1, 20));
-		}
-
-		return $description;
-	}
-
-	/**
-	 * @param array $fields_data
-	 * @param array $field_types
-	 * @param string $search_field
-	 * @return string|null
-	 */
-	protected function get_field_value_by_type(array $fields_data, array $field_types, $search_field)
-	{
-		$results = array_keys($field_types, $search_field);
-		$field = array_shift($results);
-
-		return isset($fields_data[$field]) ? $fields_data[$field] : null;
+		return isset($raw_data[$field_name]) ? $raw_data[$field_name] : '';
 	}
 }
