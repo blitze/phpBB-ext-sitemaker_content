@@ -87,7 +87,7 @@ class color_test extends base_form_field
 						'display'		=> 'box',
 					),
 				),
-				'<div style="display: inline-block; width: 15px; height: 15px; border: 1 solid #fff; border-radius: 4px; background-color: #ccc" title="#ccc"></div>',
+				'<div style="display: inline-block; width: 15px; height: 15px; border: 1px solid #fff; border-radius: 4px; background-color: #ccc" title="#ccc"></div>',
 			),
 		);
 	}

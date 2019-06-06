@@ -113,7 +113,7 @@ class color extends base
 	 */
 	protected function make_box($color)
 	{
-		$style = 'display: inline-block; width: 15px; height: 15px; border: 1 solid #fff; border-radius: 4px; background-color: ' . $color;
+		$style = 'display: inline-block; width: 15px; height: 15px; border: 1px solid #fff; border-radius: 4px; background-color: ' . $color;
 		return ($color) ? '<div style="' . $style . '" title="' . $color . '"></div>' : '';
 	}
 }
