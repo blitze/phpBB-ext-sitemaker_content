@@ -111,8 +111,10 @@ class filters_test extends \phpbb_test_case
 		$expected = '<img src="./foo_image.jpg" />
 bar_category, foo2_image
 
-<img src="./foo_image.jpg" />
-foo_image, bar_category, foo2_image
+?
+
+foo cat
+foo_image, foo2_image
 
 Seamlessly innovate in...
 

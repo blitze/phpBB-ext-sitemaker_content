@@ -1,8 +1,11 @@
 {{ FIELDS.body|field('image') }}
 {{ FIELDS.body|keys|join(', ') }}
 
-{% for row in topicrow %}
-{{ row.FIELDS.body|field('image', loop.index0) }}
+{# if field does not exist, return empty string #}
+{{ FIELDS.body|field('no_exists') }}?
+
+{% for row in loops.topicrow %}
+{{ row.FIELDS.body|field('category', 'row') }}
 {{ row.FIELDS.body|keys|join(', ') }}
 {% endfor %}
 

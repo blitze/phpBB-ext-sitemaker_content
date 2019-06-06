@@ -33,24 +33,24 @@ class filters extends \Twig\Extension\AbstractExtension
 	*/
 	public function field_filter(array &$context, $items, $field_type, $loop_variable = '')
 	{
-		if (empty($context['FIELD_TYPES']))
+		$found_fields = array_keys((array) $context['FIELD_TYPES'], $field_type);
+		$field = array_shift($found_fields);
+
+		if (isset($items[$field]))
 		{
-			return '';
+			if ($loop_variable)
+			{
+				$this->remove_from_context($context[$loop_variable], $field);
+			}
+			else
+			{
+				$this->remove_from_context($context, $field);
+			}
+
+			return $items[$field];
 		}
 
-		$field = array_shift(array_keys((array) $context['FIELD_TYPES'], $field_type));
-		$content = $items[$field];
-
-		if ($loop_variable)
-		{
-			$this->remove_from_context($context[$loop_variable], $field);
-		}
-		else
-		{
-			$this->remove_from_context($context, $field);
-		}
-
-		return $content;
+		return '';
 	}
 
 	/**
