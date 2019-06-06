@@ -223,15 +223,17 @@ class form
 	 */
 	public function save_db_fields(array $topic_data, array $content_fields)
 	{
-		foreach ($this->db_fields as $field_type => $value)
+		foreach ($this->db_fields as $field_name => $value)
 		{
-			$field = $this->fields_factory->get($field_type);
+			$field_data = $content_fields[$field_name];
 
-			$field_data = $content_fields[$field_type];
-			$field_data['field_value'] = $value;
-			$field_data['field_props'] += $field->get_default_props();
+			if ($field = $this->fields_factory->get($field_data['field_type']))
+			{
+				$field_data['field_value'] = $value;
+				$field_data['field_props'] += $field->get_default_props();
 
-			$field->save_field($field_data, $topic_data);
+				$field->save_field($field_data, $topic_data);
+			}
 		}
 	}
 
