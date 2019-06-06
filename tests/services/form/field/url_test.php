@@ -38,7 +38,7 @@ class url_test extends base_form_field
 	{
 		return array(
 			array('', ''),
-			array('http://www.google.com', '<!-- l --><a class="postlink-local" href="http://www.google.com"><!-- w --><a class="postlink" href="http://www.google.com">www.google.com</a><!-- w --></a><!-- l -->'),
+			array('http://www.google.com', 'http://www.google.com'),
 		);
 	}
 
