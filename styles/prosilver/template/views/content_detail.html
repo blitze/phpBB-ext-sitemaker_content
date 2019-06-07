@@ -1,4 +1,5 @@
 {% if not S_HIDE_HEADERS %}{% INCLUDE 'overall_header.html' %}{% endif %}
+{% INCLUDECSS '@blitze_content/assets/view/details/content_details.min.css' %}
 
 <div class="panel post">
 	<div class="inner">
@@ -71,7 +72,7 @@
 					{% if !S_REQ_MOD_INPUT %}
 						<input class="button1" type="submit" value="{{ lang('APPROVE') }}" name="action[approve]" />
 					{% else %}
-						<a class="button1" href="{{ U_MCP_EDIT }}" style="margin-bottom: -4px">{{ lang('APPROVE') }}</a>
+						<a class="button1" href="{{ U_MCP_EDIT }}">{{ lang('APPROVE') }}</a>
 					{% endif %}
 						<input type="hidden" name="post_id_list[]" value="{{ POST_ID }}" />
 						{{ S_FORM_TOKEN }}
@@ -99,17 +100,17 @@
 
 				<div class="content">
 					{% if loops.toc|length %}
-					<div class="responsive-hide toc rules pull-right" style="margin-left: 2%; max-width: 25%">
-						<ul class="fa-ul" style="margin: 15px">
+					<div class="responsive-hide smc-toc rules pull-right">
+						<ul class="fa-ul">
 							<li><strong>{{ lang('CONTENT_TOC') }}</strong><hr /></li>
 							{% for toc in loops.toc %}
-							<li><a class="{% if toc.S_FIRST_ROW %}first{% endif %}{% if toc.S_PAGE %} current{% endif %}" href="{{ toc.U_VIEW }}"><i class="fa-li fa fa-angle-right"></i>{{ toc.TITLE }}</a></li>
+							<li><a class="small{% if toc.S_FIRST_ROW %} first{% endif %}{% if toc.S_PAGE %} current{% endif %}" href="{{ toc.U_VIEW }}"><i class="fa-li fa fa-angle-right"></i>{{ toc.TITLE }}</a></li>
 							{% endfor %}
 						</ul>
 					</div>
 					{% endif %}
 					{% if TOPIC_POLL %}
-					<div class="panel bg3 sm-fill-space" style="margin-top: 10px; margin-bottom: 20px">
+					<div class="panel bg3 sm-fill-space smc-poll">
 						{{ TOPIC_POLL }}
 					</div>
 					{% endif %}
@@ -145,10 +146,7 @@
 			{% endif %}
 
 			{% if not S_PREVIEW && loops.page|length %}
-			<div class="clear"></div>
-			<p>&nbsp;</p>
-			<div class="action-bar bottom">
-				<div class="pagination" style="float: none; text-align: center">
+				<div class="pagination smc-pagination">
 					<ul>
 						{% for page in loops.page %}
 						{% if page.S_IS_PREV %}
@@ -165,7 +163,6 @@
 						{% endfor %}
 					</ul>
 				</div>
-			</div>
 			{% endif %}
 			</div>
 		</div>
@@ -176,10 +173,11 @@
 	{% endif %}
 
 	{% if S_TOOLS %}
-		<div class="action-bar bar-bottom">
+		<p>&nbsp;</p>
+		<div class="action-bar bar-bottom smc-action-bar pull-left">
 			<!-- INCLUDE viewtopic_topic_tools.html -->
 			{% if loops.quickmod|length %}
-			<div class="quickmod dropdown-container dropdown-container-left dropdown-up dropdown-{{ S_CONTENT_FLOW_END }} dropdown-button-control" id="quickmod">
+			<div class="quickmod dropdown-container dropdown-container-left dropdown-down dropdown-{{ S_CONTENT_FLOW_END }} dropdown-button-control" id="quickmod">
 				<span title="{{ lang('QUICK_MOD') }}" class="button button-secondary dropdown-trigger dropdown-select">
 					<i class="icon fa-gavel fa-fw" aria-hidden="true"></i><span class="sr-only">{{ lang('QUICK_MOD') }}</span>
 					<span class="caret"><i class="icon fa-sort-down fa-fw" aria-hidden="true"></i></span>
@@ -197,9 +195,8 @@
 			{% endif %}
 		</div>
 	{% endif %}
-
-		<div class="back2top">
-			<a href="#top" class="top" title="{{ lang('BACK_TO_TOP') }}">
+		<div class="back2top smc-back2top">
+			<a href="#top" class="top smc-top" title="{{ lang('BACK_TO_TOP') }}">
 				<i class="icon fa-chevron-circle-up fa-fw icon-gray" aria-hidden="true"></i>
 				<span class="sr-only">{{ lang('BACK_TO_TOP') }}</span>
 			</a>
