@@ -191,7 +191,7 @@ class save extends action_utils implements action_interface
 			'items_per_page'		=> $this->request->variable('items_per_page', 1),
 			'summary_tpl'			=> $this->request->variable('summary_tpl', '', true),
 			'detail_tpl'			=> $this->request->variable('detail_tpl', '', true),
-			'topic_blocks'			=> $this->request->variable('topic_blocks', ''),
+			'topic_blocks'			=> $this->get_topic_blocks(),
 			'last_modified'			=> time(),
 		));
 
@@ -398,5 +398,23 @@ class save extends action_utils implements action_interface
 		}
 
 		return $field_types;
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function get_topic_blocks()
+	{
+		$topic_blocks = $this->request->variable('topic_blocks', '');
+
+		$services = explode(',', $topic_blocks);
+		$settings = array_fill_keys($services, []);
+
+		foreach ($services as $service)
+		{
+			$settings[$service] = $this->request->variable(array('topic_block_settings', $service), array('' => ''));
+		}
+
+		return $settings;
 	}
 }

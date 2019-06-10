@@ -152,28 +152,15 @@
 	text-decoration: none;
 }
 
-.options-box {
+.topic-blocks {
 	max-height: 150px;
-	margin-right: 1.5rem;
-	padding: 0.8rem;
-	overflow: auto;
-	float: left;
+	min-height: 25px;
+	margin: 0;
+	padding: 10px;
+	border: 1px solid #dbcce6;
+	overflow-y: auto;
 
-	.topic-blocks {
-		float: left;
-		min-height: 20px;
-		min-width: 200px;
-		margin: 0;
-		padding: 5px;
-		list-style-type: none;
-		outline: 1px solid #dbcce6;
-
-		li {
-			margin: 5px;
-			padding: 5px;
-			white-space: nowrap;
-			outline: 1px solid #ccc;
-			font-size: 10px;
-		}
+	.settings {
+		padding: 0.5em;
 	}
 }

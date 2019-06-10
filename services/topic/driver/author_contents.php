@@ -60,9 +60,10 @@ class author_contents implements block_interface
 	 * @param array $topic_data
 	 * @param array $post_data
 	 * @param array $user_cache
+	 * @param array $settings
 	 * @return void
 	 */
-	public function show_block(\blitze\content\model\entity\type $entity, array $topic_data, array $post_data, array $user_cache)
+	public function show_block(\blitze\content\model\entity\type $entity, array $topic_data, array $post_data, array $user_cache, array $settings = array())
 	{
 		$this->forum->query()
 			->fetch_forum($topic_data['forum_id'])
@@ -71,7 +72,7 @@ class author_contents implements block_interface
 				'WHERE' => array('t.topic_id <> ' . (int) $topic_data['topic_id'])
 			))->build(true, true, false);
 
-		$topics_data = $this->forum->get_topic_data(5);
+		$topics_data = $this->forum->get_topic_data((int) $settings['max_topics']);
 		$topic_tracking_info = $this->forum->get_topic_tracking_info($topic_data['forum_id']);
 		$content_type = $entity->get_content_name();
 

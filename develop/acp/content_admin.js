@@ -344,19 +344,44 @@
 			connectWith: '.topic-blocks',
 			placeholder: "ui-state-highlight",
 			forcePlaceholderSize: true,
-			dropOnEmpty: true
+			dropOnEmpty: true,
+			stop: function(event, ui) {
+				// IE doesn't register the blur when sorting
+				// so trigger focusout handlers to remove .ui-state-focus
+				ui.item.children('h3').triggerHandler('focusout');
+				
+				// Refresh accordion to handle new order
+				$(this).accordion('refresh');
+			},
+			update: function() {
+				var items = [];
+				$(this).find('li').each(function() {
+					items.push($(this).data('service'));
+				});
+				$topicBlocksInput.val(items.join(','));
+			}
 		};
+		
+		$('.topic-blocks')
+			.accordion({
+				header: "> li > h3",
+				active: false,
+				collapsible: true,
+				heightStyle: 'content',
+				icons: false
+			})
+			.children('li')
+			.each(function(i, element) {
+				if ($(element).find('.settings').length) {
+					$(element).find('h3').append('<i class="fa fa-cog pull-right"></i>');
+				}
+			});
+
+		$('#selected-topic-blocks').sortable(topicBlocksSortableOptions);
+
+		delete topicBlocksSortableOptions['update'];
 
 		$('#available-topic-block-options').sortable(topicBlocksSortableOptions);
-
-		topicBlocksSortableOptions.update = function() {
-			var items = [];
-			$(this).find('li').each(function() {
-				items.push($(this).data('service'));
-			});
-			$topicBlocksInput.val(items.join(','));
-		};
-		$('#selected-topic-blocks').sortable(topicBlocksSortableOptions);
 
 		$('body').on('click', '.toggle', function(e) {
 			var id = $(this).attr('id');

@@ -309,12 +309,12 @@ abstract class base_view implements views_interface
 	protected function show_topic_blocks(\blitze\content\model\entity\type $entity, array $topic_data, array $post_data, array $user_cache)
 	{
 		$topic_blocks = $entity->get_topic_blocks();
-		foreach ($topic_blocks as $service_name)
+		foreach ($topic_blocks as $service_name => $settings)
 		{
 			/** @var \blitze\content\services\topic\driver\block_interface $block */
 			if ($block = $this->topic_blocks_factory->get($service_name))
 			{
-				$block->show_block($entity, $topic_data, $post_data, $user_cache);
+				$block->show_block($entity, $topic_data, $post_data, $user_cache, $settings);
 			}
 		}
 	}

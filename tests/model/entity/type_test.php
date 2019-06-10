@@ -121,7 +121,7 @@ class type_test extends \phpbb_test_case
 			array('comments_settings', array(), '', array(), '{"per_page": "20"}', array('per_page' => '20')), 
 			array('req_approval', false, true, true, false, false),
 			array('allow_views', true, false, false, true, true),
-			array('topic_blocks', array(), 'foo.service', array('foo.service'), array('foo.service', 'bar.service'), array('foo.service', 'bar.service')),
+			array('topic_blocks', array(), '', array(), array('foo.service' => [], 'bar.service' => ['bar_setting' => 1]), array('foo.service' => [], 'bar.service' => ['bar_setting' => 1])),
 			array('show_pagination', true, false, false, true, true),
 			array('index_show_desc', false, true, true, false, false),
 			array('items_per_page', 10, 1, 1, 5, 5),
@@ -204,7 +204,7 @@ class type_test extends \phpbb_test_case
 					'field_detail_show'		=> true,
 				),
 			),
-			'topic_blocks'		=> array('foo', 'bar'),
+			'topic_blocks'		=> array('foo' => [], 'bar' => ['bar_setting' => 1]),
 			'summary_tpl'		=> '<img src="{{ image }}" class="leftbox" />{{ exerpt }}',
 			'detail_tpl'		=> '<img src="{{ image }} /><br />{{ content }}',
 		));
@@ -232,7 +232,7 @@ class type_test extends \phpbb_test_case
 			'summary_tpl'			=> '<img src="{{ image }}" class="leftbox" />{{ exerpt }}',
 			'detail_tpl'			=> '<img src="{{ image }} /><br />{{ content }}',
 			'last_modified'			=> 0,
-			'topic_blocks'			=> array('foo', 'bar'),
+			'topic_blocks'			=> array('foo' => [],'bar' => ['bar_setting' => 1]),
 			'content_fields'		=> array(
 				'image'	=> array(
 					'field_type'			=> 'image',
@@ -287,7 +287,7 @@ class type_test extends \phpbb_test_case
 			'summary_tpl'			=> '<img src="{{ image }}" class="leftbox" />{{ exerpt }}',
 			'detail_tpl'			=> '<img src="{{ image }} /><br />{{ content }}',
 			'last_modified'			=> 0,
-			'topic_blocks'			=> 'foo,bar',
+			'topic_blocks'			=> '{"foo":[],"bar":{"bar_setting":1}}',
 		);
 
 		$this->assertEquals($to_array_expected, $content_type->to_array());

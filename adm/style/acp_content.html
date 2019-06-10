@@ -224,21 +224,38 @@
 						<dl>
 							<dt><label for="items-per-page">{{ lang('TOPIC_BLOCKS') ~ lang('COLON') }}</label><br /><span>{{ lang('TOPIC_BLOCKS_EXPLAIN') }}</span></dt>
 							<dd>
-								<input type="hidden" id="input-topic-blocks" name="topic_blocks" value="{{ TOPIC_BLOCKS|join(',') }}" />
-								<div class="options-box">
+								<input type="hidden" id="input-topic-blocks" name="topic_blocks" value="{{ TOPIC_BLOCKS|keys|join(',') }}" />
+
+								{%- macro create_topic_block(langname, service, settings = []) -%}
+									<li data-service="{{ service }}" title="{{ lang(langname ~ '_EXPLAIN') }}">
+									    <h3>{{ lang(langname) }}</h3>
+										{% if service == 'author_contents' %}
+										<div class="settings">
+											<dl>
+												<dt><label for="author_contents_max_topics">{{ lang('MAX_TOPICS') }}</label></dt>
+												<dd>
+													<input type="number" id="author_contents_max_topics" name="topic_block_settings[author_contents][max_topics]" min="1" step="1" value="{{ settings.max_topics|default(3) }}" />
+												</dd>
+											</dl>
+										</div>
+										{% endif %}
+										{% EVENT blitze_content_topic_blocks_settings %}
+									</li>
+								{%- endmacro -%}
+
+								<div class="column1">
 									<h6>{{ lang('TOPIC_BLOCKS_SELECTED') }}</h6>
 									<ul id="selected-topic-blocks" class="topic-blocks">
-									{% for service in TOPIC_BLOCKS if TOPIC_BLOCK_OPS[service] %}
-										{%- set name = TOPIC_BLOCK_OPS[service] -%}
-										<li data-service="{{ service }}" title="{{ lang(name ~ '_EXPLAIN') }}">{{ lang(name) }}</li>
+									{% for service, settings in TOPIC_BLOCKS if TOPIC_BLOCK_OPS[service] %}
+										{{ _self.create_topic_block(TOPIC_BLOCK_OPS[service], service, settings) }}
 									{% endfor %}
 									</ul>
 								</div>
-								<div class="options-box">
+								<div class="column2">
 									<h6>{{ lang('TOPIC_BLOCKS_AVAILABLE') }}</h6>
 									<ul id="available-topic-block-options" class="topic-blocks">
-									{% for service, name in TOPIC_BLOCK_OPS if service not in TOPIC_BLOCKS %}
-										<li data-service="{{ service }}" title="{{ lang(name ~ '_EXPLAIN') }}">{{ lang(name) }}</li>
+									{% for service, name in TOPIC_BLOCK_OPS if service not in TOPIC_BLOCKS|keys %}
+										{{ _self.create_topic_block(name, service) }}
 									{% endfor %}
 									</ul>
 								</div>

@@ -122,7 +122,7 @@ final class type extends base_entity
 	protected $last_modified = 0;
 
 	/** @var string */
-	protected $topic_blocks = '';
+	protected $topic_blocks = array();
 
 	/** @var array */
 	protected $content_fields = array();
@@ -243,15 +243,7 @@ final class type extends base_entity
 	 */
 	public function set_content_view_settings($settings)
 	{
-		$this->content_view_settings = '';
-		if (!is_array($settings))
-		{
-			$this->content_view_settings = $settings;
-		}
-		else if (sizeof($settings))
-		{
-			$this->content_view_settings = json_encode($settings);
-		}
+		$this->set_array_field('content_view_settings', $settings);
 		return $this;
 	}
 
@@ -261,7 +253,7 @@ final class type extends base_entity
 	 */
 	public function get_content_view_settings()
 	{
-		return ($this->content_view_settings) ? json_decode($this->content_view_settings, true) : array();
+		return $this->get_array_field('content_view_settings');
 	}
 
 	/**
@@ -271,15 +263,7 @@ final class type extends base_entity
 	 */
 	public function set_comments_settings($settings)
 	{
-		$this->comments_settings = '';
-		if (!is_array($settings))
-		{
-			$this->comments_settings = $settings;
-		}
-		else if (sizeof($settings))
-		{
-			$this->comments_settings = json_encode($settings);
-		}
+		$this->set_array_field('comments_settings', $settings);
 		return $this;
 	}
 
@@ -289,7 +273,7 @@ final class type extends base_entity
 	 */
 	public function get_comments_settings()
 	{
-		return ($this->comments_settings) ? json_decode($this->comments_settings, true) : array();
+		return $this->get_array_field('comments_settings');
 	}
 
 	/**
@@ -340,21 +324,23 @@ final class type extends base_entity
 	}
 
 	/**
-	 * @param array|string $topic_blocks
+	 * Set topic blocks + settings
+	 * @param array|string $settings
 	 * @return $this
 	 */
-	public function set_topic_blocks($topic_blocks)
+	public function set_topic_blocks($settings)
 	{
-		$this->topic_blocks = is_array($topic_blocks) ? join(',', array_filter($topic_blocks)) : $topic_blocks;
+		$this->set_array_field('topic_blocks', $settings);
 		return $this;
 	}
 
 	/**
+	 * Get topic blocks + settings
 	 * @return array
 	 */
 	public function get_topic_blocks()
 	{
-		return array_filter(explode(',', $this->topic_blocks));
+		return $this->get_array_field('topic_blocks');
 	}
 
 	/**

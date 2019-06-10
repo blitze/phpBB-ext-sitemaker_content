@@ -113,6 +113,7 @@ $lang = array_merge($lang, array(
 	'LABEL'						=> 'Label',
 	'LIVE_PREVIEW'				=> 'Live Preview',
 
+	'MAX_TOPICS'				=> 'Max. topics',
 	'MISSING_CONTENT_LANGNAME'	=> 'Missing content language name',
 	'MISSING_CONTENT_NAME'		=> 'Missing content name',
 	'MISSING_FIELD'				=> 'Missing field name!',
