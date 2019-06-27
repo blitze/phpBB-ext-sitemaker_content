@@ -17,6 +17,9 @@ class main_controller
 	/** @var \phpbb\controller\helper */
 	protected $controller;
 
+	/** @var \phpbb\path_helper */
+	protected $path_helper;
+
 	/** @var \phpbb\request\request_interface */
 	protected $request;
 
