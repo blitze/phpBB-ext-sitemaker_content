@@ -11,12 +11,10 @@
 set -e
 set -x
 
-BRANCH=$1
+EXTNAME=$1
 
-cd ../../phpBB3
+# Dependent phpBB extensions end up inside of the extension so let's move them to the phpBB/ext folder
+cp -fR phpBB/ext/$EXTNAME/ext phpBB
+rm -fR phpBB/ext/$EXTNAME/ext
 
-# Clone sitemaker
-git clone --depth=1 "git://github.com/blitze/phpBB-ext-sitemaker.git" "phpBB/ext/blitze/sitemaker" --branch=$BRANCH
-
-cd phpBB/ext/blitze/sitemaker
-composer install --no-interaction --prefer-source --no-dev --ignore-platform-reqs
+ls -d phpBB/ext/blitze/*/
