@@ -77,7 +77,7 @@ class fields extends topic
 	 * @param string $custom_tpl
 	 * @param string $view_mode			summary|detail
 	 * @param string $tpl_name
-	 * @return void
+	 * @return $this
 	 */
 	public function prepare_to_show(\blitze\content\model\entity\type $entity, array $topic_ids, array $view_mode_fields, $custom_tpl, $view_mode, $tpl_name = null)
 	{
