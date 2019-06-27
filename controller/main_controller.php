@@ -271,7 +271,6 @@ class main_controller
 	{
 		if ($_format === 'xml')
 		{
-			
 			return $this->feed->render($max_update_time ?: time());
 		}
 
