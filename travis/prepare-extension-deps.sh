@@ -16,5 +16,3 @@ EXTNAME=$1
 # Dependent phpBB extensions end up inside of the extension so let's move them to the phpBB/ext folder
 cp -fR phpBB/ext/$EXTNAME/ext phpBB
 rm -fR phpBB/ext/$EXTNAME/ext
-
-ls -d phpBB/ext/blitze/*/
