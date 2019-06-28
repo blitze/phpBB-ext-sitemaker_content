@@ -10,7 +10,7 @@
     "spectrum": "^1.8.0",
     "swiper": "^4.5.0",
     "jquery-ui": "^1.12.1",
-    "codemirror": "^5.46.0",
+    "codemirror": "^5.47.0",
     "twig.js": "https://raw.githubusercontent.com/philsbury/twigjs-bower/master/twig/twig.min.js",
     "jquery-ias": "^2.3.1",
     "masonry-layout": "^4.2.2"
