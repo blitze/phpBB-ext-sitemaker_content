@@ -92,7 +92,7 @@
 	</target>
 
 	<!--
-	Run webpack build process
+	Run gulp build process
 	-->
 	<target name="build-assets" depends="yarn-install">
 		<exec command="gulp build" dir="${package-directory}" passthru="true" checkreturn="true" />
