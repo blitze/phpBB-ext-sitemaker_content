@@ -379,7 +379,7 @@
 
 		$('#selected-topic-blocks').sortable(topicBlocksSortableOptions);
 
-		delete topicBlocksSortableOptions['update'];
+		delete topicBlocksSortableOptions.update;
 
 		$('#available-topic-block-options').sortable(topicBlocksSortableOptions);
 

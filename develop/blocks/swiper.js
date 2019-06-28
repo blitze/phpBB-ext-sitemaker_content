@@ -1,3 +1,4 @@
+/* global Swiper */
 (function($, window, document, undefined) {
 	'use strict';
 
@@ -41,7 +42,7 @@
 		};
 
 		if (options.thumbs) {
-			swipers[bid]['bottom'] = new Swiper('#thumbs-' + bid, {
+			swipers[bid].bottom = new Swiper('#thumbs-' + bid, {
 				spaceBetween: 10,
 				centeredSlides: true,
 				slidesPerView: 'auto',
@@ -50,8 +51,8 @@
 				loop: options.loop,
 				loopedSlides: options.loopedSlides
 			});
-			swipers[bid]['top'].controller.control = swipers[bid]['bottom'];
-			swipers[bid]['bottom'].controller.control = swipers[bid]['top'];
+			swipers[bid].top.controller.control = swipers[bid].bottom;
+			swipers[bid].bottom.controller.control = swipers[bid].top;
 		}
 	}
 
@@ -64,7 +65,9 @@
 			.on('blitze_sitemaker_render_block_before', function(e) {
 				if (swipers[e.block.bid]) {
 					swipers[e.block.bid].top.destroy();
-					swipers[e.block.bid].bottom ? swipers[e.block.bid].bottom.destroy() : '';
+					if (swipers[e.block.bid].bottom) {
+						swipers[e.block.bid].bottom.destroy();
+					}
 				}
 			})
 			.on('blitze_sitemaker_render_block_after', function(e) {

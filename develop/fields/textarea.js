@@ -4,7 +4,7 @@
 	$(document).ready(function() {
 		var phpbb = window.phpbb || {};
 		var bbcodeEditors = $('textarea[data-bbcode="true"]').focus(function() {
-			window['text_name'] = $(this).attr('name');
+			window['text_name'] = $(this).attr('name'); // jshint ignore:line
 		});
 
 		/**

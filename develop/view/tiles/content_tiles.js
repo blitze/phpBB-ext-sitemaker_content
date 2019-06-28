@@ -17,7 +17,7 @@
 			item: ".grid-item",
 			pagination: "#pagination",
 			next: ".next a",
-			delay: 1200,
+			delay: 1200
 		});
 
 		$ias.on('render', function(items) {

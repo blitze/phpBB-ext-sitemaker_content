@@ -1,5 +1,5 @@
 // Responsive Filemanager callback
-function responsive_filemanager_callback(field_id) {
+function responsive_filemanager_callback(field_id) { // jshint ignore:line
 	'use strict';
 	/* global $ */
 	$('#' + field_id).trigger('change');
@@ -115,7 +115,7 @@ function initAutocomplete(fieldName, map, marker, infowindow) {
 	});
 }
 
-function initMap() {
+function initMap() { // jshint ignore:line
 	'use strict';
 
 	$('.location-map').each(function() {

@@ -1,7 +1,9 @@
+/* global $ */
+
 /**
  * Display location map
  */
-function initMap() {
+function initMap() { // jshint ignore:line
 	'use strict';
 
 	$('.location-map').each(function() {
@@ -38,14 +40,13 @@ function initMap() {
 /**
  * social share
  */
-function initSocialShare() {
+function initSocialShare() { // jshint ignore:line
 	'use strict';
 
 	$('.social-share').each(function() {
 		var options = $(this).data();
 		options.shares = options.shares.split(',');
 
-		/* global jsSocials */
 		$(this).jsSocials(options);
 	});
 }
