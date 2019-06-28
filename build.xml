@@ -13,6 +13,8 @@
 		Remove some unnecessary files/directories
 		${dir}/ is the folder of your extension, e.g. ext/acme/demo/
 		-->
+		<delete dir="${dir}/ext" />
+		<delete dir="${dir}/vendor/simplepie" />
 	</target>
 
 	<!--
