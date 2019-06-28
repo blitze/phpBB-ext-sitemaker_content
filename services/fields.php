@@ -20,7 +20,7 @@ class fields extends topic
 	/** @var string */
 	protected $content_type;
 
-	/** @var \blitze\content\services\comments\comments_inferface */
+	/** @var null|\blitze\content\services\comments\comments_inferface */
 	protected $comments;
 
 	/** @var string */
@@ -321,7 +321,7 @@ class fields extends topic
 		$find_fields = join('|', array_keys($this->content_fields));
 		if (preg_match_all("#<div data-field=\"($find_fields)\">(.*?)</div><br><!-- end field -->#s", $post_text, $matches))
 		{
-			$fields_data = array_combine($matches[1], $matches[2]);
+			$fields_data = (array) array_combine($matches[1], $matches[2]);
 		}
 
 		return array_intersect_key($fields_data, $this->content_fields);

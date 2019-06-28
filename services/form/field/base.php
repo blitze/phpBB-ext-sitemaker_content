@@ -104,11 +104,11 @@ abstract class base implements field_interface
 
 		if (isset($rules['sanitize']))
 		{
-			$data['field_value'] = filter_var($data['field_value'], $rules['sanitize']);
+			$data['field_value'] = filter_var($data['field_value'], (int) $rules['sanitize']);
 		}
 
 		$message = '';
-		if ($rules['filter'] && filter_var($data['field_value'], $rules['filter'], $rules['options']) === false)
+		if ($rules['filter'] && filter_var($data['field_value'], (int) $rules['filter'], $rules['options']) === false)
 		{
 			$message = $this->get_error_message($data);
 		}
@@ -142,7 +142,7 @@ abstract class base implements field_interface
 	{
 		if (!is_array($value))
 		{
-			return array_filter(preg_split("/(\n|<br>)/", $value));
+			return array_filter((array) preg_split("/(\n|<br>)/", $value));
 		}
 
 		return $value;

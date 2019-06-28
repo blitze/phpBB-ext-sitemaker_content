@@ -313,6 +313,6 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 	protected function get_display_layouts()
 	{
 		$layouts = array('layout0', 'layout1', 'layout2');
-		return array_combine($layouts, $layouts);
+		return (array) array_combine($layouts, $layouts);
 	}
 }

@@ -364,7 +364,8 @@ abstract class base_view implements views_interface
 	 */
 	protected function get_field_value_by_type($field_type, array $field_types, array $raw_data)
 	{
-		$field_name = array_shift(array_keys($field_types, $field_type));
+		$fields = array_keys($field_types, $field_type);
+		$field_name = array_shift($fields);
 
 		return isset($raw_data[$field_name]) ? $raw_data[$field_name] : '';
 	}

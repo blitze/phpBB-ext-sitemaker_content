@@ -63,10 +63,8 @@ class mcp_post implements EventSubscriberInterface
 	public function modify_post_data(\phpbb\event\data $event)
 	{
 		$type = (string) $this->content_types->get_forum_type($event['post_info']['forum_id']);
-		if ($type && $event['post_info']['post_id'] === $event['post_info']['topic_first_post_id'])
+		if ($type && $event['post_info']['post_id'] === $event['post_info']['topic_first_post_id'] && ($entity = $this->content_types->get_type($type)) !== false)
 		{
-			$entity = $this->content_types->get_type($type);
-
 			$this->fields->prepare_to_show($entity, array($event['post_info']['topic_id']), $entity->get_summary_fields(), $entity->get_summary_tpl(), 'summary');
 			$users_cache = $attachments = $topic_tracking_info = $update_count = array();
 

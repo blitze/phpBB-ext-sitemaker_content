@@ -339,7 +339,7 @@ class builder
 
 		if (preg_match_all("/\[smcf=($find_fields)\](.*?)\[\/smcf]/s", $post_text, $matches))
 		{
-			$fields_data = array_combine($matches[1], $matches[2]);
+			$fields_data = (array) array_combine($matches[1], $matches[2]);
 		}
 
 		return $fields_data;

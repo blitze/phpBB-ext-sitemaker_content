@@ -22,6 +22,9 @@ class index extends filter implements action_interface
 	/** @var \phpbb\controller\helper */
 	protected $controller_helper;
 
+	/** @var \phpbb\language\language */
+	protected $language;
+
 	/** @var \phpbb\pagination */
 	protected $pagination;
 
@@ -62,6 +65,7 @@ class index extends filter implements action_interface
 	 * @param \phpbb\config\config							$config					Config object
 	 * @param \phpbb\db\driver\driver_interface				$db						Database connection
 	 * @param \phpbb\controller\helper						$controller_helper		Controller Helper object
+	 * @param \phpbb\language\language						$language				Language object
 	 * @param \phpbb\pagination								$pagination				Pagination object
 	 * @param \phpbb\request\request_interface				$request				Request object
 	 * @param \phpbb\template\template						$template				Template object
@@ -73,13 +77,14 @@ class index extends filter implements action_interface
 	 * @param string										$phpbb_root_path		Path to the phpbb includes directory.
 	 * @param string										$php_ext				php file extension
 	 */
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $controller_helper, \phpbb\pagination $pagination, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\types $content_types, \blitze\content\services\fields $fields, \blitze\sitemaker\services\forum\data $forum, \blitze\content\services\helper $helper, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\controller\helper $controller_helper, \phpbb\language\language $language, \phpbb\pagination $pagination, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\content\services\types $content_types, \blitze\content\services\fields $fields, \blitze\sitemaker\services\forum\data $forum, \blitze\content\services\helper $helper, $phpbb_root_path, $php_ext)
 	{
 		parent::__construct($db, $request, $template);
 
 		$this->auth = $auth;
 		$this->config = $config;
 		$this->controller_helper = $controller_helper;
+		$this->language = $language;
 		$this->pagination = $pagination;
 		$this->user = $user;
 		$this->content_types = $content_types;
@@ -97,7 +102,7 @@ class index extends filter implements action_interface
 	{
 		include($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
 
-		$this->user->add_lang('viewforum');
+		$this->language->add_lang('viewforum');
 		$this->template->assign_var('MODE', $mode);
 
 		$content_types = $this->content_types->get_all_types();
@@ -162,7 +167,8 @@ class index extends filter implements action_interface
 	 */
 	protected function init_ucp_mode(array $content_types)
 	{
-		$sql_where_array['WHERE'] = 't.topic_poster = ' . (int) $this->user->data['user_id'];
+		$sql_where_array = ['WHERE' => 't.topic_poster = ' . (int) $this->user->data['user_id']];
+
 		$this->forum->fetch_custom($sql_where_array)
 			->build(false, false, false);
 
@@ -301,7 +307,9 @@ class index extends filter implements action_interface
 	 */
 	protected function get_attachment_icon(array $row)
 	{
-		return ($this->auth->acl_get('u_download') && $this->auth->acl_get('f_download', $row['forum_id']) && $row['topic_attachment']) ? $this->user->img('icon_topic_attach', $this->language->lang('TOTAL_ATTACHMENTS')) : '';
+		return ($this->auth->acl_get('u_download') && $this->auth->acl_get('f_download', $row['forum_id']) && $row['topic_attachment'])
+			? $this->user->img('icon_topic_attach', $this->language->lang('TOTAL_ATTACHMENTS'))
+			: '';
 	}
 
 	/**
@@ -359,7 +367,7 @@ class index extends filter implements action_interface
 		$page_url = $this->get_filter_type_base_url($u_action);
 
 		$this->template->assign_vars(array(
-			'TOTAL_TOPICS'		=> $this->user->lang('VIEW_FORUM_TOPICS', $topics_count),
+			'TOTAL_TOPICS'		=> $this->language->lang('VIEW_FORUM_TOPICS', $topics_count),
 		));
 
 		$start = $this->pagination->validate_start($start, $this->topics_per_page, $topics_count);

@@ -76,7 +76,7 @@ class number extends base
 
 	/**
 	 * @inheritdoc
-	 * @return int
+	 * @return int|string
 	 */
 	public function get_field_value(array $data)
 	{

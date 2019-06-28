@@ -65,15 +65,15 @@ class filter
 
 	/**
 	 * @param array $sql_where_array
-	 * @return void
+	 * @return array
 	 */
 	protected function apply_search_filter(array &$sql_where_array)
 	{
+		$table_field = 'topic_title';
 		if ($search = $this->request->variable('search', '', true))
 		{
-			$default_type = 'topic_title';
-			$table_field = $this->request->variable('search_type', $default_type);
-			$table_field = (in_array($table_field, ['topic_title', 'topic_first_poster_name'])) ? $table_field : $default_type;
+			$search_type = $this->request->variable('search_type', $table_field);
+			$table_field = (in_array($table_field, ['topic_title', 'topic_first_poster_name'])) ? $search_type : $table_field;
 
 			$sql_where_array[] = 't.' . $table_field . ' ' . $this->db->sql_like_expression($this->db->get_any_char() . $search . $this->db->get_any_char());
 
@@ -82,9 +82,10 @@ class filter
 				'search_type'	=> $table_field,
 			);
 		}
+
 		return array(
 			'search'	=> $search,
-			'type'		=> $table_field ?: 'topic_title',
+			'type'		=> $table_field,
 		);
 	}
 
@@ -216,11 +217,11 @@ class filter
 
 	/**
 	 * @param string $topic_status
-	 * @param string $filter_type
+	 * @param array $filter_type
 	 * @param string $method
 	 * @return bool
 	 */
-	protected function is_callable($topic_status, $filter_type, $method)
+	protected function is_callable($topic_status, array $filter_type, $method)
 	{
 		return (in_array($topic_status, $filter_type) && is_callable(array($this, $method))) ? true : false;
 	}

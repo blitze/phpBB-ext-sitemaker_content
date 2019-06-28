@@ -72,7 +72,7 @@ class location extends base
 		$field_value = $this->ensure_is_array($data['field_value']);
 		$field_value = array_pad(array_map('trim', $field_value), count($fields), '');
 
-		return array_combine($fields, $field_value);
+		return (array) array_combine($fields, $field_value);
 	}
 
 	/**

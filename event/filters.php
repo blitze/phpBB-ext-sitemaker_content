@@ -44,7 +44,7 @@ class filters implements EventSubscriberInterface
 	{
 		if (isset($event['filters']['archive']))
 		{
-			$month = array_combine(array('year', 'mon'), explode('-', current($event['filters']['archive'])));
+			$month = (array) array_combine(array('year', 'mon'), explode('-', current($event['filters']['archive'])));
 			$range = $this->date_range->get_month($month);
 
 			$sql_array = $event['sql_array'];

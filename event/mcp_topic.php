@@ -86,7 +86,7 @@ class mcp_topic implements EventSubscriberInterface
 			$users_cache = $attachments = $topic_tracking_info = $update_count = array();
 
 			$post_row = (array) $event['post_row'];
-			$topic_data = $event['topic_info'];
+			$topic_data = (array) $event['topic_info'];
 			$post_data = array_merge($post_row, $event['row']);
 			$users_cache[$post_data['poster_id']] = array();
 
