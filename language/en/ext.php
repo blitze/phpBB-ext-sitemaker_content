@@ -37,9 +37,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	// Logs
-	'ACP_LOG_CONTENT_TYPE_CREATED'	=> '<strong>Content type added</strong><br />» %s',
-	'ACP_LOG_CONTENT_TYPE_DELETED'	=> '<strong>Content type deleted</strong><br />» %s',
-	'ACP_LOG_CONTENT_TYPE_RENAMED'	=> '<strong>Content type renamed</strong><br />» %s → %s',
-	'ACP_LOG_CONTENT_TYPE_UPDATED'	=> '<strong>Content type updated</strong><br />» %s',
+	'EXTENSION_VERSION_UNMET'		=> 'This extension has a dependecy on version %1$s of <a target="_blank" href="%2$s">%3$s</a>. You currently have version %4$s',
+	'MISSING_REQUIRED_EXTENSION'	=> 'This extenion cannot be installed because it is missing a required extension: <a target="_blank" href="%1$s">%2$s</a>',
+	'PHPBB_VERSION_UNMET'			=> 'This extension requires at least phpBB %s',
 ));
