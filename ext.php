@@ -77,7 +77,7 @@ class ext extends \phpbb\extension\base
 			}
 
 			$required_version = $metadata['require'][$extension];
-			$current_version = $this->get_metadata($extension, 'version');
+			$current_version = $this->get_metadata($extension)['version'];
 
 			if (!$this->version_is_ok($current_version, $required_version))
 			{
@@ -141,13 +141,12 @@ class ext extends \phpbb\extension\base
 	 * Get composer metadata information
 	 *
 	 * @param string $name
-	 * @param string $element
-	 * @return array|string
+	 * @return array
 	 */
-	protected function get_metadata($name, $element = 'all')
+	protected function get_metadata($name)
 	{
 		$ext_manager = $this->container->get('ext.manager');
 		$metadata_manager = $ext_manager->create_extension_metadata_manager($name);
-		return $metadata_manager->get_metadata($element);
+		return $metadata_manager->get_metadata('all');
 	}
 }
