@@ -20,7 +20,7 @@ class fields extends topic
 	/** @var string */
 	protected $content_type;
 
-	/** @var null|\blitze\content\services\comments\comments_inferface */
+	/** @var null|\blitze\content\services\comments\comments_interface */
 	protected $comments;
 
 	/** @var string */
