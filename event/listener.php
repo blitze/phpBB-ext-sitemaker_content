@@ -93,12 +93,11 @@ class listener implements EventSubscriberInterface
 
 			if (sizeof($match))
 			{
-				$row = $this->content_types->get_type($match[1]);
+				$entity = $this->content_types->get_type($match[1]);
 				$lang = (!empty($match[2])) ? 'SITEMAKER_READING_TOPIC' : 'SITEMAKER_BROWSING_CONTENT';
 
-				$event['location'] = $this->language->lang($lang, $row['content_langname']);
+				$event['location'] = $this->language->lang($lang, $entity->get_content_langname());
 				$event['location_url'] = $event['row']['session_page'];
-				unset($row);
 			}
 		}
 	}
