@@ -2,7 +2,6 @@
   "name": "phpbb_sitemaker_content",
   "dependencies": {
     "air-datepicker": "^2.2.3",
-    "awesome-grid": "^2.0.2",
     "fancybox": "^3.5.7",
     "imagesloaded": "^4.1.4",
     "ion.rangeSlider": "ionrangeslider#^2.3.0",
@@ -17,9 +16,6 @@
   },
   "overrides": {
     "air-datepicker": {
-      "dependencies": null
-    },
-    "awesome-grid": {
       "dependencies": null
     },
     "codemirror": {
