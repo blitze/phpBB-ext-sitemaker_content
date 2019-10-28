@@ -12,6 +12,10 @@
 			containerStyle: null
 		});
 
+		$grid.imagesLoaded().progress(function() {
+			$grid.masonry('layout');
+		});
+
 		var $ias = $.ias({
 			container: '#sitemaker-content-tiles',
 			item: ".grid-item",
@@ -25,7 +29,7 @@
 		});
 
 		$ias.on('rendered', function(items) {
-			var $items = $(items).imagesLoaded(function() {
+			var $items = $(items).imagesLoaded().progress(function() {
 				$grid.masonry('appended', $items);
 			});
 		});
