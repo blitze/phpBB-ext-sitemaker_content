@@ -29,7 +29,7 @@
 		});
 
 		$ias.on('rendered', function(items) {
-			var $items = $(items).imagesLoaded().progress(function() {
+			var $items = $(items).imagesLoaded(function() {
 				$grid.masonry('appended', $items);
 			});
 		});
