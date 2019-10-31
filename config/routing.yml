@@ -20,7 +20,7 @@ blitze_content_type_page:
 
 blitze_content_type_filter:
     path: /content/{type}/{filter_type}/{filter_value}
-    defaults: { _controller: blitze.content.main.controller:index, filter_value: '', page: 1 }
+    defaults: { _controller: blitze.content.main.controller:index, page: 1 }
     options:
         utf8: true
 
