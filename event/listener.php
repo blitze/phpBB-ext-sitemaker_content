@@ -86,19 +86,27 @@ class listener implements EventSubscriberInterface
 	 */
 	public function add_viewonline_location(\phpbb\event\data $event)
 	{
-		if ($event['on_page'][1] == 'app' && strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/content/') === 0)
+		if ($event['on_page'][1] == 'app' && strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/content') === 0)
 		{
 			$types = join('|', $this->content_types->get_forum_types());
 			preg_match("/\/content\/($types)(\/[0-9]\/.*)?/is", $event['row']['session_page'], $match);
 
-			if (sizeof($match))
-			{
-				$entity = $this->content_types->get_type($match[1]);
-				$lang = (!empty($match[2])) ? 'SITEMAKER_READING_TOPIC' : 'SITEMAKER_BROWSING_CONTENT';
+			$lang = 'SITEMAKER_BROWSING_CONTENT';
+			$langname = '';
 
-				$event['location'] = $this->language->lang($lang, $entity->get_content_langname());
-				$event['location_url'] = $event['row']['session_page'];
+			if (!empty($match[1]) && $entity = $this->content_types->get_type($match[1]))
+			{
+				$lang = 'SITEMAKER_BROWSING_CONTENT_TYPE';
+				$langname = $entity->get_content_langname();
+
+				if (!empty($match[2]))
+				{
+					$lang = 'SITEMAKER_READING_TOPIC';
+				}
 			}
+
+			$event['location'] = $this->language->lang($lang, $langname);
+			$event['location_url'] = $event['row']['session_page'];
 		}
 	}
 

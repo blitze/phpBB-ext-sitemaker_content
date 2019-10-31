@@ -56,10 +56,10 @@ $lang = array_merge($lang, array(
 
 	'POST_NEW'						=> 'Post New',
 
+	'READ_MORE'						=> 'Read More',
 	'REQ_MOD_INPUT'					=> 'Requires moderator input',
 
-	'SITEMAKER_BROWSING_CONTENT'	=> 'Browsing %s',
-	'SITEMAKER_READING_TOPIC'		=> 'Reading topic in %s',
-
-	'READ_MORE'						=> 'Read More',
+	'SITEMAKER_BROWSING_CONTENT'		=> 'Browsing content',
+	'SITEMAKER_BROWSING_CONTENT_TYPE'	=> 'Browsing %s',
+	'SITEMAKER_READING_TOPIC'			=> 'Reading topic in %s',
 ));
