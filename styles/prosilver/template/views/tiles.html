@@ -28,6 +28,7 @@
 							{{ topicrow.CUSTOM_DISPLAY }}
 						{% else %}
 							{{ topicrow.FIELDS.body|join }}
+							<p>&nbsp;</p>
 							<div class="align-right sm-badge grayscale-color">
 								<span class="info"><a href="{{ topicrow.TOPIC_URL }}">{{ lang('READ_MORE') }} ></a></span>
 							</div>
