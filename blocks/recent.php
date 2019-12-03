@@ -82,10 +82,13 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 		$default_type = $this->get_content_type_options($content_type_options, $field_options);
 		$editor_attributes = [];
 
+		$type = $settings['content_type'] ?: $default_type;
+		$field_options[$type] = array_merge(array_flip((array) $settings['fields']), (array) $field_options[$type]);
+
 		return array(
 			'legend1'			=> 'DISPLAY',
 				'content_type'		=> array('lang' => 'CONTENT_TYPE', 'validate' => 'string', 'type' => 'select:1:toggable', 'object' => $this, 'method' => 'select_content_type', 'options' => $content_type_options, 'default' => $default_type),
-				'fields'			=> array('lang' => 'SELECT_FIELDS', 'validate' => 'string', 'type' => 'checkbox', 'options' => $field_options, 'default' => array(), 'explain' => true),
+				'fields'			=> array('lang' => 'SELECT_FIELDS', 'validate' => 'string', 'type' => 'checkbox:sortable', 'options' => $field_options, 'default' => array(), 'explain' => true),
 				'block_tpl'			=> array('lang' => '', 'validate' => 'string', 'type' => 'code_editor', 'params' => [$editor_attributes, 'TEMPLATE'], 'default' => ''),
 				'layout'			=> array('lang' => 'DISPLAY_LAYOUT', 'validate' => 'string', 'type' => 'select', 'options' => $this->get_display_layouts(), 'default' => 'layout0'),
 
@@ -216,7 +219,10 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 	protected function get_block_fields(array $field_types)
 	{
 		$block_fields = (!empty($this->settings['fields'])) ? $this->settings['fields'] : array();
-		return array_intersect_key($field_types, array_flip($block_fields));
+		$block_fields = array_flip($block_fields);
+		$field_types = array_merge($block_fields, $field_types);
+
+		return array_intersect_key($field_types, $block_fields);
 	}
 
 	/**
