@@ -61,6 +61,11 @@ class filters extends \Twig\Extension\AbstractExtension
 	*/
 	public function truncate_filter($content, $max_chars = 60, $type = '')
 	{
+		if (!$max_chars)
+		{
+			return $content;
+		}
+
 		if ($type === 'html')
 		{
 			$truncator = new TruncateService();
