@@ -34,7 +34,7 @@
 							</div>
 						{% endif %}
 						</div>
-						{% if not topicrow.FIELDS.CUSTOM_DISPLAY %}
+						{% if topicrow.FIELDS.footer|length && not topicrow.FIELDS.CUSTOM_DISPLAY %}
 						<div class="sm-content-footer">{{ topicrow.FIELDS.footer|join(' | ') }}</div>
 						{% endif %}
 					</div>

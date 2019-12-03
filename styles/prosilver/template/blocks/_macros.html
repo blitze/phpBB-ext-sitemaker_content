@@ -1,9 +1,9 @@
-{%- macro show_summary(topicrow) -%}
+{%- macro show_summary(topicrow, title_limit = 0) -%}
 	<div class="postbody sm-full-width sm-inner">
 	{% INCLUDE 'parts/moderator_info.html' %}
 	{% if not topicrow.CUSTOM_DISPLAY %}
 		{{ topicrow.FIELDS.above|join }}
-		<p class="topic-title"><a href="{{ topicrow.TOPIC_URL }}" title="{{ topicrow.TOPIC_TITLE }}">{{ topicrow.TOPIC_TITLE|truncate(TITLE_LIMIT) }}</a></p>
+		<h3 class="first"><a href="{{ topicrow.TOPIC_URL }}" title="{{ topicrow.TOPIC_TITLE }}">{{ topicrow.TOPIC_TITLE|truncate(title_limit) }}</a></h3>
 		<p class="author">
 		{% if not S_IS_BOT %}
 			<a class="unread" href="{{ topicrow.U_MINI_POST }}">
@@ -14,26 +14,28 @@
 			<span>{{ topicrow.FIELDS.inline|join('|') }}</span>
 		</p>
 	{% endif %}
-	{% if topicrow.CUSTOM_DISPLAY || topicrow.FIELDS.body %}
+	{% if topicrow.CUSTOM_DISPLAY || topicrow.FIELDS.all %}
 		<div class="content">
 			{{ topicrow.CUSTOM_DISPLAY }}
-			{{ topicrow.FIELDS.body|join }}
+			{{ topicrow.FIELDS.all|join }}
 		</div>
 	{% endif %}
-	{% if not topicrow.FIELDS.CUSTOM_DISPLAY %}
-		{{ topicrow.FIELDS.footer|join }}
+	{% if topicrow.FIELDS.footer|length && not topicrow.FIELDS.CUSTOM_DISPLAY %}
+		<div class="sm-content-footer">
+			{{ topicrow.FIELDS.footer|join }}
+		</div>
 	{% endif %}
 	</div>
 {%- endmacro -%}
 
-{%- macro show_title(topicrow) -%}
+{%- macro show_title(topicrow, title_limit = 0) -%}
 	<p>
 		<i classe"fa fa-clock-o"></i>{{ topicrow.TOPIC_DATE_LONG }}<br />
 	{% if not S_IS_BOT %}
 		<a class="unread" href="{{ topicrow.U_MINI_POST }}">
-			<i class="icon fa-file fa-fw {% if postrow.S_UNREAD_POST %}icon-red{% else %}icon-lightgray{% endif %} icon-md" aria-hidden="true"></i><span class="sr-only">{{ postrow.MINI_POST }}</span>
+			<i class="icon fa-file fa-fw {% if topicrow.S_UNREAD_POST %}icon-red{% else %}icon-lightgray{% endif %} icon-md" aria-hidden="true"></i><span class="sr-only">{{ topicrow.MINI_POST }}</span>
 		</a>
 	{% endif %}
-		<a class="topic-title" href="{{ topicrow.TOPIC_URL }}" title="{{ topicrow.TOPIC_TITLE }}">{{ topicrow.TOPIC_TITLE|truncate(TITLE_LIMIT) }}</a>
+		<a class="d-inline" href="{{ topicrow.TOPIC_URL }}" title="{{ topicrow.TOPIC_TITLE }}">{{ topicrow.TOPIC_TITLE|truncate(title_limit) }}</a>
 	</p>
 {%- endmacro -%}

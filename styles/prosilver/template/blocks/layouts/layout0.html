@@ -1,7 +1,7 @@
 <ul class="sm-list">
 {% for topicrow in loops.topicrow %}
 	<li>
-		{{ macro.show_summary(topicrow) }}
+		{{ macro.show_summary(topicrow, TITLE_LIMIT) }}
 	</li>
 {% endfor %}
 </ul>

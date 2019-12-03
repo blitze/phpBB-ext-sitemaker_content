@@ -1,18 +1,20 @@
 {% if loops.topicrow|length > 1 %}
-<div class="column1">
-	{{ macro.show_summary(loops.topicrow[0]) }}
-</div>
-<div class="column2">
-	<ul class="sm-list">
-	{% for topicrow in loops.topicrow[1:] %}
-		<li>
-			<div class="small-img img-align-left">
-				{{ topicrow.FIELDS.all|field('image', 'topicrow') }}
-				{{ macro.show_title(topicrow) }}
-			</div>
-		</li>
-	{% endfor %}
-	</ul>
+<div class="grid-noBottom_sm-1">
+	<div class="col">
+		{{ macro.show_summary(loops.topicrow[0]) }}
+	</div>
+	<div class="col">
+		<ul class="sm-list small-img img-align-left">
+		{% for topicrow in loops.topicrow[1:] %}
+			<li>
+				<div class="sm-inner">
+					<a class="d-inline" href="{{ topicrow.TOPIC_URL }}">{{ topicrow.FIELDS.all|field('image', 'topicrow') }}</a>
+					{{ macro.show_title(topicrow, TITLE_LIMIT) }}
+				</div>
+			</li>
+		{% endfor %}
+		</ul>
+	</div>
 </div>
 {% else %}
 	{{ macro.show_summary(loops.topicrow[0]) }}
