@@ -141,7 +141,7 @@ class main_controller
 	}
 
 	/**
-	 * Filter topics by a filter
+	 * List content types
 	 *
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
