@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6cabe007bb4a582c9fc69af5f1cb6931",
+    "content-hash": "790f213bec4945afeef975ab49093577",
     "packages": [
         {
             "name": "blitze/sitemaker",
