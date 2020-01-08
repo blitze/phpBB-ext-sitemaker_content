@@ -78,16 +78,19 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 	 */
 	public function get_config(array $settings)
 	{
-		$content_type_options = $field_options = array();
-		$default_type = $this->get_content_type_options($content_type_options, $field_options);
 		$editor_attributes = [];
+		$content_type_options = $field_options = array();
+		$settings += array(
+			'content_type'	=> $this->get_content_type_options($content_type_options, $field_options),
+			'fields'		=> [],
+		);
 
-		$type = $settings['content_type'] ?: $default_type;
+		$type = $settings['content_type'];
 		$field_options[$type] = array_merge(array_flip((array) $settings['fields']), (array) $field_options[$type]);
 
 		return array(
 			'legend1'			=> 'DISPLAY',
-				'content_type'		=> array('lang' => 'CONTENT_TYPE', 'validate' => 'string', 'type' => 'select:1:toggable', 'object' => $this, 'method' => 'select_content_type', 'options' => $content_type_options, 'default' => $default_type),
+				'content_type'		=> array('lang' => 'CONTENT_TYPE', 'validate' => 'string', 'type' => 'select:1:toggable', 'object' => $this, 'method' => 'select_content_type', 'options' => $content_type_options, 'default' => ''),
 				'fields'			=> array('lang' => 'SELECT_FIELDS', 'validate' => 'string', 'type' => 'checkbox:sortable', 'options' => $field_options, 'default' => array(), 'explain' => true),
 				'block_tpl'			=> array('lang' => '', 'validate' => 'string', 'type' => 'code_editor', 'params' => [$editor_attributes, 'TEMPLATE'], 'default' => ''),
 				'layout'			=> array('lang' => 'DISPLAY_LAYOUT', 'validate' => 'string', 'type' => 'select', 'options' => $this->get_display_layouts(), 'default' => 'layout0'),
