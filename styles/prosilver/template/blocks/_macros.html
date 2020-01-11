@@ -17,7 +17,7 @@
 	{% if topicrow.CUSTOM_DISPLAY || topicrow.FIELDS.all %}
 		<div class="content">
 			{{ topicrow.CUSTOM_DISPLAY }}
-			{{ topicrow.FIELDS.all|join }}
+			{{ topicrow.FIELDS.body|join }}
 		</div>
 	{% endif %}
 	{% if topicrow.FIELDS.footer|length && not topicrow.FIELDS.CUSTOM_DISPLAY %}
