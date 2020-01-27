@@ -1,0 +1,14 @@
+{% import 'fields/_macros.html' as form %}
+
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-maxlength' }}">{{ lang('TEXTAREA_MAXLENGTH') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-maxlength', 'field_props[' ~ field.FIELD_NAME ~ '][maxlength]', field.FIELD_PROPS.maxlength, 'number', 5) }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-size' }}">{{ lang('INPUT_SIZE') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-size', 'field_props[' ~ field.FIELD_NAME ~ '][size]', field.FIELD_PROPS.size, 'number', 5, '', 10, 100, 5) }}%
+    </dd>
+</dl>

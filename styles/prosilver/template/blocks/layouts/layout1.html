@@ -1,3 +1,5 @@
+{% import 'blocks/_macros.html' as macro %}
+
 {{ macro.show_summary(loops.topicrow[0]) }}
 
 {% if loops.topicrow|length > 1 %}

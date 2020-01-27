@@ -1,0 +1,29 @@
+{% import 'fields/_macros.html' as form %}
+
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-editor-0' }}">{{ lang('TEXTAREA_ENABLE_EDITOR') ~ lang('COLON') }}</label>
+    </dt>
+    <dd>
+        {{ form.pickem(field.FIELD_NAME ~ '-editor-0', 'field_props[' ~ field.FIELD_NAME ~ '][editor]', 1, (field.FIELD_PROPS.editor !== 0), 'radio', 'YES') }}
+        {{ form.pickem(field.FIELD_NAME ~ '-editor-1', 'field_props[' ~ field.FIELD_NAME ~ '][editor]', 0, (field.FIELD_PROPS.editor == 0), 'radio', 'NO') }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-size-small' }}">{{ lang('TEXTAREA_SIZE') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.pickem(field.FIELD_NAME ~ '-size-small', 'field_props[' ~ field.FIELD_NAME ~ '][size]', 'small', (field.FIELD_PROPS.size === 'small'), 'radio', 'TEXTAREA_SMALL') }}
+        {{ form.pickem(field.FIELD_NAME ~ '-size-large', 'field_props[' ~ field.FIELD_NAME ~ '][size]', 'large', (field.FIELD_PROPS.size === 'large'), 'radio', 'TEXTAREA_LARGE') }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-maxlength' }}">{{ lang('TEXTAREA_MAXLENGTH') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-maxlength', 'field_props[' ~ field.FIELD_NAME ~ '][maxlength]', field.FIELD_PROPS.maxlength, 'number', 5) }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-max_chars' }}">{{ lang('INDEX_MAX_CHARS') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-max_chars', 'field_props[' ~ field.FIELD_NAME ~ '][max_chars]', field.FIELD_PROPS.max_chars, 'number', 5) }}
+    </dd>
+</dl>

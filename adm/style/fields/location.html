@@ -1,0 +1,59 @@
+{% import 'fields/_macros.html' as form %}
+
+{%- set display_types = [
+		{ value: 'address', label: 'LOCATION_DISPLAY_TYPE_ADDRESS' },
+		{ value: 'coordinates', label: 'LOCATION_DISPLAY_TYPE_COORDINATES' },
+		{ value: 'active_map', label: 'LOCATION_DISPLAY_TYPE_INTERACTIVE_MAP' },
+		{ value: 'static_map', label: 'LOCATION_DISPLAY_TYPE_STATIC_MAP' },
+	] -%}
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-disp-type' }}">{{ lang('LOCATION_DISPLAY_TYPE') ~ lang('COLON') }}</label>
+    </dt>
+    <dd>
+        {{ form.dropdown(field.FIELD_NAME ~ '-disp-type', 'field_props[' ~ field.FIELD_NAME ~ '][disp_type]', field.FIELD_PROPS.disp_type, display_types) }}
+    </dd>
+</dl>
+{%- set map_types = [
+		{ value: 'roadmap', label: 'LOCATION_MAP_TYPES_DEFAULT' },
+		{ value: 'satellite', label: 'LOCATION_MAP_TYPES_SATELLITE' },
+		{ value: 'hybrid', label: 'LOCATION_MAP_TYPES_HYBRID' },
+		{ value: 'terrain', label: 'LOCATION_MAP_TYPES_TERRAIN' },
+	] -%}
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-map-type' }}">{{ lang('LOCATION_MAP_TYPES') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {% for type in map_types %}
+        {{ form.pickem(field.FIELD_NAME ~ '-map-type-' ~ loop.index0, 'field_options[' ~ field.FIELD_NAME ~ '][]', type.value, !field.FIELD_PROPS.options || type.value in field.FIELD_PROPS.options, 'checkbox', type.label) }}<br />
+        {% endfor %}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-map_zoom' }}">{{ lang('LOCATION_MAP_ZOOM') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-map_zoom', 'field_props[' ~ field.FIELD_NAME ~ '][map_zoom]', field.FIELD_PROPS.map_zoom ?: 0, 'text', 5, '', 1, 20, 1, field.FIELD_NAME ~ '-zoom-levels') }}
+        <datalist id="{{ field.FIELD_NAME ~ '-zoom-levels' }}">
+            <option value="0">{{ lang('LOCATION_MAP_ZOOM_USER') }}</option>
+            <option value="1">{{ lang('LOCATION_MAP_ZOOM_WORLD') }}</option>
+            <option value="5">{{ lang('LOCATION_MAP_ZOOM_CONTINENT') }}</option>
+            <option value="10">{{ lang('LOCATION_MAP_ZOOM_CITY') }}</option>
+            <option value="15">{{ lang('LOCATION_MAP_ZOOM_STREETS') }}</option>
+            <option value="20">{{ lang('LOCATION_MAP_ZOOM_BUILDINGS') }}</option>
+        </datalist>
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-map_width' }}">{{ lang('LOCATION_MAP_WIDTH') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-map_width', 'field_props[' ~ field.FIELD_NAME ~ '][map_width]', field.FIELD_PROPS.map_width, 'text', 5) }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-map_height' }}">{{ lang('LOCATION_MAP_HEIGHT') ~ lang('COLON') }}</label>
+    </dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-map_height', 'field_props[' ~ field.FIELD_NAME ~ '][map_height]', field.FIELD_PROPS.map_height, 'text', 5) }}
+    </dd>
+</dl>
+
+{%- set settings_url = '<a target="_blank" href="./index.php?i=-blitze-sitemaker-acp-settings_module&mode=settings&sid=' ~ field.FIELD_PROPS.session_id ~ '#content-settings">' -%}
+<div class="warning small">{{ lang('LOCATION_GOOGLE_API_KEY_REQUIRED', settings_url, '</a>') }}</div>

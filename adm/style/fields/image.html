@@ -1,0 +1,44 @@
+{% import 'fields/_macros.html' as form %}
+{%- set image_size_options = [
+		{ value: '', label: 'DEFAULT'},
+		{ value: 'small-img', label: 'IMAGE_SIZE_SMALL' },
+		{ value: 'medium-img', label: 'IMAGE_SIZE_MEDIUM' },
+		{ value: 'large-img', label: 'IMAGE_SIZE_LARGE' },
+		{ value: 'fullwidth-img', label: 'IMAGE_SIZE_FULLWIDTH' },
+		{ value: 'card-img', label: 'IMAGE_SIZE_CARD' },
+	] -%}
+{%- set image_align_options = [
+		{ value: '', label: 'DEFAULT' },
+		{ value: 'img-align-left', label: 'IMAGE_ALIGN_LEFT' },
+		{ value: 'img-align-right', label: 'IMAGE_ALIGN_RIGHT' },
+	] -%}
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-summary_size' }}">{{ lang('IMAGE_SIZE') ~ lang('COLON') }}</label></dt>
+    <dd>
+        <div class="column1">
+            <h5>{{ lang('CONTENT_INDEX') }}</h5>
+            {{ form.dropdown(field.FIELD_NAME ~ '-summary_size', 'field_props[' ~ field.FIELD_NAME ~ '][summary_size]', field.FIELD_PROPS.summary_size, image_size_options) }}
+        </div>
+        <div class="column2">
+            <h5>{{ lang('CONTENT_DETAIL') }}</h5>
+            {{ form.dropdown(field.FIELD_NAME ~ '-detail_size', 'field_props[' ~ field.FIELD_NAME ~ '][detail_size]', field.FIELD_PROPS.detail_size, image_size_options) }}
+        </div>
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-summary_align' }}">{{ lang('IMAGE_ALIGN') ~ lang('COLON') }}</label></dt>
+    <dd>
+        <div class="column1">
+            {{ form.dropdown(field.FIELD_NAME ~ '-summary_align', 'field_props[' ~ field.FIELD_NAME ~ '][summary_align]', field.FIELD_PROPS.summary_align, image_align_options) }}
+        </div>
+        <div class="column2">
+            {{ form.dropdown(field.FIELD_NAME ~ '-detail_align', 'field_props[' ~ field.FIELD_NAME ~ '][detail_align]', field.FIELD_PROPS.detail_align, image_align_options) }}
+        </div>
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-default' }}">{{ lang('IMAGE_DEFAULT') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-default', 'field_props[' ~ field.FIELD_NAME ~ '][default]', field.FIELD_PROPS.default, 'text', 40) }}
+    </dd>
+</dl>

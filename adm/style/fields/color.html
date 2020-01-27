@@ -1,0 +1,24 @@
+{% import 'fields/_macros.html' as form %}
+
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-num_colors' }}">{{ lang('COLOR_NUM_COLORS') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-num_colors', 'field_props[' ~ field.FIELD_NAME ~ '][num_colors]', field.FIELD_PROPS.num_colors, 'number', 3, '', 1) }}
+    </dd>
+</dl>
+<dl>
+    <dt>
+        <label for="{{ field.FIELD_NAME ~ '-palette' }}">{{ lang('COLOR_PALETTE') ~ lang('COLON') }}</label><br />{{ lang('COLOR_PALETTE_EXPLAIN') }}
+    </dt>
+    <dd>
+        <textarea id="{{ field.FIELD_NAME ~ '-palette' }}" name="{{ 'field_props[' ~ field.FIELD_NAME ~ '][palette]' }}" rows="4">{{ field.FIELD_PROPS.palette }}</textarea><br />
+        {{ form.pickem(field.FIELD_NAME ~ '-palette_only', 'field_props[' ~ field.FIELD_NAME ~ '][palette_only]', 1, field.FIELD_PROPS.palette_only, 'checkbox', 'COLOR_PALETTE_ONLY') }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-color' }}">{{ lang('COLOR_DISPLAY_AS') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.pickem(field.FIELD_NAME ~ '-color', 'field_props[' ~ field.FIELD_NAME ~ '][display]', 'box', field.FIELD_PROPS.display === 'box', 'radio', 'COLOR_BOX') }}<br />
+        {{ form.pickem(field.FIELD_NAME ~ '-hex', 'field_props[' ~ field.FIELD_NAME ~ '][display]', 'hex', field.FIELD_PROPS.display === 'hex', 'radio', 'COLOR_HEX') }}
+    </dd>
+</dl>

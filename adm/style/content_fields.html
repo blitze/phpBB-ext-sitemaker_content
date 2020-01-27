@@ -13,6 +13,7 @@
 	{ value: 'footer', label: 'FIELD_SHOW_FOOTER' },
 	{ value: '', label: 'FIELD_DONOT_SHOW' }
 ] -%}
+
 {% for field in CONTENT_FIELDS %}
 	<div id="{{ 'cfield-' ~ field.FIELD_NAME }}" class="field">
 		<h3 id="{{ field.FIELD_NAME ~ '-header' }}">
@@ -73,9 +74,10 @@
 					</div>
 				</dd>
 			</dl>
-			{% if attribute(forms, field.FIELD_TYPE) is defined %}
+			{% set settings = include('fields/' ~ field.FIELD_TYPE ~ '.html', ignore_missing = true) %}
+			{% if settings %}
 			<div class="field-settings">
-				{{ attribute(forms, field.FIELD_TYPE, [field]) }}
+				{{ settings }}
 			</div>
 			{% endif %}
 			{% EVENT blitze_content_form_field_settings %}

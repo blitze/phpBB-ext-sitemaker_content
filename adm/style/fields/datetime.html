@@ -1,0 +1,49 @@
+{% import 'fields/_macros.html' as form %}
+{%- set datetime_types = [
+		{ value: 'date', label: 'DATETIME_DATE' },
+		{ value: 'datetime', label: 'DATETIME_FULL' },
+		{ value: 'timeonly', label: 'DATETIME_TIMEONLY' },
+		{ value: 'months', label: 'DATETIME_MONTHS' },
+		{ value: 'years', label: 'DATETIME_YEARS' }
+	] -%}
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-type' }}">{{ lang('DATETIME_TYPE') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.dropdown(field.FIELD_NAME ~ '-type', 'field_props[' ~ field.FIELD_NAME ~ '][type]', field.FIELD_PROPS.type, datetime_types) }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-num_dates' }}">{{ lang('DATETIME_NUM_DATES') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-num_dates', 'field_props[' ~ field.FIELD_NAME ~ '][num_dates]', field.FIELD_PROPS.num_dates, 'number', 3, '', 1) }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-range' }}">{{ lang('DATETIME_RANGE') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.pickem(field.FIELD_NAME ~ '-range', 'field_props[' ~ field.FIELD_NAME ~ '][range]', 1, field.FIELD_PROPS.range, 'radio', 'YES') }}
+        {{ form.pickem(field.FIELD_NAME ~ '-range', 'field_props[' ~ field.FIELD_NAME ~ '][range]', 0, !field.FIELD_PROPS.range, 'radio', 'NO') }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-min_date' }}">{{ lang('DATETIME_MIN_DATE') ~ lang('COLON') }}</label><br />{{ lang('DATETIME_MIN_EXPLAIN') }}
+    </dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-min_date', 'field_props[' ~ field.FIELD_NAME ~ '][min_date]', field.FIELD_PROPS.min_date, 'text', 25) }}
+    </dd>
+</dl>
+<dl>
+    <dt>
+        <label for="{{ field.FIELD_NAME ~ '-max_date' }}">{{ lang('DATETIME_MAX_DATE') ~ lang('COLON') }}</label><br />{{ lang('DATETIME_MAX_EXPLAIN') }}
+    </dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-max_date', 'field_props[' ~ field.FIELD_NAME ~ '][max_date]', field.FIELD_PROPS.max_date, 'text', 25) }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-dformat' }}">{{ lang('DATETIME_DISPLAY_FORMAT') ~ lang('COLON') }}</label><br />{{ lang('DATETIME_FORMAT_EXPLAIN') }}
+    </dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-dformat', 'field_props[' ~ field.FIELD_NAME ~ '][dformat]', field.FIELD_PROPS.dformat, 'text', 20) }}
+    </dd>
+</dl>

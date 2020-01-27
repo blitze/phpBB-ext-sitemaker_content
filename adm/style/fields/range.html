@@ -1,0 +1,82 @@
+{% import 'fields/_macros.html' as form %}
+
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-display-0' }}">{{ lang('RANGE_DISPLAY') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.pickem(field.FIELD_NAME ~ '-display-0', 'field_props[' ~ field.FIELD_NAME ~ '][display]', 'text', (field.FIELD_PROPS.display === 'text'), 'radio', 'RANGE_DISPLAY_TEXT') }}
+        {{ form.pickem(field.FIELD_NAME ~ '-display-1', 'field_props[' ~ field.FIELD_NAME ~ '][display]', 'slider', (field.FIELD_PROPS.display === 'slider'), 'radio', 'RANGE_DISPLAY_SLIDER') }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-type-0' }}">{{ lang('RANGE_TYPE') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.pickem(field.FIELD_NAME ~ '-type-0', 'field_props[' ~ field.FIELD_NAME ~ '][type]', 'single', (field.FIELD_PROPS.type === 'single'), 'radio', 'RANGE_TYPE_SINGLE') }}
+        {{ form.pickem(field.FIELD_NAME ~ '-type-1', 'field_props[' ~ field.FIELD_NAME ~ '][type]', 'double', (field.FIELD_PROPS.type === 'double'), 'radio', 'RANGE_TYPE_DOUBLE') }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-skin' }}">{{ lang('RANGE_SKIN') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {%- set range_skins = [
+				{ value: 'flat', label: 'RANGE_SKIN_FLAT' },
+				{ value: 'big', label: 'RANGE_SKIN_BIG' },
+				{ value: 'modern', label: 'RANGE_SKIN_MODERN' },
+				{ value: 'sharp', label: 'RANGE_SKIN_SHARP' },
+				{ value: 'round', label: 'RANGE_SKIN_ROUND' },
+				{ value: 'square', label: 'RANGE_SKIN_SQUARE' },
+			] -%}
+        {{ form.dropdown(field.FIELD_NAME ~ '-skin', 'field_props[' ~ field.FIELD_NAME ~ '][skin]', field.FIELD_PROPS.skin, range_skins) }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-size' }}">{{ lang('INPUT_SIZE') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-size', 'field_props[' ~ field.FIELD_NAME ~ '][size]', field.FIELD_PROPS.size, 'number', 5, '', 10, 100, 5) }}%
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-values' }}">{{ lang('RANGE_VALUES') ~ lang('COLON') }}</label><br />{{ lang('RANGE_VALUES_EXPLAIN') }}
+    </dt>
+    <dd>
+        <textarea id="{{ field.FIELD_NAME ~ '-values' }}" name="{{ 'field_props[' ~ field.FIELD_NAME ~ '][values]' }}" rows="4">{{ field.FIELD_PROPS.values }}</textarea><br />
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-prefix' }}">{{ lang('RANGE_PREFIX') ~ lang('COLON') }}</label><br />{{ lang('RANGE_PREFIX_EXPLAIN') }}
+    </dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-prefix', 'field_props[' ~ field.FIELD_NAME ~ '][prefix]', field.FIELD_PROPS.prefix, 'text', 15) }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-postfix' }}">{{ lang('RANGE_POSTFIX') ~ lang('COLON') }}</label><br />{{ lang('RANGE_POSTFIX_EXPLAIN') }}
+    </dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-postfix', 'field_props[' ~ field.FIELD_NAME ~ '][postfix]', field.FIELD_PROPS.postfix, 'text', 15) }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-min' }}">{{ lang('RANGE_MIN_VALUE') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-min', 'field_props[' ~ field.FIELD_NAME ~ '][min]', field.FIELD_PROPS.min, 'number', 5) }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-max' }}">{{ lang('RANGE_MAX_VALUE') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-max', 'field_props[' ~ field.FIELD_NAME ~ '][max]', field.FIELD_PROPS.max, 'number', 5) }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-step' }}">{{ lang('RANGE_STEP') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-step', 'field_props[' ~ field.FIELD_NAME ~ '][step]', field.FIELD_PROPS.step, 'number', 5) }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-grid-0' }}">{{ lang('RANGE_ENABLE_GRID') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.pickem(field.FIELD_NAME ~ '-grid-0', 'field_props[' ~ field.FIELD_NAME ~ '][grid]', 1, (field.FIELD_PROPS.grid !== 0), 'radio', 'YES') }}
+        {{ form.pickem(field.FIELD_NAME ~ '-grid-1', 'field_props[' ~ field.FIELD_NAME ~ '][grid]', 0, (field.FIELD_PROPS.grid == 0), 'radio', 'NO') }}
+    </dd>
+</dl>

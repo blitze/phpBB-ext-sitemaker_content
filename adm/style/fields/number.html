@@ -1,0 +1,26 @@
+{% import 'fields/_macros.html' as form %}
+
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-min' }}">{{ lang('NUMBER_MIN_VALUE') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-min', 'field_props[' ~ field.FIELD_NAME ~ '][min]', field.FIELD_PROPS.min, 'number', 5) }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-max' }}">{{ lang('NUMBER_MAX_VALUE') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-max', 'field_props[' ~ field.FIELD_NAME ~ '][max]', field.FIELD_PROPS.max, 'number', 5) }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-step' }}">{{ lang('NUMBER_STEP') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-step', 'field_props[' ~ field.FIELD_NAME ~ '][step]', field.FIELD_PROPS.step, 'number', 5) }}
+    </dd>
+</dl>
+<dl>
+    <dt><label for="{{ field.FIELD_NAME ~ '-size' }}">{{ lang('INPUT_SIZE') ~ lang('COLON') }}</label></dt>
+    <dd>
+        {{ form.input(field.FIELD_NAME ~ '-size', 'field_props[' ~ field.FIELD_NAME ~ '][size]', field.FIELD_PROPS.size, 'number', 5, '', 10, 100, 5) }}%
+    </dd>
+</dl>
