@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -58,9 +59,6 @@ class topic
 		$this->template = $template;
 		$this->user = $user;
 		$this->helper = $helper;
-
-		$this->short_date_format = $this->language->lang('CONTENT_SHORT_DATE_FORMAT');
-		$this->long_date_format = $this->language->lang('CONTENT_LONG_DATE_FORMAT');
 	}
 
 	/**
@@ -75,12 +73,15 @@ class topic
 		$post_unread = (isset($topic_tracking_info[$topic_id]) && $topic_data['topic_last_post_time'] > $topic_tracking_info[$topic_id]) ? true : false;
 		$topic_data['topic_url'] = $this->get_topic_url($type, $topic_data);
 
+		$short_date_format = $this->language->lang('CONTENT_SHORT_DATE_FORMAT');
+		$long_date_format = $this->language->lang('CONTENT_LONG_DATE_FORMAT');
+
 		return array(
 			'TOPIC_ID'			=> $topic_data['topic_id'],
 			'TOPIC_VIEWS'		=> $topic_data['topic_views'],
 			'TOPIC_TITLE'		=> censor_text($topic_data['topic_title']),
-			'TOPIC_DATE'		=> $this->user->format_date($topic_data['topic_time'], $this->short_date_format),
-			'TOPIC_DATE_LONG'	=> $this->user->format_date($topic_data['topic_time'], $this->long_date_format),
+			'TOPIC_DATE'		=> $this->user->format_date($topic_data['topic_time'], $short_date_format),
+			'TOPIC_DATE_LONG'	=> $this->user->format_date($topic_data['topic_time'], $long_date_format),
 			'TOPIC_UNIX_TIME'	=> $topic_data['topic_time'],
 			'TOPIC_URL'			=> $topic_data['topic_url'],
 			'MINI_POST'			=> ($post_unread) ? $this->user->img('icon_post_target_unread', 'UNREAD_POST') : $this->user->img('icon_post_target', 'POST'),
@@ -171,7 +172,8 @@ class topic
 	 */
 	public function get_topic_tools_data(array $topic_data)
 	{
-		return array_merge(array(
+		return array_merge(
+			array(
 				'U_PRINT_TOPIC'		=> $this->helper->get_print_topic_url($topic_data),
 				'U_EMAIL_TOPIC'		=> $this->helper->get_email_topic_url($topic_data),
 			),
@@ -200,18 +202,18 @@ class topic
 	 * @param string $handle
 	 * @return void
 	 */
-	 public function show_attachments(array $attachments, $post_id, $handle = 'attachment')
-	 {
+	public function show_attachments(array $attachments, $post_id, $handle = 'attachment')
+	{
 		if (!empty($attachments[$post_id]))
 		{
 			foreach ($attachments[$post_id] as $attachment)
 			{
 				$this->template->assign_block_vars($handle, array(
-					'DISPLAY_ATTACHMENT' => $attachment)
-				);
+					'DISPLAY_ATTACHMENT' => $attachment
+				));
 			}
 		}
-	 }
+	}
 
 	/**
 	 * @param array $post_data
@@ -383,6 +385,5 @@ class topic
 			'S_BOOKMARK_TOGGLE'		=> $this->language->lang($lang_keys['toggle'][$state_key]),
 			'S_BOOKMARKED_TOPIC'	=> $bookmarked,
 		);
-
 	}
 }

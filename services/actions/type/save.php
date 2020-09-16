@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -77,7 +78,7 @@ class save extends action_utils implements action_interface
 	 * @param string									$phpbb_admin_path       Relative admin root path
 	 * @param string									$php_ext				php file extension
 	 * @param boolean									$auto_refresh			Used for testing
-	*/
+	 */
 	public function __construct(\phpbb\auth\auth $auth, \phpbb\cache\driver\driver_interface $cache, \phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\event\dispatcher_interface $phpbb_dispatcher, \phpbb\language\language $language, \phpbb\log\log_interface $logger, \phpbb\request\request_interface $request, \phpbb\user $user, \blitze\content\services\types $content_types, \blitze\sitemaker\services\forum\manager $forum_manager, \blitze\content\model\mapper_factory $mapper_factory, $phpbb_admin_path, $php_ext, $auto_refresh = true)
 	{
 		$this->auth = $auth;
@@ -122,10 +123,10 @@ class save extends action_utils implements action_interface
 		 *
 		 * @event blitze.content.acp_save_fields_before
 		 * @var	array									field_types			Array mapping field types to field names of form array([field_type] => array([field_name1], [field_name2]))
-		 * @var	array									field_data			Array containing field data of form array([field_name] => array([field_type] => 'foo', ...))
+		 * @var	array									fields_data			Array containing field data of form array([field_name] => array([field_type] => 'foo', ...))
 		 * @var	\blitze\content\model\entity\type		entity				Content type entity
 		 */
-		$vars = array('field_types', 'field_data', 'entity');
+		$vars = array('field_types', 'fields_data', 'entity');
 		extract($this->phpbb_dispatcher->trigger_event('blitze.content.acp_save_fields_before', compact($vars)));
 
 		$this->handle_content_fields($entity->get_content_id(), $fields_data);

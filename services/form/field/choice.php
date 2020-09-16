@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -67,7 +68,7 @@ abstract class choice extends base
 	protected function get_default_value(array $data)
 	{
 		$value = $this->ensure_is_array($data['field_value']);
-		$default = $value ?: $data['field_props']['defaults'] ?: array(0 => '');
+		$default = $value ?: $data['field_props']['defaults'] ?? array(0 => '');
 		return ($data['field_props']['multi_select']) ? $default : array_shift($default);
 	}
 
@@ -90,7 +91,7 @@ abstract class choice extends base
 			foreach ($choices as $value => $option)
 			{
 				$options[] = array(
-					'id'		=> 'smc-'. $data['field_name'] . '-' . $count,
+					'id'		=> 'smc-' . $data['field_name'] . '-' . $count,
 					'label'		=> $this->language->lang($option),
 					'selected'	=> (int) (in_array($value, (array) $data['field_value'])),
 					'value'		=> $value,

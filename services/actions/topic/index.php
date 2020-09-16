@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -208,7 +209,8 @@ class index extends filter implements action_interface
 			$content_type = $this->content_forums[$topic_row['forum_id']];
 			$tpl_data = $this->fields->show($content_type, $topic_row, $post_row, $users_cache, $attachments, $update_count, $topic_tracking_info, array(), $this->redirect_url);
 
-			$this->template->assign_block_vars('topicrow', array_merge($tpl_data,
+			$this->template->assign_block_vars('topicrow', array_merge(
+				$tpl_data,
 				$this->get_content_type_info($content_type),
 				$this->get_topic_type_info($tpl_data['S_UNREAD_POST'], $tpl_data['TOPIC_COMMENTS'], $topic_row),
 				$this->get_topic_status_info($topic_row),

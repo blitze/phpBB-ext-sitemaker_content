@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -40,7 +41,7 @@ class posting implements EventSubscriberInterface
 	 * @param \phpbb\controller\helper					$helper			Controller helper class
 	 * @param \phpbb\template\template					$template		Template object
 	 * @param \blitze\content\services\form\builder		$builder		Form builder object
-	*/
+	 */
 	public function __construct(\phpbb\controller\helper $helper, \phpbb\template\template $template, \blitze\content\services\form\builder $builder)
 	{
 		$this->helper = $helper;

@@ -33,12 +33,12 @@
 			<div class="action-bar top responsive-center">
 				{% if loops.postable|length %}
 				<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
-					<span title="{{ lang('CONTENT_NEW') }}" class="button dropdown-trigger dropdown-select">{{ lang('CONTENT_NEW') }} <i class="icon fa-pencil fa-fw" aria-hidden="true"></i></span>
+					<span title="{{ lang('CONTENT_NEW') }}" class="button dropdown-trigger dropdown-select"><i class="icon fa-plus fa-fw" aria-hidden="true"></i>{{ lang('CONTENT_NEW') }}</span>
 					<div class="dropdown hidden">
 						<div class="pointer"><div class="pointer-inner"></div></div>
 						<ul class="dropdown-contents dropdown-nonscroll">
 							{% for postable in loops.postable %}
-							<li><a href="{{ postable.U_POST }}"><i class="fa fa-square" style="color: #{{ postable.COLOUR }}"></i>{{ postable.TYPE }}</a></li>
+							<li><a href="{{ postable.U_POST }}"><i class="icon fa-square" style="color: #{{ postable.COLOUR }}"></i>{{ postable.TYPE }}</a></li>
 							{% endfor %}
 						</ul>
 					</div>
@@ -71,15 +71,15 @@
 				<div class="pull-right responsive-hide">
 					{% if loops.status|length %}
 					<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
-						<span title="{{ lang('TOPIC_STATUS') }}" class="button dropdown-trigger dropdown-select"><i class="fa {% if S_STATUS_FILTER %}fa-filter fa-green{% else %}fa-square-o{% endif %}"></i> {{ lang('TOPIC_STATUS') }}</span>
+						<span title="{{ lang('TOPIC_STATUS') }}" class="button dropdown-trigger dropdown-select"><i class="icon {% if S_STATUS_FILTER %}fa-filter fa-green{% else %}fa-square-o{% endif %}"></i> {{ lang('TOPIC_STATUS') }}</span>
 						<div class="dropdown hidden">
 							<div class="pointer"><div class="pointer-inner"></div></div>
 							<ul class="dropdown-contents dropdown-nonscroll">
 							{% for status in loops.status %}
 								{% if status.S_SELECTED %}
-								<li><i class="fa fa-caret-right"></i><strong>{{ lang(status.TITLE) }}</strong></li>
+								<li><i class="icon fa-caret-right"></i><strong>{{ lang(status.TITLE) }}</strong></li>
 								{% else %}
-								<li><a href="{{ status.U_VIEW }}"><i class="fa fa-angle-right"></i>{{ lang(status.TITLE) }}</a></li>
+								<li><a href="{{ status.U_VIEW }}"><i class="icon fa-angle-right"></i>{{ lang(status.TITLE) }}</a></li>
 								{% endif %}
 							{% endfor %}
 							</ul>
@@ -89,15 +89,15 @@
 
 					{% if loops.content|length > 1 %}
 					<div class="dropdown-container dropdown-container-right dropdown-button-control topic-tools">
-						<span title="{{ lang('CONTENT_TYPE') }}" class="button dropdown-trigger dropdown-select"><i class="fa {% if S_CONTENT_FILTER %}fa-filter fa-green{% else %}fa-square-o{% endif %}"></i> {{ lang('CONTENT_TYPE') }}</span>
+						<span title="{{ lang('CONTENT_TYPE') }}" class="button dropdown-trigger dropdown-select"><i class="icon {% if S_CONTENT_FILTER %}fa-filter fa-green{% else %}fa-square-o{% endif %}"></i> {{ lang('CONTENT_TYPE') }}</span>
 						<div class="dropdown hidden">
 							<div class="pointer"><div class="pointer-inner"></div></div>
 							<ul class="dropdown-contents dropdown-nonscroll">
 							{% for content in loops.content %}
 								{% if content.S_SELECTED %}
-								<li><i class="fa fa-square" style="color: #{{ content.COLOUR }}"></i><strong>{{ lang(content.TITLE) }}</strong></li>
+								<li><i class="icon fa-square" style="color: #{{ content.COLOUR }}"></i><strong>{{ lang(content.TITLE) }}</strong></li>
 								{% else %}
-								<li><a href="{{ content.U_VIEW }}"><i class="fa fa-square" style="color: #{{ content.COLOUR }}"></i>{{ lang(content.TITLE) }}</a></li>
+								<li><a href="{{ content.U_VIEW }}"><i class="icon fa-square" style="color: #{{ content.COLOUR }}"></i>{{ lang(content.TITLE) }}</a></li>
 								{% endif %}
 							{% endfor %}
 							</ul>
@@ -137,10 +137,13 @@
 					{% for topicrow in loops.topicrow %}
 						{% set action_buttons %}
 							{% if topicrow.S_POST_UNAPPROVED && MODE == 'ucp' %}
-								<i class="fa fa-ban fa-fw fa-lg" aria-hidden="true"></i>
+								<i class="icon fa-ban fa-fw fa-lg" aria-hidden="true"></i>
 							{% else %}
-								{% if topicrow.U_EDIT %}<a href="{{ topicrow.U_EDIT }}" title="{{ lang('EDIT_POST') }}"><i class="fa fa-pencil fa-fw fa-lg fa-green" aria-hidden="true"></i></a>{% else %}<i class="fa fa-pencil fa-fw fa-lg" aria-hidden="true"></i>{% endif %}
-								{% if topicrow.U_DELETE %}<a href="{{ topicrow.U_DELETE }}" title="{{ lang('DELETE_POST') }}"><i class="fa fa-trash-o fa-fw fa-lg fa-red" aria-hidden="true"></i></a>{% endif %}
+								<a href="{{ topicrow.U_MINI_POST }}" title="{{ lang('GOTO_TOPIC') }}">
+									<i class="icon fa-chevron-circle-right fa-lg fa-fw {% if topicrow.S_UNREAD_POST %}icon-red{% else %}icon-lightgray{% endif %}" aria-hidden="true"></i>
+								</a>
+								{% if topicrow.U_EDIT %}<a href="{{ topicrow.U_EDIT }}" title="{{ lang('EDIT_POST') }}"><i class="icon fa-edit fa-fw fa-lg fa-green" aria-hidden="true"></i></a>{% else %}<i class="icon fa-edit fa-fw fa-lg" aria-hidden="true"></i>{% endif %}
+								{% if topicrow.U_DELETE %}<a href="{{ topicrow.U_DELETE }}" title="{{ lang('DELETE_POST') }}"><i class="icon fa-trash fa-fw fa-lg fa-red" aria-hidden="true"></i></a>{% endif %}
 								{% if MODE == 'mcp' %}<input type="checkbox" name="topic_id_list[]" value="{{ topicrow.TOPIC_ID }}"{% if topicrow.S_REQ_MOD_INPUT %} disabled="disabled" title="{{ lang('REQ_MOD_INPUT') }}"{% endif %}>{% endif %}
 							{% endif %}
 						{% endset %}
@@ -148,13 +151,11 @@
 						<dl class="row-item {{ topicrow.TOPIC_IMG_STYLE }}">
 							<dt {% if topicrow.TOPIC_ICON_IMG %}style="background-image: url({{ T_ICONS_PATH }}{{ topicrow.TOPIC_ICON_IMG }}); background-repeat: no-repeat;"{% endif %}>
 								<div class="list-inner">
+								{% set short_title = topicrow.TOPIC_TITLE|truncate %}
 								{% if topicrow.S_POST_UNAPPROVED && MODE == 'ucp' %}
-									<p class="topictitle">{{ topicrow.TOPIC_TITLE }}</p>
+									<p class="topictitle" title="{{ topicrow.TOPIC_TITLE }}">{{ short_title }}</p>
 								{% else %}
-									<a class="unread" href="{{ topicrow.U_MINI_POST }}" title="{{ lang('GOTO_TOPIC') }}">
-										<i class="icon fa-file fa-fw {% if topicrow.S_UNREAD_POST %}icon-red{% else %}icon-lightgray{% endif %} icon-md" aria-hidden="true"></i>
-									</a>
-									<a href="{{ topicrow.U_REVIEW_TOPIC }}" class="topictitle">{{ topicrow.TOPIC_TITLE }}</a>
+									<a href="{{ topicrow.U_REVIEW_TOPIC }}" class="topictitle" title="{{ topicrow.TOPIC_TITLE }}">{{ short_title }}</a>
 									{% if MODE == 'mcp' %}
 									{% if topicrow.S_TOPIC_DELETED or topicrow.S_POSTS_DELETED %}
 									<a href="{{ topicrow.U_MCP_QUEUE }}" title="{{ lang('TOPIC_DELETED') }}">
@@ -170,11 +171,11 @@
 									<div>
 										{% if topicrow.S_HAS_POLL %}<i class="icon fa-bar-chart fa-fw" aria-hidden="true"></i>{% endif %}
 										{% if topicrow.ATTACH_ICON_IMG %}<i class="icon fa-paperclip fa-fw" aria-hidden="true"></i>{% endif %}
-										{% if MODE == 'mcp' %}<span><i class="icon fa-user-o fa-fw"></i><strong>{{ topicrow.USERNAME_FULL }}</strong> </span>{% endif %}
+										{% if MODE == 'mcp' %}<span><i class="icon fa-user fa-fw"></i><strong>{{ topicrow.USERNAME_FULL }}</strong> </span>{% endif %}
 										<span title="{{ lang('PUBLISH_DATE') }}"><i class="icon fa-calendar fa-fw"></i><strong>{{ topicrow.TOPIC_DATE }}</strong> </span>
 										<span title="{{ lang('VIEWS') }}"><i class="icon fa-eye fa-fw"></i><strong>{{ topicrow.TOPIC_VIEWS }}</strong> </span>
 										{%- if topicrow.S_COMMENTS %}
-										<span title="{{ lang('COMMENTS') }}"><i class="icon fa-comment-o fa-fw"></i><strong>{{ topicrow.TOPIC_COMMENTS }}</strong> </span>
+										<span title="{{ lang('COMMENTS') }}"><i class="icon fa-comment fa-fw"></i><strong>{{ topicrow.TOPIC_COMMENTS }}</strong> </span>
 										{%- endif %}
 									</div>
 									<div class="action-bar bottom responsive-show left-box sm-full-width" style="display: none;">

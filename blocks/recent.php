@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -86,25 +87,29 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 		);
 
 		$type = $settings['content_type'];
-		$field_options[$type] = array_merge(array_flip((array) $settings['fields']), (array) $field_options[$type]);
+
+		if ($type)
+		{
+			$field_options[$type] = array_merge(array_flip((array) $settings['fields']), (array) $field_options[$type]);
+		}
 
 		return array(
 			'legend1'			=> 'DISPLAY',
-				'content_type'		=> array('lang' => 'CONTENT_TYPE', 'validate' => 'string', 'type' => 'select:1:toggable', 'object' => $this, 'method' => 'select_content_type', 'options' => $content_type_options, 'default' => ''),
-				'fields'			=> array('lang' => 'SELECT_FIELDS', 'validate' => 'string', 'type' => 'checkbox:sortable', 'options' => $field_options, 'default' => array(), 'explain' => true),
-				'block_tpl'			=> array('lang' => '', 'validate' => 'string', 'type' => 'code_editor', 'params' => [$editor_attributes, 'TEMPLATE'], 'default' => ''),
-				'layout'			=> array('lang' => 'DISPLAY_LAYOUT', 'validate' => 'string', 'type' => 'select', 'options' => $this->get_display_layouts(), 'default' => 'layout0'),
+			'content_type'		=> array('lang' => 'CONTENT_TYPE', 'validate' => 'string', 'type' => 'select:1:toggable', 'object' => $this, 'method' => 'select_content_type', 'options' => $content_type_options, 'default' => ''),
+			'fields'			=> array('lang' => 'SELECT_FIELDS', 'validate' => 'string', 'type' => 'checkbox:sortable', 'options' => $field_options, 'default' => array(), 'explain' => true),
+			'block_tpl'			=> array('lang' => '', 'validate' => 'string', 'type' => 'code_editor', 'params' => [$editor_attributes, 'TEMPLATE'], 'default' => ''),
+			'layout'			=> array('lang' => 'DISPLAY_LAYOUT', 'validate' => 'string', 'type' => 'select', 'options' => $this->get_display_layouts(), 'default' => 'layout0'),
 
 			'legend2'			=> 'SETTINGS',
-				'topic_type'		=> array('lang' => 'TOPIC_TYPE', 'validate' => 'string', 'type' => 'select', 'options' => $this->get_topic_type_options(), 'default' => POST_NORMAL),
-				'max_topics'		=> array('lang' => 'MAX_TOPICS', 'validate' => 'int:0:20', 'type' => 'number:0:20', 'maxlength' => 2, 'default' => 5),
-				'offset_start'		=> array('lang' => 'OFFSET_START', 'validate' => 'int:0:20', 'type' => 'number:0:20', 'maxlength' => 2, 'default' => 0),
-				'topic_title_limit'	=> array('lang' => 'TOPIC_TITLE_LIMIT', 'validate' => 'int:0:255', 'type' => 'number:0:255', 'maxlength' => 3, 'default' => 25),
-				'max_chars'			=> array('lang' => 'FIELD_MAX_CHARS', 'validate' => 'int:0:255', 'type' => 'number:0:255', 'maxlength' => 3, 'default' => 125),
-				'date_range'		=> array('lang' => 'LIMIT_POST_TIME', 'validate' => 'string', 'type' => 'select', 'options' => $this->get_range_options(), 'default' => ''),
-				'sort_key'			=> array('lang' => 'SORT_BY', 'validate' => 'string', 'type' => 'select', 'options' => $this->sort_options, 'default' => self::SORT_TOPIC_TIME),
-				'enable_tracking'	=> array('lang' => 'ENABLE_TOPIC_TRACKING', 'validate' => 'bool', 'type' => 'radio:yes_no', 'default' => 1),
-				'last_modified'		=> array('type' => 'hidden', 'default' => time()),
+			'topic_type'		=> array('lang' => 'TOPIC_TYPE', 'validate' => 'string', 'type' => 'select', 'options' => $this->get_topic_type_options(), 'default' => POST_NORMAL),
+			'max_topics'		=> array('lang' => 'MAX_TOPICS', 'validate' => 'int:0:20', 'type' => 'number:0:20', 'maxlength' => 2, 'default' => 5),
+			'offset_start'		=> array('lang' => 'OFFSET_START', 'validate' => 'int:0:20', 'type' => 'number:0:20', 'maxlength' => 2, 'default' => 0),
+			'topic_title_limit'	=> array('lang' => 'TOPIC_TITLE_LIMIT', 'validate' => 'int:0:255', 'type' => 'number:0:255', 'maxlength' => 3, 'default' => 25),
+			'max_chars'			=> array('lang' => 'FIELD_MAX_CHARS', 'validate' => 'int:0:255', 'type' => 'number:0:255', 'maxlength' => 3, 'default' => 125),
+			'date_range'		=> array('lang' => 'LIMIT_POST_TIME', 'validate' => 'string', 'type' => 'select', 'options' => $this->get_range_options(), 'default' => ''),
+			'sort_key'			=> array('lang' => 'SORT_BY', 'validate' => 'string', 'type' => 'select', 'options' => $this->sort_options, 'default' => self::SORT_TOPIC_TIME),
+			'enable_tracking'	=> array('lang' => 'ENABLE_TOPIC_TRACKING', 'validate' => 'bool', 'type' => 'radio:yes_no', 'default' => 1),
+			'last_modified'		=> array('type' => 'hidden', 'default' => time()),
 		);
 	}
 
