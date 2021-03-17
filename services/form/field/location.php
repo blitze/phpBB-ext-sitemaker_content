@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -25,14 +26,14 @@ class location extends base
 	 *
 	 * @param \phpbb\language\language                  	$language       	Language object
 	 * @param \phpbb\request\request_interface				$request			Request object
-	 * @param \blitze\sitemaker\services\template			$ptemplate			Sitemaker template object
+	 * @param \phpbb\template\template			$template			Template object
 	 * @param \phpbb\config\config							$config				Config object
 	 * @param \phpbb\user									$user				User object
 	 * @param \blitze\sitemaker\services\util				$util       		Sitemaker utility object
 	 */
-	public function __construct(\phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\sitemaker\services\template $ptemplate, \phpbb\config\config $config, \phpbb\user $user, \blitze\sitemaker\services\util $util)
+	public function __construct(\phpbb\language\language $language, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\config\config $config, \phpbb\user $user, \blitze\sitemaker\services\util $util)
 	{
-		parent::__construct($language, $request, $ptemplate);
+		parent::__construct($language, $request, $template);
 
 		$this->util = $util;
 		$this->google_api_key = $config['google_api_key'];
@@ -157,8 +158,8 @@ class location extends base
 			));
 		}
 
-		$this->ptemplate->assign_vars($data);
-		return $this->ptemplate->render_view('blitze/content', "fields/location.html", 'location_field');
+		$this->template->assign_vars($data);
+		return $this->template->render_view('blitze/content', "fields/location.html", 'location_field');
 	}
 
 	/**

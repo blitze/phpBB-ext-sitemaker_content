@@ -1,7 +1,7 @@
-{% import 'blocks/_macros.html' as macro %}
+{% import '@blitze_content/blocks/_macros.html' as macro %}
 
 <ul class="sm-list">
-{% for topicrow in loops.topicrow %}
+{% for topicrow in TOPICS %}
 	<li>
 		{{ macro.show_summary(topicrow, TITLE_LIMIT) }}
 	</li>

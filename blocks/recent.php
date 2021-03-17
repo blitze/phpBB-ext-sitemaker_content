@@ -116,27 +116,42 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 	/**
 	 * {@inheritdoc}
 	 */
+	public function get_template()
+	{
+		return '@blitze_content/blocks/' . $this->tpl_name . '.html';
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function display(array $bdata, $edit_mode = false)
 	{
 		$this->settings = $bdata['settings'];
 		$type = $this->settings['content_type'];
 
+		$title = '';
+
 		if (($entity = $this->content_types->get_type($type, false)) !== false)
 		{
 			$forum_id = $entity->get_forum_id();
+			$title = $this->get_block_title($entity->get_content_langname());
+
 			$this->build_query($forum_id);
 			$this->forum->build(true, true, false);
-			$this->ptemplate->assign_vars(array(
-				'LAYOUT'		=> $this->settings['layout'],
-				'TITLE_LIMIT'	=> $this->settings['topic_title_limit'],
-				'FIELD_TYPES'	=> $entity->get_field_types(),
-			));
 
-			return $this->show_topics($edit_mode, $bdata['bid'], $forum_id, $type, $entity);
+			return array(
+				'title'	=> $title,
+				'data'	=> array(
+					'LAYOUT'		=> $this->settings['layout'],
+					'TITLE_LIMIT'	=> $this->settings['topic_title_limit'],
+					'FIELD_TYPES'	=> $entity->get_field_types(),
+					'TOPICS'		=> $this->show_topics($edit_mode, $bdata['bid'], $forum_id, $type, $entity),
+				)
+			);
 		}
 
 		return array(
-			'title'		=> '',
+			'title'		=> 'BLITZE_CONTENT_BLOCK_RECENT',
 			'content'	=> ($edit_mode) ? $this->language->lang('NO_CONTENT_TYPE') : '',
 		);
 	}
@@ -173,10 +188,11 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 	 */
 	protected function show_topics($edit_mode, $block_id, $forum_id, $type, \blitze\content\model\entity\type $entity)
 	{
+		global $template;
 		$topics_data = $this->forum->get_topic_data($this->settings['max_topics'], $this->settings['offset_start']);
 		$posts_data = $this->forum->get_post_data('first');
 
-		$content = '';
+		$topics = [];
 		if (sizeof($posts_data) || $edit_mode !== false)
 		{
 			$users_cache = $this->forum->get_posters_info();
@@ -192,17 +208,12 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 			foreach ($topics_data as $topic_id => $topic_data)
 			{
 				$post_data	= array_shift($posts_data[$topic_id]);
-				$this->ptemplate->assign_block_vars('topicrow', $this->fields->show($type, $topic_data, $post_data, $users_cache, $attachments, $update_count, $topic_tracking_info));
+				$topics[] = $this->fields->show($type, $topic_data, $post_data, $users_cache, $attachments, $update_count, $topic_tracking_info);
 			}
 			unset($topics_data, $posts_data, $users_cache, $attachments, $topic_tracking_info);
-
-			$content = $this->ptemplate->render_view('blitze/content', "blocks/{$this->tpl_name}.html", $this->tpl_name . '_block');
 		}
 
-		return array(
-			'title'		=> $this->get_block_title($entity->get_content_langname()),
-			'content'	=> $content,
-		);
+		return $topics;
 	}
 
 	/**
@@ -301,9 +312,9 @@ class recent extends \blitze\sitemaker\services\blocks\driver\block
 	{
 		return array(
 			POST_NORMAL		=> 'POST_NORMAL',
-			POST_STICKY		=> 'POST_STICKY',
-			POST_ANNOUNCE	=> 'POST_ANNOUNCEMENT',
-			POST_GLOBAL		=> 'POST_GLOBAL',
+			POST_STICKY		=> $this->language->lang('TOPIC_TYPE_FEATURED'),
+			POST_ANNOUNCE	=> $this->language->lang('TOPIC_TYPE_RECOMMENDED'),
+			POST_GLOBAL		=> $this->language->lang('TOPIC_TYPE_MUST_READ'),
 		);
 	}
 

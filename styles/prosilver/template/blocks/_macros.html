@@ -1,6 +1,6 @@
 {%- macro show_summary(topicrow, title_limit = 0) -%}
 	<div class="postbody sm-full-width sm-inner">
-	{% INCLUDE 'parts/moderator_info.html' %}
+	{% INCLUDE '@blitze_content/parts/moderator_info.html' %}
 	{% if not topicrow.CUSTOM_DISPLAY %}
 		{{ topicrow.FIELDS.above|join }}
 		<h3 class="first"><a href="{{ topicrow.TOPIC_URL }}" title="{{ topicrow.TOPIC_TITLE }}">{{ topicrow.TOPIC_TITLE|truncate(title_limit) }}</a></h3>

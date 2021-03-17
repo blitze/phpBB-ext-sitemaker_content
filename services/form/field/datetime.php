@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -22,13 +23,13 @@ class datetime extends base
 	 *
 	 * @param \phpbb\language\language                  $language       Language object
 	 * @param \phpbb\request\request_interface			$request		Request object
-	 * @param \blitze\sitemaker\services\template		$ptemplate		Sitemaker template object
+	 * @param \phpbb\template\template		$template		Template object
 	 * @param \phpbb\user								$user			User object
 	 * @param \blitze\sitemaker\services\util			$util       	Sitemaker utility object
 	 */
-	public function __construct(\phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\sitemaker\services\template $ptemplate, \phpbb\user $user, \blitze\sitemaker\services\util $util)
+	public function __construct(\phpbb\language\language $language, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\user $user, \blitze\sitemaker\services\util $util)
 	{
-		parent::__construct($language, $request, $ptemplate);
+		parent::__construct($language, $request, $template);
 
 		$this->user = $user;
 		$this->util = $util;

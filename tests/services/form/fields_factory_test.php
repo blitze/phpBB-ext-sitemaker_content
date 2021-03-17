@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -45,20 +46,21 @@ class fields_factory_test extends \phpbb_test_case
 			->getMock();
 		$language->expects($this->any())
 			->method('lang')
-			->willReturnCallback(function () {
+			->willReturnCallback(function ()
+			{
 				return implode('-', func_get_args());
 			});
 
 		$request = $this->getMock('\phpbb\request\request_interface');
 
-		$ptemplate = $this->getMockBuilder('\blitze\sitemaker\services\template')
+		$template = $this->getMockBuilder('\phpbb\template\template')
 			->disableOriginalConstructor()
 			->getMock();
 
 		$phpbb_container = new \phpbb_mock_container_builder();
-		$phpbb_container->set('my.checkbox.field', new checkbox($language, $request, $ptemplate));
-		$phpbb_container->set('my.hidden.field', new hidden($language, $request, $ptemplate));
-		$phpbb_container->set('my.number.field', new number($language, $request, $ptemplate));
+		$phpbb_container->set('my.checkbox.field', new checkbox($language, $request, $template));
+		$phpbb_container->set('my.hidden.field', new hidden($language, $request, $template));
+		$phpbb_container->set('my.number.field', new number($language, $request, $template));
 
 		$collection = new \phpbb\di\service_collection($phpbb_container);
 		$collection->add('my.checkbox.field');

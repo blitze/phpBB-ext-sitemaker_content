@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -203,7 +204,7 @@ final class field extends base_entity
 	{
 		$field_props = ($this->field_props) ? json_decode($this->field_props, true) : array();
 
-		if (in_array($this->field_type, array('radio', 'checkbox', 'select')))
+		if (isset($field_props['options']) && in_array($this->field_type, array('radio', 'checkbox', 'select')))
 		{
 			$options = (array) $field_props['options'];
 			$field_props['options'] = array_filter((array) array_combine($options, $options), 'strlen');
@@ -213,8 +214,8 @@ final class field extends base_entity
 	}
 
 	/**
-	* {@inheritdoc}
-	*/
+	 * {@inheritdoc}
+	 */
 	public function to_db()
 	{
 		$db_data = parent::to_db();

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -19,12 +20,12 @@ class share extends base
 	 *
 	 * @param \phpbb\language\language                  	$language       	Language object
 	 * @param \phpbb\request\request_interface				$request			Request object
-	 * @param \blitze\sitemaker\services\template			$ptemplate			Sitemaker template object
+	 * @param \phpbb\template\template			$template			Template object
 	 * @param \blitze\sitemaker\services\util				$util       		Sitemaker utility object
 	 */
-	public function __construct(\phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\sitemaker\services\template $ptemplate, \blitze\sitemaker\services\util $util)
+	public function __construct(\phpbb\language\language $language, \phpbb\request\request_interface $request, \phpbb\template\template $template, \blitze\sitemaker\services\util $util)
 	{
-		parent::__construct($language, $request, $ptemplate);
+		parent::__construct($language, $request, $template);
 
 		$this->util = $util;
 	}
@@ -42,7 +43,7 @@ class share extends base
 	 */
 	public function show_form_field(array &$data)
 	{
-		return '';
+		return false;
 	}
 
 	/**

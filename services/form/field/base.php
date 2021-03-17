@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -17,21 +18,21 @@ abstract class base implements field_interface
 	/** @var \phpbb\request\request_interface */
 	protected $request;
 
-	/** @var \blitze\sitemaker\services\template */
-	protected $ptemplate;
+	/** @var \phpbb\template\template */
+	protected $template;
 
 	/**
 	 * Constructor
 	 *
 	 * @param \phpbb\language\language                  $language       Language object
 	 * @param \phpbb\request\request_interface			$request		Request object
-	 * @param \blitze\sitemaker\services\template		$ptemplate		Sitemaker template object
+	 * @param \phpbb\template\template					$template		Template object
 	 */
-	public function __construct(\phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\sitemaker\services\template $ptemplate)
+	public function __construct(\phpbb\language\language $language, \phpbb\request\request_interface $request, \phpbb\template\template $template)
 	{
 		$this->language = $language;
 		$this->request = $request;
-		$this->ptemplate = $ptemplate;
+		$this->template = $template;
 	}
 
 	/**
@@ -70,12 +71,17 @@ abstract class base implements field_interface
 	/**
 	 * @inheritdoc
 	 */
+	public function get_field_template()
+	{
+		return '@blitze_content/fields/' . $this->get_name() . '.html';
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function show_form_field(array &$data)
 	{
-		$this->ptemplate->assign_vars($data);
-
-		$field = $this->get_name();
-		return $this->ptemplate->render_view('blitze/content', "fields/$field.html", $field . '_field');
+		return true;
 	}
 
 	/**

@@ -221,7 +221,9 @@ class posting implements EventSubscriberInterface
 			$page_data = (array) $event['page_data'];
 
 			$post_data['TOPIC_URL'] = './';
-			$page_data['SITEMAKER_FORM'] = $this->builder->get_form();
+			$page_data['SITEMAKER_FORM'] = true;
+
+			$this->builder->build_form();
 
 			if ($event['preview'] && $this->content_type)
 			{

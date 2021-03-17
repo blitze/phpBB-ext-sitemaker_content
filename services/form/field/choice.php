@@ -12,6 +12,9 @@ namespace blitze\content\services\form\field;
 
 abstract class choice extends base
 {
+	/** @var string */
+	protected $template_name;
+
 	/**
 	 * @inheritdoc
 	 */
@@ -55,10 +58,16 @@ abstract class choice extends base
 	public function show_form_field(array &$data)
 	{
 		$this->set_field_options($data);
-		$this->ptemplate->assign_vars($data);
+		$this->template_name = ($data['field_type'] === 'select') ? 'select' : 'pickem';
+		return true;
+	}
 
-		$tpl_name = ($data['field_type'] === 'select') ? 'select' : 'pickem';
-		return $this->ptemplate->render_view('blitze/content', "fields/$tpl_name.html", $data['field_type'] . '_field');
+	/**
+	 * @inheritdoc
+	 */
+	public function get_field_template()
+	{
+		return '@blitze_content/fields/' . $this->template_name . '.html';
 	}
 
 	/**

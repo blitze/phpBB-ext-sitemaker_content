@@ -66,10 +66,7 @@ class image extends base
 	public function show_form_field(array &$data)
 	{
 		$data['field_value'] = $this->strip_image_bbcode($data['field_value']);
-
-		$this->ptemplate->assign_vars($data);
-
-		return $this->ptemplate->render_view('blitze/content', "fields/image.html", $this->get_name() . '_field');
+		return true;
 	}
 
 	/**

@@ -260,13 +260,6 @@ function initMap() { // jshint ignore:line
 				var fieldId = $(this).attr('name');
 
 				$('#preview-' + fieldId).html(imgSrc.length ? '<img src=' + imgSrc + ' />' : '');
-			})
-			.next()
-			.fancybox({
-				'width': 900,
-				'height': 600,
-				'autoScale': false,
-				'type': 'iframe'
 			});
 		});
 	});

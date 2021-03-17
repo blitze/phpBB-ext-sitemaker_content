@@ -1,11 +1,11 @@
-{% import 'blocks/_macros.html' as macro %}
+{% import '@blitze_content/blocks/_macros.html' as macro %}
 
-{{ macro.show_summary(loops.topicrow[0]) }}
+{{ macro.show_summary(TOPICS[0]) }}
 
-{% if loops.topicrow|length > 1 %}
+{% if TOPICS|length > 1 %}
 <p>&nbsp;</p>
 <ul class="sm-list small-img img-align-left">
-{% for topicrow in loops.topicrow[1:] %}
+{% for topicrow in TOPICS[1:] %}
 	<li>
 		<div class="sm-inner">
 			<a class="d-inline" href="{{ topicrow.TOPIC_URL }}">{{ topicrow.FIELDS.all|field('image', 'topicrow') }}</a>

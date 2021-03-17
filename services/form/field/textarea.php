@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -39,18 +40,17 @@ class textarea extends text
 	 *
 	 * @param \phpbb\language\language					$language			Language object
 	 * @param \phpbb\request\request_interface			$request			Request object
-	 * @param \blitze\sitemaker\services\template		$ptemplate			Sitemaker template object
+	 * @param \phpbb\template\template					$template			Template object
 	 * @param \phpbb\auth\auth							$auth				Auth object
 	 * @param \phpbb\config\config						$config				Config object
 	 * @param \phpbb\pagination							$pagination			Pagination object
-	 * @param \phpbb\template\template					$template			Template object
 	 * @param \blitze\sitemaker\services\util			$util				Sitemaker utility object
 	 * @param string									$phpbb_root_path	Path to the phpbb includes directory.
 	 * @param string									$php_ext			php file extension
 	 */
-	public function __construct(\phpbb\language\language $language, \phpbb\request\request_interface $request, \blitze\sitemaker\services\template $ptemplate, \phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\pagination $pagination, \phpbb\template\template $template, \blitze\sitemaker\services\util $util, $phpbb_root_path, $php_ext)
+	public function __construct(\phpbb\language\language $language, \phpbb\request\request_interface $request, \phpbb\template\template $template, \phpbb\auth\auth $auth, \phpbb\config\config $config, \phpbb\pagination $pagination, \blitze\sitemaker\services\util $util, $phpbb_root_path, $php_ext)
 	{
-		parent::__construct($language, $request, $ptemplate);
+		parent::__construct($language, $request, $template);
 
 		$this->auth = $auth;
 		$this->config = $config;
@@ -120,6 +120,8 @@ class textarea extends text
 			));
 
 			$data += $this->get_editor($forum_id);
+
+			$data['FULL_WIDTH'] = $data['field_props']['size'] === 'large';
 		}
 
 		return parent::show_form_field($data);
@@ -280,6 +282,6 @@ class textarea extends text
 
 		display_custom_bbcodes();
 
-		$this->ptemplate->assign_block_vars_array('custom_tags', $this->template->retrieve_block_vars('custom_tags', array()));
+		$this->template->assign_block_vars_array('custom_tags', $this->template->retrieve_block_vars('custom_tags', array()));
 	}
 }

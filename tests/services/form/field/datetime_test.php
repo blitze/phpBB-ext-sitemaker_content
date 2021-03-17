@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -33,7 +34,7 @@ class datetime_test extends base_form_field
 			->disableOriginalConstructor()
 			->getMock();
 
-		return new datetime($this->language, $this->request, $this->ptemplate, $this->user, $this->util);
+		return new datetime($this->language, $this->request, $this->template, $this->user, $this->util);
 	}
 
 	public function test_name()
@@ -104,7 +105,7 @@ class datetime_test extends base_form_field
 				),
 				'<div style="width: 15%; max-width: 100%;">' .
 					'<input type="text" id="smc-foo" name="foo" class="inputbox datetimepicker" data-date-format="mm/dd/yyyy" data-timepicker="true" data-range="0" value="" />' .
-				'</div>'
+					'</div>'
 			),
 			array(
 				array(
@@ -122,8 +123,8 @@ class datetime_test extends base_form_field
 					array('foo', 'bar', true, request_interface::REQUEST, 'bar'),
 				),
 				'<div style="width: 15%; max-width: 100%;">' .
-					'<input type="text" id="smc-foo" name="foo" class="inputbox datetimepicker" data-date-format="mm/dd/yyyy" data-multiple-dates="2" data-range="2" data-min-date="' . date("m/d/Y") . '" data-max-date="'. date("m/d/Y", strtotime('+2 weeks')) . '" value="bar" />' .
-				'</div>',
+					'<input type="text" id="smc-foo" name="foo" class="inputbox datetimepicker" data-date-format="mm/dd/yyyy" data-multiple-dates="2" data-range="2" data-min-date="' . date("m/d/Y") . '" data-max-date="' . date("m/d/Y", strtotime('+2 weeks')) . '" value="bar" />' .
+					'</div>',
 			),
 			array(
 				array(
@@ -138,7 +139,7 @@ class datetime_test extends base_form_field
 				),
 				'<div style="width: 15%; max-width: 100%;">' .
 					'<input type="text" id="smc-foo" name="foo" class="inputbox datetimepicker" data-date-format="" data-timepicker="true" data-only-timepicker="true" data-range="0" value="foo_bar" />' .
-				'</div>'
+					'</div>'
 			),
 			array(
 				array(
@@ -152,8 +153,8 @@ class datetime_test extends base_form_field
 					array('foo', 'bar', true, request_interface::REQUEST, 'foo_bar'),
 				),
 				'<div style="width: 15%; max-width: 100%;">' .
-					'<input type="text" id="smc-foo" name="foo" class="inputbox datetimepicker" data-date-format="" data-range="0" value="foo_bar" />' . 
-				'</div>'
+					'<input type="text" id="smc-foo" name="foo" class="inputbox datetimepicker" data-date-format="" data-range="0" value="foo_bar" />' .
+					'</div>'
 			),
 			array(
 				array(
@@ -167,8 +168,8 @@ class datetime_test extends base_form_field
 					array('foo2', 'bar', true, request_interface::REQUEST, 'foo_bar'),
 				),
 				'<div style="width: 15%; max-width: 100%;">' .
-					'<input type="text" id="smc-foo2" name="foo2" class="inputbox datetimepicker" data-date-format="" data-range="0" value="foo_bar" />' . 
-				'</div>'
+					'<input type="text" id="smc-foo2" name="foo2" class="inputbox datetimepicker" data-date-format="" data-range="0" value="foo_bar" />' .
+					'</div>'
 			),
 		);
 	}

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -14,19 +15,19 @@ class poll
 	/** @var \blitze\sitemaker\services\poll */
 	protected $poll;
 
-	/** @var \blitze\sitemaker\services\template */
-	protected $ptemplate;
+	/** @var \phpbb\template\template */
+	protected $template;
 
 	/**
 	 * Constructor
 	 *
 	 * @param \blitze\sitemaker\services\poll		$poll			Poll Object
-	 * @param \blitze\sitemaker\services\template	$ptemplate		Sitemaker Template Object
-	*/
-	public function __construct(\blitze\sitemaker\services\poll $poll, \blitze\sitemaker\services\template $ptemplate)
+	 * @param \phpbb\template\template	$template		Template Object
+	 */
+	public function __construct(\blitze\sitemaker\services\poll $poll, \phpbb\template\template $template)
 	{
 		$this->poll = $poll;
-		$this->ptemplate = $ptemplate;
+		$this->template = $template;
 	}
 
 	/**
@@ -38,9 +39,9 @@ class poll
 		$content = '';
 		if ($topic_data['poll_start'])
 		{
-			$this->poll->build($topic_data, $this->ptemplate);
+			$this->poll->build($topic_data, $this->template);
 
-			$content = $this->ptemplate->render_view('blitze/sitemaker', 'blocks/forum_poll.html', 'topic_poll');
+			$content = $this->template->render_view('blitze/sitemaker', 'blocks/forum_poll.html', 'topic_poll');
 		}
 
 		return $content;

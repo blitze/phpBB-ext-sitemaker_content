@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package phpBB Sitemaker [English]
@@ -97,8 +98,7 @@ $lang = array_merge($lang, array(
 	'TOPIC_TYPE'						=> 'Topic Type',
 	'TOPIC_VIEWS'						=> 'Topic Views',
 
-	// Overwrite phpBB post types
-	'POST_STICKY'			=> 'Featured',
-	'POST_GLOBAL'			=> 'Must Read',
-	'POST_ANNOUNCEMENT'		=> 'Recommended',
+	'TOPIC_TYPE_FEATURED'			=> 'Featured',
+	'TOPIC_TYPE_MUST_READ'			=> 'Must Read',
+	'TOPIC_TYPE_RECOMMENDED'		=> 'Recommended',
 ));

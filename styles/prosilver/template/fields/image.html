@@ -1,5 +1,4 @@
 <input type="text" class="inputbox autowidth image-field" id="smc-{{ field_name }}" name="{{ field_name }}" value="{{ field_value }}" size="45" />
-{% if filemanager_path %}<a href="{{ filemanager_path }}" class="button"><i class="fa fa-upload"></i> {{ lang('SELECT') }}</a>{% endif %}
 <div class="medium-img">
 	<div id="preview-{{ field_name }}" class="img-ui">
 		{% if field_value %}<img src="{{ field_value }}" alt="" />{% endif %}

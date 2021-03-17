@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -255,11 +256,11 @@ class builder
 	}
 
 	/**
-	 * @return string
+	 * @return void
 	 */
-	public function get_form()
+	public function build_form()
 	{
-		return $this->form->get_form(false);
+		$this->form->build_form(false);
 	}
 
 	/**

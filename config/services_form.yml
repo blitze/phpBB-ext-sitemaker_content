@@ -4,7 +4,7 @@ services:
     arguments:
       - "@language"
       - "@request"
-      - "@blitze.sitemaker.template"
+      - "@template"
 
   blitze.content.form.field.checkbox:
     class: blitze\content\services\form\field\checkbox
@@ -104,7 +104,6 @@ services:
       - "@auth"
       - "@config"
       - "@pagination"
-      - "@template"
       - "@blitze.sitemaker.util"
       - "%core.root_path%"
       - "%core.php_ext%"

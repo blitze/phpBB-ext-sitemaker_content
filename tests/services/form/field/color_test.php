@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -33,7 +34,7 @@ class color_test extends base_form_field
 			->disableOriginalConstructor()
 			->getMock();
 
-		return new color($this->language, $this->request, $this->ptemplate, $this->util);
+		return new color($this->language, $this->request, $this->template, $this->util);
 	}
 
 	public function test_name()
@@ -136,7 +137,7 @@ class color_test extends base_form_field
 				),
 				array(),
 				'<input type="text" class="inputbox autowidth colorpicker" id="smc-foo-1" name="foo[]" value="bar" data-palette="" data-allow-empty="true" size="7" />' .
-				'<input type="text" class="inputbox autowidth colorpicker" id="smc-foo-2" name="foo[]" value="" data-palette="" data-allow-empty="true" size="7" />',
+					'<input type="text" class="inputbox autowidth colorpicker" id="smc-foo-2" name="foo[]" value="" data-palette="" data-allow-empty="true" size="7" />',
 			),
 			array(
 				array(

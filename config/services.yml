@@ -1,197 +1,202 @@
 parameters:
-    tables.blitze.content_types: '%core.table_prefix%sm_content_types'
-    tables.blitze.content_fields: '%core.table_prefix%sm_content_fields'
+  tables.blitze.content_types: "%core.table_prefix%sm_content_types"
+  tables.blitze.content_fields: "%core.table_prefix%sm_content_fields"
 
 imports:
-    - { resource: services_actions.yml }
-    - { resource: services_blocks.yml }
-    - { resource: services_controllers.yml }
-    - { resource: services_form.yml }
-    - { resource: services_listeners.yml }
-    - { resource: services_template.yml }
-    - { resource: services_topic_blocks.yml }
-    - { resource: services_views.yml }
+  - { resource: services_actions.yml }
+  - { resource: services_blocks.yml }
+  - { resource: services_controllers.yml }
+  - { resource: services_form.yml }
+  - { resource: services_listeners.yml }
+  - { resource: services_topic_blocks.yml }
+  - { resource: services_views.yml }
 
 services:
+  blitze.content.action_handler:
+    class: blitze\content\services\actions\action_handler
+    arguments:
+      - "@service_container"
 
-    blitze.content.action_handler:
-        class: blitze\content\services\actions\action_handler
-        arguments:
-            - '@service_container'
+  blitze.content.comment_types_collection:
+    class: phpbb\di\service_collection
+    arguments:
+      - "@service_container"
+    tags:
+      - { name: service_collection, tag: sitemaker.content.comment_type }
 
-    blitze.content.comment_types_collection:
-        class: phpbb\di\service_collection
-        arguments:
-            - '@service_container'
-        tags:
-            - { name: service_collection, tag: sitemaker.content.comment_type }
+  blitze.content.comments.factory:
+    class: blitze\content\services\comments\factory
+    arguments:
+      - "@blitze.content.comment_types_collection"
 
-    blitze.content.comments.factory:
-        class: blitze\content\services\comments\factory
-        arguments:
-            - '@blitze.content.comment_types_collection'
+  blitze.content.comments:
+    class: blitze\content\services\comments\comments
+    arguments:
+      - "@auth"
+      - "@config"
+      - "@content.visibility"
+      - "@dbal.conn"
+      - "@language"
+      - "@pagination"
+      - "@request"
+      - "@template"
+      - "@template_context"
+      - "@user"
+      - "@blitze.sitemaker.forum.data"
+      - "@blitze.content.topic"
+      - "%core.root_path%"
+      - "%core.php_ext%"
+    tags:
+      - { name: sitemaker.content.comment_type }
 
-    blitze.content.comments:
-        class: blitze\content\services\comments\comments
-        arguments:
-            - '@auth'
-            - '@config'
-            - '@content.visibility'
-            - '@dbal.conn'
-            - '@language'
-            - '@pagination'
-            - '@request'
-            - '@template'
-            - '@template_context'
-            - '@user'
-            - '@blitze.sitemaker.forum.data'
-            - '@blitze.content.topic'
-            - '%core.root_path%'
-            - '%core.php_ext%'
-        tags:
-            - { name: sitemaker.content.comment_type }
+  blitze.content.feed:
+    class: blitze\content\services\feed
+    arguments:
+      - "@config"
+      - "@controller.helper"
+      - "@language"
+      - "@symfony_request"
+      - "@template"
+      - "@user"
+      - "%core.php_ext%"
 
-    blitze.content.feed:
-        class: blitze\content\services\feed
-        arguments:
-            - '@config'
-            - '@controller.helper'
-            - '@language'
-            - '@symfony_request'
-            - '@template'
-            - '@user'
-            - '%core.php_ext%'
+  blitze.content.fields:
+    class: blitze\content\services\fields
+    parent: blitze.content.topic
+    arguments:
+      - "@blitze.content.comments.factory"
+      - "@blitze.content.form.fields.factory"
 
-    blitze.content.fields:
-        class: blitze\content\services\fields
-        parent: blitze.content.topic
-        arguments:
-            - '@blitze.content.comments.factory'
-            - '@blitze.content.form.fields.factory'
+  blitze.content.form:
+    class: blitze\content\services\form\form
+    arguments:
+      - "@request"
+      - "@template_context"
+      - "@language"
+      - "@blitze.sitemaker.auto_lang"
+      - "@blitze.content.form.fields.factory"
+      - "@template"
 
-    blitze.content.form:
-        class: blitze\content\services\form\form
-        arguments:
-            - '@request'
-            - '@template_context'
-            - '@language'
-            - '@blitze.sitemaker.auto_lang'
-            - '@blitze.content.form.fields.factory'
-            - '@blitze.sitemaker.template'
+  blitze.content.form.builder:
+    class: blitze\content\services\form\builder
+    arguments:
+      - "@auth"
+      - "@dispatcher"
+      - "@language"
+      - "@request"
+      - "@template_context"
+      - "@user"
+      - "@blitze.content.fields"
+      - "@blitze.content.types"
+      - "@blitze.content.form"
+      - "%core.root_path%"
+      - "%core.php_ext%"
 
-    blitze.content.form.builder:
-        class: blitze\content\services\form\builder
-        arguments:
-            - '@auth'
-            - '@dispatcher'
-            - '@language'
-            - '@request'
-            - '@template_context'
-            - '@user'
-            - '@blitze.content.fields'
-            - '@blitze.content.types'
-            - '@blitze.content.form'
-            - '%core.root_path%'
-            - '%core.php_ext%'
+  blitze.content.form.fields_collection:
+    class: phpbb\di\service_collection
+    arguments:
+      - "@service_container"
+    tags:
+      - { name: service_collection, tag: sitemaker.content.form.field }
 
-    blitze.content.form.fields_collection:
-        class: phpbb\di\service_collection
-        arguments:
-            - '@service_container'
-        tags:
-            - { name: service_collection, tag: sitemaker.content.form.field }
+  blitze.content.form.fields.factory:
+    class: blitze\content\services\form\fields_factory
+    arguments:
+      - "@language"
+      - "@blitze.content.form.fields_collection"
 
-    blitze.content.form.fields.factory:
-        class: blitze\content\services\form\fields_factory
-        arguments:
-            - '@language'
-            - '@blitze.content.form.fields_collection'
+  blitze.content.helper:
+    class: blitze\content\services\helper
+    parent: blitze.content.permissions
+    arguments:
+      - "%core.root_path%"
+      - "%core.php_ext%"
 
-    blitze.content.helper:
-        class: blitze\content\services\helper
-        parent: blitze.content.permissions
-        arguments:
-            - '%core.root_path%'
-            - '%core.php_ext%'
+  blitze.content.mapper.factory:
+    class: blitze\content\model\mapper_factory
+    arguments:
+      - "@dbal.conn"
+      - mappers:
+          types: "%tables.blitze.content_types%"
+          fields: "%tables.blitze.content_fields%"
 
-    blitze.content.mapper.factory:
-        class: blitze\content\model\mapper_factory
-        arguments:
-            - '@dbal.conn'
-            - mappers:
-                types: '%tables.blitze.content_types%'
-                fields: '%tables.blitze.content_fields%'
+  blitze.content.notification.type.topic_in_queue.decorator:
+    class: blitze\content\services\notification\topic_in_queue
+    decorates: "notification.type.topic_in_queue"
+    shared: false
+    parent: notification.type.topic
+    arguments:
+      - "@blitze.content.types"
+    tags:
+      - { name: notification.type }
 
-    blitze.content.notification.type.topic_in_queue.decorator:
-        class: blitze\content\services\notification\topic_in_queue
-        decorates: 'notification.type.topic_in_queue'
-        shared: false
-        parent: notification.type.topic
-        arguments:
-            - '@blitze.content.types'
-        tags:
-            - { name: notification.type }
+  blitze.content.permissions:
+    class: blitze\content\services\permissions
+    arguments:
+      - "@auth"
+      - "@config"
+      - "@user"
 
-    blitze.content.permissions:
-        class: blitze\content\services\permissions
-        arguments:
-            - '@auth'
-            - '@config'
-            - '@user'
+  blitze.content.poll:
+    class: blitze\content\services\poll
+    arguments:
+      - "@blitze.sitemaker.poll"
+      - "@template"
 
-    blitze.content.poll:
-        class: blitze\content\services\poll
-        arguments:
-            - '@blitze.sitemaker.poll'
-            - '@blitze.sitemaker.template'
+  blitze.content.quickmod:
+    class: blitze\content\services\quickmod
+    arguments:
+      - "@auth"
+      - "@template"
+      - "@user"
+      - "%core.root_path%"
+      - "%core.php_ext%"
 
-    blitze.content.quickmod:
-        class: blitze\content\services\quickmod
-        arguments:
-            - '@auth'
-            - '@template'
-            - '@user'
-            - '%core.root_path%'
-            - '%core.php_ext%'
+  blitze.content.template.extensions.filters:
+    class: blitze\content\services\template\extensions\filters
+    arguments:
+      - "@blitze.sitemaker.truncator"
+    tags:
+      - { name: twig.extension }
 
-    blitze.content.topic:
-        class: blitze\content\services\topic
-        arguments:
-            - '@config'
-            - '@controller.helper'
-            - '@dispatcher'
-            - '@language'
-            - '@blitze.content.template'
-            - '@user'
-            - '@blitze.content.helper'
+  blitze.content.topic:
+    class: blitze\content\services\topic
+    arguments:
+      - "@config"
+      - "@controller.helper"
+      - "@dispatcher"
+      - "@language"
+      - "@template"
+      - "@user"
+      - "@blitze.content.helper"
 
-    blitze.content.topic_blocks_collection:
-        class: phpbb\di\service_collection
-        arguments:
-            - '@service_container'
-        tags:
-            - { name: service_collection, tag: sitemaker.content.topic_blocks }
+  blitze.content.topic_blocks_collection:
+    class: phpbb\di\service_collection
+    arguments:
+      - "@service_container"
+    tags:
+      - { name: service_collection, tag: sitemaker.content.topic_blocks }
 
-    blitze.content.topic_blocks.factory:
-        class: blitze\content\services\topic\blocks_factory
-        arguments:
-            - '@blitze.content.topic_blocks_collection'
+  blitze.content.topic_blocks.factory:
+    class: blitze\content\services\topic\blocks_factory
+    arguments:
+      - "@blitze.content.topic_blocks_collection"
 
-    blitze.content.types:
-        class: blitze\content\services\types
-        arguments:
-            - '@cache.driver'
-            - '@blitze.content.mapper.factory'
+  blitze.content.types:
+    class: blitze\content\services\types
+    arguments:
+      - "@cache.driver"
+      - "@blitze.content.mapper.factory"
 
-    blitze.content.views_collection:
-        class: phpbb\di\service_collection
-        arguments:
-            - '@service_container'
-        tags:
-            - { name: service_collection, tag: sitemaker.content.view }
+  blitze.content.views_collection:
+    class: phpbb\di\service_collection
+    arguments:
+      - "@service_container"
+    tags:
+      - { name: service_collection, tag: sitemaker.content.view }
 
-    blitze.content.views.factory:
-        class: blitze\content\services\views\views_factory
-        arguments:
-            - '@language'
-            - '@blitze.content.views_collection'
+  blitze.content.views.factory:
+    class: blitze\content\services\views\views_factory
+    arguments:
+      - "@language"
+      - "@blitze.content.views_collection"

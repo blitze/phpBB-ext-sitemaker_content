@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -85,11 +86,11 @@ class archive extends \blitze\sitemaker\services\blocks\driver\block
 		}
 		$this->db->sql_freeresult($result);
 
-		$this->ptemplate->assign_vars(array_merge($bdata['settings'], array('archive' => $archive)));
+		$this->template->assign_vars(array_merge($bdata['settings'], array('archive' => $archive)));
 
 		return array(
 			'title'		=> 'ARCHIVES',
-			'content'	=> $this->ptemplate->render_view('blitze/content', 'blocks/archive.html', 'archive_block'),
+			'content'	=> $this->template->render_view('blitze/content', 'blocks/archive.html', 'archive_block'),
 		);
 	}
 

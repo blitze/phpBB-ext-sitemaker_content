@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -40,7 +41,7 @@ class image_test extends base_form_field
 			->disableOriginalConstructor()
 			->getMock();
 
-		return new image($this->language, $this->request, $this->ptemplate, $this->filemanager, $this->util, $phpbb_root_path, $phpEx);
+		return new image($this->language, $this->request, $this->template, $this->filemanager, $this->util, $phpbb_root_path, $phpEx);
 	}
 
 	public function test_name()
@@ -198,7 +199,7 @@ class image_test extends base_form_field
 				),
 				false,
 				'<input type="text" class="inputbox autowidth image-field" id="smc-foo" name="foo" value="" size="45" />' .
-				'<div class="medium-img"><div id="preview-foo" class="img-ui"></div></div>',
+					'<div class="medium-img"><div id="preview-foo" class="img-ui"></div></div>',
 			),
 			array(
 				array(
@@ -213,8 +214,8 @@ class image_test extends base_form_field
 				),
 				true,
 				'<input type="text" class="inputbox autowidth image-field" id="smc-foo" name="foo" value="bar" size="45" />' .
-				'<a href="phpBB/ResponsiveFilemanager/filemanager/dialog.php?type=1&amp;field_id=smc-foo&amp;akey=foo_key" class="button"><i class="fa fa-upload"></i> SELECT</a>' .
-				'<div class="medium-img"><div id="preview-foo" class="img-ui"><img src="bar" alt="" /></div></div>',
+					'<a href="phpBB/ResponsiveFilemanager/filemanager/dialog.php?type=1&amp;field_id=smc-foo&amp;akey=foo_key" class="button"><i class="fa fa-upload"></i> SELECT</a>' .
+					'<div class="medium-img"><div id="preview-foo" class="img-ui"><img src="bar" alt="" /></div></div>',
 			),
 			array(
 				array(
@@ -226,7 +227,7 @@ class image_test extends base_form_field
 				),
 				false,
 				'<input type="text" class="inputbox autowidth image-field" id="smc-foo2" name="foo2" value="foo_bar" size="45" />' .
-				'<div class="medium-img"><div id="preview-foo2" class="img-ui"><img src="foo_bar" alt="" /></div></div>',
+					'<div class="medium-img"><div id="preview-foo2" class="img-ui"><img src="foo_bar" alt="" /></div></div>',
 			),
 		);
 	}

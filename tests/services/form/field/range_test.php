@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -33,7 +34,7 @@ class range_test extends base_form_field
 			->disableOriginalConstructor()
 			->getMock();
 
-		return new range($this->language, $this->request, $this->ptemplate, $this->util);
+		return new range($this->language, $this->request, $this->template, $this->util);
 	}
 
 	public function test_name()
@@ -176,7 +177,7 @@ class range_test extends base_form_field
 				),
 				'<div style="width: 50%">' .
 					'<input type="text" class="inputbox autowidth rangepicker" id="smc-foo" name="foo" data-type="double" data-values="" data-prefix="$" data-postfix=" per Ib" data-min="0" data-max="100" data-step="1" data-grid="false" data-from="" data-to="" data-force-edges="true" data-disable="true" data-skin="modern" value="15;35" />' .
-				'</div>',
+					'</div>',
 			),
 		);
 	}
@@ -218,7 +219,7 @@ class range_test extends base_form_field
 				),
 				'<div style="width: 100%">' .
 					'<input type="text" class="inputbox autowidth rangepicker" id="smc-foo" name="foo" data-type="single" data-values="" data-prefix="" data-postfix="" data-min="0" data-max="" data-step="1" data-grid="false" data-from="" data-to="" data-force-edges="true" data-skin="flat" value="" />' .
-				'</div>',
+					'</div>',
 			),
 			array(
 				array(
@@ -242,7 +243,7 @@ class range_test extends base_form_field
 				),
 				'<div style="width: 50%">' .
 					'<input type="text" class="inputbox autowidth rangepicker" id="smc-foo" name="foo" data-type="double" data-values="" data-prefix="$" data-postfix=" per Ib" data-min="0" data-max="100" data-step="1" data-grid="false" data-from="" data-to="" data-force-edges="true" data-skin="big" value="25;55" />' .
-				'</div>',
+					'</div>',
 			),
 			array(
 				array(
@@ -260,7 +261,7 @@ class range_test extends base_form_field
 				),
 				'<div style="width: 75%">' .
 					'<input type="text" class="inputbox autowidth rangepicker" id="smc-bar" name="bar" data-type="single" data-values="test1, test2, test3" data-prefix="" data-postfix="" data-min="0" data-max="" data-step="1" data-grid="1" data-from="2" data-to="" data-force-edges="true" data-skin="flat" value="test3" />' .
-				'</div>',
+					'</div>',
 			),
 		);
 	}

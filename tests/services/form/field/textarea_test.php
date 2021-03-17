@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -62,17 +63,20 @@ class textarea_test extends base_form_field
 			->getMock();
 		$template->expects($this->any())
 			->method('assign_var')
-			->will($this->returnCallback(function($key, $value) use (&$tpl_data) {
+			->will($this->returnCallback(function ($key, $value) use (&$tpl_data)
+			{
 				$tpl_data[$key] = $value;
 			}));
 		$template->expects($this->any())
 			->method('assign_vars')
-			->will($this->returnCallback(function($data) use (&$tpl_data) {
+			->will($this->returnCallback(function ($data) use (&$tpl_data)
+			{
 				$tpl_data = array_merge($tpl_data, $data);
 			}));
 		$template->expects($this->any())
 			->method('assign_block_vars')
-			->will($this->returnCallback(function($key, $data) use (&$tpl_data) {
+			->will($this->returnCallback(function ($key, $data) use (&$tpl_data)
+			{
 				$tpl_data[$key][] = $data;
 			}));
 		$template->expects($this->any())
@@ -80,17 +84,19 @@ class textarea_test extends base_form_field
 			->willReturn(array());
 		$template->expects($this->any())
 			->method('assign_display')
-			->will($this->returnCallback(function() use (&$tpl_data) {
+			->will($this->returnCallback(function () use (&$tpl_data)
+			{
 				return $tpl_data;
 			}));
-		$this->template =& $template;
+		$this->template = &$template;
 
 		$pagination = $this->getMockBuilder('\phpbb\pagination')
 			->disableOriginalConstructor()
 			->getMock();
 		$pagination->expects($this->any())
 			->method('validate_start')
-			->will($this->returnCallback(function($start) {
+			->will($this->returnCallback(function ($start)
+			{
 				return $start;
 			}));
 
@@ -114,7 +120,7 @@ class textarea_test extends base_form_field
 			->disableOriginalConstructor()
 			->getMock();
 
-		return new textarea($this->language, $this->request, $this->ptemplate, $auth, $config, $pagination, $template, $this->util, $phpbb_root_path, $phpEx);
+		return new textarea($this->language, $this->request, $this->template, $auth, $config, $pagination, $template, $this->util, $phpbb_root_path, $phpEx);
 	}
 
 	public function test_name()
@@ -155,7 +161,7 @@ class textarea_test extends base_form_field
 
 		return array(
 
-		// if no content, should display no content
+			// if no content, should display no content
 			array(
 				'block',
 				'summary',
@@ -189,7 +195,7 @@ class textarea_test extends base_form_field
 				),
 			),
 
-		// content is truncated if summary view and max_chars is provided
+			// content is truncated if summary view and max_chars is provided
 			array(
 				'summary',
 				'summary',
@@ -245,7 +251,7 @@ class textarea_test extends base_form_field
 				),
 			),
 
-		// summary view should always display first page with no heading
+			// summary view should always display first page with no heading
 			array(
 				'summary',
 				'summary',
@@ -277,7 +283,7 @@ class textarea_test extends base_form_field
 				array(),
 			),
 
-		// detail view should display requested page, if it exists, with heading
+			// detail view should display requested page, if it exists, with heading
 			array(
 				'detail',
 				'detail',
@@ -375,7 +381,7 @@ class textarea_test extends base_form_field
 				array(),
 			),
 
-		// if requested page does not exist, display first page
+			// if requested page does not exist, display first page
 			array(
 				'detail',
 				'detail',
@@ -406,7 +412,7 @@ class textarea_test extends base_form_field
 				),
 			),
 
-		// Form submitted and we are previewing
+			// Form submitted and we are previewing
 			array(
 				'preview',
 				'detail',
@@ -415,8 +421,8 @@ class textarea_test extends base_form_field
 				),
 				0,
 				'Page 1 content<p><hr class="dashed"></p>' .
-				'<h4>Title 2</h4>Page 2 content<p><hr class="dashed"></p>' .
-				'Page 3 content',
+					'<h4>Title 2</h4>Page 2 content<p><hr class="dashed"></p>' .
+					'Page 3 content',
 				array(),
 			),
 		);

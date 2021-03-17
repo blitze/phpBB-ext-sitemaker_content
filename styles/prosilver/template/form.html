@@ -115,19 +115,21 @@
 		};
 		// ]]>
 	</script>
-	{% for element in loops.element %}
+	{% for field in FORM_FIELDS %}
+		{%- set content = include(field.template, field) %}
+		{% if field.field_type !== 'hidden' %}
 		<dl>
-			<dt>{% if element.FIELD_LABEL %}<label for="{{ element.FIELD_ID }}">{{ element.FIELD_LABEL }}{% if element.FIELD_REQUIRED %}<abbr class="req" title="required">*</abbr>{% endif %}{{ lang('COLON') }}</label><br />{% endif %}<span>{{ element.FIELD_EXPLAIN }}</span></dt>
-		{% if not element.FULL_WIDTH %}
-			<dd>{{ element.FIELD_VIEW }}</dd>
+			<dt>{% if field.field_label %}<label for="{{ field.FIELD_ID }}">{{ field.field_label }}{% if field.field_required %}<abbr class="req" title="required">*</abbr>{% endif %}{{ lang('COLON') }}</label><br />{% endif %}<span>{{ field.field_explain }}</span></dt>
+		{% if not field.FULL_WIDTH %}
+			<dd>{{ content }}</dd>
 		{% else %}
 			<dd></dd>
-			{{ element.FIELD_VIEW }}
+			{{ content }}
 		{% endif %}
 		</dl>
-	{% endfor %}
-	{% for hidden in loops.hidden %}
-		{{ hidden.FIELD_VIEW }}
+		{% else %}
+			{{ content }}
+		{% endif %}
 	{% endfor %}
 {% if S_WRAP_FORM %}
 	</fieldset>

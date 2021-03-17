@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -26,10 +27,10 @@ class add_edit_base extends \phpbb_database_test_case
 	protected $views_factory;
 
 	/**
-	* Define the extensions to be tested
-	*
-	* @return array vendor/name of extension(s) to test
-	*/
+	 * Define the extensions to be tested
+	 *
+	 * @return array vendor/name of extension(s) to test
+	 */
 	static protected function setup_extensions()
 	{
 		return array(
@@ -77,7 +78,8 @@ class add_edit_base extends \phpbb_database_test_case
 			->getMock();
 		$this->language->expects($this->any())
 			->method('lang')
-			->willReturnCallback(function () {
+			->willReturnCallback(function ()
+			{
 				return implode(' ', func_get_args());
 			});
 
@@ -86,17 +88,20 @@ class add_edit_base extends \phpbb_database_test_case
 			->getMock();
 		$this->template->expects($this->any())
 			->method('assign_vars')
-			->will($this->returnCallback(function($data) use (&$tpl_data) {
+			->will($this->returnCallback(function ($data) use (&$tpl_data)
+			{
 				$tpl_data = array_merge($tpl_data, $data);
 			}));
 		$this->template->expects($this->any())
 			->method('assign_block_vars')
-			->will($this->returnCallback(function($block, $data) use (&$tpl_data) {
+			->will($this->returnCallback(function ($block, $data) use (&$tpl_data)
+			{
 				$tpl_data[$block][] = $data;
 			}));
 		$this->template->expects($this->any())
 			->method('assign_display')
-			->will($this->returnCallback(function() use (&$tpl_data) {
+			->will($this->returnCallback(function () use (&$tpl_data)
+			{
 				return $tpl_data;
 			}));
 
@@ -117,7 +122,7 @@ class add_edit_base extends \phpbb_database_test_case
 
 		$request = $this->getMock('\phpbb\request\request_interface');
 
-		$ptemplate = $this->getMockBuilder('\blitze\sitemaker\services\template')
+		$template = $this->getMockBuilder('\phpbb\template\template')
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -130,8 +135,8 @@ class add_edit_base extends \phpbb_database_test_case
 				'blitze.content.comments'	=> 'COMMENTS',
 			));
 
-		$text_field = new \blitze\content\services\form\field\text($this->language, $request, $ptemplate);
-		$checkbox_field = new \blitze\content\services\form\field\checkbox($this->language, $request, $ptemplate);
+		$text_field = new \blitze\content\services\form\field\text($this->language, $request, $template);
+		$checkbox_field = new \blitze\content\services\form\field\checkbox($this->language, $request, $template);
 
 		// Let's create some fake objects
 		$foo_view = $this->getMockBuilder('\stdClass')

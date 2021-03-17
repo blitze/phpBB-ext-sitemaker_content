@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -26,8 +27,8 @@ class form
 	/** @var \blitze\content\services\form\fields_factory */
 	protected $fields_factory;
 
-	/** @var \blitze\sitemaker\services\template */
-	protected $ptemplate;
+	/** @var \phpbb\template\template */
+	protected $template;
 
 	/** @var array */
 	protected $db_fields = array();
@@ -49,16 +50,16 @@ class form
 	 * @param \phpbb\language\language							$language				Language object
 	 * @param \blitze\sitemaker\services\auto_lang				$auto_lang				Auto add lang file
 	 * @param \blitze\content\services\form\fields_factory		$fields_factory			Form fields factory
-	 * @param \blitze\sitemaker\services\template				$ptemplate				Sitemaker template object
+	 * @param \phpbb\template\template							$template				Template object
 	 */
-	public function __construct(\phpbb\request\request_interface $request, \phpbb\template\context $template_context, \phpbb\language\language $language, \blitze\sitemaker\services\auto_lang $auto_lang, \blitze\content\services\form\fields_factory $fields_factory, \blitze\sitemaker\services\template $ptemplate)
+	public function __construct(\phpbb\request\request_interface $request, \phpbb\template\context $template_context, \phpbb\language\language $language, \blitze\sitemaker\services\auto_lang $auto_lang, \blitze\content\services\form\fields_factory $fields_factory, \phpbb\template\template $template)
 	{
 		$this->request = $request;
 		$this->template_context = $template_context;
 		$this->language = $language;
 		$this->auto_lang = $auto_lang;
 		$this->fields_factory = $fields_factory;
-		$this->ptemplate = $ptemplate;
+		$this->template = $template;
 	}
 
 	/**
@@ -116,10 +117,10 @@ class form
 			$field_data['field_props'] += $field->get_default_props();
 			$field_data['field_label'] = $this->language->lang($field_data['field_label']);
 			$field_data['field_value'] = $field->get_submitted_value($field_data, $this->form['is_submitted']);
-			$field_data['field_view'] = $field->show_form_field($field_data);
 
-			if ($field_data['field_view'])
+			if ($field->show_form_field($field_data))
 			{
+				$field_data['template'] = $field->get_field_template();
 				$this->data[$name] = $field_data;
 			}
 		}
@@ -129,25 +130,27 @@ class form
 
 	/**
 	 * @param bool $wrap_form_element
-	 * @return string
+	 * @return void
 	 */
-	public function get_form($wrap_form_element = true)
+	public function build_form($wrap_form_element = true)
 	{
-		foreach ($this->data as $row)
-		{
-			$key = $this->get_field_key($row['field_type']);
-			$this->ptemplate->assign_block_vars($key, array_change_key_case($row, CASE_UPPER));
-		}
+		// foreach ($this->data as $row)
+		// {
+		// 	$key = $this->get_field_key($row['field_type']);
+		// 	$this->template->assign_block_vars($key, array_change_key_case($row, CASE_UPPER));
+		// }
+		// print_data($this->data);
 
-		$this->ptemplate->assign_vars(array_merge(
+		$this->template->assign_vars(array_merge(
 			array(
 				'S_EDITOR'		=> true,
-				'S_WRAP_FORM'	=> $wrap_form_element
+				'S_WRAP_FORM'	=> $wrap_form_element,
+				'FORM_FIELDS'	=> $this->data
 			),
-			array_change_key_case($this->form, CASE_UPPER))
-		);
+			array_change_key_case($this->form, CASE_UPPER)
+		));
 
-		return $this->ptemplate->render_view('blitze/content', 'form.html', 'form');
+		// return $this->template->render_view('blitze/content', 'form.html', 'form');
 	}
 
 	/**

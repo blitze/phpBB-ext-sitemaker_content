@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -14,7 +15,7 @@ abstract class base_form_field extends \phpbb_test_case
 	protected $language;
 	protected $request;
 	protected $user;
-	protected $ptemplate;
+	protected $template;
 
 	/**
 	 * Define the extension to be tested.
@@ -42,7 +43,8 @@ abstract class base_form_field extends \phpbb_test_case
 			->getMock();
 		$this->language->expects($this->any())
 			->method('lang')
-			->willReturnCallback(function($var) {
+			->willReturnCallback(function ($var)
+			{
 				return ($var == 'COMMA_SEPARATOR') ? ', ' : implode(' ', func_get_args());
 			});
 
@@ -52,7 +54,7 @@ abstract class base_form_field extends \phpbb_test_case
 		$this->user->timezone = new \DateTimeZone('UTC');
 		$this->user->lang['datetime'] = array();
 		$this->user->page['root_script_path'] = '/phpBB/';
-		$this->user->style = array (
+		$this->user->style = array(
 			'style_name' => 'prosilver',
 			'style_path' => 'prosilver',
 		);
@@ -90,10 +92,10 @@ abstract class base_form_field extends \phpbb_test_case
 			)
 		);
 
-		$this->ptemplate = new \blitze\sitemaker\services\template($path_helper, $config, $template_context, $twig, $cache_path, $this->user, array(new \phpbb\template\twig\extension($template_context, $this->user)));
+		$this->template = new \phpbb\template\template($path_helper, $config, $template_context, $twig, $cache_path, $this->user, array(new \phpbb\template\twig\extension($template_context, $this->user)));
 		$twig->setLexer(new \phpbb\template\twig\lexer($twig));
 
-		$this->ptemplate->set_custom_style('all', $phpbb_root_path . 'ext/blitze/sitemaker/styles/all');
+		$this->template->set_custom_style('all', $phpbb_root_path . 'ext/blitze/sitemaker/styles/all');
 	}
 
 	/**
@@ -119,7 +121,7 @@ abstract class base_form_field extends \phpbb_test_case
 		}
 
 		$form_field_class = '\\blitze\\content\\services\\form\\field\\' . $form_field;
-		return new $form_field_class($this->language, $this->request, $this->ptemplate);
+		return new $form_field_class($this->language, $this->request, $this->template);
 	}
 
 	/**

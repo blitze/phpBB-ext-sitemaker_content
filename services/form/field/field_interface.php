@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -16,6 +17,12 @@ interface field_interface
 	 * @return string
 	 */
 	public function get_name();
+
+	/**
+	 * Template name in the form '@[vendor]_[extension]/[path to]/[template].html
+	 * @return string
+	 */
+	public function get_field_template();
 
 	/**
 	 * Lang name of content field

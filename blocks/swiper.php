@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -51,25 +52,25 @@ class swiper extends recent
 		return array_merge($config, array(
 			'layout'			=> '',
 			'legend3'			=> 'SWIPER_SLIDESHOW',
-				'navigation'		=> array('lang' => 'SWIPER_NAVIGATION', 'validate' => 'bool', 'type' => 'radio:yes_no', 'default' => 1),
-				'theme'				=> array('lang' => 'SWIPER_THEME', 'validate' => 'string', 'type' => 'select', 'options' => $theme_options, 'default' => ''),
-				'pagination'		=> array('lang' => 'SWIPER_PAGINATION', 'validate' => 'string', 'type' => 'select', 'options' => $pagination_options, 'default' => 1),
-				'effect'			=> array('lang' => 'SWIPER_EFFECT', 'validate' => 'string', 'type' => 'select', 'options' => $effect_options, 'default' => 'slide'),
-				'parallax'			=> array('lang' => 'SWIPER_PARALLAX_IMAGE_URL', 'validate' => 'string', 'type' => 'text::255', 'default' => ''),
-				'direction'			=> array('lang' => 'SWIPER_DIRECTION', 'validate' => 'string', 'type' => 'select:1:0:direction', 'options' => $direction_options, 'default' => 'horizontal', 'append' => '<div id="direction-vertical" class="error small">' . $this->language->lang('SWIPER_HEIGHT_REQUIRED') . '</div>'),
-				'height'			=> array('lang' => 'SWIPER_HEIGHT', 'validate' => 'int:0', 'type' => 'number:0', 'default' => 0, 'append' => 'PIXEL'),
-				'thumbs'			=> array('lang' => 'SWIPER_THUMBNAILS', 'validate' => 'bool', 'type' => 'radio:yes_no', 'default' => 0),
-				'loop'				=> array('lang' => 'SWIPER_LOOP', 'validate' => 'bool', 'type' => 'radio:yes_no', 'default' => 1),
-				'autoplay'			=> array('lang' => 'SWIPER_AUTOPLAY', 'validate' => 'int:0', 'type' => 'number:0', 'default' => 0, 'append' => 'MILLISECONDS'),
+			'navigation'		=> array('lang' => 'SWIPER_NAVIGATION', 'validate' => 'bool', 'type' => 'radio:yes_no', 'default' => 1),
+			'theme'				=> array('lang' => 'SWIPER_THEME', 'validate' => 'string', 'type' => 'select', 'options' => $theme_options, 'default' => ''),
+			'pagination'		=> array('lang' => 'SWIPER_PAGINATION', 'validate' => 'string', 'type' => 'select', 'options' => $pagination_options, 'default' => 1),
+			'effect'			=> array('lang' => 'SWIPER_EFFECT', 'validate' => 'string', 'type' => 'select', 'options' => $effect_options, 'default' => 'slide'),
+			'parallax'			=> array('lang' => 'SWIPER_PARALLAX_IMAGE_URL', 'validate' => 'string', 'type' => 'text::255', 'default' => ''),
+			'direction'			=> array('lang' => 'SWIPER_DIRECTION', 'validate' => 'string', 'type' => 'select:1:0:direction', 'options' => $direction_options, 'default' => 'horizontal', 'append' => '<div id="direction-vertical" class="error small">' . $this->language->lang('SWIPER_HEIGHT_REQUIRED') . '</div>'),
+			'height'			=> array('lang' => 'SWIPER_HEIGHT', 'validate' => 'int:0', 'type' => 'number:0', 'default' => 0, 'append' => 'PIXEL'),
+			'thumbs'			=> array('lang' => 'SWIPER_THUMBNAILS', 'validate' => 'bool', 'type' => 'radio:yes_no', 'default' => 0),
+			'loop'				=> array('lang' => 'SWIPER_LOOP', 'validate' => 'bool', 'type' => 'radio:yes_no', 'default' => 1),
+			'autoplay'			=> array('lang' => 'SWIPER_AUTOPLAY', 'validate' => 'int:0', 'type' => 'number:0', 'default' => 0, 'append' => 'MILLISECONDS'),
 			'legend4'			=> 'SWIPER_SLIDES',
-				'text_position'		=> array('lang' => 'SWIPER_TEXT_POSITION', 'validate' => 'string', 'type' => 'select', 'options' => $text_pos_options, 'default' => ''),
-				'slides-per-view'	=> array('lang' => 'SWIPER_SLIDES_PER_VIEW', 'validate' => 'int:1', 'type' => 'number:1', 'default' => 1),
-				'slides-per-group'	=> array('lang' => 'SWIPER_SLIDES_PER_GROUP', 'validate' => 'int:1', 'type' => 'number:1', 'default' => 1),
-				'space-between'		=> array('lang' => 'SWIPER_SPACE_BETWEEN_SLIDES', 'validate' => 'int:0', 'type' => 'number:0', 'default' => 10, 'append' => 'PIXEL'),
-				'set-wrapper-size'	=> array('lang' => 'SWIPER_EQUAL_HEIGHT_SLIDES', 'validate' => 'bool', 'type' => 'radio:yes_no', 'default' => 1),
-				'auto-height'		=> array('lang' => 'SWIPER_AUTO_HEIGHT', 'validate' => 'bool', 'type' => 'radio:yes_no', 'default' => 0),
-				'centered-slides'	=> array('lang' => 'SWIPER_CENTERED', 'validate' => 'bool', 'type' => 'radio:yes_no', 'default' => 0),
-				'free-mode'			=> array('lang' => 'SWIPER_FREE_MODE', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => true, 'default' => 0),
+			'text_position'		=> array('lang' => 'SWIPER_TEXT_POSITION', 'validate' => 'string', 'type' => 'select', 'options' => $text_pos_options, 'default' => ''),
+			'slides-per-view'	=> array('lang' => 'SWIPER_SLIDES_PER_VIEW', 'validate' => 'int:1', 'type' => 'number:1', 'default' => 1),
+			'slides-per-group'	=> array('lang' => 'SWIPER_SLIDES_PER_GROUP', 'validate' => 'int:1', 'type' => 'number:1', 'default' => 1),
+			'space-between'		=> array('lang' => 'SWIPER_SPACE_BETWEEN_SLIDES', 'validate' => 'int:0', 'type' => 'number:0', 'default' => 10, 'append' => 'PIXEL'),
+			'set-wrapper-size'	=> array('lang' => 'SWIPER_EQUAL_HEIGHT_SLIDES', 'validate' => 'bool', 'type' => 'radio:yes_no', 'default' => 1),
+			'auto-height'		=> array('lang' => 'SWIPER_AUTO_HEIGHT', 'validate' => 'bool', 'type' => 'radio:yes_no', 'default' => 0),
+			'centered-slides'	=> array('lang' => 'SWIPER_CENTERED', 'validate' => 'bool', 'type' => 'radio:yes_no', 'default' => 0),
+			'free-mode'			=> array('lang' => 'SWIPER_FREE_MODE', 'validate' => 'bool', 'type' => 'radio:yes_no', 'explain' => true, 'default' => 0),
 		));
 	}
 
@@ -89,7 +90,7 @@ class swiper extends recent
 		));
 
 		$bdata['settings']['layout'] = ''; // key 'layout' is needed by parent
-		$this->ptemplate->assign_vars(array(
+		$this->template->assign_vars(array(
 			'ID'			=> $bdata['bid'],
 			'SETTINGS'		=> $bdata['settings'],
 		));
