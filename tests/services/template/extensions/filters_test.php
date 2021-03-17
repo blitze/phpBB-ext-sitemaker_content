@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package sitemaker
@@ -27,7 +28,7 @@ class filters_test extends \phpbb_test_case
 	/**
 	 * Create the template service
 	 *
-	 * @return \blitze\sitemaker\services\template
+	 * @return \phpbb\template\template
 	 */
 	public function get_template()
 	{
@@ -85,7 +86,7 @@ class filters_test extends \phpbb_test_case
 	public function test_field_twig_filter()
 	{
 		$template = $this->get_template();
-		
+
 		$test_data = array(
 			'FIELDS'	=> array(
 				'body'		=> array(
