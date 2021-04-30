@@ -46,6 +46,7 @@ class m2_initial_data extends \phpbb\db\migration\container_aware_migration
 		$forum_data = array(
 			'forum_type'	=> FORUM_CAT,
 			'forum_name'	=> 'Sitemaker Content',
+			'hidden_forum'	=> true,
 		);
 
 		if (!empty($this->config['blitze_content_forum_id']))

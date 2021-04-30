@@ -306,6 +306,7 @@ class save extends action_utils implements action_interface
 			'forum_name'	=> $this->language->lang($content_langname),
 			'forum_desc'	=> $this->language->lang('CONTENT_FORUM_EXPLAIN'),
 			'parent_id'		=> (int) $this->config['blitze_content_forum_id'],
+			'hidden_forum'	=> true,
 		);
 
 		$this->forum_manager->add($forum_data, $forum_perm_from);
