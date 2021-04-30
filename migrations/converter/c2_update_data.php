@@ -92,7 +92,7 @@ class c2_update_data extends \phpbb\db\migration\migration
 			}
 			else
 			{
-				$this->db->sql_query('UPDATE ' . POSTS_TABLE . " SET bbcode_bitfield = '' WHERE post_id = " . $post_id);
+				$this->db->sql_query('UPDATE ' . POSTS_TABLE . " SET bbcode_bitfield = '' WHERE post_id = " . (int) $post_id);
 			}
 
 			if ($topic_id != $last_topic_id)
@@ -101,7 +101,7 @@ class c2_update_data extends \phpbb\db\migration\migration
 				$topic_tags[$forum_id] = $row['topic_tag'];
 				$slug = $slugify->slugify($row['topic_title']);
 
-				$this->db->sql_query('UPDATE ' . TOPICS_TABLE . " SET topic_slug = '$slug' WHERE topic_id = " . $topic_id);
+				$this->db->sql_query('UPDATE ' . TOPICS_TABLE . " SET topic_slug = '$slug' WHERE topic_id = " . (int) $topic_id);
 			}
 		}
 		$this->db->sql_freeresult($result);

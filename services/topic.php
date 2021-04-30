@@ -123,6 +123,7 @@ class topic
 		 *
 		 * @event blitze.content.modify_template_data
 		 * @var	array	tpl_data	Array containing template data
+		 * @since 3.0.0-RC4
 		 */
 		$vars = array('tpl_data');
 		extract($this->phpbb_dispatcher->trigger_event('blitze.content.modify_template_data', compact($vars)));

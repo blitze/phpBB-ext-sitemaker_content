@@ -40,4 +40,21 @@ class m4_update_field_props extends \phpbb\db\migration\migration
 			),
 		);
 	}
+
+	/**
+	 * Revert the sm_content_fields schema
+	 *
+	 * @return array Array of table schema
+	 * @access public
+	 */
+	public function revert_schema()
+	{
+		return array(
+			'change_columns'	=> array(
+				$this->table_prefix . 'sm_content_fields'	=> array(
+					'field_props'		=> array('VCHAR:255', ''),
+				),
+			),
+		);
+	}
 }

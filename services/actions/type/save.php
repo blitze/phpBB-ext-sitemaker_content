@@ -125,6 +125,7 @@ class save extends action_utils implements action_interface
 		 * @var	array									field_types			Array mapping field types to field names of form array([field_type] => array([field_name1], [field_name2]))
 		 * @var	array									fields_data			Array containing field data of form array([field_name] => array([field_type] => 'foo', ...))
 		 * @var	\blitze\content\model\entity\type		entity				Content type entity
+		 * @since 3.0.0-RC4
 		 */
 		$vars = array('field_types', 'fields_data', 'entity');
 		extract($this->phpbb_dispatcher->trigger_event('blitze.content.acp_save_fields_before', compact($vars)));

@@ -52,4 +52,26 @@ class c3_update_tables extends \phpbb\db\migration\migration
 			),
 		);
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function revert_schema()
+	{
+		return array(
+			array('custom', array(array($this, 'do_nothing'))),
+		);
+	}
+
+	/**
+	 * As this is a convertor script, we do not want to recreate old tables
+	 * created by a previous version of this extension that are no longer needed
+	 * So we do nothing here.
+	 *
+	 * @return void
+	 */
+	public function do_nothing()
+	{
+		// do nothing
+	}
 }

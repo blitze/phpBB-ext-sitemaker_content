@@ -121,6 +121,7 @@ class builder
 			 * @var int									topic_id		Current topic id
 			 * @var array								fields_data		Array containing fields data, minus 'field_value' prop, which is what we are setting here
 			 * @var \blitze\content\model\entity\type	entity			Content type entity
+			 * @since 3.0.0-RC4
 			 */
 			$vars = array('topic_id', 'fields_data', 'entity');
 			extract($this->phpbb_dispatcher->trigger_event('blitze.content.builder.set_field_values', compact($vars)));

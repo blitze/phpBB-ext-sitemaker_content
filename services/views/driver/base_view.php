@@ -292,6 +292,7 @@ abstract class base_view implements views_interface
 		 * @var mixed								forum_id		Forum id, if available
 		 * @var array								filters			Filters
 		 * @var array								sql_array		Array to modify sql query to get topics
+		 * @since 3.0.0-RC4
 		 */
 		$vars = array('forum_id', 'filters', 'sql_array');
 		extract($this->phpbb_dispatcher->trigger_event('blitze.content.view.filter', compact($vars)));

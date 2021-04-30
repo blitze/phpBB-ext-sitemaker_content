@@ -94,6 +94,7 @@ class fields extends topic
 		 * @var \blitze\content\model\entity\type	entity				Content type entity
 		 * @var array								db_fields			This array allows extensions that provide fields to list field values for current topic ids.
 		 *																Ex. array([topic_id] => array([field_name] => [field_value]))
+		 * @since 3.0.0-RC4
 		 */
 		$vars = array('view_mode', 'view_mode_fields', 'entity', 'db_fields');
 		extract($this->phpbb_dispatcher->trigger_event('blitze.content.fields.set_values', compact($vars)));

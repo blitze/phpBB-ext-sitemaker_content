@@ -97,6 +97,7 @@ class edit extends add
 			 * @var	int														content_id		Content type id
 			 * @var	array													field_data		Array containing field data
 			 * @var	\blitze\content\services\form\field\field_interface		field_instance	Field instance
+			 * @since 3.0.0-RC4
 			 */
 			$vars = array('content_id', 'field_data', 'field_instance');
 			extract($this->phpbb_dispatcher->trigger_event('blitze.content.acp_modify_field_data', compact($vars)));
